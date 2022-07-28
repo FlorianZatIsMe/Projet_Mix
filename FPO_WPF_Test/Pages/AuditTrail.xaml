@@ -33,7 +33,6 @@
 
     </Page.Resources>
 
-
     <Grid>
         <DataGrid Name="dataGridAuditTrail"
                   Background="LightGray"
