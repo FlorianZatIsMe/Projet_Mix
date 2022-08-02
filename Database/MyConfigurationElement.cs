@@ -47,7 +47,7 @@ namespace Database.Configuration
                 value = (string)this["Password"];
             }
         }
-        [ConfigurationProperty("Database", DefaultValue = "1 Years", IsRequired = false)]
+        [ConfigurationProperty("Database", DefaultValue = "", IsRequired = false)]
         public string Database
         {
             get

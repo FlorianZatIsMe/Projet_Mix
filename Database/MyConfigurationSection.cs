@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Database.Configuration
 {
-    public class DB_Connection_Info : ConfigurationSection
+    public class Connection_Info : ConfigurationSection
     {
         [ConfigurationProperty("DB_Settings")]
         public DB_Features DB_Features

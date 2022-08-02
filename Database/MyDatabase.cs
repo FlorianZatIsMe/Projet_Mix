@@ -11,18 +11,20 @@ using System.Configuration;
 using System.Collections.ObjectModel;
 using System.Data.Common;
 using System.Data;
+using System.Threading;
 
 namespace Database
 {
     public class MyDatabase
     {
-        private Configuration.DB_Connection_Info MySettings;
+        private readonly Configuration.Connection_Info MySettings;
+        private readonly NameValueCollection ConnectionAttempSettings = ConfigurationManager.GetSection("Database/Connection_Attempt") as NameValueCollection;
         private MySqlConnection connection;
         private MySqlDataReader reader;
 
         public MyDatabase()
         {
-            MySettings = ConfigurationManager.GetSection("DB_Connection_Info") as Configuration.DB_Connection_Info;
+            MySettings = ConfigurationManager.GetSection("Database/Connection_Info") as Configuration.Connection_Info;
             if (MySettings == null)
             {
                 MessageBox.Show("Database Settings are not defined");
@@ -38,8 +40,9 @@ namespace Database
             //MessageBox.Show("DB: Au revoir");
         }
 
-        public async void Connect()
+        public async void ConnectAsync()
         {
+            int attemptsNumber = 0;
             /*
              *  Add a try something here
              *  Add a while loop here
@@ -55,19 +58,65 @@ namespace Database
             };
 
             connection = new MySqlConnection(builder.ConnectionString);
-            await connection.OpenAsync();
 
-            if (isConnected())
+            while (!this.IsConnected() && attemptsNumber < int.Parse(ConnectionAttempSettings["Max"].ToString()))
             {
-                // Do a while loop instead with a timeout
+                try
+                {
+                    await connection.OpenAsync();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                attemptsNumber++;
             }
-            else
+
+            if (!this.IsConnected())
             {
                 MessageBox.Show("Connection to database failed");
             }
         }
 
-        private void Disconnect()
+        public void Connect()
+        {
+            int attemptsNumber = 0;
+            /*
+             *  Add a try something here
+             *  Add a while loop here
+             */
+
+            // set these values correctly for your database server
+            MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder
+            {
+                Server = MySettings.DB_Features.Server,
+                UserID = MySettings.DB_Features.UserID,
+                Password = MySettings.DB_Features.Password,
+                Database = MySettings.DB_Features.Database,
+            };
+
+            connection = new MySqlConnection(builder.ConnectionString);
+
+            while (!this.IsConnected() && attemptsNumber < int.Parse(ConnectionAttempSettings["Max"].ToString()))
+            {
+                try
+                {
+                    connection.Open();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                attemptsNumber++;
+            }
+
+            if (!this.IsConnected())
+            {
+                MessageBox.Show("Connection to database failed");
+            }
+        }
+
+        public void Disconnect()
         {
             /*
              * Try something
@@ -75,24 +124,28 @@ namespace Database
             connection.Close();
         }
 
-        public bool isConnected()
+        public bool IsConnected()
         {
             return connection.State == System.Data.ConnectionState.Open;
         }
 
-        public ReadOnlyCollection<DbColumn> sendCommand_readAll()
+        public ReadOnlyCollection<DbColumn> SendCommand_readAll(string tableName)
         {
-            MySqlCommand command = new MySqlCommand("SELECT * FROM audit_trail;", connection);
+            /*
+             * Ajouter un check
+             */
 
-            // create a DB command and set the SQL statement with parameters
-            // execute the command and read the results
+
+            MySqlCommand command = new MySqlCommand("SELECT * FROM " + tableName + " ORDER BY c00 DESC;", connection);
             reader = command.ExecuteReader();
-
             return reader.GetColumnSchema();
         }
 
-        public string[] readNext()
+        public string[] ReadNext()
         {
+            /*
+             * Ajouter un check
+             */
             string[] array = new string[reader.FieldCount];
 
             if (reader.Read())
@@ -108,6 +161,38 @@ namespace Database
             }
 
             return array;
+        }
+        public void SendCommand_insertRecord(string tableName, string columnFields, string[] values)
+        {
+            int valuesNumber = values.Count();
+            string[] valueTags = new string[valuesNumber];
+            string valueFields = "";
+
+            if (columnFields.Split().Count() == valuesNumber)
+            {
+                for (int i = 0; i < valuesNumber - 1; i++)
+                {
+                    valueTags[i] = "@value" + i.ToString();
+                    valueFields = valueFields + "@value" + i.ToString() + ", ";
+                }
+
+                valueTags[valuesNumber - 1] = "@value" + (valuesNumber - 1).ToString();
+                valueFields = valueFields + "@value" + (valuesNumber - 1).ToString();
+
+                MySqlCommand command = connection.CreateCommand();
+                command.CommandText = @"INSERT INTO " + tableName + " (" + columnFields + ") VALUES (" + valueFields + ");";
+                for (int i = 0; i < valuesNumber; i++)
+                {
+                    command.Parameters.AddWithValue(valueTags[i], values[i]);
+                }
+
+                reader = command.ExecuteReader();
+                reader.Close();
+            }
+            else
+            {
+                MessageBox.Show("SendCommand_insertRecord: C'est pas bien ce que tu fais là");
+            }
         }
     }
 }

@@ -14,13 +14,13 @@ namespace Driver.MODBUS
     public class SpeedMixerModbus
     {
         private ModbusClient SpeedMixer;
-        public bool isConnected {get; set;}
+        public bool IsConnected {get; set;}
 
-        private NameValueCollection MySettings;
+        private readonly NameValueCollection MySettings;
 
         public SpeedMixerModbus()
         {
-            isConnected = false;
+            IsConnected = false;
 
             MySettings = ConfigurationManager.GetSection("MODBUS_Connection_Info") as NameValueCollection;
             if (MySettings.Count == 0)        
@@ -44,11 +44,11 @@ namespace Driver.MODBUS
             {
                 SpeedMixer = new ModbusClient(MySettings["IP_address"].ToString(), int.Parse(MySettings["port"]));    //Ip-Address and Port of Modbus-TCP-Server
                 SpeedMixer.Connect();                   //Connect to Server
-                isConnected = true;
+                IsConnected = true;
             }
             catch (Exception ex)
             {
-                isConnected = false;
+                IsConnected = false;
                 MessageBox.Show(ex.Message);
                 throw;
             }

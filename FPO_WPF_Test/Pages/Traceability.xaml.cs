@@ -24,8 +24,8 @@ namespace FPO_WPF_Test.Pages
 
         public Traceability(Frame inputFrame)
         {
-            InitializeComponent();
             outputFrame = inputFrame;
+            InitializeComponent();
         }
 
         private void fxOK(object sender, RoutedEventArgs e)

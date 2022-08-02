@@ -1,0 +1,80 @@
+﻿<Page x:Class="FPO_WPF_Test.Pages.SubRecipe.Weight"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:FPO_WPF_Test.Pages.SubRecipe"
+      mc:Ignorable="d" 
+      d:DesignHeight="250" d:DesignWidth="800"
+      Title="Weight"
+      Background="Transparent">
+
+    <Border Background="#524E4F" BorderThickness="5" BorderBrush="Green" CornerRadius="15" Margin="5">
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="tbSeqNumber"
+                       Grid.Column="0"
+                       Text="#" 
+                       Foreground="Wheat"
+                       FontSize="20"
+                       VerticalAlignment="Center" 
+                       HorizontalAlignment="Center"/>
+            <Button Grid.Column="0"
+                    Content="Supprimer"
+                    Margin="0,80,0,20"
+                    Height="20"
+                    Width="70" Click="Button_Click"/>
+            <StackPanel Grid.Column="1" Margin="10,10,0,13">
+                <WrapPanel>
+                    <RadioButton Content="Pesée"
+                                 Foreground="Wheat"
+                                 HorizontalAlignment="Left" 
+                                 VerticalAlignment="Top" 
+                                 IsChecked="True"/>
+                    <RadioButton Content="SpeedMixer"
+                                 Foreground="Wheat"
+                                 HorizontalAlignment="Left"
+                                 Margin="10,0,0,0"
+                                 VerticalAlignment="Top" 
+                                 Click="RadioButton_Click_1"/>
+                </WrapPanel>
+                <WrapPanel>
+                    <TextBlock Margin="0,10,0,0" Foreground="Wheat" Text="Produit"/>
+                    <TextBox x:Name="tbProduct" Margin="10,10,0,0" Width="200"/>
+                </WrapPanel>
+                <WrapPanel>
+                    <CheckBox Margin="0,10,0,0" Foreground="Wheat" Content="Contrôle du code barres"/>
+                    <TextBlock Margin="30,10,0,0" Foreground="Wheat" Text="Code barres"/>
+                    <TextBox x:Name="tbBarcode" Margin="10,10,0,0" Width="200"/>
+                </WrapPanel>
+                <WrapPanel>
+                    <TextBlock Margin="0,10,0,0" Foreground="Wheat" Text="Format"/>
+                    <TextBlock Margin="30,10,0,0" Foreground="Wheat" Text="Unité"/>
+                    <ComboBox Margin="10,10,0,0" SelectedIndex="0" Width="70">
+                        <ComboBoxItem Content="g/kg"/>
+                        <ComboBoxItem Content="kg/kg"/>
+                    </ComboBox>
+                    <TextBlock Margin="30,10,0,0" Foreground="Wheat" Text="Nombre de chiffre après la virgule"/>
+
+                    <TextBox x:Name="Products" Margin="20,10,0,0" Width="200"/>
+                </WrapPanel>
+                <WrapPanel>
+                    <TextBlock Margin="0,10,0,0" Foreground="Wheat" Text="Cible"/>
+                    <TextBox x:Name="tbSetpoint" Margin="10,10,0,0" Width="200"/>
+                </WrapPanel>
+                <WrapPanel>
+                    <TextBlock Margin="0,10,0,0" Foreground="Wheat" Text="Minimum"/>
+                    <TextBox x:Name="tbMin" Margin="10,10,0,0" Width="200"/>
+                </WrapPanel>
+                <WrapPanel>
+                    <TextBlock Margin="0,10,0,0" Foreground="Wheat" Text="Maximum"/>
+                    <TextBox x:Name="tbMax" Margin="10,10,0,0" Width="200"/>
+                </WrapPanel>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Page>

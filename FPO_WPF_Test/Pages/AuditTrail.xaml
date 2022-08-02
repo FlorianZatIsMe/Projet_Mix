@@ -10,41 +10,8 @@
       Background="#363435"
       Foreground="#D3D7DC">
 
-
-
-    <Page.Resources>
-        <Style x:Key="DGHeaderStyle" TargetType="{x:Type DataGrid}">
-            <Setter Property="ColumnHeaderStyle" Value="{DynamicResource DGCHeaderStyle}"/>
-        </Style>
-        <Style x:Key="DGCHeaderStyle" TargetType="DataGridColumnHeader">
-            <Setter Property="Height" Value="30"/>
-            <Setter Property="Background" Value="LightBlue" />
-            <Setter Property="Foreground" Value="Black"/>
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="FontFamily" Value="Calibri" />
-        </Style>
-
-        <CollectionViewSource x:Key="cvsDataTable" Source="{Binding Amortable}">
-            <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="ID"/>
-            </CollectionViewSource.GroupDescriptions>
-        </CollectionViewSource>
-
-
-    </Page.Resources>
-
     <Grid>
         <DataGrid Name="dataGridAuditTrail"
-                  Background="LightGray"
-                  RowBackground="LightYellow"
-                  AlternatingRowBackground="LightBlue" 
-                  BorderBrush="Gray"
-                  BorderThickness="5"
-                  TextBlock.TextAlignment="Left"
-                  RowHeight="30"
-                  IsReadOnly="True"
-                  HorizontalScrollBarVisibility="Disabled"
-                  Style="{DynamicResource DGHeaderStyle}"
                   Loaded="LoadAuditTrail"/>
 
     </Grid>

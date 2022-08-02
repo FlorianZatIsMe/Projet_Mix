@@ -29,7 +29,8 @@ namespace FPO_WPF_Test
     {
         public string Text { get; set; }
         public SpeedMixerModbus SpeedMixer { get; set; }
-        public MyDatabase db { get; set; }
+        private readonly MyDatabase db;
+        private readonly NameValueCollection AuditTrailSettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
 
         public MainWindow()
         {
@@ -37,27 +38,8 @@ namespace FPO_WPF_Test
             SpeedMixer = new SpeedMixerModbus();
             db = new MyDatabase();
 
-            //MessageBox.Show("SpeedMixer - Connection status: " + SpeedMixer.isConnected.ToString());
-            //MessageBox.Show("Database - Connection status: " + db.isConnected().ToString());
-
-            /*
-            var MySettings = ConfigurationManager.GetSection("MODBUS_Connection_Info") as NameValueCollection;
-            if (MySettings.Count == 0)
-            {
-                MessageBox.Show("Post Settings are not defined");
-                Close();
-            }
-            else
-            {
-                foreach (var key in MySettings.AllKeys)
-                {
-                    //MessageBox.Show(key + " = " + MySettings[key]);
-                }
-
-                Text = MySettings["port"].ToString();
-                //MessageBox.Show(Text);
-            }
-            */
+            string[] values = new string[] { "Utilisateur connecté", "Démarrage de l'application"};
+            db.SendCommand_insertRecord(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"], values);
 
             InitializeComponent();
 
@@ -69,7 +51,7 @@ namespace FPO_WPF_Test
             MessageBox.Show("Au revoir");
         }
 
-        private void fxCycleStart(object sender, RoutedEventArgs e)
+        private void FxCycleStart(object sender, RoutedEventArgs e)
         {
             menuItemStart.IsEnabled = false;
 
@@ -83,51 +65,51 @@ namespace FPO_WPF_Test
             //Il faudra penser à bloquer ce qu'il faut
             }
 
-        private void fxCycleStop(object sender, RoutedEventArgs e)
+        private void FxCycleStop(object sender, RoutedEventArgs e)
         {
 
         }
-        private void fxSystemStatus(object sender, RoutedEventArgs e)
+        private void FxSystemStatus(object sender, RoutedEventArgs e)
         {
             frameMain.Content = new Pages.Status();
         }
-        private void fxProgramNew(object sender, RoutedEventArgs e)
+        private void FxProgramNew(object sender, RoutedEventArgs e)
         {
-            
+            frameMain.Content = new Pages.Recipe();
         }
-        private void fxProgramModify(object sender, RoutedEventArgs e)
-        {
-
-        }
-        private void fxProgramCopy(object sender, RoutedEventArgs e)
+        private void FxProgramModify(object sender, RoutedEventArgs e)
         {
 
         }
-        private void fxProgramDelete(object sender, RoutedEventArgs e)
+        private void FxProgramCopy(object sender, RoutedEventArgs e)
         {
 
         }
-        private void fxAuditTrail(object sender, RoutedEventArgs e)
-        {
-            frameMain.Content = new Pages.AuditTrail(db);
-        }
-        private void fxAlarms(object sender, RoutedEventArgs e)
+        private void FxProgramDelete(object sender, RoutedEventArgs e)
         {
 
         }
-        private void fxUserLogInOut(object sender, RoutedEventArgs e)
+        private void FxAuditTrail(object sender, RoutedEventArgs e)
+        {
+            frameMain.Content = new Pages.AuditTrail();
+        }
+        private void FxAlarms(object sender, RoutedEventArgs e)
         {
 
         }
-        private void fxUserNew(object sender, RoutedEventArgs e)
+        private void FxUserLogInOut(object sender, RoutedEventArgs e)
         {
 
         }
-        private void fxUserModify(object sender, RoutedEventArgs e)
+        private void FxUserNew(object sender, RoutedEventArgs e)
         {
 
         }
-        private void fxUserDelete(object sender, RoutedEventArgs e)
+        private void FxUserModify(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void FxUserDelete(object sender, RoutedEventArgs e)
         {
 
         }

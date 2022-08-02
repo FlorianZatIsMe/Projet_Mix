@@ -99,6 +99,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\Recipe.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SubRecipe\SpeedMixer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SubRecipe\Weight.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\Status.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -111,6 +123,15 @@
   <ItemGroup>
     <Compile Include="Pages\AuditTrail.xaml.cs">
       <DependentUpon>AuditTrail.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Recipe.xaml.cs">
+      <DependentUpon>Recipe.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SubRecipe\SpeedMixer.xaml.cs">
+      <DependentUpon>SpeedMixer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SubRecipe\Weight.xaml.cs">
+      <DependentUpon>Weight.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Status.xaml.cs" />
     <Compile Include="Pages\Traceability.xaml.cs" />

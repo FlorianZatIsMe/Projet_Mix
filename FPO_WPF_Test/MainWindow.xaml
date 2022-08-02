@@ -270,7 +270,7 @@
                 <!--// Home //-->
                 <MenuItem Header="GENERAL"
                           Style="{StaticResource Main_MenuItem}"
-                          Click = "fxSystemStatus">
+                          Click = "FxSystemStatus">
                     <MenuItem.Icon>
                         <Image Source="Resources/img_home.png"
                                Stretch="Uniform" />
@@ -280,7 +280,7 @@
                 <!--// About Us //-->
                 <MenuItem x:Name="menuItemStart" Header="DEMARRER"
                           Style="{StaticResource Main_MenuItem}"
-                          Click = "fxCycleStart">
+                          Click = "FxCycleStart">
                     <MenuItem.Icon>
                         <Image Source="Resources/img_start_en.png"
                                Stretch="Uniform" />
@@ -298,7 +298,7 @@
                     <MenuItem Header="Nouveau"
                               Height="35"
                               Style="{StaticResource Sub_MenuItem}"
-                              Click = "fxProgramNew">
+                              Click = "FxProgramNew">
                         <MenuItem.Icon>
                             <Image Source="Resources/img_new_en.png"
                                    Stretch="Uniform" />
@@ -308,7 +308,7 @@
                     <MenuItem Header="Modifier"
                               Height="35"
                               Style="{StaticResource Sub_MenuItem}"
-                              Click = "fxProgramModify">
+                              Click = "FxProgramModify">
                         <MenuItem.Icon>
                             <Image Source="Resources/img_modify_en.png"
                                    Stretch="Uniform" />
@@ -318,7 +318,7 @@
                     <MenuItem Header="Copier"
                               Height="35"
                               Style="{StaticResource Sub_MenuItem}"
-                              Click = "fxProgramCopy">
+                              Click = "FxProgramCopy">
                         <MenuItem.Icon>
                             <Image Source="Resources/img_copy_en.png"
                                    Stretch="Uniform" />
@@ -328,7 +328,7 @@
                     <MenuItem Header="Supprimer"
                               Height="35"
                               Style="{StaticResource Sub_MenuItem}"
-                              Click = "fxProgramDelete">
+                              Click = "FxProgramDelete">
                         <MenuItem.Icon>
                             <Image Source="Resources/img_delete_en.png"
                                    Stretch="Uniform" />
@@ -347,7 +347,7 @@
                     <MenuItem Header="Audit trail"
                               Height="35"
                               Style="{StaticResource Sub_MenuItem}"
-                              Click = "fxAuditTrail">
+                              Click = "FxAuditTrail">
                         <MenuItem.Icon>
                             <Image Source="Resources/img_audit_trail_en.png"
                                    Stretch="Uniform" />
@@ -357,7 +357,7 @@
                     <MenuItem Header="Alarmes"
                               Height="35"
                               Style="{StaticResource Sub_MenuItem}"
-                              Click = "fxAlarms">
+                              Click = "FxAlarms">
                         <MenuItem.Icon>
                             <Image Source="Resources/img_alarm_en.png"
                                    Stretch="Uniform" />
@@ -376,7 +376,7 @@
                     <MenuItem Header="Nouvel utilisateur"
                               Height="35"
                               Style="{StaticResource Sub_MenuItem}"
-                              Click = "fxUserNew">
+                              Click = "FxUserNew">
                         <MenuItem.Icon>
                             <Image Source="Resources/img_new_en.png"
                                    Stretch="Uniform" />
@@ -386,7 +386,7 @@
                     <MenuItem Header="Modifier utilisateur"
                               Height="35"
                               Style="{StaticResource Sub_MenuItem}"
-                              Click = "fxUserModify">
+                              Click = "FxUserModify">
                         <MenuItem.Icon>
                             <Image Source="Resources/img_modify_en.png"
                                    Stretch="Uniform" />
@@ -396,7 +396,7 @@
                     <MenuItem Header="Supprimer utilisateur"
                               Height="35"
                               Style="{StaticResource Sub_MenuItem}"
-                              Click = "fxUserDelete">
+                              Click = "FxUserDelete">
                         <MenuItem.Icon>
                             <Image Source="Resources/img_delete_en.png"
                                    Stretch="Uniform" />
@@ -416,7 +416,7 @@
                 <!--// Contact //-->
                 <MenuItem Header="CONNEXION"
                           Style="{StaticResource Main_MenuItem}"
-                          Click = "fxUserLogInOut">
+                          Click = "FxUserLogInOut">
                     <MenuItem.Icon>
                         <Image Source="Resources/img_log_in_en.png"
                                Stretch="Uniform" />
