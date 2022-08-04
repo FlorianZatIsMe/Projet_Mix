@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static FPO_WPF_Test.Pages.Recipe;
 
 namespace FPO_WPF_Test.Pages.SubRecipe
 {
@@ -21,11 +22,126 @@ namespace FPO_WPF_Test.Pages.SubRecipe
     public partial class SpeedMixer : Page
     {
         private Frame parentFrame;
+        private readonly WrapPanel[] wrapPanels = new WrapPanel[10];
+        private readonly CheckBox[] checkBoxes = new CheckBox[9];
+        private readonly TextBox[] speeds = new TextBox[10];
+        private readonly TextBox[] times = new TextBox[10];
+        private readonly TextBox[] pressures = new TextBox[10];
+        public SpeedMixer()
+        {
+            InitializeComponent();
+
+            wrapPanels[0] = Phase00;
+            wrapPanels[1] = Phase01;
+            wrapPanels[2] = Phase02;
+            wrapPanels[3] = Phase03;
+            wrapPanels[4] = Phase04;
+            wrapPanels[5] = Phase05;
+            wrapPanels[6] = Phase06;
+            wrapPanels[7] = Phase07;
+            wrapPanels[8] = Phase08;
+            wrapPanels[9] = Phase09;
+
+            checkBoxes[1] = cbPhase01;
+            checkBoxes[2] = cbPhase02;
+            checkBoxes[3] = cbPhase03;
+            checkBoxes[4] = cbPhase04;
+            checkBoxes[5] = cbPhase05;
+            checkBoxes[6] = cbPhase06;
+            checkBoxes[7] = cbPhase07;
+            checkBoxes[8] = cbPhase08;
+
+            speeds[0] = tbSpeed00;
+            speeds[1] = tbSpeed01;
+            speeds[2] = tbSpeed02;
+            speeds[3] = tbSpeed03;
+            speeds[4] = tbSpeed04;
+            speeds[5] = tbSpeed05;
+            speeds[6] = tbSpeed06;
+            speeds[7] = tbSpeed07;
+            speeds[8] = tbSpeed08;
+            speeds[9] = tbSpeed09;
+
+            times[0] = tbTime00;
+            times[1] = tbTime01;
+            times[2] = tbTime02;
+            times[3] = tbTime03;
+            times[4] = tbTime04;
+            times[5] = tbTime05;
+            times[6] = tbTime06;
+            times[7] = tbTime07;
+            times[8] = tbTime08;
+            times[9] = tbTime09;
+
+            pressures[0] = tbPression00;
+            pressures[1] = tbPression01;
+            pressures[2] = tbPression02;
+            pressures[3] = tbPression03;
+            pressures[4] = tbPression04;
+            pressures[5] = tbPression05;
+            pressures[6] = tbPression06;
+            pressures[7] = tbPression07;
+            pressures[8] = tbPression08;
+            pressures[9] = tbPression09;
+        }
         public SpeedMixer(Frame frame, string seqNumber)
         {
             parentFrame = frame;
             InitializeComponent();
             tbSeqNumber.Text = seqNumber;
+
+            wrapPanels[0] = Phase00;
+            wrapPanels[1] = Phase01;
+            wrapPanels[2] = Phase02;
+            wrapPanels[3] = Phase03;
+            wrapPanels[4] = Phase04;
+            wrapPanels[5] = Phase05;
+            wrapPanels[6] = Phase06;
+            wrapPanels[7] = Phase07;
+            wrapPanels[8] = Phase08;
+            wrapPanels[9] = Phase09;
+
+            checkBoxes[1] = cbPhase01;
+            checkBoxes[2] = cbPhase02;
+            checkBoxes[3] = cbPhase03;
+            checkBoxes[4] = cbPhase04;
+            checkBoxes[5] = cbPhase05;
+            checkBoxes[6] = cbPhase06;
+            checkBoxes[7] = cbPhase07;
+            checkBoxes[8] = cbPhase08;
+
+            speeds[0] = tbSpeed00;
+            speeds[1] = tbSpeed01;
+            speeds[2] = tbSpeed02;
+            speeds[3] = tbSpeed03;
+            speeds[4] = tbSpeed04;
+            speeds[5] = tbSpeed05;
+            speeds[6] = tbSpeed06;
+            speeds[7] = tbSpeed07;
+            speeds[8] = tbSpeed08;
+            speeds[9] = tbSpeed09;
+
+            times[0] = tbTime00;
+            times[1] = tbTime01;
+            times[2] = tbTime02;
+            times[3] = tbTime03;
+            times[4] = tbTime04;
+            times[5] = tbTime05;
+            times[6] = tbTime06;
+            times[7] = tbTime07;
+            times[8] = tbTime08;
+            times[9] = tbTime09;
+
+            pressures[0] = tbPression00;
+            pressures[1] = tbPression01;
+            pressures[2] = tbPression02;
+            pressures[3] = tbPression03;
+            pressures[4] = tbPression04;
+            pressures[5] = tbPression05;
+            pressures[6] = tbPression06;
+            pressures[7] = tbPression07;
+            pressures[8] = tbPression08;
+            pressures[9] = tbPression09;
         }
 
         private void RadioButton_Click_1(object sender, RoutedEventArgs e)
@@ -41,6 +157,80 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             parentFrame.Content = null;
+        }
+
+        private void cbPhase_Unchecked(object sender, RoutedEventArgs e)
+        {
+            CheckBox checkbox = sender as CheckBox;
+            int id = int.Parse(checkbox.Name.Substring(checkbox.Name.Length - 2, 2)) + 1;
+
+            wrapPanels[id].Visibility = Visibility.Collapsed;
+            if (id != 9)
+            {
+                checkBoxes[id].IsChecked = false;
+            }
+        }
+
+        private void cbPhase_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckBox checkbox = sender as CheckBox;
+            int id = int.Parse(checkbox.Name.Substring(checkbox.Name.Length - 2, 2)) + 1;
+
+            wrapPanels[id].Visibility = Visibility.Visible;
+        }
+
+        public void FillPage(string[] array)
+        {
+            int i;
+
+            tbProgramName.Text = array[3];
+            tbAcceleration.Text = array[4];
+            tbDeceleration.Text = array[5];
+            cbVacuum.IsChecked = array[6] == "True";
+            if (array[7] == "True") rbNitrogen.IsChecked = true;
+            cbMonitorType.IsChecked = array[8] == "True";
+            cbxPressureUnit.Text = array[9];
+            tbSCurve.Text = array[10];
+            cbColdTrap.IsChecked = array[11] == "True";
+
+            i = 0;
+            while (i != 10 && array[12 + 3 * i] != "")
+            {
+                speeds[i].Text = array[12 + 3 * i];
+                times[i].Text = array[13 + 3 * i];
+                pressures[i].Text = array[14 + 3 * i];
+
+                if (i > 0 && i < 9)
+                {
+                    checkBoxes[i].IsChecked = true;
+                }
+                i++;
+            }
+        }
+
+        public void FillPage(SequenceSpeedMixer seqSpeedMixer)
+        {
+            tbProgramName.Text = seqSpeedMixer.Name;
+            tbAcceleration.Text = seqSpeedMixer.Acceleration.ToString();
+            tbDeceleration.Text = seqSpeedMixer.Deceleration.ToString();
+            cbVacuum.IsChecked = seqSpeedMixer.Vaccum_control;
+            if (seqSpeedMixer.Is_ventgas_air) rbNitrogen.IsChecked = true;
+            cbMonitorType.IsChecked = seqSpeedMixer.Monitor_type;
+            cbxPressureUnit.Text = seqSpeedMixer.Pressure_unit;
+            tbSCurve.Text = seqSpeedMixer.Scurve;
+            cbColdTrap.IsChecked = seqSpeedMixer.Coldtrap;
+
+            for (int i = 0; i < seqSpeedMixer.Nphases; i++)
+            {
+                speeds[i].Text = seqSpeedMixer.Speed[i].ToString();
+                times[i].Text = seqSpeedMixer.Time[i].ToString();
+                pressures[i].Text = seqSpeedMixer.Pressure[i].ToString();
+
+                if (i > 0 && i < 9)
+                {
+                    checkBoxes[i].IsChecked = true;
+                }
+            }
         }
     }
 }

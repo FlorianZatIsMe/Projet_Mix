@@ -140,8 +140,51 @@ namespace Database
             reader = command.ExecuteReader();
             return reader.GetColumnSchema();
         }
+        /*
+        public ReadOnlyCollection<DbColumn> SendCommand_readAllRecipe(string tableName)
+        {
+            /*
+             * Ajouter un check
+             *//*
 
-        public string[] ReadNext()
+            MySqlCommand command = connection.CreateCommand();
+            command.CommandText = @"SELECT * FROM " + tableName + " WHERE name=@name AND version=@version;";
+            command.Parameters.AddWithValue("@name", "Riboflavine");
+            command.Parameters.AddWithValue("@version", "1");
+
+            reader = command.ExecuteReader();
+            return reader.GetColumnSchema();
+        }*/
+
+    public ReadOnlyCollection<DbColumn> SendCommand_readAllRecipe(string tableName, string[] whereColumns, string[] whereValues)
+        {
+            /*
+             * Add check 
+             */
+
+            //string[] whereColumns = ("name,version").Split(',');
+            //string[] whereValues = ("Riboflavine,1").Split(',');
+            string whereArg = whereColumns[0] + "=@" + whereColumns[0];
+
+            for (int i = 1; i < whereColumns.Count(); i++)
+            {
+                whereArg = whereArg + " AND " + whereColumns[i] + "=@" + whereColumns[i];
+            }
+
+            MySqlCommand command = connection.CreateCommand();
+            command.CommandText = @"SELECT * FROM " + tableName + " WHERE " + whereArg;
+
+            for (int i = 0; i < whereColumns.Count(); i++)
+            {
+                command.Parameters.AddWithValue("@" + whereColumns[i], whereValues[i]);
+            }
+
+            reader = command.ExecuteReader();
+            return reader.GetColumnSchema();
+        }
+
+
+    public string[] ReadNext()
         {
             /*
              * Ajouter un check
@@ -187,12 +230,17 @@ namespace Database
                 }
 
                 reader = command.ExecuteReader();
-                reader.Close();
+                Close_reader();
             }
             else
             {
                 MessageBox.Show("SendCommand_insertRecord: C'est pas bien ce que tu fais là");
             }
+        }
+
+        public void Close_reader()
+        {
+            reader.Close();
         }
     }
 }

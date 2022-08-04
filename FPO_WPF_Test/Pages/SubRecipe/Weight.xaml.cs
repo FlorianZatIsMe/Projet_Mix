@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static FPO_WPF_Test.Pages.Recipe;
 
 namespace FPO_WPF_Test.Pages.SubRecipe
 {
@@ -21,6 +22,10 @@ namespace FPO_WPF_Test.Pages.SubRecipe
     public partial class Weight : Page
     {
         private Frame parentFrame;
+        public Weight()
+        {
+            InitializeComponent();
+        }
         public Weight(Frame frame, string seqNumber)
         {
             parentFrame = frame;
@@ -34,20 +39,49 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             parentFrame.Content = new SpeedMixer(parentFrame, tbSeqNumber.Text);
         }
 
-        public void setSeqNumber(string n)
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            parentFrame.Content = null;
+        }
+
+        public void SetSeqNumber(string n)
         {
             tbSeqNumber.Text = n;
         }
 
-        public int getSeqNumber()
+        public int GetSeqNumber()
         {
             MessageBox.Show("get");
             return 42;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        public void SetSeqToSpeedMixer()
         {
-            parentFrame.Content = null;
+            rbSpeedMixer.IsChecked = true;
+        }
+
+        public void FillPage(string[] array)
+        {
+            tbProduct.Text = array[3];
+            cbIsBarcode.IsChecked = array[4] == "True";
+            tbBarcode.Text = array[5];
+            cbxUnit.Text = array[6];
+            tbDecimalNumber.Text = array[7];
+            tbSetpoint.Text = array[8];
+            tbMin.Text = array[9];
+            tbMax.Text = array[10];
+        }
+
+        public void FillPage_old(SequenceWeight seqWeight)
+        {
+            tbProduct.Text = seqWeight.Name;
+            cbIsBarcode.IsChecked = seqWeight.Is_barcode_used;
+            tbBarcode.Text = seqWeight.Barcode;
+            cbxUnit.Text = seqWeight.Unit;
+            tbDecimalNumber.Text = seqWeight.Decimal_number.ToString();
+            tbSetpoint.Text = seqWeight.Setpoint.ToString();
+            tbMin.Text = seqWeight.Min.ToString();
+            tbMax.Text = seqWeight.Max.ToString();
         }
     }
 }
