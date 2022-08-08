@@ -185,7 +185,7 @@
                     <TextBox x:Name="tbPression08" Margin="10,10,0,0" Width="50"/>
                 </WrapPanel>
                 <WrapPanel x:Name="Phase09" Visibility="Collapsed">
-                    <TextBlock Margin="20,10,0,0" Foreground="Wheat" Text="Phase 10"/>
+                    <CheckBox x:Name="cbPhase09" Margin="0,10,0,0" IsChecked="false" Foreground="Wheat" Content="Phase 10" Unchecked="cbPhase_Unchecked" Checked="cbPhase_Checked"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat" Text="Vitesse (rpm)"/>
                     <TextBox x:Name="tbSpeed09" Margin="10,10,0,0" Width="50"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat" Text="Temps (s)"/>

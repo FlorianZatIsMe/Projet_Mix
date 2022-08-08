@@ -12,17 +12,24 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid x:Name="gridMain">
             <Grid.RowDefinitions>
-                <RowDefinition Height="80"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
-            <WrapPanel Margin="20, 20, 0, 0">
+            <WrapPanel Grid.Row="0" Margin="10, 10, 0, 0">
                 <TextBlock Foreground="Wheat" Text="Nom du programme"/>
                 <TextBox x:Name="tbProgramName" Margin="20, 0, 0, 0" Width="120"/>
                 <TextBlock Foreground="Wheat" Margin="20, 0, 0, 0" Text="Version"/>
                 <TextBox x:Name="tbVersion" Margin="20, 0, 0, 0" Width="50"/>
                 <TextBlock Foreground="Wheat" Margin="20, 0, 0, 0" Text="Status:"/>
                 <TextBlock x:Name="labelStatus" Foreground="Wheat" Margin="10, 0, 0, 0" Text="#"/>
-                <Button Grid.Row="0" Content="Nouvelle séquence" Margin="20, 0, 0, 0"  HorizontalAlignment="Left" VerticalAlignment="center" Click="Button_Click"/>
-                <Button Grid.Row="0" Content="Send to DB" Margin="20, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="center" Click="Button1_Click"/>
+                <Button Grid.Row="0" Content="Nouvelle séquence" Margin="20, 0, 0, 0"  HorizontalAlignment="Left" VerticalAlignment="center" Click="New_Sequence_Click"/>
+                <Button Grid.Row="0" Content="Send to DB" Margin="20, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="center" Click="WriteDB_Click"/>
+            </WrapPanel>
+            <WrapPanel Grid.Row="1" Margin="10, 10, 0, 0">
+                <TextBlock Foreground="Wheat" Text="Nom du programme"/>
+                <TextBox x:Name="tbProgramNameRead" Margin="20, 0, 0, 0" Width="120"/>
+                <TextBlock Foreground="Wheat" Margin="20, 0, 0, 0" Text="Version"/>
+                <TextBox x:Name="tbVersionRead" Margin="20, 0, 0, 0" Width="50"/>
                 <Button Grid.Row="0" Content="Read from DB" Margin="20, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="center" Click="ReadDB_Click"/>
             </WrapPanel>
         </Grid>

@@ -60,7 +60,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             rbSpeedMixer.IsChecked = true;
         }
 
-        public void FillPage(string[] array)
+        public void SetPage(string[] array)
         {
             tbProduct.Text = array[3];
             cbIsBarcode.IsChecked = array[4] == "True";
@@ -72,16 +72,21 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             tbMax.Text = array[10];
         }
 
-        public void FillPage_old(SequenceWeight seqWeight)
+        public string[] GetPage()
         {
-            tbProduct.Text = seqWeight.Name;
-            cbIsBarcode.IsChecked = seqWeight.Is_barcode_used;
-            tbBarcode.Text = seqWeight.Barcode;
-            cbxUnit.Text = seqWeight.Unit;
-            tbDecimalNumber.Text = seqWeight.Decimal_number.ToString();
-            tbSetpoint.Text = seqWeight.Setpoint.ToString();
-            tbMin.Text = seqWeight.Min.ToString();
-            tbMax.Text = seqWeight.Max.ToString();
+            int n = 1;
+            string[] array = new string[11 - n];
+
+            array[3 - n] = tbProduct.Text;
+            array[4 - n] = (bool)cbIsBarcode.IsChecked ? "1" : "0";
+            array[5 - n] = tbBarcode.Text;
+            array[6 - n] = cbxUnit.Text;
+            array[7 - n] = tbDecimalNumber.Text;
+            array[8 - n] = tbSetpoint.Text;
+            array[9 - n] = tbMin.Text;
+            array[10 - n] = tbMax.Text;
+
+            return array;
         }
     }
 }

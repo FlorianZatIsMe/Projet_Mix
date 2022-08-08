@@ -1,6 +1,8 @@
 ﻿using Database;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -26,12 +28,13 @@ namespace FPO_WPF_Test.Pages
         private readonly MyDatabase db;
         private readonly string[] status;
         private bool isFrameLoaded;
+        private readonly NameValueCollection MySettings = ConfigurationManager.GetSection("Database/Recipe") as NameValueCollection;
 
         public Recipe()
         {
             nRow = 1;
             db = new MyDatabase();
-            status = new string[] { "Draft", "Production", "Obsolète" };
+            status = MySettings["Status"].Split(',');
             isFrameLoaded = false;
             InitializeComponent();
 
@@ -59,10 +62,6 @@ namespace FPO_WPF_Test.Pages
         {
 
         }
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            New_Sequence(false);
-        }
 
         private void Frame_ContentRendered(object sender, EventArgs e)
         {
@@ -86,10 +85,367 @@ namespace FPO_WPF_Test.Pages
             MessageBox.Show(gridMain.RowDefinitions.Count().ToString() + " Row: " + Grid.GetRow(frame).ToString());
         }
 
-        private void Button1_Click(object sender, RoutedEventArgs e)
+        private void New_Sequence_Click(object sender, RoutedEventArgs e)
         {
+            New_Sequence(MySettings["SubRecipeWeight_SeqType"]);
+        }
+
+        private void WriteDB_Click(object sender, RoutedEventArgs e)
+        {
+            int i = 1;
+            int j = 0;
+            string recipeName = tbProgramName.Text;
+            string[] whereColumns = new string[] { "name" };
+            string[] whereValues = new string[] { recipeName };
+            int new_version;
+            string nextSeqType = "";
+            int nextSeqID = -1;
+            string[] values = new string[1];
+            string columnsRecipe = "name, version, status, first_seq_type, first_seq_id";
+            string columnsWeight = "next_seq_type, next_seq_id, name, is_barcode_used, barcode, unit, decimal_number, setpoint, min, max";
+            string columnsSpeedMixer = "next_seq_type, next_seq_id, name, acceleration, deceleration, vaccum_control, is_ventgas_air, monitor_type, pressure_unit, scurve, coldtrap, speed00, time00, pressure00, speed01, time01, pressure01, speed02, time02, pressure02, speed03, time03, pressure03, speed04, time04, pressure04, speed05, time05, pressure05, speed06, time06, pressure06, speed07, time07, pressure07, speed08, time08, pressure08, speed09, time09, pressure09";
+
+            var currentPage = new List<Page>
+                    {
+                        new SubRecipe.Weight(),
+                        new SubRecipe.SpeedMixer()
+                    };
+            int currentType = -1;
+            string subRecipeName ="";
+
+            if (recipeName != "")
+            {
+                if (!db.IsConnected()) db.Connect();
+
+                if (db.IsConnected())
+                {
+                    new_version = db.GetMax("recipe", "version", whereColumns, whereValues) + 1;
+
+                    if (new_version != 0)
+                    {
+                        foreach (UIElement element in gridMain.Children)
+                        {
+                            if (element.GetType().Equals(typeof(Frame)))
+                            {
+                                Frame frame = element as Frame;
+                                if (frame.Content.GetType().Equals(typeof(SubRecipe.Weight)))
+                                {
+                                    MessageBox.Show("Weight - i = " + $"{i}");
+                                    currentType = 0;
+                                    currentPage[currentType] = frame.Content as SubRecipe.Weight;
+                                    subRecipeName = "recipe_weight";
+                                }
+                                else if (frame.Content.GetType().Equals(typeof(SubRecipe.SpeedMixer)))
+                                {
+                                    MessageBox.Show("Speed Mixer - i = " + $"{i}");
+                                    currentType = 1;
+                                    currentPage[currentType] = frame.Content as SubRecipe.SpeedMixer;
+                                    subRecipeName = "recipe_speedmixer";
+                                }
+                                else
+                                {
+                                    MessageBox.Show("-1");
+                                    currentType = -1;
+                                }
+
+                                if (currentType != -1)
+                                {
+                                    if (i == 1)
+                                    {
+                                        nextSeqType = $"{currentType}";
+                                        nextSeqID = db.GetMax(subRecipeName, "id") + 1;
+                                        values = new string[] { recipeName, new_version.ToString(), $"{currentType}", nextSeqType, nextSeqID.ToString() };
+                                        db.SendCommand_insertRecord("recipe", columnsRecipe, values);
+                                        /*
+                                         * 
+                                         * 
+                                         *      Problème: si l'utilisateur crée la recette mais qu'elle contient une erreur (ex: champ vide), une ou plusieurs lignes de seront créé ce qui va créer un mix.
+                                         *      Une idée : commencer par tout contrôler avant d'écrire quoi que ce soit ET tout écrire à la fin s'il n'y a pas eu d'erreur (dit autrement, plutôt que d'écrire, stocker les infos) -> s'il y a une seule erreur, on pourra supprimer les lignes créées
+                                         * 
+                                         */
+                                    }
+                                    else
+                                    {
+                                        nextSeqID = db.GetMax(subRecipeName, "id") + (nextSeqType == $"{currentType}" ? 2 : 1);
+                                        nextSeqType = $"{currentType}";
+                                        values[0] = nextSeqType;
+                                        values[1] = nextSeqID.ToString();
+
+                                        if (values.Count() == 11 - 1) // because it should be something like MySettings["SubRecipes_n_Columns"] - 1
+                                        {
+                                            // The previous sequence was Weight
+                                            db.SendCommand_insertRecord("recipe_weight", columnsWeight, values);
+
+                                        }
+                                        else if (values.Count() == 42 - 1) // because it should be something like MySettings["SubRecipes_n_Columns"] - 1
+                                        {
+                                            // The previous sequence was SpeedMixer
+                                            db.SendCommand_insertRecord("recipe_speedmixer", columnsSpeedMixer, values);
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("SpeedMixer: très bizarre tout ça...");
+                                        }
+                                    }
+
+                                    if (currentType == 0)
+                                    {
+                                        var tempPage = currentPage[currentType] as SubRecipe.Weight;
+                                        values = tempPage.GetPage();
+                                    }
+                                    else if (currentType == 1)
+                                    {
+                                        var tempPage = currentPage[currentType] as SubRecipe.SpeedMixer;
+                                        values = tempPage.GetPage();
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("Oups");
+                                        values = null;
+                                    }
+
+                                    i++;
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Etrange... TRES étrange...");
+                                }
+
+
+/*                                }
+                                else if (frame.Content.GetType().Equals(typeof(SubRecipe.SpeedMixer)))
+                                {
+                                    //MessageBox.Show("Speed Mixer - i = " + $"{i}");
+                                    currentPage = frame.Content as SubRecipe.SpeedMixer;
+                                    if (i == 1)
+                                    {
+                                        nextSeqType = "1";
+                                        nextSeqID = db.GetMax("recipe_speedmixer", "id") + 1;
+                                        values = new string[] { recipeName, new_version.ToString(), "0", nextSeqType, nextSeqID.ToString() };
+                                        db.SendCommand_insertRecord("recipe", "name, version, status, first_seq_type, first_seq_id", values);
+                                    }
+                                    else
+                                    {
+                                        nextSeqID = db.GetMax("recipe_speedmixer", "id") + (nextSeqType == "1" ? 2 : 1);
+                                        nextSeqType = "1";
+                                        values[0] = nextSeqType;
+                                        values[1] = nextSeqID.ToString();
+
+                                        if (values.Count() == 11-1) // because it should be something like MySettings["SubRecipes_n_Columns"] - 1
+                                        {
+                                            // The previous sequence was Weight
+                                            db.SendCommand_insertRecord("recipe_weight", columnsWeight, values);
+
+                                        }
+                                        else if(values.Count() == 42-1) // because it should be something like MySettings["SubRecipes_n_Columns"] - 1
+                                        {
+                                            // The previous sequence was SpeedMixer
+                                            db.SendCommand_insertRecord("recipe_speedmixer", columnsSpeedMixer, values);
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("SpeedMixer: très bizarre tout ça...");
+                                        }
+                                    }
+                                    values = currentPage.GetPage();
+                                    i++;
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Vraiment très bizarre ct'histoire...");
+                                }*/
+                            }
+                        }
+                        //MessageBox.Show("Last");
+                        if (values.Count() == 11 - 1) // because it should be something like MySettings["SubRecipes_n_Columns"] - 1
+                        {
+                            // The previous sequence was Weight
+                            db.SendCommand_insertRecord("recipe_weight", columnsWeight, values);
+
+                        }
+                        else if (values.Count() == 42 - 1) // because it should be something like MySettings["SubRecipes_n_Columns"] - 1
+                        {
+                            // The previous sequence was SpeedMixer
+                            db.SendCommand_insertRecord("recipe_speedmixer", columnsSpeedMixer, values);
+                        }
+                        else
+                        {
+                            MessageBox.Show("J'y crois pas, tu n'as pas fait de séquence !!!");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Not good, not good at all");
+                    }
+
+                    db.Disconnect();
+                    MessageBox.Show("Ouf, ça c'est fait");
+                }
+                else
+                {
+                    MessageBox.Show("Not good brotha");
+                    db.ConnectAsync();
+                }
+            }
+            else
+            {
+                MessageBox.Show("You should know by now that a recipe name can't be empty...");
+            }
 
         }
+
+        /*
+        private void WriteDB_Click(object sender, RoutedEventArgs e)
+        {
+            int i = 1;
+            int j = 0;
+            string recipeName = tbProgramName.Text;
+            string[] whereColumns = new string[] { "name" };
+            string[] whereValues = new string[] { recipeName };
+            int new_version;
+            string nextSeqType = "";
+            int nextSeqID = -1;
+            string[] values = new string[1];
+            SubRecipe.Weight currentpageWeight;
+            SubRecipe.SpeedMixer currentpageSpeedMixer;
+            string columnsRecipe = "name, version, status, first_seq_type, first_seq_id";
+            string columnsWeight = "next_seq_type, next_seq_id, name, is_barcode_used, barcode, unit, decimal_number, setpoint, min, max";
+            string columnsSpeedMixer = "next_seq_type, next_seq_id, name, acceleration, deceleration, vaccum_control, is_ventgas_air, monitor_type, pressure_unit, scurve, coldtrap, speed00, time00, pressure00, speed01, time01, pressure01, speed02, time02, pressure02, speed03, time03, pressure03, speed04, time04, pressure04, speed05, time05, pressure05, speed06, time06, pressure06, speed07, time07, pressure07, speed08, time08, pressure08, speed09, time09, pressure09";
+
+            if (recipeName != "")
+            {
+                if (!db.IsConnected()) db.Connect();
+
+                if (db.IsConnected())
+                {
+                    new_version = db.GetMax("recipe", "version", whereColumns, whereValues) + 1;
+
+                    if (new_version != 0)
+                    {
+                        foreach (UIElement element in gridMain.Children)
+                        {
+                            if (element.GetType().Equals(typeof(Frame)))
+                            {
+                                Frame frame = element as Frame;
+                                if (frame.Content.GetType().Equals(typeof(SubRecipe.Weight)))
+                                {
+                                    //MessageBox.Show("Weight - i = " + $"{i}");
+                                    currentpageWeight = frame.Content as SubRecipe.Weight;
+
+                                    if (i == 1)
+                                    {
+                                        nextSeqType = "0";
+                                        nextSeqID = db.GetMax("recipe_weight", "id") + 1;
+                                        values = new string[] { recipeName, new_version.ToString(), "0", nextSeqType, nextSeqID.ToString() };
+                                        db.SendCommand_insertRecord("recipe", columnsRecipe, values);
+                                    }
+                                    else
+                                    {
+                                        nextSeqID = db.GetMax("recipe_weight", "id") + (nextSeqType == "0" ? 2 : 1);
+                                        nextSeqType = "0";
+                                        values[0] = nextSeqType;
+                                        values[1] = nextSeqID.ToString();
+
+                                        if (values.Count() == 11 - 1) // because it should be something like MySettings["SubRecipes_n_Columns"] - 1
+                                        {
+                                            // The previous sequence was Weight
+                                            db.SendCommand_insertRecord("recipe_weight", columnsWeight, values);
+
+                                        }
+                                        else if (values.Count() == 42 - 1) // because it should be something like MySettings["SubRecipes_n_Columns"] - 1
+                                        {
+                                            // The previous sequence was SpeedMixer
+                                            db.SendCommand_insertRecord("recipe_speedmixer", columnsSpeedMixer, values);
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("SpeedMixer: très bizarre tout ça...");
+                                        }
+                                    }
+                                    values = currentpageWeight.GetPage();
+                                    i++;
+                                }
+                                else if (frame.Content.GetType().Equals(typeof(SubRecipe.SpeedMixer)))
+                                {
+                                    //MessageBox.Show("Speed Mixer - i = " + $"{i}");
+                                    currentpageSpeedMixer = frame.Content as SubRecipe.SpeedMixer;
+                                    if (i == 1)
+                                    {
+                                        nextSeqType = "1";
+                                        nextSeqID = db.GetMax("recipe_speedmixer", "id") + 1;
+                                        values = new string[] { recipeName, new_version.ToString(), "0", nextSeqType, nextSeqID.ToString() };
+                                        db.SendCommand_insertRecord("recipe", "name, version, status, first_seq_type, first_seq_id", values);
+                                    }
+                                    else
+                                    {
+                                        nextSeqID = db.GetMax("recipe_speedmixer", "id") + (nextSeqType == "1" ? 2 : 1);
+                                        nextSeqType = "1";
+                                        values[0] = nextSeqType;
+                                        values[1] = nextSeqID.ToString();
+
+                                        if (values.Count() == 11-1) // because it should be something like MySettings["SubRecipes_n_Columns"] - 1
+                                        {
+                                            // The previous sequence was Weight
+                                            db.SendCommand_insertRecord("recipe_weight", columnsWeight, values);
+
+                                        }
+                                        else if(values.Count() == 42-1) // because it should be something like MySettings["SubRecipes_n_Columns"] - 1
+                                        {
+                                            // The previous sequence was SpeedMixer
+                                            db.SendCommand_insertRecord("recipe_speedmixer", columnsSpeedMixer, values);
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("SpeedMixer: très bizarre tout ça...");
+                                        }
+                                    }
+                                    values = currentpageSpeedMixer.GetPage();
+                                    i++;
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Vraiment très bizarre ct'histoire...");
+                                }
+                            }
+                        }
+                        //MessageBox.Show("Last");
+                        if (values.Count() == 11 - 1) // because it should be something like MySettings["SubRecipes_n_Columns"] - 1
+                        {
+                            // The previous sequence was Weight
+                            db.SendCommand_insertRecord("recipe_weight", columnsWeight, values);
+
+                        }
+                        else if (values.Count() == 42 - 1) // because it should be something like MySettings["SubRecipes_n_Columns"] - 1
+                        {
+                            // The previous sequence was SpeedMixer
+                            db.SendCommand_insertRecord("recipe_speedmixer", columnsSpeedMixer, values);
+                        }
+                        else
+                        {
+                            MessageBox.Show("SpeedMixer: très bizarre tout ça...");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Not good, not good at all");
+                    }
+
+                    db.Disconnect();
+                    MessageBox.Show("Ouf, ça c'est fait");
+                }
+                else
+                {
+                    MessageBox.Show("Not good brotha");
+                    db.ConnectAsync();
+                }
+            }
+            else
+            {
+                MessageBox.Show("You should know by now that a recipe name can't be empty...");
+            }
+
+        }
+         */
 
         public static class Util
         {
@@ -115,15 +471,18 @@ namespace FPO_WPF_Test.Pages
 
         private async void ReadDB_Click(object sender, RoutedEventArgs e)
         {
+            /*  VARIABLE TO USED IN ARGUMENT OF THE FOLLOWING METHOD  */string[] whereValues = new string[] { tbProgramNameRead.Text, tbVersionRead.Text };
+
             string[] array;
             string nextSeqType;
             string nextSeqID;
             //int seqNumber = 1;
-            int i;
 
-            if (db.IsConnected()) // while loop is better
+            if (!db.IsConnected()) db.Connect();
+
+                if (db.IsConnected()) // while loop is better
             {
-                db.SendCommand_readAllRecipe("recipe", new string[] { "name", "version" }, new string[] { "Old Fashioned", "1" });
+                db.SendCommand_readAllRecipe(MySettings["Table_Name"].ToString(), MySettings["Where_Columns"].Split(','), whereValues);
 
                 array = db.ReadNext();
 
@@ -136,152 +495,86 @@ namespace FPO_WPF_Test.Pages
                     nextSeqID = array[5];
 
                     Frame frame;
-                    SubRecipe.Weight currentPage_Weight;
-                    SubRecipe.SpeedMixer currentPage_SpeedMixer;
-                    SequenceWeight seqWeight = new SequenceWeight();
-                    SequenceSpeedMixer seqSpeedMixer = new SequenceSpeedMixer();
 
                     var currentPage = new List<Page>
                     {
                         new SubRecipe.Weight(),
                         new SubRecipe.SpeedMixer()
                     };
-
-                    string[] dbSubrecipeName = { "recipe_weight", "recipe_speedmixer" };
-                    int[] dbSubrecipeColumnNumber = { 11, 42 };
+                    
+                    string[] dbSubRecipeName = MySettings["SubRecipes_Table_Name"].Split(',');
+                    int[] dbSubRecipeNColumns = Array.ConvertAll(MySettings["SubRecipes_N_Columns"].Split(','), int.Parse);
 
                     do // On remplie les frames ici
                     {
-
-                        New_Sequence(nextSeqType == "1");
+                        isFrameLoaded = false;
+                        New_Sequence(nextSeqType);
+                        while (!isFrameLoaded) // On attend que la frame créée (New_Sequence(nextSeqType == "1");) a été chargé
+                        {
+                            await Task.Delay(25);
+                        };
+                        isFrameLoaded = false;
 
                         if (gridMain.Children[gridMain.Children.Count - 1].GetType().Equals(typeof(Frame))) // Si le dernier élément de la grille gridMain est une frame on continue
                         {
-                            while (!isFrameLoaded) // On attend que la frame créée (New_Sequence(nextSeqType == "1");) a été chargé
-                            {
-                                await Task.Delay(25);
-                            };
-                            isFrameLoaded = false;
-
                             db.Close_reader(); // On ferme le reader de la db pour pouvoir lancer une autre requête
 
-//                            if (nextSeqType == "0") // Si la prochaine séquence est Weight
-//                            {
-                                db.SendCommand_readAllRecipe(dbSubrecipeName[int.Parse(nextSeqType)], new string[] { "id" }, new string[] { nextSeqID });
-                                //db.SendCommand_readAllRecipe("recipe_weight", new string[] { "id" }, new string[] { nextSeqID });
+                                db.SendCommand_readAllRecipe(dbSubRecipeName[int.Parse(nextSeqType)], MySettings["SubRecipes_Where_Columns"].Split(','), new string[] { nextSeqID });
                                 frame = gridMain.Children[gridMain.Children.Count - 1] as Frame;
-                                //currentPage_Weight = frame.Content as SubRecipe.Weight;
-
-                                if (nextSeqType == "0")
-                                {
+                            
+                            if (nextSeqType == MySettings["SubRecipeWeight_SeqType"]) {
                                     currentPage[int.Parse(nextSeqType)] = frame.Content as SubRecipe.Weight;
                                 }
-                                else if(nextSeqType == "1")
-                                {
+                                else if(nextSeqType == MySettings["SubRecipeSpeedMixer_SeqType"]) {
                                     currentPage[int.Parse(nextSeqType)] = frame.Content as SubRecipe.SpeedMixer;
                                 }
 
                                 array = db.ReadNext();
-
-                                if (array.Count() == dbSubrecipeColumnNumber[int.Parse(nextSeqType)] && db.ReadNext().Count() == 0)
-                                {
-                                    //currentPage_Weight.FillPage(seqWeight);
-
-                                    if (nextSeqType == "0")
-                                    {
-                                        var test = currentPage[int.Parse(nextSeqType)] as SubRecipe.Weight;
-                                        test.FillPage(array);
+                            
+                            if (array.Count() == dbSubRecipeNColumns[int.Parse(nextSeqType)] && db.ReadNext().Count() == 0) {
+                                    if (nextSeqType == MySettings["SubRecipeWeight_SeqType"]) {
+                                    var tempPage = currentPage[int.Parse(nextSeqType)] as SubRecipe.Weight;
+                                        tempPage.SetPage(array);
                                     }
-                                    else if (nextSeqType == "1")
-                                    {
-                                        var test = currentPage[int.Parse(nextSeqType)] as SubRecipe.SpeedMixer;
-                                        test.FillPage(array);
+                                    else if (nextSeqType == MySettings["SubRecipeSpeedMixer_SeqType"]) {
+                                    var tempPage = currentPage[int.Parse(nextSeqType)] as SubRecipe.SpeedMixer;
+                                        tempPage.SetPage(array);
                                     }
-
-                                    //var test = currentPage[0] as SubRecipe.Weight;
 
                                     nextSeqType = array[1];
                                     nextSeqID = array[2];
                                 }
-                                else
-                                {
+                                else {
                                     MessageBox.Show("Elle est cassée ta recette, tu me demandes une séquence qui n'existe pas è_é");
                                     nextSeqID = "";
                                 }
-//                            }
-                            /*else if (nextSeqType == "1")
-                            {
-                                db.SendCommand_readAllRecipe("recipe_speedmixer", new string[] { "id" }, new string[] { nextSeqID });
-                                frame = gridMain.Children[gridMain.Children.Count - 1] as Frame;
-                                currentPage_SpeedMixer = frame.Content as SubRecipe.SpeedMixer;
-
-                                array = db.ReadNext();
-
-                                if (array.Count() == 42 && db.ReadNext().Count() == 0)
-                                {
-                                    seqSpeedMixer.Name = array[3];
-                                    seqSpeedMixer.Acceleration = int.Parse(array[4]);
-                                    seqSpeedMixer.Deceleration = int.Parse(array[5]);
-                                    seqSpeedMixer.Vaccum_control = array[6] == "True";
-                                    seqSpeedMixer.Is_ventgas_air = array[7] == "True";
-                                    seqSpeedMixer.Monitor_type = array[8] == "True";
-                                    seqSpeedMixer.Pressure_unit = array[9];
-                                    seqSpeedMixer.Scurve = array[10];
-                                    seqSpeedMixer.Coldtrap = array[11] == "True";
-
-                                    i = 0;
-                                    while (i != 10 && array[12 + 3 * i] != "")
-                                    {
-                                        seqSpeedMixer.Speed[i] = int.Parse(array[12 + 3*i]);
-                                        seqSpeedMixer.Time[i] = int.Parse(array[13 + 3*i]);
-                                        seqSpeedMixer.Pressure[i] = int.Parse(array[14 + 3*i]);
-                                        i++;
-                                    }
-                                    seqSpeedMixer.Nphases = i;
-
-                                    currentPage_SpeedMixer.FillPage(seqSpeedMixer);
-
-                                    nextSeqType = array[1];
-                                    nextSeqID = array[2];
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Elle est cassée ta recette, tu me demandes une séquence qui n'existe pas è_é");
-                                    nextSeqID = "";
-                                }
-                            }*/
                         }
-                        else
-                        {
+                        else {
                             MessageBox.Show("Je ne comprends pas... Pourquoi je ne vois pas de frame...");
                         }
                     } while (nextSeqID != "");
 
                     MessageBox.Show("Ouf c'est fini");
                 }
-                else
-                {
-                    if (array.Count() == 0)
-                    {
+                else {
+                    if (array.Count() == 0) {
                         MessageBox.Show("La recette demandée n'existe pas");
                     }
-                    else
-                    {
+                    else {
                         MessageBox.Show("C'est quoi ça ? La version demandée existe en plusieurs exemplaires !");
                     }
                 }
 
                 db.Disconnect();
             }
-            else
-            {
+            else {
                 MessageBox.Show("Not good brotha");
                 db.ConnectAsync();
             }
 
         }
 
-        private void New_Sequence(bool isSpeedMixer)
+        private void New_Sequence(string seqType)
         {
             gridMain.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) });
 
@@ -289,15 +582,14 @@ namespace FPO_WPF_Test.Pages
             frame.MouseDoubleClick += new MouseButtonEventHandler(Frame_test);
             frame.ContentRendered += Frame_ContentRendered;
 
-            if (isSpeedMixer)
-            {
-                frame.Content = new SubRecipe.SpeedMixer(frame, nRow.ToString());
-            }
-            else
+            if (seqType == MySettings["SubRecipeWeight_SeqType"])
             {
                 frame.Content = new SubRecipe.Weight(frame, nRow.ToString());
             }
-
+            else if (seqType == MySettings["SubRecipeSpeedMixer_SeqType"])
+            {
+                frame.Content = new SubRecipe.SpeedMixer(frame, nRow.ToString());
+            }
 
             Grid.SetRow(frame, gridMain.RowDefinitions.Count() - 1);
             gridMain.Children.Add(frame);
@@ -325,54 +617,6 @@ namespace FPO_WPF_Test.Pages
                         i++;
                     }
                 }
-            }
-        }
-        
-        public class SequenceWeight
-        {
-            public string Name { get; set; }
-            public bool Is_barcode_used { get; set; }
-            public string Barcode { get; set; }
-            public string Unit { get; set; }
-            public int Decimal_number { get; set; }
-            public float Setpoint { get; set; }
-            public float Min { get; set; }
-            public float Max { get; set; }
-        }
-
-        public class SequenceSpeedMixer
-        {
-            public string Name { get; set; }
-            public int Acceleration { get; set; }
-            public int Deceleration { get; set; }
-            public bool Vaccum_control { get; set; }
-            public bool Is_ventgas_air { get; set; }
-            public bool Monitor_type { get; set; }
-            public string Pressure_unit { get; set; }
-            public string Scurve { get; set; }
-            public bool Coldtrap { get; set; }
-            public int[] Speed { get; set; }
-            public int[] Time { get; set; }
-            public int[] Pressure { get; set; }
-            public int Nphases { get; set; }
-
-            public SequenceSpeedMixer()
-            {
-                Speed = new int[10];
-                Time = new int[10];
-                Pressure = new int[10];
-            }
-        }
-
-        public class CurrentPageClass
-        {
-            Page[] CurrentPage { get; set; }
-            SubRecipe.Weight currentPage_Weight;
-            SubRecipe.SpeedMixer currentPage_SpeedMixer;
-
-            public CurrentPageClass()
-            {
-                CurrentPage = new Page[2];
             }
         }
 

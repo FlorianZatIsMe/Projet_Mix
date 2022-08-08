@@ -23,7 +23,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
     {
         private Frame parentFrame;
         private readonly WrapPanel[] wrapPanels = new WrapPanel[10];
-        private readonly CheckBox[] checkBoxes = new CheckBox[9];
+        private readonly CheckBox[] checkBoxes = new CheckBox[10];
         private readonly TextBox[] speeds = new TextBox[10];
         private readonly TextBox[] times = new TextBox[10];
         private readonly TextBox[] pressures = new TextBox[10];
@@ -50,6 +50,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             checkBoxes[6] = cbPhase06;
             checkBoxes[7] = cbPhase07;
             checkBoxes[8] = cbPhase08;
+            checkBoxes[9] = cbPhase09;
 
             speeds[0] = tbSpeed00;
             speeds[1] = tbSpeed01;
@@ -109,6 +110,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             checkBoxes[6] = cbPhase06;
             checkBoxes[7] = cbPhase07;
             checkBoxes[8] = cbPhase08;
+            checkBoxes[9] = cbPhase09;
 
             speeds[0] = tbSpeed00;
             speeds[1] = tbSpeed01;
@@ -164,9 +166,9 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             CheckBox checkbox = sender as CheckBox;
             int id = int.Parse(checkbox.Name.Substring(checkbox.Name.Length - 2, 2)) + 1;
 
-            wrapPanels[id].Visibility = Visibility.Collapsed;
-            if (id != 9)
+            if (id != 10)
             {
+                wrapPanels[id].Visibility = Visibility.Collapsed;
                 checkBoxes[id].IsChecked = false;
             }
         }
@@ -176,10 +178,13 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             CheckBox checkbox = sender as CheckBox;
             int id = int.Parse(checkbox.Name.Substring(checkbox.Name.Length - 2, 2)) + 1;
 
-            wrapPanels[id].Visibility = Visibility.Visible;
+            if (id != 10)
+            {
+                wrapPanels[id].Visibility = Visibility.Visible;
+            }
         }
 
-        public void FillPage(string[] array)
+        public void SetPage(string[] array)
         {
             int i;
 
@@ -208,29 +213,32 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
         }
 
-        public void FillPage(SequenceSpeedMixer seqSpeedMixer)
+        public string[] GetPage()
         {
-            tbProgramName.Text = seqSpeedMixer.Name;
-            tbAcceleration.Text = seqSpeedMixer.Acceleration.ToString();
-            tbDeceleration.Text = seqSpeedMixer.Deceleration.ToString();
-            cbVacuum.IsChecked = seqSpeedMixer.Vaccum_control;
-            if (seqSpeedMixer.Is_ventgas_air) rbNitrogen.IsChecked = true;
-            cbMonitorType.IsChecked = seqSpeedMixer.Monitor_type;
-            cbxPressureUnit.Text = seqSpeedMixer.Pressure_unit;
-            tbSCurve.Text = seqSpeedMixer.Scurve;
-            cbColdTrap.IsChecked = seqSpeedMixer.Coldtrap;
+            int i;
+            int n = 1;
+            string[] array = new string[42 - n];
 
-            for (int i = 0; i < seqSpeedMixer.Nphases; i++)
+            array[3 - n] = tbProgramName.Text;
+            array[4 - n] = tbAcceleration.Text;
+            array[5 - n] = tbDeceleration.Text;
+            array[6 - n] = (bool)cbVacuum.IsChecked ? "1" : "0";
+            array[7 - n] = (bool)rbNitrogen.IsChecked ? "1" : "0";
+            array[8 - n] = (bool)cbMonitorType.IsChecked ? "1" : "0";
+            array[9 - n] = cbxPressureUnit.Text;
+            array[10 - n] = tbSCurve.Text;
+            array[11 - n] = (bool)cbColdTrap.IsChecked ? "1" : "0";
+
+            i = 0;
+            do
             {
-                speeds[i].Text = seqSpeedMixer.Speed[i].ToString();
-                times[i].Text = seqSpeedMixer.Time[i].ToString();
-                pressures[i].Text = seqSpeedMixer.Pressure[i].ToString();
+                array[12 - n + 3 * i] = speeds[i].Text;
+                array[13 - n + 3 * i] = times[i].Text;
+                array[14 - n + 3 * i] = pressures[i].Text;
+                i++;
+            } while (i != 10 && (bool)checkBoxes[i].IsChecked);
 
-                if (i > 0 && i < 9)
-                {
-                    checkBoxes[i].IsChecked = true;
-                }
-            }
+            return array;
         }
     }
 }

@@ -183,6 +183,50 @@ namespace Database
             return reader.GetColumnSchema();
         }
 
+        public int GetMax(string tableName, string column, string[] whereColumns = null, string[] whereValues = null)
+        {
+            int n;
+            string whereArg = "";
+            MySqlCommand command;
+            
+            if (whereColumns != null && whereValues != null)
+            {
+                whereArg = " WHERE " + whereColumns[0] + "=@" + whereColumns[0];
+
+                for (int i = 1; i < whereColumns.Count(); i++)
+                {
+                    whereArg = whereArg + " AND " + whereColumns[i] + "=@" + whereColumns[i];
+                }
+            }
+
+            command = connection.CreateCommand();
+            command.CommandText = @"SELECT MAX(" + column + ") FROM " + tableName + whereArg;
+
+            if (whereColumns != null && whereValues != null)
+            {
+                for (int i = 0; i < whereColumns.Count(); i++)
+                {
+                    command.Parameters.AddWithValue("@" + whereColumns[i], whereValues[i]);
+                }
+            }
+
+            reader = command.ExecuteReader();
+            reader.Read();
+
+            if (!reader.IsDBNull(0))
+            {
+                n = reader.GetInt32(0);
+                reader.Read();
+                if (reader.FieldCount == 0){
+                    n = -1;
+                }
+            }
+            else {
+                n = 0;
+            }
+            Close_reader();
+            return n;
+        }
 
     public string[] ReadNext()
         {
@@ -211,6 +255,8 @@ namespace Database
             string[] valueTags = new string[valuesNumber];
             string valueFields = "";
 
+            //MessageBox.Show("columnFields: " + $"{columnFields.Split().Count()}" + " ; valuesNumber: " + $"{valuesNumber}");
+
             if (columnFields.Split().Count() == valuesNumber)
             {
                 for (int i = 0; i < valuesNumber - 1; i++)
@@ -229,7 +275,15 @@ namespace Database
                     command.Parameters.AddWithValue(valueTags[i], values[i]);
                 }
 
-                reader = command.ExecuteReader();
+                try
+                {
+                    reader = command.ExecuteReader();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+
                 Close_reader();
             }
             else
