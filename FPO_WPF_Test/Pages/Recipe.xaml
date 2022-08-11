@@ -9,11 +9,11 @@
       Title="Recipe"
       Background="#524E4F">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid x:Name="gridMain">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="40"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <WrapPanel Grid.Row="0" Margin="10, 10, 0, 0">
                 <TextBlock Foreground="Wheat" Text="Nom du programme"/>
@@ -32,6 +32,8 @@
                 <TextBox x:Name="tbVersionRead" Margin="20, 0, 0, 0" Width="50"/>
                 <Button Grid.Row="0" Content="Read from DB" Margin="20, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="center" Click="ReadDB_Click"/>
             </WrapPanel>
+            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                <Grid x:Name="gridMain"></Grid>
+            </ScrollViewer>
         </Grid>
-    </ScrollViewer>
 </Page>

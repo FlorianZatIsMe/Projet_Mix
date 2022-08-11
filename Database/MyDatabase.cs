@@ -132,38 +132,20 @@ namespace Database
         public ReadOnlyCollection<DbColumn> SendCommand_readAll(string tableName)
         {
             /*
-             * Ajouter un check
+             * Ajouter un check surtout fussionne avec l'autre
              */
-
 
             MySqlCommand command = new MySqlCommand("SELECT * FROM " + tableName + " ORDER BY c00 DESC;", connection);
             reader = command.ExecuteReader();
             return reader.GetColumnSchema();
         }
-        /*
-        public ReadOnlyCollection<DbColumn> SendCommand_readAllRecipe(string tableName)
-        {
-            /*
-             * Ajouter un check
-             *//*
-
-            MySqlCommand command = connection.CreateCommand();
-            command.CommandText = @"SELECT * FROM " + tableName + " WHERE name=@name AND version=@version;";
-            command.Parameters.AddWithValue("@name", "Riboflavine");
-            command.Parameters.AddWithValue("@version", "1");
-
-            reader = command.ExecuteReader();
-            return reader.GetColumnSchema();
-        }*/
 
     public ReadOnlyCollection<DbColumn> SendCommand_readAllRecipe(string tableName, string[] whereColumns, string[] whereValues)
         {
             /*
-             * Add check 
+             * Add check surtout fussionne avec l'autre
              */
 
-            //string[] whereColumns = ("name,version").Split(',');
-            //string[] whereValues = ("Riboflavine,1").Split(',');
             string whereArg = whereColumns[0] + "=@" + whereColumns[0];
 
             for (int i = 1; i < whereColumns.Count(); i++)
@@ -179,8 +161,16 @@ namespace Database
                 command.Parameters.AddWithValue("@" + whereColumns[i], whereValues[i]);
             }
 
-            reader = command.ExecuteReader();
-            return reader.GetColumnSchema();
+            try
+            {
+                reader = command.ExecuteReader();
+                return reader.GetColumnSchema();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return null;
+            }
         }
 
         public int GetMax(string tableName, string column, string[] whereColumns = null, string[] whereValues = null)
@@ -210,22 +200,32 @@ namespace Database
                 }
             }
 
-            reader = command.ExecuteReader();
-            reader.Read();
-
-            if (!reader.IsDBNull(0))
+            try
             {
-                n = reader.GetInt32(0);
+                reader = command.ExecuteReader();
                 reader.Read();
-                if (reader.FieldCount == 0){
-                    n = -1;
+
+                if (!reader.IsDBNull(0))
+                {
+                    n = reader.GetInt32(0);
+                    reader.Read();
+                    if (reader.FieldCount == 0)
+                    {
+                        n = -1;
+                    }
                 }
+                else
+                {
+                    n = 0;
+                }
+                Close_reader();
+                return n;
             }
-            else {
-                n = 0;
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return -1;
             }
-            Close_reader();
-            return n;
         }
 
     public string[] ReadNext()
@@ -249,7 +249,7 @@ namespace Database
 
             return array;
         }
-        public void SendCommand_insertRecord(string tableName, string columnFields, string[] values)
+        public bool SendCommand_insertRecord(string tableName, string columnFields, string[] values)
         {
             int valuesNumber = values.Count();
             string[] valueTags = new string[valuesNumber];
@@ -278,23 +278,98 @@ namespace Database
                 try
                 {
                     reader = command.ExecuteReader();
+                    Close_reader();
                 }
                 catch (Exception e)
                 {
                     MessageBox.Show(e.Message);
+                    return false;
                 }
 
-                Close_reader();
             }
             else
             {
                 MessageBox.Show("SendCommand_insertRecord: C'est pas bien ce que tu fais là");
             }
+
+            return true;
+        }
+
+        public bool DeleteRow(string tableName, string[] whereColumns, string[] whereValues)
+        {
+            string whereArg;
+            MySqlCommand command;
+            bool isCommandOk = true;
+
+            whereArg = GetWhereArg(whereColumns, whereValues);
+
+            command = connection.CreateCommand();
+            command.CommandText = @"DELETE FROM " + tableName + whereArg;
+
+            if (whereColumns != null && whereValues != null)
+            {
+                isCommandOk = SetCommand(command, whereColumns, whereValues);
+            }
+
+            if (isCommandOk  && whereArg != "")
+            {
+                try
+                {
+                    reader = command.ExecuteReader();
+                    Close_reader();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Je n'ai pas pu supprimer la ligne demandée");
+            }
+
+            return false;
         }
 
         public void Close_reader()
         {
             reader.Close();
+        }
+
+        private string GetWhereArg(string[] whereColumns, string[] whereValues)
+        {
+            string whereArg;
+
+            if (whereColumns != null && whereValues != null && whereColumns.Count() == whereValues.Count())
+            {
+                whereArg = " WHERE " + whereColumns[0] + "=@" + whereColumns[0];
+
+                for (int i = 1; i < whereColumns.Count(); i++)
+                {
+                    whereArg = whereArg + " AND " + whereColumns[i] + "=@" + whereColumns[i];
+                }
+            }
+            else
+            {
+                whereArg = "";
+            }
+
+            return whereArg;
+        }
+
+        private bool SetCommand(MySqlCommand command, string[] columns, string[] values)
+        {
+            if (columns.Count() == values.Count())
+            {
+                for (int i = 0; i < columns.Count(); i++)
+                {
+                    command.Parameters.AddWithValue("@" + columns[i], values[i]);
+                }
+                return true;
+            }
+
+            return false;
         }
     }
 }

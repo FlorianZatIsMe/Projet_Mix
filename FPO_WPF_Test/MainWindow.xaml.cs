@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -12,13 +11,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using EasyModbus;
 using System.Configuration;
 using MySqlConnector;
 using System.Collections;
 using System.Collections.Specialized;
 using Driver.MODBUS;
 using Database;
+using Driver.ColdTrap;
+using System.Globalization;
 
 namespace FPO_WPF_Test
 {
@@ -31,12 +31,14 @@ namespace FPO_WPF_Test
         public SpeedMixerModbus SpeedMixer { get; set; }
         private readonly MyDatabase db;
         private readonly NameValueCollection AuditTrailSettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
+        private ColdTrap coldtrap;
 
         public MainWindow()
         {
 
             SpeedMixer = new SpeedMixerModbus();
             db = new MyDatabase();
+            coldtrap = new ColdTrap();
 
             string[] values = new string[] { "Utilisateur connecté", "Démarrage de l'application"};
             db.SendCommand_insertRecord(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"], values);
@@ -44,6 +46,31 @@ namespace FPO_WPF_Test
             InitializeComponent();
 
             if (true) frameMain.Content = new Pages.Status();
+
+            NumberFormatInfo nfi = new CultureInfo(CultureInfo.CurrentCulture.Name, false).NumberFormat;
+
+            /*
+            MessageBox.Show(nfi.NumberDecimalSeparator);
+
+
+            try
+            {
+                MessageBox.Show(float.Parse("1.2").ToString());
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Weird");
+            }
+
+            try
+            {
+                MessageBox.Show(float.Parse("1,2").ToString());
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("VERY Weird");
+            }
+            */
         }
 
         ~MainWindow()

@@ -21,7 +21,18 @@ namespace FPO_WPF_Test.Pages.SubRecipe
     /// </summary>
     public partial class Weight : Page
     {
+        private const int ControlNumber = 6;
+        private const int IdProduct = 0;
+        private const int IdBarcode = 1;
+        private const int IdDecimalNumber = 2;
+        private const int IdSetpoint = 3;
+        private const int IdMin = 4;
+        private const int IdMax = 5;
+
         private Frame parentFrame;
+        private bool[] FormatControl = new bool[ControlNumber];
+        private bool CurrentFormatControl_tbBarcode;
+        private General g = new General();
         public Weight()
         {
             InitializeComponent();
@@ -29,6 +40,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         public Weight(Frame frame, string seqNumber)
         {
             parentFrame = frame;
+            CurrentFormatControl_tbBarcode = false;
             InitializeComponent();
             tbSeqNumber.Text = seqNumber;
         }
@@ -67,9 +79,14 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             tbBarcode.Text = array[5];
             cbxUnit.Text = array[6];
             tbDecimalNumber.Text = array[7];
-            tbSetpoint.Text = array[8];
-            tbMin.Text = array[9];
-            tbMax.Text = array[10];
+
+            tbSetpoint.Text = decimal.Parse(array[8]).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
+            tbMin.Text = decimal.Parse(array[9]).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
+            tbMax.Text = decimal.Parse(array[10]).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
+
+            //tbSetpoint.Text = array[8];
+            //tbMin.Text = array[9];
+            //tbMax.Text = array[10];
         }
 
         public string[] GetPage()
@@ -87,6 +104,183 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             array[10 - n] = tbMax.Text;
 
             return array;
+        }
+
+        private void cbIsBarcode_Checked(object sender, RoutedEventArgs e)
+        {
+            tbBarcode.Visibility = Visibility.Visible;
+            labelBarcode.Visibility = Visibility.Visible;
+            FormatControl[IdBarcode] = CurrentFormatControl_tbBarcode;
+        }
+
+        private void cbIsBarcode_Unchecked(object sender, RoutedEventArgs e)
+        {
+            tbBarcode.Visibility = Visibility.Hidden;
+            labelBarcode.Visibility = Visibility.Hidden;
+            FormatControl[IdBarcode] = false;
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            cbIsBarcode.IsChecked = true;
+        }
+
+        private void tbProduct_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            int i = IdProduct;
+
+            if (g.Verify_Format(textBox, isNotNull: true, isNumber: false, 30))
+            {
+                FormatControl[i] = true;
+            }
+            else
+            {
+                FormatControl[i] = false;
+            }
+            //MessageBox.Show(FormatControl[i].ToString());
+        }
+
+        private void tbBarcode_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            int i = IdBarcode;
+
+            if (g.Verify_Format(textBox, isNotNull:true, isNumber: false, 30))
+            {
+                FormatControl[i] = true;
+            }
+            else
+            {
+                FormatControl[i] = false;
+            }
+
+            CurrentFormatControl_tbBarcode = FormatControl[i];
+
+            //MessageBox.Show(FormatControl[i].ToString());
+        }
+
+        private void tbDecimalNumber_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            int i = IdDecimalNumber;
+
+            if (g.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 6))
+            {
+                FormatControl[i] = true;
+                if (FormatControl[IdSetpoint])
+                {
+                    tbSetpoint.Text = decimal.Parse(tbSetpoint.Text).ToString("N" + int.Parse(textBox.Text).ToString());
+                }
+                if (FormatControl[IdMin])
+                {
+                    tbMin.Text = decimal.Parse(tbMin.Text).ToString("N" + int.Parse(textBox.Text).ToString());
+                }
+                if (FormatControl[IdMax])
+                {
+                    tbMax.Text = decimal.Parse(tbMax.Text).ToString("N" + int.Parse(textBox.Text).ToString());
+                }
+            }
+            else
+            {
+                FormatControl[i] = false;
+            }
+            //MessageBox.Show(FormatControl[i].ToString());
+        }
+
+        private void tbSetpoint_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            int i = IdSetpoint;
+            int n;
+
+            try
+            {
+                n = int.Parse(tbDecimalNumber.Text);
+            }
+            catch (Exception)
+            {
+                n = 0;
+            }
+
+
+            if (g.Verify_Format(textBox, isNotNull: true, isNumber: true, n))
+            {
+                FormatControl[i] = true;
+            }
+            else
+            {
+                FormatControl[i] = false;
+            }
+            //MessageBox.Show(FormatControl[i].ToString());
+        }
+
+        private void tbMin_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            int i = IdMin;
+            int n;
+
+            try
+            {
+                n = int.Parse(tbDecimalNumber.Text);
+            }
+            catch (Exception)
+            {
+                n = 0;
+            }
+
+
+            if (g.Verify_Format(textBox, isNotNull: true, isNumber: true, n))
+            {
+                FormatControl[i] = true;
+            }
+            else
+            {
+                FormatControl[i] = false;
+            }
+            //MessageBox.Show(FormatControl[i].ToString());
+        }
+
+        private void tbMax_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            int i = IdMax;
+            int n;
+
+            try
+            {
+                n = int.Parse(tbDecimalNumber.Text);
+            }
+            catch (Exception)
+            {
+                n = 0;
+            }
+
+            if (g.Verify_Format(textBox, isNotNull: true, isNumber: true, n))
+            {
+                FormatControl[i] = true;
+            }
+            else
+            {
+                FormatControl[i] = false;
+            }
+            //MessageBox.Show(FormatControl[i].ToString());
+        }
+    
+        public bool IsFormatOk()
+        {
+            int n = 0;
+            int x;
+
+            for (int i = 0; i < ControlNumber; i++)
+            {
+                n += FormatControl[i] ? 1 : 0;
+            }
+
+            x = (bool)cbIsBarcode.IsChecked ? 0 : 1;
+
+            return (n+x) == ControlNumber;
         }
     }
 }

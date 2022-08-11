@@ -21,12 +21,52 @@ namespace FPO_WPF_Test.Pages.SubRecipe
     /// </summary>
     public partial class SpeedMixer : Page
     {
+        private const int PhasesNumber = 10;
+        private const int ControlNumber = 34;
+        private const int IdProgramName = 0;
+        private const int IdAcceleration = 1;
+        private const int IdDeceleration = 2;
+        private const int IdSCurve = 3;
+        private const int IdSpeed00 = 4;
+        private const int IdSpeed01 = 5;
+        private const int IdSpeed02 = 6;
+        private const int IdSpeed03 = 7;
+        private const int IdSpeed04 = 8;
+        private const int IdSpeed05 = 9;
+        private const int IdSpeed06 = 10;
+        private const int IdSpeed07 = 11;
+        private const int IdSpeed08 = 12;
+        private const int IdSpeed09 = 13;
+        private const int IdTime00 = 14;
+        private const int IdTime01 = 15;
+        private const int IdTime02 = 16;
+        private const int IdTime03 = 17;
+        private const int IdTime04 = 18;
+        private const int IdTime05 = 19;
+        private const int IdTime06 = 20;
+        private const int IdTime07 = 21;
+        private const int IdTime08 = 22;
+        private const int IdTime09 = 23;
+        private const int IdPression00 = 24;
+        private const int IdPression01 = 25;
+        private const int IdPression02 = 26;
+        private const int IdPression03 = 27;
+        private const int IdPression04 = 28;
+        private const int IdPression05 = 29;
+        private const int IdPression06 = 30;
+        private const int IdPression07 = 31;
+        private const int IdPression08 = 32;
+        private const int IdPression09 = 33;
+
+
         private Frame parentFrame;
-        private readonly WrapPanel[] wrapPanels = new WrapPanel[10];
-        private readonly CheckBox[] checkBoxes = new CheckBox[10];
-        private readonly TextBox[] speeds = new TextBox[10];
-        private readonly TextBox[] times = new TextBox[10];
-        private readonly TextBox[] pressures = new TextBox[10];
+        private readonly WrapPanel[] wrapPanels = new WrapPanel[PhasesNumber];
+        private readonly CheckBox[] checkBoxes = new CheckBox[PhasesNumber];
+        private readonly TextBox[] speeds = new TextBox[PhasesNumber];
+        private readonly TextBox[] times = new TextBox[PhasesNumber];
+        private readonly TextBox[] pressures = new TextBox[PhasesNumber];
+        private bool[] FormatControl = new bool[ControlNumber];
+        private General g = new General();
         public SpeedMixer()
         {
             InitializeComponent();
@@ -164,23 +204,72 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         private void cbPhase_Unchecked(object sender, RoutedEventArgs e)
         {
             CheckBox checkbox = sender as CheckBox;
-            int id = int.Parse(checkbox.Name.Substring(checkbox.Name.Length - 2, 2)) + 1;
+            int id = -1;// = int.Parse(checkbox.Name.Substring(checkbox.Name.Length - 2, 2)) + 1;
 
-            if (id != 10)
+            for (int i = 1; i < PhasesNumber; i++)
             {
-                wrapPanels[id].Visibility = Visibility.Collapsed;
-                checkBoxes[id].IsChecked = false;
+                if (checkbox == checkBoxes[i])
+                {
+                    id = i + 1;
+                }
+            }
+
+            try
+            {
+                speeds[id - 1].IsEnabled = false;
+                times[id - 1].IsEnabled = false;
+                pressures[id - 1].IsEnabled = false;
+
+                speeds[id - 1].Text = "";
+                times[id - 1].Text = "";
+                pressures[id - 1].Text = "";
+
+                FormatControl[IdSpeed00 + id - 1] = false;
+                FormatControl[IdTime00 + id - 1] = false;
+                FormatControl[IdPression00 + id - 1] = false;
+
+                if (id != 10)
+                {
+                    wrapPanels[id].Visibility = Visibility.Collapsed;
+                    checkBoxes[id].IsChecked = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
         private void cbPhase_Checked(object sender, RoutedEventArgs e)
         {
             CheckBox checkbox = sender as CheckBox;
-            int id = int.Parse(checkbox.Name.Substring(checkbox.Name.Length - 2, 2)) + 1;
+            int id = -1;// = int.Parse(checkbox.Name.Substring(checkbox.Name.Length - 2, 2)) + 1;
 
-            if (id != 10)
+            for (int i = 1; i < PhasesNumber; i++)
             {
-                wrapPanels[id].Visibility = Visibility.Visible;
+                if (checkbox == checkBoxes[i])
+                {
+                    id = i + 1;
+                }
+            }
+
+            try
+            {
+                speeds[id - 1].IsEnabled = true;
+                times[id - 1].IsEnabled = true;
+                pressures[id - 1].IsEnabled = true;
+
+                if (id != 10)
+                {
+                    speeds[id].IsEnabled = false;
+                    times[id].IsEnabled = false;
+                    pressures[id].IsEnabled = false;
+                    wrapPanels[id].Visibility = Visibility.Visible;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -239,6 +328,166 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             } while (i != 10 && (bool)checkBoxes[i].IsChecked);
 
             return array;
+        }
+
+        private void tbProgramName_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            int i = IdProgramName;
+
+            if (g.Verify_Format(textBox, isNotNull: true, isNumber: false, 30))
+            {
+                FormatControl[i] = true;
+            }
+            else
+            {
+                FormatControl[i] = false;
+            }
+            //MessageBox.Show(FormatControl[i].ToString());
+        }
+
+        private void tbAcceleration_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            int i = IdAcceleration;
+
+            if (g.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 2000))
+            {
+                FormatControl[i] = true;
+
+            }
+            else
+            {
+                FormatControl[i] = false;
+            }
+            //MessageBox.Show(FormatControl[i].ToString());
+        }
+
+        private void tbDeceleration_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            int i = IdDeceleration;
+
+            if (g.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 2000))
+            {
+                FormatControl[i] = true;
+
+            }
+            else
+            {
+                FormatControl[i] = false;
+            }
+            //MessageBox.Show(FormatControl[i].ToString());
+        }
+
+        private void tbSCurve_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            int i = IdSCurve;
+
+            if (g.Verify_Format(textBox, isNotNull: true, isNumber: false, 30))
+            {
+                FormatControl[i] = true;
+            }
+            else
+            {
+                FormatControl[i] = false;
+            }
+            //MessageBox.Show(FormatControl[i].ToString());
+        }
+
+        private void tbSpeed_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            int i = IdSpeed00;
+
+            for (int j = 0; j < PhasesNumber; j++)
+            {
+                if (textBox == speeds[j])
+                {
+                    if (j == 0 || (bool)checkBoxes[j].IsChecked)
+                    {
+                        if (g.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 2000))
+                        {
+                            FormatControl[i + j] = true;
+
+                        }
+                        else
+                        {
+                            FormatControl[i + j] = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void tbTime_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            int i = IdTime00;
+
+            for (int j = 0; j < PhasesNumber; j++)
+            {
+                if (textBox == times[j])
+                {
+                    if (j == 0 || (bool)checkBoxes[j].IsChecked)
+                    {
+                        if (g.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 2000))
+                        {
+                            FormatControl[i + j] = true;
+
+                        }
+                        else
+                        {
+                            FormatControl[i + j] = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void tbPression_LostFocus(object sender, RoutedEventArgs e)
+        {
+            //pressures[0] = tbPression00;
+            TextBox textBox = sender as TextBox;
+            int i = IdPression00;
+
+            for (int j = 0; j < PhasesNumber; j++)
+            {
+                if (textBox == pressures[j])
+                {
+                    if (j == 0 || (bool)checkBoxes[j].IsChecked)
+                    {
+                        if (g.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 2000))
+                        {
+                            FormatControl[i + j] = true;
+
+                        }
+                        else
+                        {
+                            FormatControl[i + j] = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        public bool IsFormatOk()
+        {
+            int n = 0;
+            int x = 0;
+
+            for (int i = 0; i < ControlNumber; i++)
+            {
+                n += FormatControl[i] ? 1 : 0;
+            }
+
+            for (int i = 1; i < PhasesNumber; i++)
+            {
+                x += (bool)checkBoxes[i].IsChecked ? 0 : 3; // Pour chaque checkbox décoché, on ajoutera 3 au score final
+            }
+
+            return (n + x) == ControlNumber;
         }
     }
 }

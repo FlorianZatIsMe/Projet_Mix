@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:FPO_WPF_Test.Pages.SubRecipe"
       mc:Ignorable="d" 
-      d:DesignHeight="650" d:DesignWidth="800"
+      d:DesignHeight="450" d:DesignWidth="800"
       Title="SpeedMixer"
       Background="Transparent">
     
@@ -43,15 +43,15 @@
                 </WrapPanel>
                 <WrapPanel>
                     <TextBlock Margin="0,10,0,0" Foreground="Wheat" Text="Nom du programme"/>
-                    <TextBox x:Name="tbProgramName" Margin="10,10,0,0" Width="200"/>
+                    <TextBox x:Name="tbProgramName" Margin="10,10,0,0" Width="200" LostFocus="tbProgramName_LostFocus"/>
                 </WrapPanel>
                 <WrapPanel>
                     <TextBlock Margin="0,10,0,0" Foreground="Wheat" Text="Accélération (rpm/s)"/>
-                    <TextBox x:Name="tbAcceleration" Margin="10,10,0,0" Width="200"/>
+                    <TextBox x:Name="tbAcceleration" Margin="10,10,0,0" Width="200" LostFocus="tbAcceleration_LostFocus"/>
                 </WrapPanel>
                 <WrapPanel>
                     <TextBlock Margin="0,10,0,0" Foreground="Wheat" Text="Décélération (rpm/s)"/>
-                    <TextBox x:Name="tbDeceleration" Margin="10,10,0,0" Width="200"/>
+                    <TextBox x:Name="tbDeceleration" Margin="10,10,0,0" Width="200" LostFocus="tbDeceleration_LostFocus"/>
                 </WrapPanel>
                 <CheckBox Margin="0,10,0,0" x:Name="cbVacuum" Foreground="Wheat" Content="Contrôle du vide"/>
                 <WrapPanel Margin="0,10,0,0">
@@ -82,118 +82,118 @@
                 </WrapPanel>
                 <WrapPanel>
                     <TextBlock Margin="0,10,0,0" Foreground="Wheat" Text="Courbe S"/>
-                    <TextBox x:Name="tbSCurve" Margin="10,10,0,0" Width="200"/>
+                    <TextBox x:Name="tbSCurve" Margin="10,10,0,0" Width="200" LostFocus="tbSCurve_LostFocus"/>
                 </WrapPanel>
                 <CheckBox Margin="0,10,0,0" x:Name="cbColdTrap" Foreground="Wheat" Content="Utilisation du piège froid"/>
                 <WrapPanel x:Name="Phase00">
                     <TextBlock Margin="20,10,0,0" Foreground="Wheat" Text="Phase 1"/>
                     <TextBlock Margin="37,10,0,0" Foreground="Wheat" Text="Vitesse (rpm)"/>
-                    <TextBox x:Name="tbSpeed00" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbSpeed00" Margin="10,10,0,0" Width="50" LostFocus="tbSpeed_LostFocus"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat" Text="Temps (s)"/>
-                    <TextBox x:Name="tbTime00" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbTime00" Margin="10,10,0,0" Width="50" LostFocus="tbTime_LostFocus"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat">
                         <Run Text="Pression ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
                     </TextBlock>
-                    <TextBox x:Name="tbPression00" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbPression00" Margin="10,10,0,0" Width="50" LostFocus="tbPression_LostFocus"/>
                 </WrapPanel>
                 <WrapPanel x:Name="Phase01">
                     <CheckBox x:Name="cbPhase01" Margin="0,10,0,0" IsChecked="false" Foreground="Wheat" Content="Phase 2" Unchecked="cbPhase_Unchecked" Checked="cbPhase_Checked"/>
                     <TextBlock Margin="37,10,0,0" Foreground="Wheat" Text="Vitesse (rpm)"/>
-                    <TextBox x:Name="tbSpeed01" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbSpeed01" Margin="10,10,0,0" Width="50" IsEnabled="false" LostFocus="tbSpeed_LostFocus"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat" Text="Temps (s)"/>
-                    <TextBox x:Name="tbTime01" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbTime01" Margin="10,10,0,0" Width="50" IsEnabled="false" LostFocus="tbTime_LostFocus"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat">
                         <Run Text="Pression ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
                     </TextBlock>
-                    <TextBox x:Name="tbPression01" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbPression01" Margin="10,10,0,0" Width="50" IsEnabled="false" LostFocus="tbPression_LostFocus"/>
                 </WrapPanel>
                 <WrapPanel x:Name="Phase02" Visibility="Collapsed">
                     <CheckBox x:Name="cbPhase02" Margin="0,10,0,0" IsChecked="false" Foreground="Wheat" Content="Phase 3" Unchecked="cbPhase_Unchecked" Checked="cbPhase_Checked"/>
                     <TextBlock Margin="37,10,0,0" Foreground="Wheat" Text="Vitesse (rpm)"/>
-                    <TextBox x:Name="tbSpeed02" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbSpeed02" Margin="10,10,0,0" Width="50" LostFocus="tbSpeed_LostFocus"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat" Text="Temps (s)"/>
-                    <TextBox x:Name="tbTime02" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbTime02" Margin="10,10,0,0" Width="50" LostFocus="tbTime_LostFocus"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat">
                         <Run Text="Pression ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
                     </TextBlock>
-                    <TextBox x:Name="tbPression02" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbPression02" Margin="10,10,0,0" Width="50" LostFocus="tbPression_LostFocus"/>
                 </WrapPanel>
                 <WrapPanel x:Name="Phase03" Visibility="Collapsed">
                     <CheckBox x:Name="cbPhase03" Margin="0,10,0,0" IsChecked="false" Foreground="Wheat" Content="Phase 4" Unchecked="cbPhase_Unchecked" Checked="cbPhase_Checked"/>
                     <TextBlock Margin="37,10,0,0" Foreground="Wheat" Text="Vitesse (rpm)"/>
-                    <TextBox x:Name="tbSpeed03" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbSpeed03" Margin="10,10,0,0" Width="50" LostFocus="tbSpeed_LostFocus"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat" Text="Temps (s)"/>
-                    <TextBox x:Name="tbTime03" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbTime03" Margin="10,10,0,0" Width="50" LostFocus="tbTime_LostFocus"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat">
                         <Run Text="Pression ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
                     </TextBlock>
-                    <TextBox x:Name="tbPression03" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbPression03" Margin="10,10,0,0" Width="50" LostFocus="tbPression_LostFocus"/>
                 </WrapPanel>
                 <WrapPanel x:Name="Phase04" Visibility="Collapsed">
                     <CheckBox x:Name="cbPhase04" Margin="0,10,0,0" IsChecked="false" Foreground="Wheat" Content="Phase 5" Unchecked="cbPhase_Unchecked" Checked="cbPhase_Checked"/>
                     <TextBlock Margin="37,10,0,0" Foreground="Wheat" Text="Vitesse (rpm)"/>
-                    <TextBox x:Name="tbSpeed04" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbSpeed04" Margin="10,10,0,0" Width="50" LostFocus="tbSpeed_LostFocus"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat" Text="Temps (s)"/>
-                    <TextBox x:Name="tbTime04" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbTime04" Margin="10,10,0,0" Width="50" LostFocus="tbTime_LostFocus"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat">
                         <Run Text="Pression ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
                     </TextBlock>
-                    <TextBox x:Name="tbPression04" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbPression04" Margin="10,10,0,0" Width="50" LostFocus="tbPression_LostFocus"/>
                 </WrapPanel>
                 <WrapPanel x:Name="Phase05" Visibility="Collapsed">
                     <CheckBox x:Name="cbPhase05" Margin="0,10,0,0" IsChecked="false" Foreground="Wheat" Content="Phase 6" Unchecked="cbPhase_Unchecked" Checked="cbPhase_Checked"/>
                     <TextBlock Margin="37,10,0,0" Foreground="Wheat" Text="Vitesse (rpm)"/>
-                    <TextBox x:Name="tbSpeed05" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbSpeed05" Margin="10,10,0,0" Width="50" LostFocus="tbSpeed_LostFocus"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat" Text="Temps (s)"/>
-                    <TextBox x:Name="tbTime05" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbTime05" Margin="10,10,0,0" Width="50" LostFocus="tbTime_LostFocus"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat">
                         <Run Text="Pression ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
                     </TextBlock>
-                    <TextBox x:Name="tbPression05" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbPression05" Margin="10,10,0,0" Width="50" LostFocus="tbPression_LostFocus"/>
                 </WrapPanel>
                 <WrapPanel x:Name="Phase06" Visibility="Collapsed">
                     <CheckBox x:Name="cbPhase06" Margin="0,10,0,0" IsChecked="false" Foreground="Wheat" Content="Phase 7" Unchecked="cbPhase_Unchecked" Checked="cbPhase_Checked"/>
                     <TextBlock Margin="37,10,0,0" Foreground="Wheat" Text="Vitesse (rpm)"/>
-                    <TextBox x:Name="tbSpeed06" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbSpeed06" Margin="10,10,0,0" Width="50" LostFocus="tbSpeed_LostFocus"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat" Text="Temps (s)"/>
-                    <TextBox x:Name="tbTime06" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbTime06" Margin="10,10,0,0" Width="50" LostFocus="tbTime_LostFocus"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat">
                         <Run Text="Pression ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
                     </TextBlock>
-                    <TextBox x:Name="tbPression06" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbPression06" Margin="10,10,0,0" Width="50" LostFocus="tbPression_LostFocus"/>
                 </WrapPanel>
                 <WrapPanel x:Name="Phase07" Visibility="Collapsed">
                     <CheckBox x:Name="cbPhase07" Margin="0,10,0,0" IsChecked="false" Foreground="Wheat" Content="Phase 8" Unchecked="cbPhase_Unchecked" Checked="cbPhase_Checked"/>
                     <TextBlock Margin="37,10,0,0" Foreground="Wheat" Text="Vitesse (rpm)"/>
-                    <TextBox x:Name="tbSpeed07" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbSpeed07" Margin="10,10,0,0" Width="50" LostFocus="tbSpeed_LostFocus"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat" Text="Temps (s)"/>
-                    <TextBox x:Name="tbTime07" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbTime07" Margin="10,10,0,0" Width="50" LostFocus="tbTime_LostFocus"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat">
                         <Run Text="Pression ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
                     </TextBlock>
-                    <TextBox x:Name="tbPression07" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbPression07" Margin="10,10,0,0" Width="50" LostFocus="tbPression_LostFocus"/>
                 </WrapPanel>
                 <WrapPanel x:Name="Phase08" Visibility="Collapsed">
                     <CheckBox x:Name="cbPhase08" Margin="0,10,0,0" IsChecked="false" Foreground="Wheat" Content="Phase 9" Unchecked="cbPhase_Unchecked" Checked="cbPhase_Checked"/>
                     <TextBlock Margin="37,10,0,0" Foreground="Wheat" Text="Vitesse (rpm)"/>
-                    <TextBox x:Name="tbSpeed08" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbSpeed08" Margin="10,10,0,0" Width="50" LostFocus="tbSpeed_LostFocus"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat" Text="Temps (s)"/>
-                    <TextBox x:Name="tbTime08" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbTime08" Margin="10,10,0,0" Width="50" LostFocus="tbTime_LostFocus"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat">
                         <Run Text="Pression ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
                     </TextBlock>
-                    <TextBox x:Name="tbPression08" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbPression08" Margin="10,10,0,0" Width="50" LostFocus="tbPression_LostFocus"/>
                 </WrapPanel>
                 <WrapPanel x:Name="Phase09" Visibility="Collapsed">
                     <CheckBox x:Name="cbPhase09" Margin="0,10,0,0" IsChecked="false" Foreground="Wheat" Content="Phase 10" Unchecked="cbPhase_Unchecked" Checked="cbPhase_Checked"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat" Text="Vitesse (rpm)"/>
-                    <TextBox x:Name="tbSpeed09" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbSpeed09" Margin="10,10,0,0" Width="50" LostFocus="tbSpeed_LostFocus"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat" Text="Temps (s)"/>
-                    <TextBox x:Name="tbTime09" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbTime09" Margin="10,10,0,0" Width="50" LostFocus="tbTime_LostFocus"/>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat">
                         <Run Text="Pression ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
                     </TextBlock>
-                    <TextBox x:Name="tbPression09" Margin="10,10,0,0" Width="50"/>
+                    <TextBox x:Name="tbPression09" Margin="10,10,0,0" Width="50" LostFocus="tbPression_LostFocus"/>
                 </WrapPanel>
             </StackPanel>
         </Grid>
