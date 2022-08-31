@@ -7,13 +7,12 @@ using NationalInstruments.DAQmx;
 
 namespace Driver.ColdTrap
 {
-    public class ColdTrap
+    public static class ColdTrap
     {
-        private Task myTask;
-        private DigitalSingleChannelReader myDigitalReader;
-        public ColdTrap()
+        private static Task myTask;
+        private static DigitalSingleChannelReader myDigitalReader;
+        static ColdTrap()
         {
-
             try
             {
                 //Create a task such that it will be disposed after
@@ -26,36 +25,6 @@ namespace Driver.ColdTrap
                     ChannelLineGrouping.OneChannelForEachLine);
 
                 myDigitalReader = new DigitalSingleChannelReader(myTask.Stream);
-
-
-
-
-                try
-                {
-                    bool[] readData;
-
-                    //                    boom = myDigitalReader.ReadSingleSampleSingleLine();
-                    //                    MessageBox.Show(boom.ToString());
-
-                    //Read the digital channel
-                    readData = myDigitalReader.ReadSingleSampleMultiLine();
-                    //MessageBox.Show(readData[1].ToString());
-                    //MessageBox.Show(readData[2].ToString());
-                }
-
-                catch (DaqException exception)
-                {
-                    //dispose task
-                    myTask.Dispose();
-                    MessageBox.Show("DaqException_2: " + exception.Message);
-                }
-
-                catch (IndexOutOfRangeException exception)
-                {
-                    //dispose task
-                    myTask.Dispose();
-                    MessageBox.Show("Error: You must specify eight lines in the channel string (i.e., 0:7). " + exception.Message);
-                }
             }
             catch (DaqException exception)
             {
@@ -63,6 +32,31 @@ namespace Driver.ColdTrap
                 //dispose task
                 myTask.Dispose();
             }
+        }
+        public static bool IsTempOK()
+        {
+            try
+            {
+                bool[] readData;
+                readData = myDigitalReader.ReadSingleSampleMultiLine();
+
+                return !readData[0];
+            }
+
+            catch (DaqException exception)
+            {
+                //dispose task
+                myTask.Dispose();
+                MessageBox.Show("DaqException_2: " + exception.Message);
+            }
+
+            catch (IndexOutOfRangeException exception)
+            {
+                //dispose task
+                myTask.Dispose();
+                MessageBox.Show("Error: You must specify eight lines in the channel string (i.e., 0:7). " + exception.Message);
+            }
+            return false;
         }
     }
 }

@@ -108,6 +108,22 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\SubCycle\CycleInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SubCycle\CycleSpeedMixer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SubCycle\CycleWeight.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SubCycle\PreCycle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\SubRecipe\SpeedMixer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -120,18 +136,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\Traceability.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Pages\AuditTrail.xaml.cs">
       <DependentUpon>AuditTrail.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\General.cs" />
+    <Compile Include="General.cs" />
     <Compile Include="Pages\Recipe.xaml.cs">
       <DependentUpon>Recipe.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SubCycle\CycleInfo.xaml.cs">
+      <DependentUpon>CycleInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SubCycle\CycleSpeedMixer.xaml.cs">
+      <DependentUpon>CycleSpeedMixer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SubCycle\CycleWeight.xaml.cs">
+      <DependentUpon>CycleWeight.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SubCycle\PreCycle.xaml.cs">
+      <DependentUpon>PreCycle.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\SubRecipe\SpeedMixer.xaml.cs">
       <DependentUpon>SpeedMixer.xaml</DependentUpon>
@@ -140,7 +164,6 @@
       <DependentUpon>Weight.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Status.xaml.cs" />
-    <Compile Include="Pages\Traceability.xaml.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -275,6 +298,15 @@
       <Project>{fffc191f-46a5-44d6-9208-831505a35c23}</Project>
       <Name>Driver.MODBUS</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Driver.RS232-Pump\Driver.RS232.Pump.csproj">
+      <Project>{2AC9C27E-6FAB-4EAA-AC2F-55691AFC24F6}</Project>
+      <Name>Driver.RS232.Pump</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DRIVER.Weight\DRIVER.RS232.Weight.csproj">
+      <Project>{24D3295E-C288-495D-AA65-345A32FAFB60}</Project>
+      <Name>DRIVER.RS232.Weight</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

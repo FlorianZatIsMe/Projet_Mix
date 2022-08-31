@@ -43,6 +43,7 @@ namespace FPO_WPF_Test.Pages
 
             if (db.IsConnected()) // while loop is better
             {
+//                columns = db.SendCommand_readAll("audit_trail_bis");
                 columns = db.SendCommand_readAll(MySettings["Table_Name"].ToString());
 
                 //Création des colonnes

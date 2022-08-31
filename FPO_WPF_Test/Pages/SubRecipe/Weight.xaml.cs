@@ -32,7 +32,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         private Frame parentFrame;
         private bool[] FormatControl = new bool[ControlNumber];
         private bool CurrentFormatControl_tbBarcode;
-        private General g = new General();
+        //private General g = new General();
         public Weight()
         {
             InitializeComponent();
@@ -44,34 +44,27 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             InitializeComponent();
             tbSeqNumber.Text = seqNumber;
         }
-
-
         private void RadioButton_Click_1(object sender, RoutedEventArgs e)
         {
             parentFrame.Content = new SpeedMixer(parentFrame, tbSeqNumber.Text);
         }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             parentFrame.Content = null;
         }
-
         public void SetSeqNumber(string n)
         {
             tbSeqNumber.Text = n;
         }
-
         public int GetSeqNumber()
         {
             MessageBox.Show("get");
             return 42;
         }
-
         public void SetSeqToSpeedMixer()
         {
             rbSpeedMixer.IsChecked = true;
         }
-
         public void SetPage(string[] array)
         {
             tbProduct.Text = array[3];
@@ -84,11 +77,14 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             tbMin.Text = decimal.Parse(array[9]).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
             tbMax.Text = decimal.Parse(array[10]).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
 
-            //tbSetpoint.Text = array[8];
-            //tbMin.Text = array[9];
-            //tbMax.Text = array[10];
+            tbProduct_LostFocus(tbProduct, new RoutedEventArgs());
+            if ((bool)cbIsBarcode.IsChecked) tbBarcode_LostFocus(tbBarcode, new RoutedEventArgs());
+            else FormatControl[IdBarcode] = false;
+            tbDecimalNumber_LostFocus(tbDecimalNumber, new RoutedEventArgs());
+            tbSetpoint_LostFocus(tbSetpoint, new RoutedEventArgs());
+            tbMin_LostFocus(tbMin, new RoutedEventArgs());
+            tbMax_LostFocus(tbMax, new RoutedEventArgs());
         }
-
         public string[] GetPage()
         {
             int n = 1;
@@ -105,32 +101,28 @@ namespace FPO_WPF_Test.Pages.SubRecipe
 
             return array;
         }
-
         private void cbIsBarcode_Checked(object sender, RoutedEventArgs e)
         {
             tbBarcode.Visibility = Visibility.Visible;
             labelBarcode.Visibility = Visibility.Visible;
             FormatControl[IdBarcode] = CurrentFormatControl_tbBarcode;
         }
-
         private void cbIsBarcode_Unchecked(object sender, RoutedEventArgs e)
         {
             tbBarcode.Visibility = Visibility.Hidden;
             labelBarcode.Visibility = Visibility.Hidden;
             FormatControl[IdBarcode] = false;
         }
-
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             cbIsBarcode.IsChecked = true;
         }
-
         private void tbProduct_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdProduct;
 
-            if (g.Verify_Format(textBox, isNotNull: true, isNumber: false, 30))
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: false, 30))
             {
                 FormatControl[i] = true;
             }
@@ -140,13 +132,12 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
             //MessageBox.Show(FormatControl[i].ToString());
         }
-
         private void tbBarcode_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdBarcode;
 
-            if (g.Verify_Format(textBox, isNotNull:true, isNumber: false, 30))
+            if (General.Verify_Format(textBox, isNotNull:true, isNumber: false, 30))
             {
                 FormatControl[i] = true;
             }
@@ -159,13 +150,12 @@ namespace FPO_WPF_Test.Pages.SubRecipe
 
             //MessageBox.Show(FormatControl[i].ToString());
         }
-
         private void tbDecimalNumber_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdDecimalNumber;
 
-            if (g.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 6))
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 6))
             {
                 FormatControl[i] = true;
                 if (FormatControl[IdSetpoint])
@@ -187,7 +177,6 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
             //MessageBox.Show(FormatControl[i].ToString());
         }
-
         private void tbSetpoint_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
@@ -204,7 +193,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
 
 
-            if (g.Verify_Format(textBox, isNotNull: true, isNumber: true, n))
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, n))
             {
                 FormatControl[i] = true;
             }
@@ -214,7 +203,6 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
             //MessageBox.Show(FormatControl[i].ToString());
         }
-
         private void tbMin_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
@@ -231,7 +219,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
 
 
-            if (g.Verify_Format(textBox, isNotNull: true, isNumber: true, n))
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, n))
             {
                 FormatControl[i] = true;
             }
@@ -241,7 +229,6 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
             //MessageBox.Show(FormatControl[i].ToString());
         }
-
         private void tbMax_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
@@ -257,7 +244,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 n = 0;
             }
 
-            if (g.Verify_Format(textBox, isNotNull: true, isNumber: true, n))
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, n))
             {
                 FormatControl[i] = true;
             }
@@ -267,7 +254,6 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
             //MessageBox.Show(FormatControl[i].ToString());
         }
-    
         public bool IsFormatOk()
         {
             int n = 0;

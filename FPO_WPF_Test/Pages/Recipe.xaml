@@ -10,30 +10,39 @@
       Background="#524E4F">
 
         <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <WrapPanel Grid.Row="0" Margin="10, 10, 0, 0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" x:Name="gridNewRecipe" Visibility="Collapsed">
+            <WrapPanel Margin="10, 10, 0, 0">
                 <TextBlock Foreground="Wheat" Text="Nom du programme"/>
                 <TextBox x:Name="tbProgramName" Margin="20, 0, 0, 0" Width="120"/>
-                <TextBlock Foreground="Wheat" Margin="20, 0, 0, 0" Text="Version"/>
-                <TextBox x:Name="tbVersion" Margin="20, 0, 0, 0" Width="50"/>
-                <TextBlock Foreground="Wheat" Margin="20, 0, 0, 0" Text="Status:"/>
-                <TextBlock x:Name="labelStatus" Foreground="Wheat" Margin="10, 0, 0, 0" Text="#"/>
-                <Button Grid.Row="0" Content="Nouvelle séquence" Margin="20, 0, 0, 0"  HorizontalAlignment="Left" VerticalAlignment="center" Click="New_Sequence_Click"/>
-                <Button Grid.Row="0" Content="Send to DB" Margin="20, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="center" Click="WriteDB_Click"/>
+                <Button Content="Nouvelle séquence" Width="120" Margin="20, 0, 0, 0"  HorizontalAlignment="Left" VerticalAlignment="center" Click="New_Sequence_Click"/>
             </WrapPanel>
-            <WrapPanel Grid.Row="1" Margin="10, 10, 0, 0">
-                <TextBlock Foreground="Wheat" Text="Nom du programme"/>
-                <TextBox x:Name="tbProgramNameRead" Margin="20, 0, 0, 0" Width="120"/>
-                <TextBlock Foreground="Wheat" Margin="20, 0, 0, 0" Text="Version"/>
-                <TextBox x:Name="tbVersionRead" Margin="20, 0, 0, 0" Width="50"/>
-                <Button Grid.Row="0" Content="Read from DB" Margin="20, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="center" Click="ReadDB_Click"/>
+            <Button Content="Créer recette" Width="Auto" Margin="0, 0, 10, 0" HorizontalAlignment="Right" VerticalAlignment="center" Click="WriteDB_Click"/>
+        </Grid>
+
+        <Grid Grid.Row="0" x:Name="gridModify_Recipe" Visibility="Collapsed">
+            <WrapPanel Margin="10, 10, 0, 0">
+                <TextBlock Foreground="Wheat" Margin="0,4,0,0" Text="Nom du programme"/>
+                <ComboBox x:Name="cbxProgramName" Margin="10,0,0,0" Width="Auto" SelectionChanged="cbxProgramName_SelectionChanged" IsSynchronizedWithCurrentItem="True"/>
+
+                <WrapPanel x:Name="panelInfoRecipe" Visibility="Collapsed">
+                    <TextBlock Foreground="Wheat" Margin="20, 4, 0, 0" Text="Version: "/>
+                    <TextBlock x:Name="labelVersion" Foreground="Wheat" Margin="0, 4, 0, 0" Text="#"/>
+                    <TextBlock Foreground="Wheat" Margin="20, 4, 0, 0" Text="Statut: "/>
+                    <TextBlock x:Name="labelStatus" Foreground="Wheat" Margin="0, 4, 0, 0" Text="#"/>
+                    <Button Content="Nouvelle séquence" Width="120" Margin="20, 0, 0, 0"  HorizontalAlignment="Left" VerticalAlignment="center" Click="New_Sequence_Click"/>
+                    <!-- <Button x:Name="btChangeStatus" Content="#" Width="Auto" Margin="20, 0, 0, 0"  HorizontalAlignment="Left" VerticalAlignment="center" Click="btChangeStatus_Click"/> -->                    
+                </WrapPanel>
             </WrapPanel>
-            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
-                <Grid x:Name="gridMain"></Grid>
-            </ScrollViewer>
+            <Button Content="Modifier recette" Width="Auto" Margin="0, 0, 10, 0" HorizontalAlignment="Right" VerticalAlignment="center" Click="Button_Click"/>
+        </Grid>
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <Grid x:Name="gridMain"></Grid>
+        </ScrollViewer>
         </Grid>
 </Page>

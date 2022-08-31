@@ -58,7 +58,6 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         private const int IdPression08 = 32;
         private const int IdPression09 = 33;
 
-
         private Frame parentFrame;
         private readonly WrapPanel[] wrapPanels = new WrapPanel[PhasesNumber];
         private readonly CheckBox[] checkBoxes = new CheckBox[PhasesNumber];
@@ -66,7 +65,8 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         private readonly TextBox[] times = new TextBox[PhasesNumber];
         private readonly TextBox[] pressures = new TextBox[PhasesNumber];
         private bool[] FormatControl = new bool[ControlNumber];
-        private General g = new General();
+        //private General g = new General();
+
         public SpeedMixer()
         {
             InitializeComponent();
@@ -124,6 +124,8 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             pressures[7] = tbPression07;
             pressures[8] = tbPression08;
             pressures[9] = tbPression09;
+
+            FormatControl[IdSCurve] = true;     
         }
         public SpeedMixer(Frame frame, string seqNumber)
         {
@@ -184,23 +186,21 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             pressures[7] = tbPression07;
             pressures[8] = tbPression08;
             pressures[9] = tbPression09;
-        }
 
+            FormatControl[IdSCurve] = true;
+        }
         private void RadioButton_Click_1(object sender, RoutedEventArgs e)
         {
             parentFrame.Content = new Weight(parentFrame, tbSeqNumber.Text);
         }
-
         public void setSeqNumber(string n)
         {
             tbSeqNumber.Text = n;
         }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             parentFrame.Content = null;
         }
-
         private void cbPhase_Unchecked(object sender, RoutedEventArgs e)
         {
             CheckBox checkbox = sender as CheckBox;
@@ -239,7 +239,6 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 MessageBox.Show(ex.Message);
             }
         }
-
         private void cbPhase_Checked(object sender, RoutedEventArgs e)
         {
             CheckBox checkbox = sender as CheckBox;
@@ -272,7 +271,6 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 MessageBox.Show(ex.Message);
             }
         }
-
         public void SetPage(string[] array)
         {
             int i;
@@ -287,6 +285,11 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             tbSCurve.Text = array[10];
             cbColdTrap.IsChecked = array[11] == "True";
 
+            tbProgramName_LostFocus(tbProgramName, new RoutedEventArgs());
+            tbAcceleration_LostFocus(tbAcceleration, new RoutedEventArgs());
+            tbDeceleration_LostFocus(tbDeceleration, new RoutedEventArgs());
+            tbSCurve_LostFocus(tbSCurve, new RoutedEventArgs());
+
             i = 0;
             while (i != 10 && array[12 + 3 * i] != "")
             {
@@ -294,14 +297,18 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 times[i].Text = array[13 + 3 * i];
                 pressures[i].Text = array[14 + 3 * i];
 
-                if (i > 0 && i < 9)
+                if (i > 0)
                 {
                     checkBoxes[i].IsChecked = true;
                 }
+
+                tbSpeed_LostFocus(speeds[i], new RoutedEventArgs());
+                tbTime_LostFocus(times[i], new RoutedEventArgs());
+                tbPression_LostFocus(pressures[i], new RoutedEventArgs());
+
                 i++;
             }
         }
-
         public string[] GetPage()
         {
             int i;
@@ -329,13 +336,12 @@ namespace FPO_WPF_Test.Pages.SubRecipe
 
             return array;
         }
-
         private void tbProgramName_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdProgramName;
 
-            if (g.Verify_Format(textBox, isNotNull: true, isNumber: false, 30))
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: false, 30))
             {
                 FormatControl[i] = true;
             }
@@ -345,13 +351,12 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
             //MessageBox.Show(FormatControl[i].ToString());
         }
-
         private void tbAcceleration_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdAcceleration;
 
-            if (g.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 2000))
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 2000))
             {
                 FormatControl[i] = true;
 
@@ -362,13 +367,12 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
             //MessageBox.Show(FormatControl[i].ToString());
         }
-
         private void tbDeceleration_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdDeceleration;
 
-            if (g.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 2000))
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 2000))
             {
                 FormatControl[i] = true;
 
@@ -379,13 +383,12 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
             //MessageBox.Show(FormatControl[i].ToString());
         }
-
         private void tbSCurve_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdSCurve;
 
-            if (g.Verify_Format(textBox, isNotNull: true, isNumber: false, 30))
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: false, 30))
             {
                 FormatControl[i] = true;
             }
@@ -395,7 +398,6 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
             //MessageBox.Show(FormatControl[i].ToString());
         }
-
         private void tbSpeed_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
@@ -407,7 +409,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 {
                     if (j == 0 || (bool)checkBoxes[j].IsChecked)
                     {
-                        if (g.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 2000))
+                        if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 2000))
                         {
                             FormatControl[i + j] = true;
 
@@ -420,7 +422,6 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 }
             }
         }
-
         private void tbTime_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
@@ -432,7 +433,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 {
                     if (j == 0 || (bool)checkBoxes[j].IsChecked)
                     {
-                        if (g.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 2000))
+                        if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 2000))
                         {
                             FormatControl[i + j] = true;
 
@@ -445,7 +446,6 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 }
             }
         }
-
         private void tbPression_LostFocus(object sender, RoutedEventArgs e)
         {
             //pressures[0] = tbPression00;
@@ -458,7 +458,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 {
                     if (j == 0 || (bool)checkBoxes[j].IsChecked)
                     {
-                        if (g.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 2000))
+                        if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 2000))
                         {
                             FormatControl[i + j] = true;
 
@@ -471,7 +471,6 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 }
             }
         }
-
         public bool IsFormatOk()
         {
             int n = 0;

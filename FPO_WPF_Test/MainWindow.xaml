@@ -450,8 +450,10 @@
                     BorderThickness="3"
                     CornerRadius="5">
 
-                <Frame x:Name="frameMain" NavigationUIVisibility="Hidden" Margin="5"/>
-
+                <DockPanel LastChildFill = "True">
+                    <Frame DockPanel.Dock = "Left" x:Name="frameInfoCycle" NavigationUIVisibility="Hidden" Margin="5" Visibility="Collapsed" Width="600"/>
+                    <Frame x:Name="frameMain" NavigationUIVisibility="Hidden" Margin="5"/>
+                </DockPanel>
             </Border>
         </Grid>
 
