@@ -18,12 +18,15 @@ namespace FPO_WPF_Test.Pages.SubCycle
     /// <summary>
     /// Logique d'interaction pour CycleInfo.xaml
     /// </summary>
-    public partial class CycleInfo : Page
+    public partial class CycleInfo : Page // Les pages ne peuvent pas être static
     {
         private List<WrapPanel> wrapPanels = new List<WrapPanel>();
-        private string[] seqTypes;
+        private static int seqNumber;
+
         public CycleInfo(string[] info)
         {
+            seqNumber = -1;
+
             InitializeComponent();
 
             if (info.Length == 4)
@@ -90,11 +93,11 @@ namespace FPO_WPF_Test.Pages.SubCycle
             StackMain.Children.Add(wrapPanel);
             wrapPanels.Add(wrapPanel);
         }
-        public void UpdateWeightInfo(string[] info, int seqNumber)
+        public void UpdateCurrentWeightInfo(string[] info)
         {
             (wrapPanels[seqNumber].Children[3] as TextBlock).Text = "Masse pesée: " + info[0];
         }
-        public void UpdateSpeedMixerInfo(string[] info, int seqNumber)
+        public void UpdateCurrentSpeedMixerInfo(string[] info)
         {
             (wrapPanels[seqNumber].Children[1] as TextBlock).Text = "Status: " + info[0];
         }
@@ -110,6 +113,19 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
             wrapPanel.Children.Add(actualWeight);
             StackMain.Children.Add(wrapPanel);
+        }
+        public void UpdateSequenceNumber()
+        {
+            if (wrapPanels == null)
+            {
+                wrapPanels.Clear();
+            }
+
+            seqNumber++;
+        }
+        public void InitializeSequenceNumber()
+        {
+            seqNumber = -1;
         }
     }
 }

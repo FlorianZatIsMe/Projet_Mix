@@ -21,6 +21,8 @@ using Driver.ColdTrap;
 using System.Globalization;
 using DRIVER.RS232.Weight;
 using Driver.RS232.Pump;
+using System.Threading.Tasks;
+using Alarm_Management;
 
 namespace FPO_WPF_Test
 {
@@ -67,17 +69,25 @@ namespace FPO_WPF_Test
 
             RS232Weight.Open();
             RS232Pump.Open();
-            SpeedMixerModbus.Connect();
+
+            if (RS232Pump.IsOpen())
+            {
+                RS232Pump.BlockUse();
+                RS232Pump.SetCommand("!C802 0");
+                RS232Pump.FreeUse();
+            }
+
+
+            //SpeedMixerModbus.Connect();
 
 
 
 
 
         }
-
         ~MainWindow()
         {
-            MessageBox.Show("Au revoir");
+            //MessageBox.Show("Au revoir");
         }
 
         private void FxCycleStart(object sender, RoutedEventArgs e)
@@ -92,7 +102,6 @@ namespace FPO_WPF_Test
             frameMain.Content = new Pages.SubCycle.PreCycle(frameMain, frameInfoCycle);
 
             //Il faudra penser à bloquer ce qu'il faut
-            db.AcknowledgeAlarm("ALARM 00.01 - Connexion à la balance échouée");
         }
 
         private void FxCycleStop(object sender, RoutedEventArgs e)
@@ -102,8 +111,6 @@ namespace FPO_WPF_Test
         private void FxSystemStatus(object sender, RoutedEventArgs e)
         {
             frameMain.Content = new Pages.Status();
-            db.InactivateAlarm("ALARM 00.01 - Connexion à la balance échouée");
-            RS232Weight.areAlarmActive[0] = false;
         }
         private void FxProgramNew(object sender, RoutedEventArgs e)
         {
@@ -115,13 +122,15 @@ namespace FPO_WPF_Test
         }
         private void FxProgramCopy(object sender, RoutedEventArgs e)
         {
-            
+
         }
         private void FxProgramDelete(object sender, RoutedEventArgs e)
         {
+
         }
-        private void FxAuditTrail(object sender, RoutedEventArgs e)
+        private async void FxAuditTrail(object sender, RoutedEventArgs e)
         {
+            //while(frameInfoCycle != null) await Task.Delay(25);
             frameMain.Content = new Pages.AuditTrail();
         }
         private void FxAlarms(object sender, RoutedEventArgs e)

@@ -1,4 +1,5 @@
-﻿using Database;
+﻿using Alarm_Management;
+using Database;
 using System;
 using System.Collections.Generic;
 using System.IO.Ports;
@@ -28,6 +29,9 @@ namespace DRIVER.RS232.Weight
 
         static RS232Weight()
         {
+            isWeightStable = false;
+            isRS232Active = false;
+
             scaleConnection = new SerialPort();
             scaleConnection.BaudRate = 9600;
             scaleConnection.DataBits = 8;
@@ -41,8 +45,6 @@ namespace DRIVER.RS232.Weight
 
             scaleConnection.DataReceived += new SerialDataReceivedEventHandler(weightReceivedData);
             isFree = true;
-            isWeightStable = false;
-            isRS232Active = false;
 
             taskAlarmScan = Task.Factory.StartNew(() => scanAlarms());
         }
@@ -52,12 +54,14 @@ namespace DRIVER.RS232.Weight
             {
                 if (isRS232Active && !IsOpen() && !areAlarmActive[0])
                 {
-                    db.NewAlarm("ALARM 00.01 - Connexion à la balance échouée");
+                    AlarmManagement.NewAlarm(AlarmManagement.alarms[0, 0]);
+                    //db.NewAlarm("ALARM 00.01 - Connexion à la balance échouée");
                     areAlarmActive[0] = true;
                 }
                 else if (IsOpen() && areAlarmActive[0])
                 {
-                    db.InactivateAlarm("ALARM 00.01 - Connexion à la balance échouée");
+                    AlarmManagement.InactivateAlarm(AlarmManagement.alarms[0, 0]);
+                    //db.InactivateAlarm("ALARM 00.01 - Connexion à la balance échouée");
                     areAlarmActive[0] = false;
                 }
                 else
@@ -155,22 +159,6 @@ namespace DRIVER.RS232.Weight
             {
                 weight = -1;
             }
-
-            /*
-            byte[] b = new byte[30];
-            int n;
-
-            //MessageBox.Show("salut\rça va ?");
-            n = weight.Read(b, 0, 30);
-            
-            char[] c = new char[n];
-
-            for (int i = 0; i < n; i++)
-            {
-                c[i] = (char)b[i];
-            }
-
-            MessageBox.Show(n.ToString() + " - " + new string(c));*/
         }
     }
 }

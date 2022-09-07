@@ -286,6 +286,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Alarm_Management\Alarm_Management.csproj">
+      <Project>{D55D238D-616B-4AC6-ACEC-1C6D34F94A07}</Project>
+      <Name>Alarm_Management</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ColdTrap\Driver.ColdTrap.csproj">
       <Project>{3eae629b-056a-48d1-8b56-14cc259a48a9}</Project>
       <Name>Driver.ColdTrap</Name>

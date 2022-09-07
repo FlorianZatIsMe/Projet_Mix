@@ -2,6 +2,8 @@
 using FPO_WPF_Test.Pages.SubCycle;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,10 +17,6 @@ namespace FPO_WPF_Test
         private static MyDatabase db = new MyDatabase();
         public static string Role = "";
         public static CycleInfo CurrentCycleInfo;
-        /*public General()
-        {
-
-        }*/
 
         public static bool Verify_Format(TextBox textBox, bool isNotNull, bool isNumber, int parameter, decimal min = -1, decimal max = -1)
         {
@@ -141,8 +139,6 @@ namespace FPO_WPF_Test
                     MessageBox.Show(info);
                 }
             }
-
-            MessageBox.Show(cycleInfo.ToString());
         }
     }
 }

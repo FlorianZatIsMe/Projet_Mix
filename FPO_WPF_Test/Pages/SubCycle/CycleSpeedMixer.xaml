@@ -12,12 +12,16 @@
     <Grid>
         <TextBlock Text="SpeedMixer" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"/>
         <StackPanel>
-            <TextBlock x:Name="tbPhaseName" Text="#" Margin="20"/>
+            <TextBlock x:Name="tbPhaseName" Text="#" Margin="0, 10, 0, 10"/>
             <WrapPanel>
                 <TextBlock Text="Phase n°"/>
                 <TextBlock x:Name="tbPhaseNumber" Text="#"/>
                 <TextBlock Text="Phase Time: " Margin="20,0,0,0"/>
                 <TextBlock x:Name="tbPhaseTime" Text="#"/>
+            </WrapPanel>
+            <WrapPanel>
+                <TextBlock Text="Température: "/>
+                <TextBlock x:Name="tbTemperatureOK" Text="#"/>
             </WrapPanel>
             <TextBlock Name="tbReadyToRun" Text="#"/>
             <TextBlock Name="tbMixerRunning" Text="#"/>

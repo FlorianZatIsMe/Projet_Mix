@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Alarm_Management;
+using Database;
+using System;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -10,11 +13,21 @@ namespace Driver.RS232.Pump
 {
     public static class RS232Pump
     {
-        private static SerialPort pump;
+        private static readonly SerialPort pump;
         private static string data;
-        private static decimal weightValue;
+        private static string lastCommand;
+        private static bool isFree;
+        private static MyDatabase db = new MyDatabase();
+        private static int nAlarms = 1;
+        public static bool[] areAlarmActive = new bool[nAlarms];
+        private static bool[] wereAlarmActive = new bool[nAlarms];
+        private static Task taskAlarmScan;
+        private static bool isRS232Active;
+
         static RS232Pump()
         {
+            isRS232Active = false;
+
             pump = new SerialPort();
             pump.BaudRate = 9600;
             pump.DataBits = 8;
@@ -25,81 +38,111 @@ namespace Driver.RS232.Pump
             pump.PortName = "COM2";
 
             pump.DataReceived += new SerialDataReceivedEventHandler(RecivedData);
-        }
+            isFree = true;
 
+            taskAlarmScan = Task.Factory.StartNew(() => scanAlarms());
+        }
+        private static async void scanAlarms()
+        {
+            while (true)
+            {
+                if (isRS232Active && !IsOpen() && !areAlarmActive[0])
+                {
+                    AlarmManagement.NewAlarm(AlarmManagement.alarms[2, 0]);
+                    // db.NewAlarm("ALARM 02.01 - Connexion à la pompe à vide échouée");
+                    areAlarmActive[0] = true;
+                }
+                else if (IsOpen() && areAlarmActive[0])
+                {
+                    AlarmManagement.InactivateAlarm(AlarmManagement.alarms[2, 0]);
+                    //db.InactivateAlarm("ALARM 02.01 - Connexion à la pompe à vide échouée");
+                    areAlarmActive[0] = false;
+                }
+                else if (isRS232Active && !IsOpen())
+                {
+                    try
+                    {
+                        pump.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        //MessageBox.Show(ex.Message);
+                    }
+                }
+                else
+                {
+                    //MessageBox.Show(isRS232Active.ToString() + IsOpen().ToString() + areAlarmActive[0].ToString());
+                }
+                await Task.Delay(1000);
+            }
+        }
+        public static void BlockUse()
+        {
+            isFree = false;
+            //MessageBox.Show("Bloqué");
+        }
+        public static void FreeUse()
+        {
+            isFree = true;
+            //MessageBox.Show("Libéré");
+        }
+        public static bool IsFree()
+        {
+            return isFree;
+        }
         public static void Open()
         {
-            if (!pump.IsOpen)
+            if (!IsOpen())
             {
                 try
                 {
                     pump.Open();
-                    //MessageBox.Show("Pump Opened");
-                    pump.WriteLine("!C802 0");
+                    //pump.WriteLine("!C802 0");
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
                 }
 
+                isRS232Active = true;
             }
-
-
-            //MessageBox.Show("Opened");
-            //weight.Write("I4\n");// + ((char)(13)).ToString());// + ((char)(11)).ToString() ;
-            //weight.WriteLine("I4");
-            //weight.WriteLine("?S0");
         }
-
         public static bool IsOpen()
         {
             return pump.IsOpen;
         }
-
         public static void SetCommand(string command)
         {
-            pump.WriteLine(command);
-            //MessageBox.Show("Et maintenant ?");
-            //pump.Write(command + "\r");
-            /*
-            pump.Write(command + "\n");
-            MessageBox.Show("Et maintenant ???");*/
+            try
+            {
+                if (!isFree)
+                {
+                    lastCommand = command;
+                    pump.WriteLine(command);
+                }
+                else
+                {
+                    MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Connexion bloqué");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
-
         public static string GetData()
         {
             return data;
         }
-
-        public static decimal GetWeight()
-        {
-            return weightValue;
-        }
-
         private static void RecivedData(object sender, SerialDataReceivedEventArgs e)
-        {//*
-            //MessageBox.Show("Bonjour");
-            data = pump.ReadLine();// (b, 0, 18);
-            //*/
+        {
+            data = pump.ReadLine();
 
-
-
-            /*
-            byte[] b = new byte[30];
-            int n;
-
-            //MessageBox.Show("salut\rça va ?");
-            n = pump.Read(b, 0, 30);
-
-            char[] c = new char[n];
-
-            for (int i = 0; i < n; i++)
+            if (lastCommand == "!C802 0" || lastCommand == "!C802 1")
             {
-                c[i] = (char)b[i];
+                // Il va falloir faire quelque chose s'il y une erreur: data != *C802 0
+                //MessageBox.Show(data);
             }
-
-            MessageBox.Show(n.ToString() + " - " + new string(c));
-            //*/
         }
     }
 }

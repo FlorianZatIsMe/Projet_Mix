@@ -21,9 +21,10 @@ namespace FPO_WPF_Test.Pages.SubCycle
     /// <summary>
     /// Logique d'interaction pour CycleWeight.xaml
     /// </summary>
-    public partial class CycleWeight : Page
+    public partial class CycleWeight : Page, IDisposable
     {
-        private Frame thisFrame;
+        private Frame mainFrame;
+        private Frame frameInfoCycle;
         private MyDatabase db = new MyDatabase();
         private readonly string[] currentPhaseParameters;
         private List<string[]> thisCycleInfo;
@@ -36,15 +37,42 @@ namespace FPO_WPF_Test.Pages.SubCycle
         private Task taskGetWeight;
         private bool isBalanceFree;
         private bool isWeightCorrect;
+        private bool disposedValue;
 
-        public CycleWeight(Frame inputFrame, string id, List<string[]> cycleInfo)
+        public CycleWeight(Frame mainFrame_arg, Frame frameInfoCycle_arg, string id, List<string[]> cycleInfo)
         {
-            thisFrame = inputFrame;
+            mainFrame = mainFrame_arg;
+            frameInfoCycle = frameInfoCycle_arg;
+            mainFrame.ContentRendered += new EventHandler(thisFrame_ContentRendered);
             thisCycleInfo = cycleInfo;
             isSequenceOver = false;
             isWeightCorrect = false;
+            General.CurrentCycleInfo.UpdateSequenceNumber();
 
             InitializeComponent();
+
+            // On bloque l'utilisation de la balance par quelqu'un d'autre
+            // On vérifie aussi que personne n'est en train d'utiliser la balance
+            if (!RS232Weight.IsOpen()) RS232Weight.Open();
+
+            if (RS232Weight.IsOpen())
+            {
+                if (RS232Weight.IsFree())
+                {
+                    RS232Weight.BlockUse();
+                    isBalanceFree = true;
+                }
+                else
+                {
+                    isBalanceFree = false;
+                    MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Connexion avec la balance déjà en cours");
+                }
+            }
+            else
+            {
+                isBalanceFree = false;
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Connexion avec la balance impossible");
+            }
 
             if (!db.IsConnected()) db.Connect();
 
@@ -97,6 +125,14 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 db.ConnectAsync();
             }
 
+            if (isBalanceFree)
+            {
+                RS232Weight.SetCommand("SIR");
+                taskGetWeight = Task.Factory.StartNew(() => getWeight());
+            }
+
+
+            /*
             if (!RS232Weight.IsOpen()) RS232Weight.Open();
 
             if (RS232Weight.IsOpen())
@@ -119,7 +155,28 @@ namespace FPO_WPF_Test.Pages.SubCycle
             {
                 isBalanceFree = false;
                 MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Connexion avec la balance impossible");
+            }*/
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: supprimer l'état managé (objets managés)
+                    if(taskGetWeight != null) taskGetWeight.Dispose();
+                }
+
+                // TODO: libérer les ressources non managées (objets non managés) et substituer le finaliseur
+                // TODO: affecter aux grands champs une valeur null
+                disposedValue = true;
             }
+        }
+        public void Dispose()
+        {
+            // Ne changez pas ce code. Placez le code de nettoyage dans la méthode 'Dispose(bool disposing)'
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
         private async void getWeight()
         {
@@ -160,7 +217,6 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 }
             }
         }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -183,29 +239,35 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
                     if (isBalanceFree)
                     {
-                        //MessageBox.Show("3");
                         if (currentPhaseParameters[1] != "0") RS232Weight.SetCommand("@");
                         taskGetWeight.Wait();
                         RS232Weight.FreeUse();
                         isBalanceFree = false;
                     }
 
+                    General.CurrentCycleInfo.UpdateCurrentWeightInfo(new string[] { tbWeight.Text });
+
                     string[] info = new string[] { "0", currentPhaseParameters[3], tbWeight.Text, min.ToString(), max.ToString() };
                     thisCycleInfo.Add(info);
 
                     if (currentPhaseParameters[1] == "0") // Si la première séquence est une séquence de poids
                     {
-                        thisFrame.Content = new Pages.SubCycle.CycleWeight(thisFrame, currentPhaseParameters[2], thisCycleInfo);
+                        mainFrame.Content = new Pages.SubCycle.CycleWeight(mainFrame, frameInfoCycle, currentPhaseParameters[2], thisCycleInfo);
                     }
                     else if (currentPhaseParameters[1] == "1") // Si la première séquence est une séquence speedmixer
                     {
                         MessageBox.Show("Mettez le produit dans le speedmixer et fermer le capot");
-                        thisFrame.Content = new Pages.SubCycle.CycleSpeedMixer(thisFrame, currentPhaseParameters[2], thisCycleInfo);
+                        mainFrame.Content = new Pages.SubCycle.CycleSpeedMixer(mainFrame, frameInfoCycle, currentPhaseParameters[2], thisCycleInfo);
                     }
                     else if (currentPhaseParameters[1] == null || currentPhaseParameters[1] == "") // Si la première séquence est une séquence speedmixer
                     {
                         MessageBox.Show("C'est fini, merci d'être passé");
                         General.PrintReport(thisCycleInfo);
+
+                        // On cache le panneau d'information
+                        frameInfoCycle.Content = null;
+                        frameInfoCycle.Visibility = Visibility.Collapsed;
+                        mainFrame.Content = new Pages.Status();
                     }
                     else
                     {
@@ -221,6 +283,10 @@ namespace FPO_WPF_Test.Pages.SubCycle
             {
                 MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - " + ex.Message);
             }
+            finally
+            {
+                Dispose(disposing: true);
+            }
         }
         private async void tbScan_LostFocusAsync(object sender, RoutedEventArgs e)
         {
@@ -233,7 +299,6 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 textbox.Focus();
             }
         }
-
         private void tbScan_KeyDown(object sender, KeyEventArgs e)
         {
             TextBox textbox = sender as TextBox;
@@ -253,28 +318,24 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 }
             }
         }
-
-        private void Grid_KeyDown(object sender, KeyEventArgs e)
+        private void thisFrame_ContentRendered(object sender, EventArgs e)
         {
-            //MessageBox.Show(e.Key.ToString());
-            /*
-            if (e.Key == Key.Enter)
+            if (mainFrame.Content != this)
             {
-                if (currentPhaseParameters[5] == "2222")
+                mainFrame.ContentRendered -= thisFrame_ContentRendered;
+
+                if (!isWeightCorrect)
                 {
-                    labelScan.Visibility = Visibility.Collapsed;
-                    gridMain.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    MessageBox.Show("Pas bien " + scannedText + " au lieu de " + currentPhaseParameters[5]);
-                    scannedText = "";
+                    General.PrintReport(thisCycleInfo);
+
+                    // On cache le panneau d'information
+                    frameInfoCycle.Content = null;
+                    frameInfoCycle.Visibility = Visibility.Collapsed;
+                    mainFrame.Content = new Pages.Status();
+                    Dispose(disposing: true);
                 }
             }
-            else
-            {
-                scannedText += e.Key.ToString();
-            }*/
+
         }
     }
 }

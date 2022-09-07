@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MySqlConnector;
-using System.Collections;
 using System.Collections.Specialized;
 using System.Windows;
 using System.Configuration;
 using System.Collections.ObjectModel;
 using System.Data.Common;
-using System.Data;
-using System.Threading;
 using System.Reflection;
 
 namespace Database
@@ -20,12 +15,18 @@ namespace Database
     {
         private readonly Configuration.Connection_Info MySettings = ConfigurationManager.GetSection("Database/Connection_Info") as Configuration.Connection_Info;
         private readonly NameValueCollection ConnectionAttempSettings = ConfigurationManager.GetSection("Database/Connection_Attempt") as NameValueCollection;
-        private readonly NameValueCollection AuditTrailSettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
+        //private readonly NameValueCollection AuditTrailSettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
         private MySqlConnection connection;
         private MySqlDataReader reader;
         public static List<int> AlarmListID = new List<int>();
         public static List<string> AlarmListDescription = new List<string>();
         public static List<string> AlarmListStatus = new List<string>();
+        /*
+        public enum AlarmType
+        {
+            Alarm,
+            Warning
+        }
 
         public void NewAlarm(string alarmDescription)
         {
@@ -69,10 +70,10 @@ namespace Database
             }
             else
             {
-                MessageBox.Show("Ce n'est pas bien ce que vous faite Monsieur");
+                MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Ce n'est pas bien ce que vous faite Monsieur, on ne crée pas d'alarme si elle est déjà active...");
             }
         }
-        public void InactivateAlarm(string alarmDescription)
+        public void InactivateAlarm(string alarmDescription, AlarmType alarmType = AlarmType.Alarm)
         {
             int n = -1;
 
@@ -164,7 +165,7 @@ namespace Database
             {
                 MessageBox.Show("Tu sais pas ce que tu fais c'est pas vrai !");
             }
-        }
+        }*/
         public MyDatabase()
         {
             if (MySettings == null)

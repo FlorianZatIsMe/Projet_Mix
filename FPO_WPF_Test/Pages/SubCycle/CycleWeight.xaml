@@ -9,7 +9,7 @@
       Title="CycleWeight"
       Foreground="Wheat">
 
-    <Grid x:Name="gridScan" KeyDown="Grid_KeyDown" Focusable="True">
+    <Grid x:Name="gridScan" Focusable="True">
         <TextBlock Text="Weight" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="20"/>
         <Grid x:Name="gridMain" Visibility="Collapsed">
             <StackPanel Margin="20">

@@ -29,7 +29,6 @@ namespace FPO_WPF_Test.Pages.SubCycle
         private Frame frameInfoCycle = new Frame();
         private List<string> ProgramNames = new List<string>();
         private List<string> ProgramIDs = new List<string>();
-        //private General g = new General();
         private MyDatabase db = new MyDatabase();
         private List<string[]> thisCycleInfo = new List<string[]>();
         private readonly NameValueCollection MySettings = ConfigurationManager.GetSection("Database/Recipe") as NameValueCollection;
@@ -68,7 +67,6 @@ namespace FPO_WPF_Test.Pages.SubCycle
                         thisCycleInfo.Add(preCycleInfo);
 
                         General.CurrentCycleInfo = new CycleInfo(new string[] { tbOFnumber.Text, array[3], array[4], tbFinalWeight.Text });
-                        //CycleInfo cycleInfo = new CycleInfo(new string[] { tbOFnumber.Text, array[3], array[4], tbFinalWeight.Text });
 
                         db.Close_reader(); // On ferme le reader de la db pour pouvoir lancer une autre requête
 
@@ -110,13 +108,15 @@ namespace FPO_WPF_Test.Pages.SubCycle
                             db.Close_reader(); // On ferme le reader de la db pour pouvoir lancer une autre requête
                         }
 
+                        General.CurrentCycleInfo.InitializeSequenceNumber();
+
                         if (firstSeqType == "0") // Si la première séquence est une séquence de poids
                         {
-                            outputFrame.Content = new Pages.SubCycle.CycleWeight(outputFrame, firstSeqID, thisCycleInfo);
+                            outputFrame.Content = new Pages.SubCycle.CycleWeight(outputFrame, frameInfoCycle, firstSeqID, thisCycleInfo);
                         }
                         else if (firstSeqType == "1") // Si la première séquence est une séquence speedmixer
                         {
-                            outputFrame.Content = new Pages.SubCycle.CycleSpeedMixer(outputFrame, firstSeqID, thisCycleInfo);
+                            outputFrame.Content = new Pages.SubCycle.CycleSpeedMixer(outputFrame, frameInfoCycle, firstSeqID, thisCycleInfo);
                         }
                         else
                         {
