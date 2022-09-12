@@ -13,7 +13,8 @@ namespace Alarm_Management
 {
     public static class AlarmManagement
     {
-        private static List<Alarm> activeAlarms = new List<Alarm>();
+        public static List<Alarm> activeAlarms { get; }
+        public static List<Alarm> RAZalarms;
         public readonly static Alarm[,] alarms;
         private static MyDatabase db = new MyDatabase();
         private readonly static NameValueCollection AuditTrailSettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
@@ -42,6 +43,8 @@ namespace Alarm_Management
 
         static AlarmManagement()
         {
+            activeAlarms = new List<Alarm>();
+            RAZalarms = new List<Alarm>();
             alarms = new Alarm[4, 2];
 
             alarms[0, 0].Description = "ALARM 00.00 - Connexion à la balance échouée";
@@ -146,11 +149,16 @@ namespace Alarm_Management
                     string[] values = new string[] { "Système", alarm.Description, statusBefore.ToString(), statusAfter.ToString() };
                     db.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values);
 
+                    alarm.id = db.GetMax(AuditTrailSettings["Table_Name"], "c00");
+                    alarm.Status = statusAfter;
+
                     if (statusAfter == AlarmStatus.INACTIVE)
                     {
-                        alarm.id = db.GetMax(AuditTrailSettings["Table_Name"], "c00");
-                        alarm.Status = statusAfter;
                         activeAlarms.Add(alarm);
+                    }
+                    else if (statusAfter == AlarmStatus.RAZ)
+                    {
+                        RAZalarms.Add(alarm);
                     }
 
                     activeAlarms.RemoveAt(n);
@@ -188,15 +196,19 @@ namespace Alarm_Management
                 string[] values = new string[] { "Système", alarm.Description, statusBefore.ToString(), statusAfter.ToString() };
                 db.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values);
 
+                alarm.id = db.GetMax(AuditTrailSettings["Table_Name"], "c00");
+                alarm.Status = statusAfter;
+
                 if (statusAfter == AlarmStatus.ACK)
                 {
-                    alarm.id = db.GetMax(AuditTrailSettings["Table_Name"], "c00");
-                    alarm.Status = statusAfter;
                     activeAlarms.Add(alarm);
+                }
+                else if (statusAfter == AlarmStatus.RAZ)
+                {
+                    RAZalarms.Add(alarm);
                 }
 
                 activeAlarms.RemoveAt(n);
-
 
                 for (int i = 0; i < activeAlarms.Count(); i++)
                 {
@@ -209,6 +221,5 @@ namespace Alarm_Management
                 MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Tu sais pas ce que tu fais c'est pas vrai !");
             }
         }
-
     }
 }

@@ -24,37 +24,38 @@ namespace FPO_WPF_Test.Pages.SubCycle
     public partial class CycleWeight : Page, IDisposable
     {
         private Frame mainFrame;
-        private Frame frameInfoCycle;
         private MyDatabase db = new MyDatabase();
         private readonly string[] currentPhaseParameters;
         private List<string[]> thisCycleInfo;
         private readonly decimal setpoint;
         private readonly decimal min;
         private readonly decimal max;
-        private readonly string unit;
+        //private readonly string unit; to use later maybe
         private bool isScanningStep;
         private bool isSequenceOver;
         private Task taskGetWeight;
         private bool isBalanceFree;
+        private bool wasBalanceFreeOnce;
         private bool isWeightCorrect;
         private bool disposedValue;
 
-        public CycleWeight(Frame mainFrame_arg, Frame frameInfoCycle_arg, string id, List<string[]> cycleInfo)
+        public CycleWeight(Frame mainFrame_arg, string id, List<string[]> cycleInfo)
         {
             mainFrame = mainFrame_arg;
-            frameInfoCycle = frameInfoCycle_arg;
+            //frameInfoCycle = frameInfoCycle_arg;
             mainFrame.ContentRendered += new EventHandler(thisFrame_ContentRendered);
             thisCycleInfo = cycleInfo;
             isSequenceOver = false;
             isWeightCorrect = false;
+            wasBalanceFreeOnce = false;
             General.CurrentCycleInfo.UpdateSequenceNumber();
 
             InitializeComponent();
 
             // On bloque l'utilisation de la balance par quelqu'un d'autre
             // On vérifie aussi que personne n'est en train d'utiliser la balance
-            if (!RS232Weight.IsOpen()) RS232Weight.Open();
-
+            //if (!RS232Weight.IsOpen()) RS232Weight.Open();
+            /*
             if (RS232Weight.IsOpen())
             {
                 if (RS232Weight.IsFree())
@@ -72,7 +73,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             {
                 isBalanceFree = false;
                 MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Connexion avec la balance impossible");
-            }
+            }*/
 
             if (!db.IsConnected()) db.Connect();
 
@@ -124,13 +125,14 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - La base de données n'est pas connecté");
                 db.ConnectAsync();
             }
-
+            /*
             if (isBalanceFree)
             {
                 RS232Weight.SetCommand("SIR");
                 taskGetWeight = Task.Factory.StartNew(() => getWeight());
-            }
+            }*/
 
+            taskGetWeight = Task.Factory.StartNew(() => getWeight());
 
             /*
             if (!RS232Weight.IsOpen()) RS232Weight.Open();
@@ -180,42 +182,61 @@ namespace FPO_WPF_Test.Pages.SubCycle
         }
         private async void getWeight()
         {
-            if (isBalanceFree)
+            decimal currentWeight;
+
+            while (!isSequenceOver)
             {
-                //MessageBox.Show("2");
-                decimal currentWeight;
-                while (!isSequenceOver)
+                if (!wasBalanceFreeOnce)
                 {
-                    try
+                    if (RS232Weight.IsOpen() && RS232Weight.IsFree())
                     {
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            currentWeight = RS232Weight.GetWeight();
-                            tbWeight.Text = currentWeight.ToString();
-                            if(!RS232Weight.IsWeightStable())
-                            { 
-                                tbWeight.Background = Brushes.Red;
-                                isWeightCorrect = false;
-                            }
-                            else if(currentWeight >= min && currentWeight <= max)
-                            {
-                                tbWeight.Background = Brushes.Green;
-                                isWeightCorrect = true;
-                            }
-                            else
-                            {
-                                tbWeight.Background = Brushes.White;
-                                isWeightCorrect = false;
-                            }
-                        });
-                        await Task.Delay(500);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message);
+                        RS232Weight.BlockUse();
+                        RS232Weight.SetCommand("SIR");
+                        wasBalanceFreeOnce = true;
                     }
                 }
+                else
+                {
+                    isBalanceFree = RS232Weight.IsOpen();
+
+                    if (isBalanceFree)
+                    {
+                        //MessageBox.Show("2");
+                        try
+                        {
+                            this.Dispatcher.Invoke(() =>
+                            {
+                                currentWeight = RS232Weight.GetWeight();
+                                tbWeight.Text = currentWeight.ToString();
+                                if (!RS232Weight.IsWeightStable())
+                                {
+                                    tbWeight.Background = Brushes.Red;
+                                    isWeightCorrect = false;
+                                }
+                                else if (currentWeight >= min && currentWeight <= max)
+                                {
+                                    tbWeight.Background = Brushes.Green;
+                                    isWeightCorrect = true;
+                                }
+                                else
+                                {
+                                    tbWeight.Background = Brushes.White;
+                                    isWeightCorrect = false;
+                                }
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+                    }
+                }
+
+                await Task.Delay(500);
             }
+
+
+
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -252,21 +273,21 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
                     if (currentPhaseParameters[1] == "0") // Si la première séquence est une séquence de poids
                     {
-                        mainFrame.Content = new Pages.SubCycle.CycleWeight(mainFrame, frameInfoCycle, currentPhaseParameters[2], thisCycleInfo);
+                        mainFrame.Content = new Pages.SubCycle.CycleWeight(mainFrame, currentPhaseParameters[2], thisCycleInfo);
                     }
                     else if (currentPhaseParameters[1] == "1") // Si la première séquence est une séquence speedmixer
                     {
                         MessageBox.Show("Mettez le produit dans le speedmixer et fermer le capot");
-                        mainFrame.Content = new Pages.SubCycle.CycleSpeedMixer(mainFrame, frameInfoCycle, currentPhaseParameters[2], thisCycleInfo);
+                        mainFrame.Content = new Pages.SubCycle.CycleSpeedMixer(mainFrame, currentPhaseParameters[2], thisCycleInfo);
                     }
                     else if (currentPhaseParameters[1] == null || currentPhaseParameters[1] == "") // Si la première séquence est une séquence speedmixer
                     {
                         MessageBox.Show("C'est fini, merci d'être passé");
+                        General.CurrentCycleInfo.InitializeSequenceNumber();
                         General.PrintReport(thisCycleInfo);
 
                         // On cache le panneau d'information
-                        frameInfoCycle.Content = null;
-                        frameInfoCycle.Visibility = Visibility.Collapsed;
+                        General.CurrentCycleInfo.SetVisibility(false);
                         mainFrame.Content = new Pages.Status();
                     }
                     else
@@ -329,8 +350,9 @@ namespace FPO_WPF_Test.Pages.SubCycle
                     General.PrintReport(thisCycleInfo);
 
                     // On cache le panneau d'information
-                    frameInfoCycle.Content = null;
-                    frameInfoCycle.Visibility = Visibility.Collapsed;
+                    General.CurrentCycleInfo.SetVisibility(false);
+                    //frameInfoCycle.Content = null;
+                    //frameInfoCycle.Visibility = Visibility.Collapsed;
                     mainFrame.Content = new Pages.Status();
                     Dispose(disposing: true);
                 }

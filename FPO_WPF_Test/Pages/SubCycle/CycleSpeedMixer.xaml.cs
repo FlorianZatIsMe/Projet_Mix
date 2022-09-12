@@ -23,123 +23,150 @@ using Alarm_Management;
 
 namespace FPO_WPF_Test.Pages.SubCycle
 {
-    /// <summary>
-    /// Logique d'interaction pour CycleSpeedMixer.xaml
-    /// </summary>
+    /* class CycleSpeedMixer
+     * 
+     * Description: Classe contrôlant une séquence de SpeedMixer
+     * Appelé par: CycleSpeedMixer, Cycle Weight, PreCycle
+     * 
+     * Classes de références: TBD
+     * 
+     * Version: 1.0
+     */
+
     public partial class CycleSpeedMixer : Page, IDisposable
     {
         private Frame mainFrame;
-        private Frame frameInfoCycle;
         private MyDatabase db = new MyDatabase();
         private readonly string[] currentPhaseParameters;
         private List<string[]> thisCycleInfo;
-        private bool sequenceHasStarted;
+
+        private bool hasSequenceStarted;
         private bool isSequenceOver;
-        private bool isTempOK;
+        private bool isCycleStopped;
+
         private Task taskGetStatus;
         private int timeGetStatus = 500;
+
         private System.Timers.Timer sequenceTimer;
+        private int currentPhaseTimer;
+        private int currentPhaseNumber;
+
         private System.Timers.Timer pumpNotFreeTimer;
-        private System.Timers.Timer tempTooHotTimer;
-        private int currentSeqTimer;
-        private int currentSeqNumber;
         private bool isPumpFree;
+        private bool wasPumpActivated;
         private int pumpNotFreeSince;
+
+        private System.Timers.Timer tempControlTimer;
+        private bool isTempOK;
         private int tempTooHotSince;
-        private bool isCycleStopped;
-        private bool disposedValue;
+
         private readonly int timeoutPumpNotFree = 30; // 30s, si la pompe n'est pas disponible pendant ce temps, on arrête la séquence
-        private readonly int timeoutTempTooHot = 20; // 30s, si la pompe n'est pas disponible pendant ce temps, on arrête la séquence
+        private readonly int timeoutTempTooHotDuringCycle = 20;
+        private readonly int timeoutTempTooHotBeforeCycle = 30;
+        private readonly int timeoutSequenceTooLong = 60;
+        private readonly int timeoutSequenceBlocked = 90;
+
         private static int nAlarms = 1;
         private static bool[] areAlarmActive = new bool[nAlarms];
 
-        public CycleSpeedMixer(Frame mainFrame_arg, Frame frameInfoCycle_arg, string id, List<string[]> cycleInfo)
+        private bool disposedValue;
+
+        /* public CycleSpeedMixer(Frame mainFrame_arg, string id, List<string[]> cycleInfo)
+         * 
+         * Description: Constructeur de la classe 
+         * 
+         * Arguments:
+         *      - Frame mainFrame_arg: Frame qui doit contenir ce page (CycleSpeedMixer.xaml)
+         *      - string id: valeur de la colonne "id" de la table "recipe_speedmixer". Utilisé pour avoir les paramètres de la séquence en cours
+         *      - List<string[]> cycleInfo (ça va sûrement changer): Variable qui se transmet tout au long du cycle. Contient les infos du cycle, utilisé pour générer le rapport
+         * 
+         * Version: 1.0
+         */
+        public CycleSpeedMixer(Frame mainFrame_arg, string id, List<string[]> cycleInfo)
         {
             mainFrame = mainFrame_arg;
-            frameInfoCycle = frameInfoCycle_arg;
             mainFrame.ContentRendered += new EventHandler(thisFrame_ContentRendered);
             thisCycleInfo = cycleInfo;
-            isSequenceOver = false;
-            sequenceHasStarted = false;
-            currentSeqNumber = 1;
-            isCycleStopped = false;
+            isSequenceOver = false;     // la séquence n'est pas terminée
+            hasSequenceStarted = false; // la séquence n'a pas démarré
+            isCycleStopped = false;     // ne cycle n'a pas été arrêté
 
+            // Initialisation des timers
             sequenceTimer = new System.Timers.Timer();
             sequenceTimer.Interval = 1000;
             sequenceTimer.Elapsed += seqTimer_OnTimedEvent;
             sequenceTimer.AutoReset = true;
+            currentPhaseNumber = 1;     // la phase en cours est la première
 
             pumpNotFreeTimer = new System.Timers.Timer();
             pumpNotFreeTimer.Interval = 1000;
             pumpNotFreeTimer.Elapsed += pumpNotFreeTimer_OnTimedEvent;
             pumpNotFreeTimer.AutoReset = true;
+            isPumpFree = false;         // la pompe n'est pas disponible
+            wasPumpActivated = false;   // la pompe n'a pas encore été commandée
+            pumpNotFreeSince = 0;       // Initialisation de la valeur du timer
 
-            tempTooHotTimer = new System.Timers.Timer();
-            tempTooHotTimer.Interval = 1000;
-            tempTooHotTimer.Elapsed += tempTooHotTimer_OnTimedEvent;
-            tempTooHotTimer.AutoReset = true;
+            tempControlTimer = new System.Timers.Timer();
+            tempControlTimer.Interval = 1000;
+            tempControlTimer.Elapsed += tempTooHotTimer_OnTimedEvent;
+            tempControlTimer.AutoReset = true;
+            tempTooHotSince = 0;        // Initialisation de la valeur du timer
 
-            isPumpFree = false;
-            pumpNotFreeSince = 0;
-
-            General.CurrentCycleInfo.UpdateSequenceNumber();
+            // Mise à jour du numéro de séquence (seqNumber de la classe CycleInfo) + démarrage du scan des alarmes si on est sur la première séquence du cycle (voir checkAlarmsTimer_OnTimedEvent de la classe CycleInfo)
+            General.CurrentCycleInfo.UpdateSequenceNumber(); 
 
             InitializeComponent();
 
+            // On affiche sur le panneau d'information que la séquence est en cours
             General.CurrentCycleInfo.UpdateCurrentSpeedMixerInfo(new string[] { "En cours" });
 
-            // On bloque l'utilisation de la pompe par quelqu'un d'autre
-            // On vérifie aussi que personne n'est en train d'utiliser la pompe
-            if (RS232Pump.IsOpen() && RS232Pump.IsFree())
+            //if (!db.IsConnected()) db.Connect();
+
+            if (db.IsConnected()) // Si l'on est connecté à la base de données
             {
-                RS232Pump.BlockUse();
-                isPumpFree = true;
-            }
-            else
-            {
-                isPumpFree = false;
-            }
+                // currentPhaseParameters =  liste des paramètres pour notre séquence
+                currentPhaseParameters = db.GetOneRow("recipe_speedmixer", whereColumns: new string[] { "id" }, whereValues: new string[] { id });
+                db.Disconnect();
 
-            if (!db.IsConnected()) db.Connect();
-
-            if (db.IsConnected()) // while loop is better
-            {
-                db.SendCommand_Read("recipe_speedmixer", whereColumns: new string[] { "id" }, whereValues: new string[] { id });
-
-                currentPhaseParameters = db.ReadNext();
-
-                if (currentPhaseParameters.Count() != 0 && db.ReadNext().Count() == 0)
+                if (currentPhaseParameters.Count() != 0) // S'il n'y a pas eu d'erreur...
                 {
-                    db.Close_reader(); // On ferme le reader de la db pour pouvoir lancer une autre requête
                     tbPhaseName.Text = currentPhaseParameters[3];
-
+                    /*
                     // Pump initializsation
-                    if (isPumpFree)
+                    // Si la connection RS232 avec la pompe est ouverte et que personne d'autre n'utilise la pompe
+                    if (RS232Pump.IsOpen() && RS232Pump.IsFree())
                     {
+                        RS232Pump.BlockUse();   // On bloque l'utilisation de la pompe par quelqu'un d'autre
+                        isPumpFree = true;      // Et on dit que la pompe est dispo
+
                         if (currentPhaseParameters[6] == "True") RS232Pump.SetCommand("!C802 1");   // Si on contrôle la pression, on démarre la pompe
                         else RS232Pump.SetCommand("!C802 0"); // Sinon on arrête la pompe 
                     }
-                    else if (RS232Pump.IsOpen())
-                    {
-                        MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Connexion avec la pompe déjà en cours, tu vois");
-                    }
                     else
-                    {
-                        MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Connexion avec la pompe impossible");
-                    }
+                    { 
+                        //isPumpFree = false;    // Sinon la pompe n'est pas dispo
+                        pumpNotFreeTimer.Start();
 
+                        if (RS232Pump.IsOpen())
+                        {
+                            MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Connexion avec la pompe déjà en cours, tu vois");
+                        }
+                        else
+                        {
+                            MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Connexion avec la pompe impossible");
+                        }
+                    }*/
+
+                    pumpNotFreeTimer.Start();
+                    tempControlTimer.Start(); // On lance le timer de contrôle de la température
                     SpeedMixerModbus.SetProgram(currentPhaseParameters); // On met à jour tout les paramètres dans le speedmixer
-
-                    isTempOK = currentPhaseParameters[11] != "True"; // Si on n'utilise pas le piège froid, on va zapper l'étape où l'on attend que la température du piège froid soit bonne
-
-                    taskGetStatus = Task.Factory.StartNew(() => getStatus()); // On lance la tâche de vérification du status et d'autre choses sûrement
+                    taskGetStatus = Task.Factory.StartNew(() => sequenceController()); // On lance la tâche de vérification du status et d'autre choses sûrement
                 }
-                db.Disconnect();
             }
             else
             {
                 MessageBox.Show("La base de données n'est pas connecté");
-                db.ConnectAsync();
+                //db.ConnectAsync();
             }
         }
         protected virtual void Dispose(bool disposing)
@@ -149,15 +176,15 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 if (disposing)
                 {
                     // TODO: supprimer l'état managé (objets managés)
+                    if (taskGetStatus != null) taskGetStatus.Dispose();
+                    if (sequenceTimer != null) sequenceTimer.Dispose();
+                    if (pumpNotFreeTimer != null) pumpNotFreeTimer.Dispose();
+                    if (tempControlTimer != null) tempControlTimer.Dispose();
                 }
 
                 // TODO: libérer les ressources non managées (objets non managés) et substituer le finaliseur
                 // TODO: affecter aux grands champs une valeur null
                 disposedValue = true;
-                if (taskGetStatus != null) taskGetStatus.Dispose();
-                if (sequenceTimer != null) sequenceTimer.Dispose();
-                if (pumpNotFreeTimer != null) pumpNotFreeTimer.Dispose();
-                if (tempTooHotTimer != null) tempTooHotTimer.Dispose();
             }
         }
         public void Dispose()
@@ -169,129 +196,9 @@ namespace FPO_WPF_Test.Pages.SubCycle
         ~CycleSpeedMixer()
         {
             Dispose(disposing: false);
-            MessageBox.Show("Disconnection done");
+            MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Disconnection done");
         }
-        private void pumpNotFreeTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
-        {
-            pumpNotFreeSince++;
-
-            //
-            // Il faudrait montrer la valeur du timer et un message qui informe l'utilisateur de la déconnexion de la pompe
-            // 
-
-            // On vérifie si tout va bien en fait
-            if (RS232Pump.IsOpen() && (RS232Pump.IsFree() || sequenceHasStarted || isSequenceOver))
-            {
-                RS232Pump.BlockUse();
-                isPumpFree = true;
-                pumpNotFreeSince = 0;
-                pumpNotFreeTimer.AutoReset = false;
-                pumpNotFreeTimer.Enabled = false;
-            }
-
-            if (pumpNotFreeSince > timeoutPumpNotFree)
-            {
-                pumpNotFreeTimer.AutoReset = false; // c'est un peu sale tout ça !
-                pumpNotFreeTimer.Stop();
-
-                if (sequenceHasStarted)
-                {
-                    MessageBox.Show("TIMEOUT !!! Le cycle est en cours, je ne l'arrête pas, ALARME (WARNING) !");
-                    
-                }
-                else
-                {
-                    MessageBox.Show("TIMEOUT !!! Il faut arrêter le cycle maintenant, ALARME !!!");
-                    stopCycle();
-                    isSequenceOver = true;
-                }
-
-                pumpNotFreeTimer.Enabled = false;
-            }
-        }
-        private void tempTooHotTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
-        {
-            tempTooHotSince++;
-
-            //
-            // Il faudrait montrer la valeur du timer et un message qui informe l'utilisateur de la déconnexion de la pompe
-            // 
-
-            // On vérifie si tout va bien en fait
-            if (isTempOK)
-            {
-                tempTooHotSince = 0;
-                tempTooHotTimer.Stop();
-            }
-
-            if (tempTooHotSince > timeoutTempTooHot)
-            {
-                tempTooHotTimer.Stop();
-
-                MessageBox.Show("TIMEOUT !!! C'est fini, il fait beaucoup trop chaud, génération d'alarme");
-                stopCycle();
-                if (!sequenceHasStarted) isSequenceOver = true;
-            }
-
-            if (sequenceHasStarted)
-            {
-                if (!isTempOK && !areAlarmActive[0])
-                {
-                    areAlarmActive[0] = true;
-                    MessageBox.Show(currentPhaseParameters[11]);
-                    AlarmManagement.NewAlarm(AlarmManagement.alarms[3, 1]); // Warning température trop haute
-                }
-                else if (isTempOK && areAlarmActive[0])
-                {
-                    areAlarmActive[0] = false;
-                    AlarmManagement.InactivateAlarm(AlarmManagement.alarms[3, 1]); // Warning température trop haute
-                }
-            }
-
-
-        }
-        private void seqTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
-        {
-            currentSeqTimer--;
-
-            if (currentSeqTimer >= 0)
-            {
-                this.Dispatcher.Invoke(() =>
-                {
-                    tbPhaseTime.Text = currentSeqTimer.ToString();
-                });
-            }
-            else if (currentSeqTimer == -60)
-            {
-                //sequenceTimer.Enabled = false;
-                MessageBox.Show("C'est normal que ça traîne comme ça ? Attention je vais arrêter le timer");
-                stopCycle();
-            }
-            else if (currentSeqTimer == -90)
-            {
-                MessageBox.Show("C'est fini, il faut se faire une raison");
-                isSequenceOver = true;
-            }
-
-                // on devrait commencer le timeout quand le robot est à home
-                // Penser à ajouter des tests : vérifier que la vitesse et la pression du speedmixer est à peu près celle du paramètre
-
-                if (currentSeqTimer <= 0)
-            {
-                if (currentPhaseParameters[10 + 3 * (currentSeqNumber+1)] != null  && currentPhaseParameters[10 + 3 * (currentSeqNumber+1)] != "")
-                {
-                    currentSeqNumber++;
-                    currentSeqTimer = int.Parse(currentPhaseParameters[10 + 3 * currentSeqNumber]);
-
-                    this.Dispatcher.Invoke(() =>
-                    {
-                        tbPhaseNumber.Text = currentSeqNumber.ToString() + " - " + currentPhaseParameters[10 + 3 * currentSeqNumber] + "s";
-                        tbPhaseTime.Text = currentSeqTimer.ToString();
-                    });
-                }
-            }
-        }
-        private async void getStatus()
+        private async void sequenceController()
         {
             bool[] status = new bool[8];
 
@@ -299,119 +206,73 @@ namespace FPO_WPF_Test.Pages.SubCycle
             {
                 status = SpeedMixerModbus.GetStatus();
 
-                //                if (true) // Si la température est bonne ou si on ne vérifie pas température alors on contrôle le cycle speedmixer
-                //                {
-                // Contrôler la température
-                if (currentPhaseParameters[11] == "True")
+                this.Dispatcher.Invoke(() =>
                 {
-                    isTempOK = temperatureControl();
-                } 
+                    tbReadyToRun.Text = status[0] ? "Ready to run " + hasSequenceStarted.ToString() : "Not ready to run";
+                    tbMixerRunning.Text = status[1] ? "Mixer running" : "Mixer not running";
+                    tbMixerError.Text = status[2] ? "Mixer Error" : "No error";
+                    tbLidOpen.Text = status[3] ? "Lid Open" : "Lid not open";
+                    tbLidClosed.Text = status[4] ? "Lid closed" : "Lid not closed";
+                    tbSafetyOK.Text = status[5] ? "Safety OK" : "Safety not OK";
+                    tbRobotAtHome.Text = status[7] ? "Robot at home" : "Robot not at home";
+                    tbPressure.Text = "Pression : " + (SpeedMixerModbus.GetPressure() / 10).ToString();
+                    tbSpeed.Text = "Vitesse : " + (SpeedMixerModbus.GetSpeed()).ToString();
+                });
 
-                    // A voir si on supprimer la ligne au dessus de if (isTempOK)
-                    //status = SpeedMixerModbus.GetStatus();
-
-                    this.Dispatcher.Invoke(() =>
-                    {
-                        tbReadyToRun.Text = status[0] ? "Ready to run " + sequenceHasStarted.ToString() : "Not ready to run";
-                        tbMixerRunning.Text = status[1] ? "Mixer running" : "Mixer not running";
-                        tbMixerError.Text = status[2] ? "Mixer Error" : "No error";
-                        tbLidOpen.Text = status[3] ? "Lid Open" : "Lid not open";
-                        tbLidClosed.Text = status[4] ? "Lid closed" : "Lid not closed";
-                        tbSafetyOK.Text = status[5] ? "Safety OK" : "Safety not OK";
-                        tbRobotAtHome.Text = status[7] ? "Robot at home" : "Robot not at home";
-                        tbPressure.Text = "Pression : " + (SpeedMixerModbus.GetPressure() / 10).ToString();
-                        tbSpeed.Text = "Vitesse : " + (SpeedMixerModbus.GetSpeed()).ToString();
-                    });
-
-                    // Si on n'a pas encore démarré mais que le capot n'est pas fermé (Safety not OK)
-                    if (!sequenceHasStarted && !status[5]) 
-                    {
-                        MessageBox.Show("Veuillez fermer le capot avant de démarrer le cycle");
-                    }
-                    // Si on n'a pas encore démarré et que le capot est fermé alors on démarre le cycle
-                    else if (!sequenceHasStarted && status[5] && !status[1]) 
-                    {
-                        if (currentPhaseParameters[11] == "False" || isTempOK)
-                        {
-                            if (isPumpFree || currentPhaseParameters[6] == "False") // Si la pompe est dispo ou qu'on en a pas besoin, on démarre le cycle
-                            {
-                                // Pump initializsation
-                                if (isPumpFree)
-                                {
-                                    if (currentPhaseParameters[6] == "True") RS232Pump.SetCommand("!C802 1");   // Si on contrôle la pression, on démarre la pompe
-                                    else RS232Pump.SetCommand("!C802 0"); // Sinon on arrête la pompe 
-                                }
-
-                                MessageBox.Show("Cliquez sur OK pour démarrer le speedmixer"); // Peut-être retirer ça s'il y a plusieurs cycle
-                                SpeedMixerModbus.RunProgram();
-
-                                this.Dispatcher.Invoke(() =>
-                                {
-                                    tbPhaseNumber.Text = currentSeqNumber.ToString() + " - " + currentPhaseParameters[10 + 3 * currentSeqNumber] + "s";
-                                    currentSeqTimer = int.Parse(currentPhaseParameters[10 + 3 * currentSeqNumber]);
-                                    tbPhaseTime.Text = currentSeqTimer.ToString();
-                                });
-
-                                sequenceHasStarted = true; // le programme a démarré
-                                sequenceTimer.Enabled = true;
-                            }
-                            else if (!isPumpFree && currentPhaseParameters[6] == "True") // Si la pompe n'est pas dispo mais qu'on en a besoin, on démarre le timer
-                            {
-                                if (!pumpNotFreeTimer.Enabled && pumpNotFreeSince == 0)
-                                {
-                                    pumpNotFreeTimer.AutoReset = true;
-                                    pumpNotFreeTimer.Enabled = true;
-                                    //MessageBox.Show("Démarrage du timer: LA POMPE N'EST PAS DISPO, VITE ! RENDS LA DISPONIBLE OU LE CYCLE VA S'ARRETER POUR TOUJOURS !!!");
-                                }
-                            }
-                            else
-                            {
-                                MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Je ne comprends pas comment c'est possible");
-                            }
-                        }
-                    }
-                    // Si le programme est en cours
-                    else if (sequenceHasStarted && status[1]) 
-                    {
-                        if (currentPhaseParameters[6] == "True" && !RS232Pump.IsOpen() && !pumpNotFreeTimer.Enabled && pumpNotFreeSince == 0)
-                        {
-                            isPumpFree = false;
-                            pumpNotFreeTimer.AutoReset = true;
-                            pumpNotFreeTimer.Enabled = true;
-                            // Il faut vite fermer cette message box sinon le cycle va s'arrêter, 
-                            MessageBox.Show("Démarrage du timer_2: LA POMPE N'EST PAS DISPO, VITE ! RENDS LA DISPONIBLE OU LE CYCLE VA S'ARRETER POUR TOUJOURS !!!");
-                        }
-                        else if (pumpNotFreeSince != 0 && RS232Pump.IsOpen())
-                        {
-                            pumpNotFreeSince = 0;
-                        }
-                    }
-                    // si le cycle a démarré mais qu'il ne tourne plus (si c'est la fin du programme Speedmixer)
-                    else if (sequenceHasStarted && !status[1] && status[7])
-                    {
-                        isSequenceOver = true; // le cycle est fini, du coup on arrête de le contrôler
-                    }
-/*                }
-                else if(!sequenceHasStarted)
+                // Si on n'a pas encore démarré mais que le capot n'est pas fermé (Safety not OK)
+                if (!hasSequenceStarted && !status[5])
                 {
-                    isTempOK = temperatureControl();
-                    /*
-                    isTempOK = ColdTrap.IsTempOK();
-
-                    this.Dispatcher.Invoke(() =>
+                    MessageBox.Show("Veuillez fermer le capot avant de démarrer le cycle");
+                }
+                // Si on n'a pas encore démarré et que le capot est fermé alors on démarre le cycle
+                else if (!hasSequenceStarted && status[5] && !status[1])
+                {
+                    if ((currentPhaseParameters[11] == "False" || isTempOK) && (wasPumpActivated || currentPhaseParameters[6] == "False")) // Si on ne conttrôle pas la température ou qu'elle est bonne et si la pompe a été commandée ou qu'on en a pas besoin, on démarre le cycle
                     {
-                        tbTemperatureOK.Text = isTempOK ? "Bonne" : "Trop chaude";
-                    });
+                        MessageBox.Show("Cliquez sur OK pour démarrer le speedmixer"); // Peut-être retirer ça s'il y a plusieurs cycle
+                        SpeedMixerModbus.RunProgram();
 
-                    if (!tempTooHotTimer.Enabled && tempTooHotSince == 0)
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            tbPhaseNumber.Text = currentPhaseNumber.ToString() + " - " + currentPhaseParameters[10 + 3 * currentPhaseNumber] + "s";
+                            currentPhaseTimer = int.Parse(currentPhaseParameters[10 + 3 * currentPhaseNumber]);
+                            tbPhaseTime.Text = currentPhaseTimer.ToString();
+                        });
+
+                        hasSequenceStarted = true; // le programme a démarré
+                        sequenceTimer.Start();
+                    }
+                }
+                // Si le programme est en cours
+                else if (hasSequenceStarted && status[1])
+                {/*
+                    // Si on a besoin de la pompe mais qu'elle n'est pas disponible et que le timer n'a pas été lancer
+                    if (currentPhaseParameters[6] == "True" && !RS232Pump.IsOpen() && !pumpNotFreeTimer.Enabled && pumpNotFreeSince == 0)
                     {
-                        tempTooHotTimer.AutoReset = true;
-                        tempTooHotTimer.Enabled = true;
-                    }*//*
-                }*/
+                        // On lance le timer
+                        pumpNotFreeTimer.Start();
+
+                        // Il faut vite fermer cette message box sinon le cycle va s'arrêter, 
+                        MessageBox.Show("Démarrage du timer_2: LA POMPE N'EST PAS DISPO, VITE ! RENDS LA DISPONIBLE OU LE CYCLE VA S'ARRETER POUR TOUJOURS !!!");
+                    }
+                    else if (pumpNotFreeSince != 0 && RS232Pump.IsOpen())
+                    {
+                        pumpNotFreeSince = 0;
+                    }*/
+                }
+                // si le cycle a démarré mais qu'il ne tourne plus (si c'est la fin du programme Speedmixer)
+                else if (hasSequenceStarted && !status[1] && status[7])
+                {
+                    isSequenceOver = true; // le cycle est fini, du coup on arrête de le contrôler
+                }
 
                 await Task.Delay(timeGetStatus);
-                //MessageBox.Show("GO");
+                //MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - GO");
+            }
+
+            if (currentPhaseTimer >= 0) // Si la séquence s'est pas arrêtée avant la fin, on arrête le cycle
+            {
+                isCycleStopped = true;
             }
 
             // un fois que le cycle est terminé, on commence la séquence final
@@ -420,23 +281,150 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 EndSequence();
             });
         }
-        private bool temperatureControl()
+        private void tempTooHotTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-            bool check = ColdTrap.IsTempOK();
+            //
+            // Il faudrait montrer la valeur du timer et un message qui informe l'utilisateur de la déconnexion de la pompe
+            // 
+
+            isTempOK = ColdTrap.IsTempOK();
 
             this.Dispatcher.Invoke(() =>
             {
                 tbTemperatureOK.Text = isTempOK ? "Bonne" : "Trop chaude";
             });
 
-            if (!check && !tempTooHotTimer.Enabled && tempTooHotSince == 0)
+            // Si la température est bonne, on réinitialise le timer
+            if (isTempOK)
             {
-                //MessageBox.Show("On démarre le timer");
-                tempTooHotTimer.AutoReset = true;
-                tempTooHotTimer.Enabled = true;
+                tempTooHotSince = 0;
+                //tempControlTimer.Stop();
+            }
+            else // Sinon on l'incrémente et on se demande si on est en timeout
+            {
+                tempTooHotSince++;
+
+                // On gère différemment la situation si le cycle a démarré ou pas
+                if (hasSequenceStarted)
+                {
+                    if (tempTooHotSince > timeoutTempTooHotDuringCycle)
+                    {
+                        tempControlTimer.Stop();
+
+                        MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - TIMEOUT pendant le cycle !!! C'est fini, il fait beaucoup trop chaud");
+                        stopCycle();
+                    }
+                }
+                else
+                {
+                    if (tempTooHotSince > timeoutTempTooHotBeforeCycle)
+                    {
+                        tempControlTimer.Stop();
+
+                        MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - TIMEOUT avant le cycle !!! C'est fini, il fait beaucoup trop chaud");
+                        stopCycle();
+                    }
+                }
             }
 
-            return check;
+            // Gestion de l'alarme
+            if (hasSequenceStarted)
+            {
+                if (!isTempOK && !areAlarmActive[0])
+                {
+                    areAlarmActive[0] = true;
+                    AlarmManagement.NewAlarm(AlarmManagement.alarms[3, 1]); // Warning température trop haute
+                }
+                else if (isTempOK && areAlarmActive[0])
+                {
+                    areAlarmActive[0] = false;
+                    AlarmManagement.InactivateAlarm(AlarmManagement.alarms[3, 1]); // Warning température trop haute
+                }
+            }
+        }
+        private void pumpNotFreeTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            //
+            // Il faudrait montrer la valeur du timer et un message qui informe l'utilisateur de la déconnexion de la pompe                        // Ici on va afficher un ruban qui dit qu'on démarre le timer est en cours
+            // Ici on va afficher un ruban qui dit qu'on démarre le timer est en cours
+            // 
+
+            if (!isPumpFree && RS232Pump.IsFree())
+            {
+                RS232Pump.BlockUse();
+                isPumpFree = true;
+            }
+
+            // Si la connection avec la pompe est ouverte et qu'on a le droit de lui parler...
+            if (RS232Pump.IsOpen() && isPumpFree)
+            {
+                pumpNotFreeSince = 0; // On réinitialise la valeur du timeout
+
+                // Si la séquence n'a pas démarré, on démarre ou éteint la pompe
+                if (!wasPumpActivated && !hasSequenceStarted)
+                {
+                    if (currentPhaseParameters[6] == "True") RS232Pump.SetCommand("!C802 1");   // Si on contrôle la pression, on démarre la pompe
+                    else RS232Pump.SetCommand("!C802 0"); // Sinon on arrête la pompe 
+                    wasPumpActivated = true;
+                }
+            }
+            else
+            {
+                pumpNotFreeSince++;
+
+                if (pumpNotFreeSince > timeoutPumpNotFree)
+                {
+                    if (hasSequenceStarted)
+                    {
+                        MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - TIMEOUT !!! Le cycle est en cours, je ne l'arrête pas, ALARME (WARNING) !");
+                    }
+                    else
+                    {
+                        MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - TIMEOUT !!! Il faut arrêter le cycle maintenant, ALARME !!!");
+                        stopCycle();
+                    }
+                }
+            }
+        }
+        private void seqTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            currentPhaseTimer--;
+
+            if (currentPhaseTimer >= 0)
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    tbPhaseTime.Text = currentPhaseTimer.ToString();
+                });
+            }
+            else if (currentPhaseTimer == -timeoutSequenceTooLong)
+            {
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - C'est normal que ça traîne comme ça ? Attention je vais arrêter le timer");
+                stopCycle();
+            }
+            else if (currentPhaseTimer == -timeoutSequenceBlocked)
+            {
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - C'est fini, il faut se faire une raison");
+                isSequenceOver = true;
+            }
+
+            // on devrait commencer le timeout quand le robot est à home
+            // Penser à ajouter des tests : vérifier que la vitesse et la pression du speedmixer est à peu près celle du paramètre
+
+            if (currentPhaseTimer <= 0)
+            {
+                if (currentPhaseParameters[10 + 3 * (currentPhaseNumber + 1)] != null && currentPhaseParameters[10 + 3 * (currentPhaseNumber + 1)] != "")
+                {
+                    currentPhaseNumber++;
+                    currentPhaseTimer = int.Parse(currentPhaseParameters[10 + 3 * currentPhaseNumber]);
+
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        tbPhaseNumber.Text = currentPhaseNumber.ToString() + " - " + currentPhaseParameters[10 + 3 * currentPhaseNumber] + "s";
+                        tbPhaseTime.Text = currentPhaseTimer.ToString();
+                    });
+                }
+            }
         }
         private void EndSequence()
         {
@@ -444,64 +432,57 @@ namespace FPO_WPF_Test.Pages.SubCycle
             {
                 string[] info = new string[] { "1", currentPhaseParameters[3] };
 
-                // On arrête les 2 timers (celle qui gère le temps de la séquence et celle qui gère la dispo de la pompe)
-                pumpNotFreeTimer.Stop();
+                // On arrête les timers (celle qui gère le temps de la séquence, la température du cold trap et celle qui gère la dispo de la pompe)
                 sequenceTimer.Stop();
+                tempControlTimer.Stop();
+                pumpNotFreeTimer.Stop();
 
                 // Peut-être pas, à voir
-                while (pumpNotFreeTimer.Enabled) ;
                 while (sequenceTimer.Enabled) ;
+                while (tempControlTimer.Enabled) ;
+                while (pumpNotFreeTimer.Enabled) ;
 
                 General.CurrentCycleInfo.UpdateCurrentSpeedMixerInfo(new string[] { "Terminé" });
                 thisCycleInfo.Add(info);
 
                 if (areAlarmActive[0]) // Si l'alarme est toujours active alors on l'a désactive
                 {
-                    //MessageBox.Show("INIBITION");
                     AlarmManagement.InactivateAlarm(AlarmManagement.alarms[3, 1]); // Alarme température trop haute
                     areAlarmActive[0] = false;
                 }
 
                 if (!isCycleStopped && currentPhaseParameters[1] == "0") // Si la prochaine séquence est une séquence de poids et que le cycle n'est pas arrêté
                 {
-                    if (RS232Pump.IsOpen())
-                    {
-                        RS232Pump.BlockUse();
-                        RS232Pump.SetCommand("!C802 0");
-                        isPumpFree = false;
-                    }
+                    if (RS232Pump.IsOpen() && isPumpFree) RS232Pump.SetCommand("!C802 0");
                     RS232Pump.FreeUse();
-                    mainFrame.Content = new Pages.SubCycle.CycleWeight(mainFrame, frameInfoCycle, currentPhaseParameters[2], thisCycleInfo);
+                    isPumpFree = false;
+                    mainFrame.Content = new Pages.SubCycle.CycleWeight(mainFrame, currentPhaseParameters[2], thisCycleInfo);
                 }
                 else if (!isCycleStopped && currentPhaseParameters[1] == "1") // Si la prochaine séquence est une séquence speedmixer et que le cycle n'est pas arrêté
                 {
                     RS232Pump.FreeUse();
                     isPumpFree = false;
 
-                    mainFrame.Content = new Pages.SubCycle.CycleSpeedMixer(mainFrame, frameInfoCycle, currentPhaseParameters[2], thisCycleInfo);
+                    mainFrame.Content = new Pages.SubCycle.CycleSpeedMixer(mainFrame, currentPhaseParameters[2], thisCycleInfo);
                 }
                 else if (currentPhaseParameters[1] == null || currentPhaseParameters[1] == "" || isCycleStopped) // Si c'est fini
                 {
-                    if (RS232Pump.IsOpen())
-                    {
-                        RS232Pump.BlockUse();
-                        RS232Pump.SetCommand("!C802 0");
-                        isPumpFree = false;
-                    }
+                    if (RS232Pump.IsOpen() && isPumpFree) RS232Pump.SetCommand("!C802 0");
                     RS232Pump.FreeUse();
+                    isPumpFree = false;
 
 
                     MessageBox.Show("C'est fini, merci d'être passé");
+                    General.CurrentCycleInfo.InitializeSequenceNumber();
                     General.PrintReport(thisCycleInfo);
 
                     // On cache le panneau d'information
-                    frameInfoCycle.Content = null;
-                    frameInfoCycle.Visibility = Visibility.Collapsed;
+                    General.CurrentCycleInfo.SetVisibility(false);
                     mainFrame.Content = new Pages.Status();
                 }
                 else
                 {
-                    MessageBox.Show("Je ne sais pas, je ne sais plus, je suis perdu");
+                    MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Je ne sais pas, je ne sais plus, je suis perdu");
                 }
             }
             catch (Exception ex)
@@ -534,7 +515,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
             SpeedMixerModbus.StopProgram();
             isCycleStopped = true;
-            if (!sequenceHasStarted) isSequenceOver = true; // Si la séquence n'a pas démarré on l'arrête
+            if (!hasSequenceStarted) isSequenceOver = true; // Si la séquence n'a pas démarré on l'arrête
             // On attend que le cycle se termine, plutôt que de faire ça: isSequenceOver = true; // ou directement EndSequence(), à voir
         }
     }

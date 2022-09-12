@@ -23,6 +23,9 @@ using DRIVER.RS232.Weight;
 using Driver.RS232.Pump;
 using System.Threading.Tasks;
 using Alarm_Management;
+using System.Security.Principal;
+using PdfSharp.Drawing;
+using PdfSharp.Pdf;
 
 namespace FPO_WPF_Test
 {
@@ -41,17 +44,71 @@ namespace FPO_WPF_Test
 
     public partial class MainWindow : Window
     {
-        public string Text { get; set; }
-        //public SpeedMixerModbus speedMixer { get; set; }
         private readonly MyDatabase db;
         private readonly NameValueCollection AuditTrailSettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
-        //private ColdTrap coldtrap;
+
+        bool IsInGroup(string user, string group)
+        {
+            //using (var identity = new WindowsIdentity(user))
+            {
+                //WindowsIdentity identity = new WindowsIdentity(WindowsIdentity.GetCurrent().Name);
+                WindowsPrincipal principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
+                return principal.IsInRole(group);
+            }
+        }
+
+        private void pdfGenerator()
+        {
+            // Check http://www.pdfsharp.net/wiki/PDFsharpSamples.ashx
+            string filename = String.Format("{0}_tempfile.pdf", Guid.NewGuid().ToString("D").ToUpper());
+
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+            PdfDocument s_document = new PdfDocument();
+
+            s_document = new PdfDocument();/*
+            s_document.Info.Title = "This is the title";
+            s_document.Info.Author = WindowsIdentity.GetCurrent().Name;
+            s_document.Info.Subject = "this is the subject";
+            s_document.Info.Keywords = "What do you want, me?";*/
+
+            PdfPage page = s_document.AddPage();
+            //MessageBox.Show(filename);
+            s_document.Save(@"C:\Temp\Sample_1.pdf");
+        }
+
+        private void pdfGenerator1()
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+            PdfDocument document = new PdfDocument();
+
+            PdfPage page = document.AddPage();
+
+            XGraphics gfx = XGraphics.FromPdfPage(page);
+
+            XFont font = new XFont("Arial", 20);
+
+            gfx.DrawString("First line of text", font, XBrushes.Black,
+                new XRect(0, 0, page.Width, page.Height),
+                XStringFormats.Center);
+
+            gfx.DrawString("Second line of text", font, XBrushes.BlueViolet,
+                new XRect(0, 0, page.Width, page.Height),
+                XStringFormats.BottomLeft);
+
+            gfx.DrawString("Third line of text", font, XBrushes.Red, new XPoint(100, 300));
+
+            document.Save(@"C:\Temp\C'est moi qui la fait.pdf");
+        }
 
         public MainWindow()
         {
             db = new MyDatabase();
+            pdfGenerator();
+            //MessageBox.Show(IsInGroup("", @"BUILTIN\Users").ToString());
 
-            string[] values = new string[] { "Utilisateur connecté", "Démarrage de l'application"};
+            string[] values = new string[] { WindowsIdentity.GetCurrent().Name, "Démarrage de l'application"};
             db.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"], values);
 
             InitializeComponent();

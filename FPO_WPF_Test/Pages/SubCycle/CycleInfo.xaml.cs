@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Alarm_Management;
+using Database;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static Alarm_Management.AlarmManagement;
 
 namespace FPO_WPF_Test.Pages.SubCycle
 {
@@ -22,10 +26,21 @@ namespace FPO_WPF_Test.Pages.SubCycle
     {
         private List<WrapPanel> wrapPanels = new List<WrapPanel>();
         private static int seqNumber;
+        private static List<Alarm> activeAlarms = new List<Alarm>();
+        private System.Timers.Timer checkAlarmsTimer;
+        private MyDatabase db = new MyDatabase();
+        private Frame frameCycleInfo;
 
-        public CycleInfo(string[] info)
+        public CycleInfo(string[] info, Frame frame)
         {
             seqNumber = -1;
+
+            checkAlarmsTimer = new System.Timers.Timer();
+            checkAlarmsTimer.Interval = 1000;
+            checkAlarmsTimer.Elapsed += checkAlarmsTimer_OnTimedEvent;
+            checkAlarmsTimer.AutoReset = true;
+
+            frameCycleInfo = frame;
 
             InitializeComponent();
 
@@ -35,10 +50,95 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 labelRecipeName.Text = info[1];
                 labelRecipeVersion.Text = info[2];
                 labelFinalWeight.Text = info[3];
+
+                SetVisibility(true);
             }
             else
             {
                 MessageBox.Show("Il y a un problème là");
+            }
+        }
+        public void SetVisibility(bool visibility) 
+        {
+            if (visibility)
+            {
+                frameCycleInfo.Content = this;
+                frameCycleInfo.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                frameCycleInfo.Content = null;
+                frameCycleInfo.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        /* checkAlarmsTimer_OnTimedEvent
+         * 
+         * Description: affiche dans le panneau d'informations tous les évènements d'alarmes (ACTIVE, ACK, INACTIVE et RAZ)
+         * 
+         * Version: 1.0
+         */
+        private void checkAlarmsTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            string[] array;
+
+            // S'il y a un évènement d'alarme qui n'a pas été affiché...
+            if (!activeAlarms.SequenceEqual(AlarmManagement.activeAlarms))
+            {
+                // On parcours toutes les alarmes actives
+                for (int i = 0; i < AlarmManagement.activeAlarms.Count; i++)
+                {
+                    // Si l'alarme active qu'on regarde n'a pas été affichée...
+                    if (!activeAlarms.Contains(AlarmManagement.activeAlarms[i]))
+                    {
+                        // On met dans la variable array, l'enregistrement d'audit trail de l'alarme en question
+                        array = db.GetOneRow(tableName: "audit_trail", whereColumns: new string[] { "c00" }, whereValues: new string[] { AlarmManagement.activeAlarms[i].id.ToString() });
+
+                        // S'il n'y a pas eu d'erreur, on affiche les infos de l'alarme
+                        if (array.Count() != 0)
+                        {
+                            this.Dispatcher.Invoke(() =>
+                            {
+                                AddRow(array[1] + " - " + array[3] + " - " + array[5]);
+                            });
+                        }
+                        else
+                        {
+                            MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - checkAlarmsTimer_OnTimedEvent : Je n'aime pas ça");
+                        }
+                    }
+                }
+
+                // activeAlarms = AlarmManagement.activeAlarms mais en plus chiant
+                activeAlarms.Clear();
+                for (int i = 0; i < AlarmManagement.activeAlarms.Count; i++) activeAlarms.Add(AlarmManagement.activeAlarms[i]);
+            }
+
+            // S'il y a une Remise A Zéro d'une alarme qui n'a pas été affichée...
+            if (AlarmManagement.RAZalarms.Count > 0)
+            {
+                // On parcours toutes les alarmes RAZ
+                for (int i = 0; i < AlarmManagement.RAZalarms.Count; i++)
+                {
+                    // On met dans la variable array l'enregistrement d'audit trail de l'alarme
+                    array = db.GetOneRow(tableName: "audit_trail", whereColumns: new string[] { "c00" }, whereValues: new string[] { AlarmManagement.RAZalarms[i].id.ToString() });
+
+                    // S'il n'y a pas eu d'erreur, on affiche les infos de l'alarme
+                    if (array.Count() != 0)
+                    {
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            AddRow(array[1] + " - " + array[3] + " - " + array[5]);
+                        });
+                    }
+                    else
+                    {
+                        MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - checkAlarmsTimer_OnTimedEvent : Je n'aime pas ça");
+                    }
+                }
+
+                AlarmManagement.RAZalarms.Clear();
+                MessageBox.Show("checkAlarmsTimer_OnTimedEvent - RAZ done je suis trop content !!!");
             }
         }
         public void NewInfoWeight(string[] info)
@@ -116,16 +216,25 @@ namespace FPO_WPF_Test.Pages.SubCycle
         }
         public void UpdateSequenceNumber()
         {
-            if (wrapPanels == null)
+            if (wrapPanels == null) // Il sert à quelque chose ce code ?
             {
                 wrapPanels.Clear();
             }
 
             seqNumber++;
+            if (seqNumber == 0)
+            {
+                //MessageBox.Show("UpdateSequenceNumber " + activeAlarms.Count.ToString() + AlarmManagement.activeAlarms.Count.ToString());
+                checkAlarmsTimer.Start();
+            }
         }
         public void InitializeSequenceNumber()
         {
+            //MessageBox.Show("InitializeSequenceNumber");
             seqNumber = -1;
+            checkAlarmsTimer.Stop();
+            activeAlarms.Clear();
+            AlarmManagement.RAZalarms.Clear();
         }
     }
 }

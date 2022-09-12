@@ -66,7 +66,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                     {
                         thisCycleInfo.Add(preCycleInfo);
 
-                        General.CurrentCycleInfo = new CycleInfo(new string[] { tbOFnumber.Text, array[3], array[4], tbFinalWeight.Text });
+                        General.CurrentCycleInfo = new CycleInfo(new string[] { tbOFnumber.Text, array[3], array[4], tbFinalWeight.Text }, frameInfoCycle);
 
                         db.Close_reader(); // On ferme le reader de la db pour pouvoir lancer une autre requête
 
@@ -88,12 +88,10 @@ namespace FPO_WPF_Test.Pages.SubCycle
                                 {
                                     // Refaire ces calculs plus sérieusement une fois que tout est clarifié, il faut arrondir aussi
                                     General.CurrentCycleInfo.NewInfoWeight(new string[] { array[3], Math.Round(decimal.Parse(array[9]), int.Parse(array[7])).ToString("N" + array[7]).ToString(), Math.Round(decimal.Parse(array[10]), int.Parse(array[7])).ToString("N" + array[7]).ToString() });
-                                    //cycleInfo.NewInfoWeight(new string[] { array[3], Math.Round(decimal.Parse(array[9]), int.Parse(array[7])).ToString("N" + array[7]).ToString(), Math.Round(decimal.Parse(array[10]), int.Parse(array[7])).ToString("N" + array[7]).ToString() });
                                 }
                                 else if (nextSeqType == MySettings["SubRecipeSpeedMixer_SeqType"])
                                 {
                                     General.CurrentCycleInfo.NewInfoSpeedMixer(new string[] { array[3] });
-                                    //cycleInfo.NewInfoSpeedMixer(new string[] { array[3] });
                                 }
 
                                 nextSeqType = array[1];
@@ -112,22 +110,16 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
                         if (firstSeqType == "0") // Si la première séquence est une séquence de poids
                         {
-                            outputFrame.Content = new Pages.SubCycle.CycleWeight(outputFrame, frameInfoCycle, firstSeqID, thisCycleInfo);
+                            outputFrame.Content = new Pages.SubCycle.CycleWeight(outputFrame, firstSeqID, thisCycleInfo);
                         }
                         else if (firstSeqType == "1") // Si la première séquence est une séquence speedmixer
                         {
-                            outputFrame.Content = new Pages.SubCycle.CycleSpeedMixer(outputFrame, frameInfoCycle, firstSeqID, thisCycleInfo);
+                            outputFrame.Content = new Pages.SubCycle.CycleSpeedMixer(outputFrame, firstSeqID, thisCycleInfo);
                         }
                         else
                         {
                             thisCycleInfo.Clear();
                             MessageBox.Show("C'est pas normal ça...");
-                        }
-                        
-                        if (General.CurrentCycleInfo != null)
-                        {
-                            frameInfoCycle.Content = General.CurrentCycleInfo;
-                            frameInfoCycle.Visibility = Visibility.Visible;
                         }
 
                         db.Close_reader(); // On ferme le reader de la db pour pouvoir lancer une autre requête

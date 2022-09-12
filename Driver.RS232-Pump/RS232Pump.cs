@@ -49,16 +49,15 @@ namespace Driver.RS232.Pump
                 if (isRS232Active && !IsOpen() && !areAlarmActive[0])
                 {
                     AlarmManagement.NewAlarm(AlarmManagement.alarms[2, 0]);
-                    // db.NewAlarm("ALARM 02.01 - Connexion à la pompe à vide échouée");
                     areAlarmActive[0] = true;
                 }
                 else if (IsOpen() && areAlarmActive[0])
                 {
                     AlarmManagement.InactivateAlarm(AlarmManagement.alarms[2, 0]);
-                    //db.InactivateAlarm("ALARM 02.01 - Connexion à la pompe à vide échouée");
                     areAlarmActive[0] = false;
                 }
-                else if (isRS232Active && !IsOpen())
+                
+                if (isRS232Active && !IsOpen())
                 {
                     try
                     {
@@ -68,10 +67,6 @@ namespace Driver.RS232.Pump
                     {
                         //MessageBox.Show(ex.Message);
                     }
-                }
-                else
-                {
-                    //MessageBox.Show(isRS232Active.ToString() + IsOpen().ToString() + areAlarmActive[0].ToString());
                 }
                 await Task.Delay(1000);
             }

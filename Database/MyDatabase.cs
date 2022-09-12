@@ -15,157 +15,13 @@ namespace Database
     {
         private readonly Configuration.Connection_Info MySettings = ConfigurationManager.GetSection("Database/Connection_Info") as Configuration.Connection_Info;
         private readonly NameValueCollection ConnectionAttempSettings = ConfigurationManager.GetSection("Database/Connection_Attempt") as NameValueCollection;
-        //private readonly NameValueCollection AuditTrailSettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
         private MySqlConnection connection;
         private MySqlDataReader reader;
         public static List<int> AlarmListID = new List<int>();
         public static List<string> AlarmListDescription = new List<string>();
         public static List<string> AlarmListStatus = new List<string>();
-        /*
-        public enum AlarmType
-        {
-            Alarm,
-            Warning
-        }
+        private System.Timers.Timer ConnectTimer;
 
-        public void NewAlarm(string alarmDescription)
-        {
-            int n = -1;
-
-            for (int i = 0; i < AlarmListDescription.Count; i++)
-            {
-                if (AlarmListDescription[i] == alarmDescription)
-                {
-                    n = i;
-                    break;
-                }
-            }
-
-            if (n == -1 || AlarmListStatus[n] != "ACTIVE")
-            {
-                int id;
-                string statusBefore = (n == -1) ? "RAZ" : AlarmListStatus[n];
-                string statusAfter = "ACTIVE";
-
-                string[] values = new string[] { "Système", alarmDescription, statusBefore, statusAfter };
-                InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values);
-                id = GetMax(AuditTrailSettings["Table_Name"], "c00");
-
-                AlarmListID.Add(id);
-                AlarmListDescription.Add(alarmDescription);
-                AlarmListStatus.Add("ACTIVE");
-
-                if (n != -1)
-                {
-                    AlarmListID.RemoveAt(n);
-                    AlarmListDescription.RemoveAt(n);
-                    AlarmListStatus.RemoveAt(n);
-                }
-
-                for (int i = 0; i < AlarmListID.Count(); i++)
-                {
-                    //MessageBox.Show("NewAlarm " + i.ToString() + ", " + AlarmListID[i] + ", " + AlarmListDescription[i] + ", " + AlarmListStatus[i]);
-                }
-                MessageBox.Show(alarmDescription); // Peut-être afficher la liste des alarmes actives à la place
-            }
-            else
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Ce n'est pas bien ce que vous faite Monsieur, on ne crée pas d'alarme si elle est déjà active...");
-            }
-        }
-        public void InactivateAlarm(string alarmDescription, AlarmType alarmType = AlarmType.Alarm)
-        {
-            int n = -1;
-
-            for (int i = 0; i < AlarmListDescription.Count; i++)
-            {
-                if (AlarmListDescription[i] == alarmDescription)
-                {
-                    n = i;
-                    break;
-                }
-            }
-
-            if (n != -1 && AlarmListStatus[n] != "INACTIVE")
-            {
-                int id;
-                string statusBefore = AlarmListStatus[n];
-                string statusAfter = (AlarmListStatus[n] == "ACTIVE") ? "INACTIVE" : "RAZ";
-
-                string[] values = new string[] { "Système", alarmDescription, statusBefore, statusAfter };
-                InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values);
-
-                if (statusAfter == "INACTIVE")
-                {
-                    id = GetMax(AuditTrailSettings["Table_Name"], "c00");
-
-                    AlarmListID.Add(id);
-                    AlarmListDescription.Add(alarmDescription);
-                    AlarmListStatus.Add("INACTIVE");
-                }
-
-                AlarmListID.RemoveAt(n);
-                AlarmListDescription.RemoveAt(n);
-                AlarmListStatus.RemoveAt(n);
-
-                for (int i = 0; i < AlarmListID.Count(); i++)
-                {
-                    //MessageBox.Show("InactivateAlarm " + i.ToString() + ", " + AlarmListID[i] + ", " + AlarmListDescription[i] + ", " + AlarmListStatus[i]);
-                }
-
-            }
-            else
-            {
-                MessageBox.Show("Tu sais pas ce que tu fais c'est pas vrai !");
-            }
-        }
-        public void AcknowledgeAlarm(string alarmDescription)
-        {
-            int n = -1;
-
-            for (int i = 0; i < AlarmListDescription.Count; i++)
-            {
-                if (AlarmListDescription[i] == alarmDescription)
-                {
-                    n = i;
-                    break;
-                }
-            }
-
-            if (n != -1)
-            {
-                int id;
-                string statusBefore = AlarmListStatus[n];
-                string statusAfter = (AlarmListStatus[n] == "ACTIVE") ? "ACK" : "RAZ";
-
-                string[] values = new string[] { "Système", alarmDescription, statusBefore, statusAfter };
-                InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values);
-
-                if (statusAfter == "ACK")
-                {
-                    id = GetMax(AuditTrailSettings["Table_Name"], "c00");
-
-                    AlarmListID.Add(id);
-                    AlarmListDescription.Add(alarmDescription);
-                    AlarmListStatus.Add("ACK");
-                }
-
-                AlarmListID.RemoveAt(n);
-                AlarmListDescription.RemoveAt(n);
-                AlarmListStatus.RemoveAt(n);
-
-
-                for (int i = 0; i < AlarmListID.Count(); i++)
-                {
-                    //MessageBox.Show("AcknowledgeAlarm" + i.ToString() + ", " + AlarmListID[i] + ", " + AlarmListDescription[i] + ", " + AlarmListStatus[i]);
-                }
-
-            }
-            else
-            {
-                MessageBox.Show("Tu sais pas ce que tu fais c'est pas vrai !");
-            }
-        }*/
         public MyDatabase()
         {
             if (MySettings == null)
@@ -175,6 +31,13 @@ namespace Database
             else
             {
                 Connect();
+
+                // Initialisation des timers
+                ConnectTimer = new System.Timers.Timer();
+                ConnectTimer.Interval = 1000;
+                ConnectTimer.Elapsed += seqTimer_OnTimedEvent;
+                ConnectTimer.AutoReset = true;
+                ConnectTimer.Start();
             }
         }
         ~MyDatabase()
@@ -182,15 +45,16 @@ namespace Database
             Disconnect();
             //MessageBox.Show("DB: Au revoir");
         }
+        private void seqTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e) 
+        {
+            if (!IsConnected())
+            {
+                ConnectAsync();
+                MessageBox.Show("Cool " + IsConnected().ToString());
+            }
+        }
         public async void ConnectAsync()
         {
-            int attemptsNumber = 0;
-            /*
-             *  Add a try something here
-             *  Add a while loop here
-             */
-
-            // set these values correctly for your database server
             MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder
             {
                 Server = MySettings.DB_Features.Server,
@@ -201,33 +65,17 @@ namespace Database
 
             connection = new MySqlConnection(builder.ConnectionString);
 
-            while (!this.IsConnected() && attemptsNumber < int.Parse(ConnectionAttempSettings["Max"].ToString()))
+            try
             {
-                try
-                {
-                    await connection.OpenAsync();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-                attemptsNumber++;
+                await connection.OpenAsync();
             }
-
-            if (!this.IsConnected())
+            catch (Exception ex)
             {
-                MessageBox.Show("Connection to database failed");
+                MessageBox.Show(ex.Message);
             }
         }
         public void Connect()
         {
-            int attemptsNumber = 0;
-            /*
-             *  Add a try something here
-             *  Add a while loop here
-             */
-
-            // set these values correctly for your database server
             MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder
             {
                 Server = MySettings.DB_Features.Server,
@@ -238,30 +86,13 @@ namespace Database
 
             connection = new MySqlConnection(builder.ConnectionString);
 
-            while (!this.IsConnected() && attemptsNumber < int.Parse(ConnectionAttempSettings["Max"].ToString()))
+            try
             {
-                try
-                {
-                    connection.Open();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-                attemptsNumber++;
+                connection.Open();
             }
-
-            //MessageBox.Show(MySettings.DB_Features.Server + ", " + MySettings.DB_Features.UserID + ", " + MySettings.DB_Features.Password + ", " + MySettings.DB_Features.Database);
-
-            if (!this.IsConnected())
+            catch (Exception ex)
             {
-                MessageBox.Show("Connexion à la base de donnée échouée");
-
-                //NewAlarm("ALARME 00.01 - Connexion à la base de donnée échouée");
-
-                //string[] values = new string[] { "Système", "ALARME 00.01 - Connexion à la base de donnée échouée" };
-                //InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"], values);
-
+                //MessageBox.Show(ex.Message);
             }
         }
         public void Disconnect()
@@ -269,10 +100,13 @@ namespace Database
             /*
              * Try something
              */
+            ConnectTimer.Stop();
             connection.Close();
         }
         public bool IsConnected()
         {
+            if (connection == null) return false;
+
             return connection.State == System.Data.ConnectionState.Open;
         }
         public ReadOnlyCollection<DbColumn> SendCommand_readAll(string tableName)
@@ -323,6 +157,8 @@ namespace Database
             string orderArg = "";
             string groupByArg = "";
             bool isCommandOk = true;
+
+            Close_reader();
 
             if (orderBy != null)
             {
@@ -405,11 +241,34 @@ namespace Database
         }
         public void Close_reader()
         {
-            reader.Close();
+            if(!IsReaderNull()) reader.Close();
         }
         public bool IsReaderNull()
         {
             return reader == null;
+        }
+        public string[] GetOneRow(string tableName, string selectColumns = "*", string[] whereColumns = null, string[] whereValues = null)
+        {
+            string[] array = new string[0];
+
+            if (IsConnected())
+            {
+                SendCommand_Read(tableName, selectColumns, whereColumns, whereValues);
+
+                array = ReadNext();
+
+                if (ReadNext().Count() != 0)
+                {
+                    array = new string[0];
+                    MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - GetOneRow : Oula c'est mauvais ça !");
+                }
+                Close_reader();
+            }
+            else
+            {
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - GetOneRow : ce sera pas possible Monsieur. Non...");
+            }
+            return array;
         }
         public int GetMax(string tableName, string column, string[] whereColumns = null, string[] whereValues = null)
         {

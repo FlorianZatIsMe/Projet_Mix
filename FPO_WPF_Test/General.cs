@@ -17,6 +17,13 @@ namespace FPO_WPF_Test
         private static MyDatabase db = new MyDatabase();
         public static string Role = "";
         public static CycleInfo CurrentCycleInfo;
+        public const string application_version = "1.0";
+        public const string application_namen = "MixingApplication";
+
+        public static void SetframeInfoCycle(Frame frame)
+        {
+
+        }
 
         public static bool Verify_Format(TextBox textBox, bool isNotNull, bool isNumber, int parameter, decimal min = -1, decimal max = -1)
         {
@@ -25,6 +32,8 @@ namespace FPO_WPF_Test
              *              - si isNumber = false : le nombre de caractère max
              *              - si isNumber = true : le nombre de chiffre après la virgule
              */
+
+            
 
             bool result = true;
 
