@@ -50,13 +50,15 @@ namespace Driver.MODBUS
             {
                 if (isModbusActive && !IsConnected() && !areAlarmActive[0])
                 {
-                    AlarmManagement.NewAlarm(AlarmManagement.alarms[1, 0]);
+                    AlarmManagement.NewAlarm(1, 0);
+                    //AlarmManagement.NewAlarm(AlarmManagement.alarms[1, 0]);
                     //db.NewAlarm("ALARM 01.01 - Connexion au SpeedMixer échouée");
                     areAlarmActive[0] = true;
                 }
                 else if (IsConnected() && areAlarmActive[0])
                 {
-                    AlarmManagement.InactivateAlarm(AlarmManagement.alarms[1, 0]);
+                    AlarmManagement.InactivateAlarm(1, 0);
+                    //AlarmManagement.InactivateAlarm(AlarmManagement.alarms[1, 0]);
                     //db.InactivateAlarm("ALARM 01.01 - Connexion au SpeedMixer échouée");
                     areAlarmActive[0] = false;
                 }

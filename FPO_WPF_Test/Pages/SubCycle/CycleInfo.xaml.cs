@@ -26,7 +26,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
     {
         private List<WrapPanel> wrapPanels = new List<WrapPanel>();
         private static int seqNumber;
-        private static List<Alarm> activeAlarms = new List<Alarm>();
+        private static List<Tuple<int, int>> activeAlarms = new List<Tuple<int, int>>();
         private System.Timers.Timer checkAlarmsTimer;
         private MyDatabase db = new MyDatabase();
         private Frame frameCycleInfo;
@@ -81,7 +81,6 @@ namespace FPO_WPF_Test.Pages.SubCycle
         private void checkAlarmsTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
             string[] array;
-
             // S'il y a un évènement d'alarme qui n'a pas été affiché...
             if (!activeAlarms.SequenceEqual(AlarmManagement.activeAlarms))
             {
@@ -92,14 +91,16 @@ namespace FPO_WPF_Test.Pages.SubCycle
                     if (!activeAlarms.Contains(AlarmManagement.activeAlarms[i]))
                     {
                         // On met dans la variable array, l'enregistrement d'audit trail de l'alarme en question
-                        array = db.GetOneRow(tableName: "audit_trail", whereColumns: new string[] { "c00" }, whereValues: new string[] { AlarmManagement.activeAlarms[i].id.ToString() });
+                        array = db.GetOneRow(tableName: "audit_trail", 
+                            whereColumns: new string[] { "id" }, 
+                            whereValues: new string[] { AlarmManagement.alarms[AlarmManagement.activeAlarms[i].Item1, AlarmManagement.activeAlarms[i].Item2].id.ToString() });
 
                         // S'il n'y a pas eu d'erreur, on affiche les infos de l'alarme
                         if (array.Count() != 0)
                         {
                             this.Dispatcher.Invoke(() =>
                             {
-                                AddRow(array[1] + " - " + array[3] + " - " + array[5]);
+                                AddRow(array[1] + " - " + array[4] + " - " + array[6]);
                             });
                         }
                         else
@@ -121,14 +122,14 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 for (int i = 0; i < AlarmManagement.RAZalarms.Count; i++)
                 {
                     // On met dans la variable array l'enregistrement d'audit trail de l'alarme
-                    array = db.GetOneRow(tableName: "audit_trail", whereColumns: new string[] { "c00" }, whereValues: new string[] { AlarmManagement.RAZalarms[i].id.ToString() });
+                    array = db.GetOneRow(tableName: "audit_trail", whereColumns: new string[] { "id" }, whereValues: new string[] { AlarmManagement.RAZalarms[i].ToString() });
 
                     // S'il n'y a pas eu d'erreur, on affiche les infos de l'alarme
                     if (array.Count() != 0)
                     {
                         this.Dispatcher.Invoke(() =>
                         {
-                            AddRow(array[1] + " - " + array[3] + " - " + array[5]);
+                            AddRow(array[1] + " - " + array[4] + " - " + array[6]);
                         });
                     }
                     else

@@ -24,6 +24,10 @@ namespace FPO_WPF_Test.Pages.SubCycle
     public partial class CycleWeight : Page, IDisposable
     {
         private Frame mainFrame;
+        private int idCycle;
+        private int idPrevious;
+        private string tablePrevious;
+        private int idSubCycle;
         private MyDatabase db = new MyDatabase();
         private readonly string[] currentPhaseParameters;
         private List<string[]> thisCycleInfo;
@@ -39,10 +43,12 @@ namespace FPO_WPF_Test.Pages.SubCycle
         private bool isWeightCorrect;
         private bool disposedValue;
 
-        public CycleWeight(Frame mainFrame_arg, string id, List<string[]> cycleInfo)
+        public CycleWeight(Frame mainFrame_arg, string id, List<string[]> cycleInfo, int idCycle_arg, int idPrevious_arg, string tablePrevious_arg)
         {
             mainFrame = mainFrame_arg;
-            //frameInfoCycle = frameInfoCycle_arg;
+            idCycle = idCycle_arg;
+            idPrevious = idPrevious_arg;
+            tablePrevious = tablePrevious_arg;
             mainFrame.ContentRendered += new EventHandler(thisFrame_ContentRendered);
             thisCycleInfo = cycleInfo;
             isSequenceOver = false;
@@ -96,6 +102,13 @@ namespace FPO_WPF_Test.Pages.SubCycle
                     labelWeightLimits.Text = "[ " + min.ToString("N" + currentPhaseParameters[7]) + "; " + max.ToString("N" + currentPhaseParameters[7]) + " ]";
                     db.Close_reader(); // On ferme le reader de la db pour pouvoir lancer une autre requête
 
+                    string columns = "product, setpoint, minimum, maximum, unit, decimal_number";
+                    string[] values = new string[] { currentPhaseParameters[3], setpoint.ToString(), min.ToString(), max.ToString(), currentPhaseParameters[6], currentPhaseParameters[7] };
+                    db.InsertRow("cycle_weight", columns, values);
+                    idSubCycle = db.GetMax("cycle_weight", "id");
+
+                    db.Update_Row(tablePrevious, new string[] { "next_seq_type", "next_seq_id" }, new string[] { "0", idSubCycle.ToString() }, idPrevious.ToString());
+
                     if (currentPhaseParameters[4] == "True") // Si le contrôle du code barre est activé, on affiche les bonnes infos
                     {
                         isScanningStep = true;
@@ -118,7 +131,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 {
                     MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Méthode suivante ne renvoie pas une seule ligne: db.SendCommand_Read(recipe_weight, whereColumns: new string[] { id }, whereValues: new string[] { id })");
                 }
-                db.Disconnect();
+                //db.Disconnect();
             }
             else
             {
@@ -271,20 +284,26 @@ namespace FPO_WPF_Test.Pages.SubCycle
                     string[] info = new string[] { "0", currentPhaseParameters[3], tbWeight.Text, min.ToString(), max.ToString() };
                     thisCycleInfo.Add(info);
 
+                    db.Update_Row("cycle_weight", new string[] { "was_weight_manual", "date_time", "actual_value" }, new string[] { isBalanceFree ? "0" : "1", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), tbWeight.Text }, idSubCycle.ToString());
+
                     if (currentPhaseParameters[1] == "0") // Si la première séquence est une séquence de poids
                     {
-                        mainFrame.Content = new Pages.SubCycle.CycleWeight(mainFrame, currentPhaseParameters[2], thisCycleInfo);
+                        mainFrame.Content = new Pages.SubCycle.CycleWeight(mainFrame, currentPhaseParameters[2], thisCycleInfo, idCycle, idSubCycle, "cycle_weight");
                     }
                     else if (currentPhaseParameters[1] == "1") // Si la première séquence est une séquence speedmixer
                     {
                         MessageBox.Show("Mettez le produit dans le speedmixer et fermer le capot");
-                        mainFrame.Content = new Pages.SubCycle.CycleSpeedMixer(mainFrame, currentPhaseParameters[2], thisCycleInfo);
+                        mainFrame.Content = new Pages.SubCycle.CycleSpeedMixer(mainFrame, currentPhaseParameters[2], thisCycleInfo, idCycle, idSubCycle, "cycle_weight");
                     }
                     else if (currentPhaseParameters[1] == null || currentPhaseParameters[1] == "") // Si la première séquence est une séquence speedmixer
                     {
+                        string lastAlarmId = db.GetMax("audit_trail", "id").ToString();
+                        db.Update_Row("cycle", new string[] { "date_time_end_cycle", "last_alarm_id" }, new string[] { DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), lastAlarmId }, idCycle.ToString());
+
                         MessageBox.Show("C'est fini, merci d'être passé");
                         General.CurrentCycleInfo.InitializeSequenceNumber();
-                        General.PrintReport(thisCycleInfo);
+                        General.PrintReport(idCycle);
+                        MessageBox.Show("Yes");
 
                         // On cache le panneau d'information
                         General.CurrentCycleInfo.SetVisibility(false);
@@ -347,14 +366,82 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
                 if (!isWeightCorrect)
                 {
-                    General.PrintReport(thisCycleInfo);
+                    db.Update_Row("cycle", new string[] { "date_time_end_cycle", "comment" }, new string[] { DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), "Cycle interrompu"}, idCycle.ToString());
+
+                    string[] recipeParameters = currentPhaseParameters;
+
+                    int previousSeqType = 0;
+                    string previousSeqId = idSubCycle.ToString();
+                    string nextSeqId;
+                    int nextRecipeSeqType;
+                    bool isNextRcpSeqTpOK;
+
+                    string[] tableNameSubCycles = new string[] { "cycle_weight", "cycle_speedmixer" }; // Pas bien ça, il faut faire référence au fichier de config et même ça devrait une constante globale. Non ?
+                    string[] tableNameSubRecipes = new string[] { "recipe_weight", "recipe_speedmixer" }; // Pas bien ça, il faut faire référence au fichier de config et même ça devrait une constante globale. Non ?
+                    string[] columnNamesSubCycles = new string[] { "product, setpoint, minimum, maximum, unit, decimal_number", "time_mix_th, pressure_unit, speed_min, speed_max, pressure_min, pressure_max" }; // Pas bien ça, il faut faire référence au fichier de config et même ça devrait une constante globale. Non ?
+                    string[] valuesSubCycle = new string[0];
+                    int timeTh_seconds = 0;
+                    //TimeSpan timeTh;
+                    int i;
+
+                    while (recipeParameters[1] != "" && recipeParameters[1] != null)
+                    {
+                        nextRecipeSeqType = int.Parse(recipeParameters[1]);
+                        recipeParameters = db.GetOneRow(tableNameSubRecipes[int.Parse(recipeParameters[1])], whereColumns: new string[] { "id" }, whereValues: new string[] { recipeParameters[2] });
+
+                        if (nextRecipeSeqType == 0)
+                        {
+                            valuesSubCycle = new string[] { recipeParameters[3], recipeParameters[8], recipeParameters[9], recipeParameters[10], recipeParameters[6], recipeParameters[7] };
+                            isNextRcpSeqTpOK = true;
+                        }
+                        else if (nextRecipeSeqType == 1)
+                        {
+                            i = 0;
+                            while (i != 10 && recipeParameters[12 + 3 * i] != "")
+                            {
+                                timeTh_seconds += int.Parse(recipeParameters[13 + 3 * i]);
+
+                                i++;
+                            }
+
+                            //MessageBox.Show("timeTh: " + timeTh_seconds.ToString());
+                            //timeTh = TimeSpan.FromSeconds(timeTh_seconds);
+
+                            valuesSubCycle = new string[] { TimeSpan.FromSeconds(timeTh_seconds).ToString(), recipeParameters[9], recipeParameters[42], recipeParameters[43], recipeParameters[44], recipeParameters[45] };
+                            isNextRcpSeqTpOK = true;
+                            timeTh_seconds = 0;
+                        }
+                        else
+                        {
+                            MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Mais non, tu déconnes !");
+                            isNextRcpSeqTpOK = false;
+                        }
+
+                        if (isNextRcpSeqTpOK)
+                        {
+                            db.InsertRow(tableNameSubCycles[nextRecipeSeqType],
+                                columnNamesSubCycles[nextRecipeSeqType],
+                                valuesSubCycle);
+
+                            nextSeqId = db.GetMax(tableNameSubCycles[nextRecipeSeqType], "id").ToString();
+                            db.Update_Row(tableNameSubCycles[previousSeqType],
+                                new string[] { "next_seq_type", "next_seq_id" },
+                                new string[] { nextRecipeSeqType.ToString(), nextSeqId }, previousSeqId);
+                            previousSeqType = nextRecipeSeqType;
+                            previousSeqId = nextSeqId;
+                        }
+                    }
+
+                    string lastAlarmId = db.GetMax("audit_trail", "id").ToString();
+                    db.Update_Row("cycle", new string[] { "date_time_end_cycle", "last_alarm_id" }, new string[] { DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), lastAlarmId }, idCycle.ToString());
+                    General.CurrentCycleInfo.InitializeSequenceNumber();
+                    General.PrintReport(idCycle);
+                    MessageBox.Show("Rapport généré");
 
                     // On cache le panneau d'information
                     General.CurrentCycleInfo.SetVisibility(false);
-                    //frameInfoCycle.Content = null;
-                    //frameInfoCycle.Visibility = Visibility.Collapsed;
                     mainFrame.Content = new Pages.Status();
-                    Dispose(disposing: true);
+                    Dispose(disposing: true); // Il va peut-être falloir sortir ça du "if"
                 }
             }
 

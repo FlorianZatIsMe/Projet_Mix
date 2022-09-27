@@ -13,18 +13,29 @@ namespace Alarm_Management
 {
     public static class AlarmManagement
     {
-        public static List<Alarm> activeAlarms { get; }
-        public static List<Alarm> RAZalarms;
-        public readonly static Alarm[,] alarms;
+        public static List<Tuple<int, int>> activeAlarms { get; }
+        //public static List<Alarm> activeAlarms { get; }
+        public static List<int> RAZalarms;
+        public static Alarm[,] alarms;
         private static MyDatabase db = new MyDatabase();
         private readonly static NameValueCollection AuditTrailSettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
+        private readonly static Configuration.List MySettings = ConfigurationManager.GetSection("Alarm_Info/List") as Configuration.List;
+        private readonly static Database.Configuration.Connection_Info HisSettings = ConfigurationManager.GetSection("Database/Connection_Info") as Database.Configuration.Connection_Info;
 
         public struct Alarm
         {
             public int id;
-            public string Description;
-            public AlarmType Type;
+            public readonly string Description;
+            public readonly AlarmType Type;
             public AlarmStatus Status;
+
+            public Alarm(string description, AlarmType type)
+            {
+                id = -1;
+                Description = description;
+                Type = type;
+                Status = AlarmStatus.RAZ;
+            }
         }
         public enum AlarmType
         {
@@ -35,92 +46,101 @@ namespace Alarm_Management
         public enum AlarmStatus
         {
             RAZ,
+            RAZACK,
             ACTIVE,
             INACTIVE,
             ACK,
             None
         }
-
         static AlarmManagement()
         {
-            activeAlarms = new List<Alarm>();
-            RAZalarms = new List<Alarm>();
+            activeAlarms = new List<Tuple<int, int>>();
+            //RAZalarms = new List<Alarm>();
+            RAZalarms = new List<int>();
             alarms = new Alarm[4, 2];
 
-            alarms[0, 0].Description = "ALARM 00.00 - Connexion à la balance échouée";
-            alarms[0, 0].Type = AlarmType.Alarm;
-
-            alarms[1, 0].Description = "ALARM 01.00 - Connexion au SpeedMixer échouée";
-            alarms[1, 0].Type = AlarmType.Alarm;
-
-            alarms[2, 0].Description = "ALARM 02.00 - Connexion à la pompe à vide échouée";
-            alarms[2, 0].Type = AlarmType.Alarm;
-
-            alarms[3, 0].Description = "ALARM 03.00 - Connexion au piège froid échouée";
-            alarms[3, 0].Type = AlarmType.Alarm;
-
-            alarms[3, 1].Description = "ALARM 03.01 - Température trop haute pendant le cycle";
-            alarms[3, 1].Type = AlarmType.Alarm;
+            alarms[0, 0] = new Alarm("Connexion à la balance échouée", AlarmType.Alarm);
+            alarms[1, 0] = new Alarm("Connexion au SpeedMixer échouée", AlarmType.Alarm);
+            alarms[2, 0] = new Alarm("Connexion à la pompe à vide échouée", AlarmType.Alarm);
+            alarms[3, 0] = new Alarm("Connexion au piège froid échouée", AlarmType.Alarm);
+            alarms[3, 1] = new Alarm("Température trop haute pendant le cycle", AlarmType.Alarm);
         }
-        public static void NewAlarm(Alarm alarm_arg)
+        public static void NewAlarm(int id1, int id2)
         {
-            int n = -1;
-            Alarm alarm = alarm_arg;
+            //MessageBox.Show((MySettings.Alarm_Features.ID_List+1).ToString());
 
+            int n = -1;
+            bool isAlarmNotActive = alarms[id1, id2].Status != AlarmStatus.ACTIVE && 
+                                    alarms[id1, id2].Status != AlarmStatus.ACK;
+            /*
             for (int i = 0; i < activeAlarms.Count; i++)
             {
-                if (activeAlarms[i].Description == alarm.Description)
+                if (activeAlarms[i].Description == alarms[id1, id2].Description)
                 {
                     n = i;
                     break;
                 }
-            }
+            }*/
 
-            if (n == -1 || (activeAlarms[n].Status != AlarmStatus.ACTIVE && activeAlarms[n].Status != AlarmStatus.ACK))
+            if (isAlarmNotActive) // Si l'alarme n'est pas active, on peut la créer
+            //if (n == -1 || (activeAlarms[n].Status != AlarmStatus.ACTIVE && activeAlarms[n].Status != AlarmStatus.ACK))
             {
-                AlarmStatus statusBefore = (n == -1) ? AlarmStatus.RAZ : activeAlarms[n].Status;
+                AlarmStatus statusBefore = alarms[id1, id2].Status;
                 AlarmStatus statusAfter = AlarmStatus.ACTIVE;
 
-                string[] values = new string[] { "Système", alarm.Description, statusBefore.ToString(), statusAfter.ToString() };
+                string[] values = new string[] { "Système", GetAlarmType(alarms[id1, id2].Type), GetAlarmDescription(id1, id2), statusBefore.ToString(), statusAfter.ToString() };
                 db.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values);
 
-                alarm.id = db.GetMax(AuditTrailSettings["Table_Name"], "c00");
-                alarm.Status = statusAfter;
-                activeAlarms.Add(alarm);
+                alarms[id1, id2].id = db.GetMax(AuditTrailSettings["Table_Name"], "id");
+                alarms[id1, id2].Status = statusAfter;
+                activeAlarms.Add(new Tuple<int, int>(id1, id2));
 
-                if (n != -1) activeAlarms.RemoveAt(n);
+                if (statusBefore == AlarmStatus.INACTIVE)
+                {
+                    for (int i = 0; i < activeAlarms.Count; i++)
+                    {
+                        if (activeAlarms[i].Item1 == id1 && activeAlarms[i].Item2 == id2)
+                        {
+                            n = i;
+                            break;
+                        }
+                    }
+
+                    if (n != -1) activeAlarms.RemoveAt(n);
+                    else MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Très bizarre...");
+                }
+
 
                 for (int i = 0; i < activeAlarms.Count(); i++)
                 {
                     //MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - " + i.ToString() + ", " + activeAlarms[i].id.ToString() + ", " + activeAlarms[i].Description + ", " + activeAlarms[i].Status.ToString());
                 }
-                MessageBox.Show(alarm.Description); // Peut-être afficher la liste des alarmes actives à la place
+                MessageBox.Show(GetAlarmDescription(id1, id2)); // Peut-être afficher la liste des alarmes actives à la place
             }
             else
             {
                 MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Ce n'est pas bien ce que vous faite Monsieur, on ne crée pas d'alarme si elle est déjà active...");
             }
         }
-        public static void InactivateAlarm(Alarm alarm_arg)
+        public static void InactivateAlarm(int id1, int id2)
         {
             int n = -1;
-            Alarm alarm = alarm_arg;
 
             for (int i = 0; i < activeAlarms.Count; i++)
             {
-                if (activeAlarms[i].Description == alarm.Description)
+                if (activeAlarms[i].Item1 == id1 && activeAlarms[i].Item2 == id2)
                 {
                     n = i;
                     break;
                 }
             }
 
-            if (n != -1 && activeAlarms[n].Status != AlarmStatus.INACTIVE)
+            if (n != -1 && alarms[id1, id2].Status != AlarmStatus.INACTIVE)
             {
-                AlarmStatus statusBefore = activeAlarms[n].Status;
+                AlarmStatus statusBefore = alarms[id1, id2].Status;
                 AlarmStatus statusAfter = AlarmStatus.None;// = (activeAlarms[n].Status == AlarmStatus.ACTIVE) ? AlarmStatus.INACTIVE : AlarmStatus.RAZ;
 
-                if (alarm.Type == AlarmType.Alarm)
+                if (alarms[id1, id2].Type == AlarmType.Alarm)
                 {
                     if (statusBefore == AlarmStatus.ACTIVE)
                     {
@@ -135,7 +155,7 @@ namespace Alarm_Management
                         MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Non mais WHAT !!! T'es sérieux là ???");
                     }
                 }
-                else if (alarm.Type == AlarmType.Warning)
+                else if (alarms[id1, id2].Type == AlarmType.Warning)
                 {
                     statusAfter = AlarmStatus.RAZ;
                 }
@@ -146,19 +166,19 @@ namespace Alarm_Management
 
                 if (statusAfter != AlarmStatus.None)
                 {
-                    string[] values = new string[] { "Système", alarm.Description, statusBefore.ToString(), statusAfter.ToString() };
+                    string[] values = new string[] { "Système", GetAlarmType(alarms[id1, id2].Type), GetAlarmDescription(id1, id2), statusBefore.ToString(), statusAfter.ToString() };
                     db.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values);
 
-                    alarm.id = db.GetMax(AuditTrailSettings["Table_Name"], "c00");
-                    alarm.Status = statusAfter;
+                    alarms[id1, id2].id = db.GetMax(AuditTrailSettings["Table_Name"], "id");
+                    alarms[id1, id2].Status = statusAfter;
 
                     if (statusAfter == AlarmStatus.INACTIVE)
                     {
-                        activeAlarms.Add(alarm);
+                        activeAlarms.Add(new Tuple<int, int>(id1, id2));
                     }
                     else if (statusAfter == AlarmStatus.RAZ)
                     {
-                        RAZalarms.Add(alarm);
+                        RAZalarms.Add(alarms[id1, id2].id);
                     }
 
                     activeAlarms.RemoveAt(n);
@@ -174,14 +194,13 @@ namespace Alarm_Management
                 //MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - " + i.ToString() + ", " + activeAlarms[i].id.ToString() + ", " + activeAlarms[i].Description + ", " + activeAlarms[i].Status.ToString());
             }
         }
-        public static void AcknowledgeAlarm(Alarm alarm_arg)
+        public static void AcknowledgeAlarm(int id1, int id2)
         {
             int n = -1;
-            Alarm alarm = alarm_arg;
 
             for (int i = 0; i < activeAlarms.Count; i++)
             {
-                if (activeAlarms[i].Description == alarm.Description)
+                if (activeAlarms[i].Item1 == id1 && activeAlarms[i].Item2 == id2)
                 {
                     n = i;
                     break;
@@ -190,25 +209,28 @@ namespace Alarm_Management
 
             if (n != -1)
             {
-                AlarmStatus statusBefore = activeAlarms[n].Status;
-                AlarmStatus statusAfter = (activeAlarms[n].Status == AlarmStatus.ACTIVE) ? AlarmStatus.ACK : AlarmStatus.RAZ;
+                AlarmStatus statusBefore = alarms[id1, id2].Status;
+                AlarmStatus statusAfter = statusBefore == AlarmStatus.ACTIVE ? AlarmStatus.ACK : (statusBefore == AlarmStatus.INACTIVE ? AlarmStatus.RAZACK : statusBefore);
 
-                string[] values = new string[] { "Système", alarm.Description, statusBefore.ToString(), statusAfter.ToString() };
-                db.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values);
-
-                alarm.id = db.GetMax(AuditTrailSettings["Table_Name"], "c00");
-                alarm.Status = statusAfter;
-
-                if (statusAfter == AlarmStatus.ACK)
+                if (statusBefore != statusAfter)
                 {
-                    activeAlarms.Add(alarm);
-                }
-                else if (statusAfter == AlarmStatus.RAZ)
-                {
-                    RAZalarms.Add(alarm);
-                }
+                    string[] values = new string[] { "Système", GetAlarmType(alarms[id1, id2].Type), GetAlarmDescription(id1, id2), statusBefore.ToString(), statusAfter.ToString() };
+                    db.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values);
 
-                activeAlarms.RemoveAt(n);
+                    alarms[id1, id2].id = db.GetMax(AuditTrailSettings["Table_Name"], "id");
+                    alarms[id1, id2].Status = statusAfter;
+
+                    if (statusAfter == AlarmStatus.ACK)
+                    {
+                        activeAlarms.Add(new Tuple<int, int>(id1, id2));
+                    }
+                    else if (statusAfter == AlarmStatus.RAZACK)
+                    {
+                        RAZalarms.Add(alarms[id1, id2].id);
+                    }
+
+                    activeAlarms.RemoveAt(n);
+                }
 
                 for (int i = 0; i < activeAlarms.Count(); i++)
                 {
@@ -220,6 +242,23 @@ namespace Alarm_Management
             {
                 MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Tu sais pas ce que tu fais c'est pas vrai !");
             }
+        }
+        public static string GetAlarmType(AlarmType type)
+        {
+            switch (type)
+            {
+                case AlarmType.Alarm:
+                    return "Alarme";
+                case AlarmType.Warning:
+                    return "Alerte";
+                case AlarmType.None:
+                default:
+                    return "";
+            }
+        }
+        public static string GetAlarmDescription(int id1, int id2)
+        {
+            return GetAlarmType(alarms[id1, id2].Type).ToUpper() + " " + id1.ToString("00") + "." + id2.ToString("00") + " " + alarms[id1, id2].Description;
         }
     }
 }

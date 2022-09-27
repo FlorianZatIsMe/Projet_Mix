@@ -1,4 +1,5 @@
-﻿using Database;
+﻿using Alarm_Management;
+using Database;
 using Driver.RS232.Pump;
 using DRIVER.RS232.Weight;
 using System;
@@ -20,9 +21,6 @@ using System.Windows.Shapes;
 
 namespace FPO_WPF_Test.Pages.SubCycle
 {
-    /// <summary>
-    /// Logique d'interaction pour PreCycle.xaml
-    /// </summary>
     public partial class PreCycle : Page
     {
         private Frame outputFrame = new Frame();
@@ -41,7 +39,6 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
             General.Update_RecipeNames(cbxProgramName, ProgramNames, ProgramIDs, true);
         }
-
         private void fxOK(object sender, RoutedEventArgs e)
         {
             string[] array;
@@ -75,6 +72,14 @@ namespace FPO_WPF_Test.Pages.SubCycle
                         nextSeqType = array[1];
                         nextSeqID = array[2];
 
+                        string recipe_name = array[3];
+                        string recipe_version = array[4];
+
+                        string columns = "job_number, batch_number, quantity_value, quantity_unit, item_number, recipe_name, recipe_version, equipment_name, username";
+                        string[] values = new string[] { tbOFnumber.Text, tbOFnumber.Text, tbFinalWeight.Text, "g", recipe_name, recipe_name, recipe_version, General.equipement_name, General.loggedUsername };
+                        db.InsertRow("cycle", columns, values);
+                        int idCycle = db.GetMax("cycle", "id");
+
                         while (nextSeqID != "" && nextSeqID != null)
                         {
 
@@ -106,15 +111,23 @@ namespace FPO_WPF_Test.Pages.SubCycle
                             db.Close_reader(); // On ferme le reader de la db pour pouvoir lancer une autre requête
                         }
 
-                        General.CurrentCycleInfo.InitializeSequenceNumber();
+                        General.CurrentCycleInfo.InitializeSequenceNumber(); //'2022-09-20 11:52:10
+
+                        db.InsertRow("audit_trail", "username, event_type, description", new string[] { General.loggedUsername, "Evènement", "Départ cycle. Lot: " + tbOFnumber.Text + ", Recette: " + recipe_name + " version " + recipe_version });
+
+                        string firstAlarmId;
+                        if (AlarmManagement.activeAlarms.Count > 0) firstAlarmId = AlarmManagement.alarms[AlarmManagement.activeAlarms[0].Item1, AlarmManagement.activeAlarms[0].Item2].id.ToString();
+                        else firstAlarmId = db.GetMax("audit_trail", "id").ToString();
+
+                        db.Update_Row("cycle", new string[] { "date_time_start_cycle", "first_alarm_id" }, new string[] { DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), firstAlarmId }, idCycle.ToString());
 
                         if (firstSeqType == "0") // Si la première séquence est une séquence de poids
                         {
-                            outputFrame.Content = new Pages.SubCycle.CycleWeight(outputFrame, firstSeqID, thisCycleInfo);
+                            outputFrame.Content = new Pages.SubCycle.CycleWeight(outputFrame, firstSeqID, thisCycleInfo, idCycle, idCycle, "cycle");
                         }
                         else if (firstSeqType == "1") // Si la première séquence est une séquence speedmixer
                         {
-                            outputFrame.Content = new Pages.SubCycle.CycleSpeedMixer(outputFrame, firstSeqID, thisCycleInfo);
+                            outputFrame.Content = new Pages.SubCycle.CycleSpeedMixer(outputFrame, firstSeqID, thisCycleInfo, idCycle, idCycle, "cycle");
                         }
                         else
                         {
@@ -137,12 +150,10 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 }
             }
         }
-
         private void fxAnnuler(object sender, RoutedEventArgs e)
         {
             outputFrame.Content = new Status();
         }
-
         private void tbOFnumber_KeyDown(object sender, KeyEventArgs e)
         {
             TextBox textbox = sender as TextBox;   
@@ -160,7 +171,6 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 }
             }
         }
-
         private void tbFinalWeight_KeyDown(object sender, KeyEventArgs e)
         {
             TextBox textbox = sender as TextBox;

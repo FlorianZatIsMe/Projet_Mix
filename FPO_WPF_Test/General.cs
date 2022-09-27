@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,7 +19,9 @@ namespace FPO_WPF_Test
         public static string Role = "";
         public static CycleInfo CurrentCycleInfo;
         public const string application_version = "1.0";
-        public const string application_namen = "MixingApplication";
+        public const string application_name = "MixingApplication";
+        public const string equipement_name = "Mabcxyz";
+        public static string loggedUsername = WindowsIdentity.GetCurrent().Name;
 
         public static void SetframeInfoCycle(Frame frame)
         {
@@ -49,7 +52,7 @@ namespace FPO_WPF_Test
                 {
                     textBox.Text = Math.Round(decimal.Parse(textBox.Text), parameter).ToString("N" + parameter.ToString());
 
-                    if ((min != -1 || max != -1) && (decimal.Parse(textBox.Text) < min || decimal.Parse(textBox.Text) > max))
+                    if (min != -1 && max != -1 && (decimal.Parse(textBox.Text) < min || decimal.Parse(textBox.Text) > max))
                     {
                         MessageBox.Show("Format incorrect, valeur en dehors de la gamme [" + min.ToString() + " ; " + max.ToString() + "]");
 
@@ -66,6 +69,16 @@ namespace FPO_WPF_Test
                             MessageBox.Show("Drôle de situation");
                             return false;
                         }
+                    }
+                    else if (min != -1 && decimal.Parse(textBox.Text) < min)
+                    {
+                        MessageBox.Show("Format incorrect, valeur inférieure au minimum: " + min.ToString());
+                        textBox.Text = min.ToString();
+                    }
+                    else if (max != -1 && decimal.Parse(textBox.Text) > max)
+                    {
+                        MessageBox.Show("Format incorrect, valeur valeur supérieur au maximum: " + max.ToString());
+                        textBox.Text = max.ToString();
                     }
                 }
                 catch (Exception)
@@ -101,7 +114,7 @@ namespace FPO_WPF_Test
                 db.SendCommand_GetLastRecipes(onlyProdRecipes);
                 string[] array;
 
-                if (!db.IsReaderNull())
+                if (!db.IsReaderNotAvailable())
                 {
                     array = db.ReadNext();
 
@@ -128,26 +141,10 @@ namespace FPO_WPF_Test
                 MessageBox.Show("Not good brotha");
             }
         }
-        public static void PrintReport(List<string[]> cycleInfo)
+        public static void PrintReport(int id)
         {
-            string info;
-
-            info = "Nom recette: " + cycleInfo[0][0] + " ; Numéro de lot: " + cycleInfo[0][1] + " ; Masse du produit fini: " + cycleInfo[0][2];
-            MessageBox.Show(info);
-
-            for (int i = 1; i < cycleInfo.Count; i++)
-            {
-                if (cycleInfo[i][0] == "0")
-                {
-                    info = "Masse " + i.ToString() + " - Produit: " + cycleInfo[i][1] + " ; Masse produit: " + cycleInfo[i][2] + " ; Minimum: " + cycleInfo[i][3] + " ; Maximum: " + cycleInfo[i][4];
-                    MessageBox.Show(info);
-                }
-                else if (cycleInfo[i][0] == "1")
-                {
-                    info = "SpeedMixer " + i.ToString() + " - Produit: " + cycleInfo[i][1];
-                    MessageBox.Show(info);
-                }
-            }
+            ReportGeneration report = new ReportGeneration();
+            report.pdfGenerator(id.ToString());
         }
     }
 }

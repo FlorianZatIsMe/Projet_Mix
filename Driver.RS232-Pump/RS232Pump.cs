@@ -48,12 +48,12 @@ namespace Driver.RS232.Pump
             {
                 if (isRS232Active && !IsOpen() && !areAlarmActive[0])
                 {
-                    AlarmManagement.NewAlarm(AlarmManagement.alarms[2, 0]);
+                    AlarmManagement.NewAlarm(2, 0);
                     areAlarmActive[0] = true;
                 }
                 else if (IsOpen() && areAlarmActive[0])
                 {
-                    AlarmManagement.InactivateAlarm(AlarmManagement.alarms[2, 0]);
+                    AlarmManagement.InactivateAlarm(2, 0);
                     areAlarmActive[0] = false;
                 }
                 

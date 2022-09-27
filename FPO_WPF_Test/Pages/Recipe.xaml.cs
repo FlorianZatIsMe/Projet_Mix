@@ -36,7 +36,6 @@ namespace FPO_WPF_Test.Pages
         private string currentRecipeName;
         private string currentRecipeVersion;
         private string currentRecipeStatus;
-        //private General g = new General();
 
         public class BaseA
         {
@@ -440,11 +439,12 @@ namespace FPO_WPF_Test.Pages
 
                                     nextSeqType = array[1];
                                     nextSeqID = array[2];
-                                }
-                                else {
-                                    MessageBox.Show("Elle est cassée ta recette, tu me demandes une séquence qui n'existe pas è_é");
-                                    nextSeqID = "";
-                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("Elle est cassée ta recette, tu me demandes une séquence qui n'existe pas è_é");
+                                nextSeqID = "";
+                            }
                         }
                         else {
                             MessageBox.Show("Je ne comprends pas... Pourquoi je ne vois pas de frame...");

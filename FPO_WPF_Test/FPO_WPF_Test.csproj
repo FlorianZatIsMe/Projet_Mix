@@ -61,6 +61,8 @@
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=5.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.5.0.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Common, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Drawing.Common.6.0.0\lib\net461\System.Drawing.Common.dll</HintPath>
@@ -101,6 +103,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="LogIn.xaml.cs">
+      <DependentUpon>LogIn.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ActiveAlarms.xaml.cs">
+      <DependentUpon>ActiveAlarms.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ReportGeneration.cs" />
+    <Page Include="LogIn.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -113,6 +126,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Pages\ActiveAlarms.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\AuditTrail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -289,6 +306,9 @@
     <Resource Include="Resources\Start.png" />
     <Resource Include="Resources\Status.png" />
     <Resource Include="Resources\Stop.png" />
+    <Content Include="Resources\Integra-Logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\UserManagement.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -322,6 +342,10 @@
     <ProjectReference Include="..\DRIVER.Weight\DRIVER.RS232.Weight.csproj">
       <Project>{24D3295E-C288-495D-AA65-345A32FAFB60}</Project>
       <Name>DRIVER.RS232.Weight</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\User_Management\User_Management.csproj">
+      <Project>{1596B98A-6BB1-45D8-A08D-891D9165CC03}</Project>
+      <Name>User_Management</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

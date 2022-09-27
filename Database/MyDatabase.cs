@@ -49,8 +49,8 @@ namespace Database
         {
             if (!IsConnected())
             {
+                MessageBox.Show("seqTimer_OnTimedEvent " + IsConnected().ToString());
                 ConnectAsync();
-                MessageBox.Show("Cool " + IsConnected().ToString());
             }
         }
         public async void ConnectAsync()
@@ -82,6 +82,7 @@ namespace Database
                 UserID = MySettings.DB_Features.UserID,
                 Password = MySettings.DB_Features.Password,
                 Database = MySettings.DB_Features.Database,
+                AllowZeroDateTime = true,
             };
 
             connection = new MySqlConnection(builder.ConnectionString);
@@ -111,6 +112,7 @@ namespace Database
         }
         public ReadOnlyCollection<DbColumn> SendCommand_readAll(string tableName)
         {
+            if (!IsConnected()) Connect();
             /*
              * Ajouter un check surtout fussionne avec l'autre
              */
@@ -121,6 +123,7 @@ namespace Database
         }
         public ReadOnlyCollection<DbColumn> SendCommand_readAllRecipe(string tableName, string[] whereColumns, string[] whereValues)
         {
+            if (!IsConnected()) Connect();
             /*
              * Add check surtout fussionne avec l'autre
              */
@@ -153,7 +156,8 @@ namespace Database
         }
         public ReadOnlyCollection<DbColumn> SendCommand_Read(string tableName, string selectColumns = "*", string[] whereColumns = null, string[] whereValues = null, string orderBy = null, bool isOrderAsc = true, string groupBy = null)
         {
-            string whereArg = " WHERE " + GetArg(whereColumns, whereValues, " AND ");
+            if (!IsConnected()) Connect();
+            string whereArg = GetArg(whereColumns, whereValues, " AND ", " WHERE ");
             string orderArg = "";
             string groupByArg = "";
             bool isCommandOk = true;
@@ -172,7 +176,7 @@ namespace Database
 
             MySqlCommand command = connection.CreateCommand();
             command.CommandText = @"SELECT " + selectColumns + " FROM " + tableName + whereArg + groupByArg + orderArg;
-
+            //MessageBox.Show(command.CommandText + " - id: " + whereValues[0]);
             if (whereColumns != null && whereValues != null)
             {
                 isCommandOk = SetCommand(command, whereColumns, whereValues);
@@ -198,8 +202,101 @@ namespace Database
 
             return null;
         }
+        public void SendCommand_ReadAuditTrail(DateTime dtBefore, DateTime dtAfter, string[] eventTypes = null, string orderBy = null, bool isOrderAsc = true)
+        {
+            if (!IsConnected()) Connect();
+            string whereDateTime = "date_time >= @dtBefore AND date_time <= @dtAfter";
+            string eventType = " AND (";
+            string orderArg = "";
+            bool isCommandOk = true;
+
+            if (eventTypes != null)
+            {
+                for (int i = 0; i < eventTypes.Length - 1; i++)
+                {
+                    eventType += "event_type = @" + eventTypes[i] + " OR ";
+                }
+                eventType += "event_type = @" + eventTypes[eventTypes.Length - 1] + ")";
+            }
+            else
+            {
+                eventType = "";
+            }
+
+            Close_reader();
+
+            if (orderBy != null)
+            {
+                orderArg = " ORDER BY " + orderBy + (isOrderAsc ? " ASC" : " DESC");
+            }
+
+            MySqlCommand command = connection.CreateCommand();
+            command.CommandText = @"SELECT * FROM audit_trail WHERE " + whereDateTime + eventType + orderArg;
+            command.Parameters.AddWithValue("@dtBefore", dtBefore.ToString("yyyy-MM-dd HH:mm:ss"));
+            command.Parameters.AddWithValue("@dtAfter", dtAfter.ToString("yyyy-MM-dd HH:mm:ss"));
+
+            if (eventTypes != null)
+            {
+                for (int i = 0; i < eventTypes.Length; i++)
+                {
+                    command.Parameters.AddWithValue("@" + eventTypes[i], eventTypes[i]);
+                }
+            }
+            //MessageBox.Show(command.CommandText);
+            if (isCommandOk)
+            {
+                try
+                {
+                    reader = command.ExecuteReader();
+                }
+                catch (Exception ex)
+                {
+                    reader = null;
+                    MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - " + ex.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Création de la commande incorrecte");
+            }
+
+        }
+        public void SendCommand_ReadAlarms(int firstId = -1, int lastId = -1, bool readAlert = false)
+        {
+            if (!IsConnected()) Connect();
+            bool isCommandOk = firstId == -1 ? true : firstId < lastId;
+            string whereId = firstId == -1 ? "" : "id >= @firstId AND id <= @lastId AND ";
+            string eventType = readAlert ? "(event_type = 'Alarme' OR event_type = 'Alerte')" : "event_type = 'Alarme'";
+            Close_reader();
+
+            MySqlCommand command = connection.CreateCommand();
+            command.CommandText = @"SELECT * FROM audit_trail WHERE " + whereId + eventType;
+            //MessageBox.Show(command.CommandText);
+            if(firstId != -1) SetCommand(command, new string[] { "firstId", "lastId" }, new string[] { firstId.ToString(), lastId.ToString() });
+
+            if (isCommandOk)
+            {
+                try
+                {
+                    reader = command.ExecuteReader();
+                    //return reader.GetColumnSchema();
+                }
+                catch (Exception ex)
+                {
+                    reader = null;
+                    MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - " + ex.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand_ReadAlarms: Création de la commande incorrecte");
+            }
+
+            //return null;
+        }
         public void SendCommand_GetLastRecipes(bool onlyProdRecipes = false)
         {
+            if (!IsConnected()) Connect();
             string statusFilter = onlyProdRecipes ? "status = 1" : "status <> 2";
 
             MySqlCommand command = new MySqlCommand("SELECT name, id FROM recipe WHERE ((name, version) IN (SELECT name, MAX(version) FROM recipe GROUP BY name)) AND " + statusFilter + " ORDER BY name;", connection);
@@ -211,12 +308,13 @@ namespace Database
             catch (Exception e)
             {
                 reader = null;
-                MessageBox.Show(e.Message);
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - " + e.Message);
             }
         }
         public string[] ReadNext()
         {
-            if (!IsReaderNull())
+            if (!IsConnected()) Connect();
+            if (!IsReaderNotAvailable())
             {
                 string[] array = new string[reader.FieldCount];
 
@@ -239,16 +337,43 @@ namespace Database
                 return new string[0];
             }
         }
+        public bool[] ReadNextBool()
+        {
+            if (!IsConnected()) Connect();
+            if (!IsReaderNotAvailable())
+            {
+                bool[] array = new bool[reader.FieldCount-2];
+
+                if (reader.Read())
+                {
+                    for (int i = 0; i < reader.FieldCount-2; i++)
+                    {
+                        array[i] = reader.GetBoolean(i + 2);
+                    }
+                }
+                else
+                {
+                    return new bool[0];
+                }
+
+                return array;
+            }
+            else
+            {
+                return new bool[0];
+            }
+        }
         public void Close_reader()
         {
-            if(!IsReaderNull()) reader.Close();
+            if(!IsReaderNotAvailable()) reader.Close();
         }
-        public bool IsReaderNull()
+        public bool IsReaderNotAvailable()
         {
-            return reader == null;
+            return reader == null || reader.IsClosed;
         }
         public string[] GetOneRow(string tableName, string selectColumns = "*", string[] whereColumns = null, string[] whereValues = null)
         {
+            if (!IsConnected()) Connect();
             string[] array = new string[0];
 
             if (IsConnected())
@@ -272,6 +397,7 @@ namespace Database
         }
         public int GetMax(string tableName, string column, string[] whereColumns = null, string[] whereValues = null)
         {
+            if (!IsConnected()) Connect();
             int n;
             string whereArg = "";
             MySqlCommand command;
@@ -321,15 +447,21 @@ namespace Database
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - GetMax - " + ex.Message);
                 return -1;
             }
         }
         public bool InsertRow(string tableName, string columnFields, string[] values)
         {
+            // peut-être ajouter ici des check de connection
+
+            if (!IsConnected()) Connect();
+
             int valuesNumber = values.Count();
             string[] valueTags = new string[valuesNumber];
             string valueFields = "";
+
+            Close_reader();
 
             if (columnFields.Split().Count() == valuesNumber)
             {
@@ -356,7 +488,7 @@ namespace Database
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - " + ex.Message);
                     return false;
                 }
 
@@ -370,13 +502,14 @@ namespace Database
         }
         public bool Update_Row(string tableName, string[] setColumns, string[] setValues, string id)
         {
+            if (!IsConnected()) Connect();
             string whereArg = " WHERE id = @id";
             string setArg = " SET " + GetArg(setColumns, setValues, ", ");
             bool isCommandOk = true;
 
             MySqlCommand command = connection.CreateCommand();
             command.CommandText = @"UPDATE " + tableName + setArg + whereArg;
-
+            //MessageBox.Show(command.CommandText + " - id: " + id);
             if (setColumns != null && setValues != null)
             {
                 isCommandOk = SetCommand(command, setColumns, setValues);
@@ -407,6 +540,7 @@ namespace Database
         }
         public bool DeleteRow(string tableName, string[] whereColumns, string[] whereValues)
         {
+            if (!IsConnected()) Connect();
             string whereArg;
             MySqlCommand command;
             bool isCommandOk = true;
@@ -442,19 +576,68 @@ namespace Database
 
             return false;
         }
+        public void CreateTempTable(string fields)
+        {
+            if (!IsConnected()) Connect();
+            Close_reader();
+
+            // On supprimer la table temp si jamais elle existe
+            MySqlCommand command = connection.CreateCommand();
+
+            try
+            {
+                command.CommandText = @"DROP TABLE temp";
+                reader = command.ExecuteReader();
+                Close_reader();
+            }
+            catch (Exception)
+            {
+                //MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - CreateTempTable: " + ex.Message);
+            }
+
+            try
+            {
+                command.CommandText = @"CREATE TABLE temp (" +
+                    "id  INT NOT NULL auto_increment PRIMARY KEY," +
+                    fields + ")";
+                reader = command.ExecuteReader();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - CreateTempTable: " + ex.Message);
+            }
+
+            Close_reader();
+        }
+        public void SelectFromTemp(string select)
+        {
+            if (!IsConnected()) Connect();
+            Close_reader();
+
+            try
+            {
+                MySqlCommand command = connection.CreateCommand();
+                command.CommandText = @"SELECT " + select + " FROM temp;";
+                reader = command.ExecuteReader();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SelectFromTemp: " + ex.Message);
+            }
+        }
 
         // Méthode outils
-        private string GetArg(string[] columns, string[] values, string separator)
+        private string GetArg(string[] columns, string[] values, string separator, string prefix = "")
         {
             string arg;
 
             if (columns != null && values != null && columns.Count() == values.Count())
             {
-                arg = columns[0] + "=@" + columns[0];
+                arg = prefix + columns[0] + "=@" + columns[0];
 
                 for (int i = 1; i < columns.Count(); i++)
                 {
-                    arg = arg + separator + columns[i] + "=@" + columns[i];
+                    arg += separator + columns[i] + "=@" + columns[i];
                 }
             }
             else

@@ -426,7 +426,8 @@
 
 
             <WrapPanel HorizontalAlignment="Right" VerticalAlignment="Center">
-                <TextBlock Text="User name, Access Group"
+                <TextBlock x:Name="labelUser"
+                           Text="User name, Access Group"
                            Foreground="#D3D7DC"
                            FontFamily="Rubik"
                            FontSize="13"
@@ -459,7 +460,8 @@
 
         <Grid Grid.Row="2">
             <Border Background="#363435" />
-            <TextBlock Text="Software name and version"
+            <TextBlock x:Name="labelSoftwareName"
+                           Text="Software name and version"
                            Foreground="#D3D7DC"
                            FontFamily="Rubik"
                            FontSize="13"

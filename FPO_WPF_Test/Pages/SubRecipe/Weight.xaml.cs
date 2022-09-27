@@ -193,7 +193,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
 
 
-            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, n))
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: n, min: tbMin.Text == "" ? 0 : decimal.Parse(tbMin.Text), max: tbMax.Text == "" ? -1 : decimal.Parse(tbMax.Text)))
             {
                 FormatControl[i] = true;
             }
@@ -219,7 +219,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
 
 
-            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, n))
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: n, min: 0, max: tbMax.Text == "" ? -1 : decimal.Parse(tbMax.Text)))
             {
                 FormatControl[i] = true;
             }
@@ -244,7 +244,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 n = 0;
             }
 
-            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, n))
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: n, min: tbMin.Text == "" ? 0 : decimal.Parse(tbMin.Text)))
             {
                 FormatControl[i] = true;
             }

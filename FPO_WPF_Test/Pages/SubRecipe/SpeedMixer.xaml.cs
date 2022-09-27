@@ -21,8 +21,9 @@ namespace FPO_WPF_Test.Pages.SubRecipe
     /// </summary>
     public partial class SpeedMixer : Page
     {
-        private const int PhasesNumber = 10;
-        private const int ControlNumber = 34;
+        private const int ElementNumber = 46; // Nombre de colonne dans la base de données de recette
+        private const int PhasesNumber = 10; // Nombre maximum de phase pendant une séquence speedmixer
+        private const int ControlNumber = 38;
         private const int IdProgramName = 0;
         private const int IdAcceleration = 1;
         private const int IdDeceleration = 2;
@@ -47,16 +48,20 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         private const int IdTime07 = 21;
         private const int IdTime08 = 22;
         private const int IdTime09 = 23;
-        private const int IdPression00 = 24;
-        private const int IdPression01 = 25;
-        private const int IdPression02 = 26;
-        private const int IdPression03 = 27;
-        private const int IdPression04 = 28;
-        private const int IdPression05 = 29;
-        private const int IdPression06 = 30;
-        private const int IdPression07 = 31;
-        private const int IdPression08 = 32;
-        private const int IdPression09 = 33;
+        private const int IdPressure00 = 24;
+        private const int IdPressure01 = 25;
+        private const int IdPressure02 = 26;
+        private const int IdPressure03 = 27;
+        private const int IdPressure04 = 28;
+        private const int IdPressure05 = 29;
+        private const int IdPressure06 = 30;
+        private const int IdPressure07 = 31;
+        private const int IdPressure08 = 32;
+        private const int IdPressure09 = 33;
+        private const int IdSpeedMin = 34;
+        private const int IdSpeedMax = 35;
+        private const int IdPressureMin = 36;
+        private const int IdPressureMax = 37;
 
         private Frame parentFrame;
         private readonly WrapPanel[] wrapPanels = new WrapPanel[PhasesNumber];
@@ -226,7 +231,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
 
                 FormatControl[IdSpeed00 + id - 1] = false;
                 FormatControl[IdTime00 + id - 1] = false;
-                FormatControl[IdPression00 + id - 1] = false;
+                FormatControl[IdPressure00 + id - 1] = false;
 
                 if (id != 10)
                 {
@@ -308,12 +313,22 @@ namespace FPO_WPF_Test.Pages.SubRecipe
 
                 i++;
             }
+
+            tbSpeedMin.Text = array[42];
+            tbSpeedMax.Text = array[43];
+            tbPressureMin.Text = array[44];
+            tbPressureMax.Text = array[45];
+
+            tbSpeedMin_LostFocus(tbSpeedMin, new RoutedEventArgs());
+            tbSpeedMax_LostFocus(tbSpeedMax, new RoutedEventArgs());
+            tbPressureMin_LostFocus(tbPressureMin, new RoutedEventArgs());
+            tbPressureMax_LostFocus(tbPressureMax, new RoutedEventArgs());
         }
         public string[] GetPage()
         {
             int i;
             int n = 1;
-            string[] array = new string[42 - n];
+            string[] array = new string[ElementNumber - n];
 
             array[3 - n] = tbProgramName.Text;
             array[4 - n] = tbAcceleration.Text;
@@ -333,6 +348,11 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 array[14 - n + 3 * i] = pressures[i].Text;
                 i++;
             } while (i != 10 && (bool)checkBoxes[i].IsChecked);
+
+            array[42 - n] = tbSpeedMin.Text;
+            array[43 - n] = tbSpeedMax.Text;
+            array[44 - n] = tbPressureMin.Text;
+            array[45 - n] = tbPressureMax.Text;
 
             return array;
         }
@@ -359,7 +379,6 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 2000))
             {
                 FormatControl[i] = true;
-
             }
             else
             {
@@ -375,7 +394,6 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 2000))
             {
                 FormatControl[i] = true;
-
             }
             else
             {
@@ -412,7 +430,6 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                         if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 2000))
                         {
                             FormatControl[i + j] = true;
-
                         }
                         else
                         {
@@ -436,7 +453,6 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                         if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 2000))
                         {
                             FormatControl[i + j] = true;
-
                         }
                         else
                         {
@@ -450,7 +466,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         {
             //pressures[0] = tbPression00;
             TextBox textBox = sender as TextBox;
-            int i = IdPression00;
+            int i = IdPressure00;
 
             for (int j = 0; j < PhasesNumber; j++)
             {
@@ -461,7 +477,6 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                         if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 2000))
                         {
                             FormatControl[i + j] = true;
-
                         }
                         else
                         {
@@ -470,6 +485,66 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                     }
                 }
             }
+        }
+        private void tbSpeedMin_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            int i = IdSpeedMin;
+
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: tbSpeedMax.Text == "" ? 1200 : decimal.Parse(tbSpeedMax.Text)))
+            {
+                FormatControl[i] = true;
+            }
+            else
+            {
+                FormatControl[i] = false;
+            }
+            //MessageBox.Show(FormatControl[i].ToString());
+        }
+        private void tbSpeedMax_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            int i = IdSpeedMax;
+
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: tbSpeedMin.Text == "" ? 0 : decimal.Parse(tbSpeedMin.Text), max: 1200))
+            {
+                FormatControl[i] = true;
+            }
+            else
+            {
+                FormatControl[i] = false;
+            }
+            //MessageBox.Show(FormatControl[i].ToString());
+        }
+        private void tbPressureMin_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            int i = IdPressureMin;
+
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: tbPressureMax.Text == "" ? 1000 : decimal.Parse(tbPressureMax.Text)))
+            {
+                FormatControl[i] = true;
+            }
+            else
+            {
+                FormatControl[i] = false;
+            }
+            //MessageBox.Show(FormatControl[i].ToString());
+        }
+        private void tbPressureMax_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            int i = IdPressureMax;
+
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: tbPressureMin.Text == "" ? 0 : decimal.Parse(tbPressureMin.Text), max: 1000))
+            {
+                FormatControl[i] = true;
+            }
+            else
+            {
+                FormatControl[i] = false;
+            }
+            //MessageBox.Show(FormatControl[i].ToString());
         }
         public bool IsFormatOk()
         {
@@ -485,7 +560,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             {
                 x += (bool)checkBoxes[i].IsChecked ? 0 : 3; // Pour chaque checkbox décoché, on ajoutera 3 au score final
             }
-
+            //MessageBox.Show(n.ToString() + " + " + x.ToString() + " = " + (n+x).ToString());
             return (n + x) == ControlNumber;
         }
     }

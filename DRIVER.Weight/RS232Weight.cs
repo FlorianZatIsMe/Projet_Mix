@@ -54,13 +54,13 @@ namespace DRIVER.RS232.Weight
             {
                 if (isRS232Active && !IsOpen() && !areAlarmActive[0])
                 {
-                    AlarmManagement.NewAlarm(AlarmManagement.alarms[0, 0]);
+                    AlarmManagement.NewAlarm(0, 0);
                     //db.NewAlarm("ALARM 00.01 - Connexion à la balance échouée");
                     areAlarmActive[0] = true;
                 }
                 else if (IsOpen() && areAlarmActive[0])
                 {
-                    AlarmManagement.InactivateAlarm(AlarmManagement.alarms[0, 0]);
+                    AlarmManagement.InactivateAlarm(0, 0);
                     //db.InactivateAlarm("ALARM 00.01 - Connexion à la balance échouée");
                     areAlarmActive[0] = false;
                 }
