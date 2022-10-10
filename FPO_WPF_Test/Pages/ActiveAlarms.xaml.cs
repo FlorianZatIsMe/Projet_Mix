@@ -25,11 +25,11 @@ namespace FPO_WPF_Test.Pages
     /// </summary>
     public partial class ActiveAlarms : Page
     {
-        private MyDatabase db;
+        //private MyDatabase db;
         private readonly NameValueCollection MySettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
         public ActiveAlarms()
         {
-            db = new MyDatabase();
+            //db = new MyDatabase();
             InitializeComponent();
         }
 
@@ -59,14 +59,14 @@ namespace FPO_WPF_Test.Pages
             int i = 0;
             List<string> listId = new List<string>();
 
-            if (db.IsConnected()) // while loop is better
+            if (MyDatabase.IsConnected()) // while loop is better
             {
                 foreach (Tuple<int,int> id in AlarmManagement.activeAlarms)
                 {
                     listId.Add(AlarmManagement.alarms[id.Item1, id.Item2].id.ToString());
                 }
 
-                db.SendCommand_Read(MySettings["Table_Name"].ToString(), whereColumns: new string[] { "id" }, whereValues: listId.ToArray(), orderBy: "id", isOrderAsc: true);
+                MyDatabase.SendCommand_Read(MySettings["Table_Name"].ToString(), whereColumns: new string[] { "id" }, whereValues: listId.ToArray(), orderBy: "id", isOrderAsc: true);
 
                 //Création des colonnes
                 foreach (string columnName in columnNames)
@@ -77,7 +77,7 @@ namespace FPO_WPF_Test.Pages
                 //Ajout des lignes
                 do
                 {
-                    array = db.ReadNext();
+                    array = MyDatabase.ReadNext();
 
                     if (array.Count() != 0)
                     {
@@ -90,7 +90,7 @@ namespace FPO_WPF_Test.Pages
                 //Implémentation dans la DataGrid 
                 dataGridAlarms.ItemsSource = dt.DefaultView;
                 dataGridAlarms.Columns[0].Visibility = Visibility.Collapsed;
-                //db.Disconnect();
+                //MyDatabase.Disconnect();
             }
             else
             {

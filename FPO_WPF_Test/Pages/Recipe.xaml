@@ -5,13 +5,13 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:FPO_WPF_Test.Pages"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="450" d:DesignWidth="1200"
       Title="Recipe"
       Background="#524E4F">
 
         <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="45"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -28,7 +28,11 @@
         <Grid Grid.Row="0" x:Name="gridModify_Recipe" Visibility="Collapsed">
             <WrapPanel Margin="10, 10, 0, 0">
                 <TextBlock Foreground="Wheat" Margin="0,4,0,0" Text="Nom du programme"/>
-                <ComboBox x:Name="cbxProgramName" Margin="10,0,0,0" Width="Auto" SelectionChanged="cbxProgramName_SelectionChanged" IsSynchronizedWithCurrentItem="True"/>
+                <ComboBox x:Name="cbxPgmToModify" 
+                          Margin="10,0,0,0" 
+                          Width="Auto" 
+                          SelectionChanged="cbxPgmToModify_SelectionChanged" 
+                          IsSynchronizedWithCurrentItem="True"/>
 
                 <WrapPanel x:Name="panelInfoRecipe" Visibility="Collapsed">
                     <TextBlock Foreground="Wheat" Margin="20, 4, 0, 0" Text="Version: "/>
@@ -36,10 +40,51 @@
                     <TextBlock Foreground="Wheat" Margin="20, 4, 0, 0" Text="Statut: "/>
                     <TextBlock x:Name="labelStatus" Foreground="Wheat" Margin="0, 4, 0, 0" Text="#"/>
                     <Button Content="Nouvelle séquence" Width="120" Margin="20, 0, 0, 0"  HorizontalAlignment="Left" VerticalAlignment="center" Click="New_Sequence_Click"/>
-                    <!-- <Button x:Name="btChangeStatus" Content="#" Width="Auto" Margin="20, 0, 0, 0"  HorizontalAlignment="Left" VerticalAlignment="center" Click="btChangeStatus_Click"/> -->                    
+
+                    <TextBlock Foreground="Wheat" Margin="50, 4, 0, 0" Text="Tester recette"/>
+                    <TextBlock Foreground="Wheat" Margin="20, 4, 0, 0" Text="Masse produit final (g)"/>
+                    <TextBox x:Name="tbFinaleWeight" Margin="10, 4, 0, 0" Width="50"/>
+                    <Button Content="Tester" Width="50" Margin="20, 0, 0, 0"  HorizontalAlignment="Left" VerticalAlignment="center" Click="Test_Sequence_Click"/>
                 </WrapPanel>
             </WrapPanel>
-            <Button Content="Modifier recette" Width="Auto" Margin="0, 0, 10, 0" HorizontalAlignment="Right" VerticalAlignment="center" Click="Button_Click"/>
+            <Button Content="Modifier recette" Width="Auto" Margin="0, 0, 10, 0" HorizontalAlignment="Right" VerticalAlignment="center" Click="ButtonModify_Click"/>
+        </Grid>
+
+        <Grid Grid.Row="0" x:Name="gridDelete_Recipe" Visibility="Collapsed">
+            <WrapPanel Margin="10, 10, 0, 0">
+                <StackPanel>
+                    <RadioButton x:Name="rbActivate" 
+                                 IsEnabled="True"
+                                 Margin="0,0,0,0" 
+                                 Content="Activer recette"
+                                 Foreground="Wheat"
+                                 HorizontalAlignment="Left" 
+                                 VerticalAlignment="Top" 
+                                 Checked="rbActivateDelete_Checked"/>
+                    <RadioButton x:Name="rbDelete" 
+                                 IsEnabled="True"
+                                 Content="Désactiver/Supprimer recette"
+                                 Foreground="Wheat"
+                                 HorizontalAlignment="Left"
+                                 Margin="0,5,0,0"
+                                 VerticalAlignment="Top" 
+                                 IsChecked="True" Checked="rbActivateDelete_Checked"/>
+                </StackPanel>
+                <TextBlock Foreground="Wheat" Margin="20,4,0,0" Text="Nom du programme" VerticalAlignment="Center"/>
+                <ComboBox x:Name="cbxPgmToActDelete" 
+                          Margin="10,0,0,0" 
+                          Width="Auto" Height="25"
+                          IsSynchronizedWithCurrentItem="True">
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="ComboBoxItem">
+                            <Setter Property="Height" Value="20" />
+                            <Setter Property="Width" Value="Auto" />
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                </ComboBox>
+            </WrapPanel>
+            <Button x:Name="btDelAct" Content="Supprimer recette" Width="Auto" Margin="0, 0, 10, 0" HorizontalAlignment="Right" VerticalAlignment="center" Click="ButtonActDel_Click"/>
         </Grid>
         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
             <Grid x:Name="gridMain"></Grid>

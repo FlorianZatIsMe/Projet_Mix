@@ -35,14 +35,16 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
     public partial class CycleSpeedMixer : Page, IDisposable
     {
-        private Frame mainFrame;
-        private MyDatabase db = new MyDatabase();
+        private Frame frameMain;
+        private Frame frameInfoCycle;
+        //private MyDatabase db = new MyDatabase();
         private readonly string[] currentPhaseParameters;
-        private List<string[]> thisCycleInfo;
+        //private List<string[]> thisCycleInfo;
         private int idCycle;
         private int idPrevious;
         private string tablePrevious;
         private int idSubCycle;
+        private bool isTest;
 
         private bool hasSequenceStarted;
         private bool isSequenceOver;
@@ -76,10 +78,6 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
         private int currentSpeed;
         private decimal currentPressure;
-        private decimal speedMean;
-        private decimal pressureMean;
-        private decimal speedSTD;
-        private decimal pressureSTD;
 
         private bool disposedValue;
 
@@ -94,14 +92,16 @@ namespace FPO_WPF_Test.Pages.SubCycle
          * 
          * Version: 1.0
          */
-        public CycleSpeedMixer(Frame mainFrame_arg, string id, List<string[]> cycleInfo, int idCycle_arg, int idPrevious_arg, string tablePrevious_arg)
+        public CycleSpeedMixer(Frame frameMain_arg, Frame frameInfoCycle_arg, string id, int idCycle_arg, int idPrevious_arg, string tablePrevious_arg, bool isTest_arg = true)
         {
-            mainFrame = mainFrame_arg;
+            frameMain = frameMain_arg;
+            frameInfoCycle = frameInfoCycle_arg;
             idCycle = idCycle_arg;
             idPrevious = idPrevious_arg;
             tablePrevious = tablePrevious_arg;
-            mainFrame.ContentRendered += new EventHandler(thisFrame_ContentRendered);
-            thisCycleInfo = cycleInfo;
+            isTest = isTest_arg;
+            frameMain.ContentRendered += new EventHandler(thisFrame_ContentRendered);
+            //thisCycleInfo = cycleInfo;
             isSequenceOver = false;     // la séquence n'est pas terminée
             hasSequenceStarted = false; // la séquence n'a pas démarré
             isCycleStopped = false;     // ne cycle n'a pas été arrêté
@@ -130,10 +130,6 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
             currentSpeed = 0;
             currentPressure = 0;
-            speedMean = 0;
-            pressureMean = 0;
-            speedSTD = 0;
-            pressureSTD = 0;
 
             // Mise à jour du numéro de séquence (seqNumber de la classe CycleInfo) + démarrage du scan des alarmes si on est sur la première séquence du cycle (voir checkAlarmsTimer_OnTimedEvent de la classe CycleInfo)
             General.CurrentCycleInfo.UpdateSequenceNumber();
@@ -143,22 +139,22 @@ namespace FPO_WPF_Test.Pages.SubCycle
             // On affiche sur le panneau d'information que la séquence est en cours
             General.CurrentCycleInfo.UpdateCurrentSpeedMixerInfo(new string[] { "En cours" });
 
-            //if (!db.IsConnected()) db.Connect();
+            //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
-            if (db.IsConnected()) // Si l'on est connecté à la base de données
+            if (MyDatabase.IsConnected()) // Si l'on est connecté à la base de données
             {
-                db.CreateTempTable("speed DECIMAL(5,1) NOT NULL, pressure DECIMAL(5,1) NOT NULL");
+                MyDatabase.CreateTempTable("speed DECIMAL(5,1) NOT NULL, pressure DECIMAL(5,1) NOT NULL");
 
                 /*
-                db.InsertRow("temp", "speed, pressure", new string[] { "10", "36" });
-                db.InsertRow("temp", "speed, pressure", new string[] { "20", "92" });
-                db.InsertRow("temp", "speed, pressure", new string[] { "30", "28" });
-                db.InsertRow("temp", "speed, pressure", new string[] { "40", "15" });
-                db.InsertRow("temp", "speed, pressure", new string[] { "50", "43" });
+                MyDatabase.InsertRow("temp", "speed, pressure", new string[] { "10", "36" });
+                MyDatabase.InsertRow("temp", "speed, pressure", new string[] { "20", "92" });
+                MyDatabase.InsertRow("temp", "speed, pressure", new string[] { "30", "28" });
+                MyDatabase.InsertRow("temp", "speed, pressure", new string[] { "40", "15" });
+                MyDatabase.InsertRow("temp", "speed, pressure", new string[] { "50", "43" });
                 */
 
                 // currentPhaseParameters =  liste des paramètres pour notre séquence
-                this.currentPhaseParameters = db.GetOneRow("recipe_speedmixer", whereColumns: new string[] { "id" }, whereValues: new string[] { id });
+                this.currentPhaseParameters = MyDatabase.GetOneRow("recipe_speedmixer", whereColumns: new string[] { "id" }, whereValues: new string[] { id });
 
                 int i;
                 int timeTh_seconds = 0;
@@ -174,12 +170,14 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 string columns = "date_time_start, time_mix_th, pressure_unit, speed_min, speed_max, pressure_min, pressure_max";
                 string[] values = new string[] { DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), TimeSpan.FromSeconds(timeTh_seconds).ToString(), currentPhaseParameters[9], currentPhaseParameters[42], currentPhaseParameters[43], currentPhaseParameters[44], currentPhaseParameters[45] };
                 //string[] values = new string[] { this.currentPhaseParameters[3], setpoint.ToString(), min.ToString(), max.ToString(), this.currentPhaseParameters[6], this.currentPhaseParameters[7] };
-                db.InsertRow("cycle_speedmixer", columns, values);
-                idSubCycle = db.GetMax("cycle_speedmixer", "id");
 
-                db.Update_Row(tablePrevious, new string[] { "next_seq_type", "next_seq_id" }, new string[] { "1", idSubCycle.ToString() }, idPrevious.ToString());
+                //MyDatabase.InsertRow("temp2", "description", new string[] { "InsertRow - CycleSpeedMixer" });
+                MyDatabase.InsertRow("cycle_speedmixer", columns, values);
+                idSubCycle = MyDatabase.GetMax("cycle_speedmixer", "id");
 
-                //db.Disconnect();
+                MyDatabase.Update_Row(tablePrevious, new string[] { "next_seq_type", "next_seq_id" }, new string[] { "1", idSubCycle.ToString() }, idPrevious.ToString());
+
+                //MyDatabase.Disconnect();
 
                 if (this.currentPhaseParameters.Count() != 0) // S'il n'y a pas eu d'erreur...
                 {
@@ -210,8 +208,14 @@ namespace FPO_WPF_Test.Pages.SubCycle
                         }
                     }*/
 
+
+
                     pumpNotFreeTimer.Start();
                     tempControlTimer.Start(); // On lance le timer de contrôle de la température
+
+
+
+
                     SpeedMixerModbus.SetProgram(this.currentPhaseParameters); // On met à jour tout les paramètres dans le speedmixer
                     taskGetStatus = Task.Factory.StartNew(() => sequenceController()); // On lance la tâche de vérification du status et d'autre choses sûrement
                 }
@@ -219,7 +223,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             else
             {
                 MessageBox.Show("La base de données n'est pas connecté");
-                //db.ConnectAsync();
+                //MyDatabase.ConnectAsync();
             }
         }
         protected virtual void Dispose(bool disposing)
@@ -229,10 +233,26 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 if (disposing)
                 {
                     // TODO: supprimer l'état managé (objets managés)
-                    if (taskGetStatus != null) taskGetStatus.Dispose();
-                    if (sequenceTimer != null) sequenceTimer.Dispose();
-                    if (pumpNotFreeTimer != null) pumpNotFreeTimer.Dispose();
-                    if (tempControlTimer != null) tempControlTimer.Dispose();
+                    if (taskGetStatus != null)
+                    {
+                        taskGetStatus.Wait();
+                        taskGetStatus.Dispose();
+                    }
+                    if (sequenceTimer != null)
+                    {
+                        sequenceTimer.Stop();
+                        sequenceTimer.Dispose();
+                    }
+                    if (pumpNotFreeTimer != null)
+                    {
+                        pumpNotFreeTimer.Stop();
+                        pumpNotFreeTimer.Dispose(); 
+                    }
+                    if (tempControlTimer != null)
+                    {
+                        tempControlTimer.Stop();
+                        tempControlTimer.Dispose();
+                    }
                 }
 
                 // TODO: libérer les ressources non managées (objets non managés) et substituer le finaliseur
@@ -261,7 +281,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
                 currentPressure = (decimal)SpeedMixerModbus.GetPressure() / 10;
                 currentSpeed = SpeedMixerModbus.GetSpeed();
-
+                
                 this.Dispatcher.Invoke(() =>
                 {
                     tbReadyToRun.Text = status[0] ? "Ready to run " + hasSequenceStarted.ToString() : "Not ready to run";
@@ -296,7 +316,14 @@ namespace FPO_WPF_Test.Pages.SubCycle
                         });
 
                         hasSequenceStarted = true; // le programme a démarré
+
+
+
                         sequenceTimer.Start();
+
+
+
+
                     }
                 }
                 // Si le programme est en cours
@@ -419,7 +446,14 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 // Si la séquence n'a pas démarré, on démarre ou éteint la pompe
                 if (!wasPumpActivated && !hasSequenceStarted)
                 {
-                    if (currentPhaseParameters[6] == "True") RS232Pump.SetCommand("!C802 1");   // Si on contrôle la pression, on démarre la pompe
+                    if (currentPhaseParameters[6] == "True")
+                    {
+                        RS232Pump.SetCommand("!C802 1");   // Si on contrôle la pression, on démarre la pompe
+
+                        //Task.Delay(25); // C'est sale il faut changer ça
+
+                        //RS232Pump.SetCommand("!C803 0");   // On pompe à fond
+                    }
                     else RS232Pump.SetCommand("!C802 0"); // Sinon on arrête la pompe 
                     wasPumpActivated = true;
                 }
@@ -446,7 +480,8 @@ namespace FPO_WPF_Test.Pages.SubCycle
         {
             currentSeqTime++; // On met à jour le temps total du mix, quand est-ce qu'il s'arrête ?
 
-            db.InsertRow("temp", "speed, pressure", new string[] { currentSpeed.ToString(), currentPressure.ToString() });
+            //MyDatabase.InsertRow("temp2", "description", new string[] { "InsertRow - seqTimer_OnTimedEvent" });
+            MyDatabase.InsertRow("temp", "speed, pressure", new string[] { currentSpeed.ToString(), currentPressure.ToString() });
 
             currentPhaseTime--;
             
@@ -488,87 +523,116 @@ namespace FPO_WPF_Test.Pages.SubCycle
         }
         private void EndSequence()
         {
-            MessageBox.Show("1");
-            try
+
+            //string[] info = new string[] { "1", currentPhaseParameters[3] };
+
+            // On arrête les timers (celle qui gère le temps de la séquence, la température du cold trap et celle qui gère la dispo de la pompe)
+            sequenceTimer.Stop();
+            tempControlTimer.Stop();
+            pumpNotFreeTimer.Stop();
+
+            // Peut-être pas, à voir
+            while (sequenceTimer.Enabled) ;
+            while (tempControlTimer.Enabled) ;
+            while (pumpNotFreeTimer.Enabled) ;
+            //MessageBox.Show("2");
+
+            General.CurrentCycleInfo.UpdateCurrentSpeedMixerInfo(new string[] { "Terminé" });
+            //thisCycleInfo.Add(info);
+
+            //if (!MyDatabase.IsConnected()) MyDatabase.Connect(); // Il va falloir supprimer ça
+
+            MyDatabase.SelectFromTemp("AVG(speed), AVG(pressure), STD(speed), STD(pressure)");
+            string[] array = MyDatabase.ReadNext();
+            string comment = "";
+            MyDatabase.Close_reader();
+
+            MyDatabase.Update_Row("cycle_speedmixer",
+                new string[] { "date_time_end", "time_mix_eff", "speed_mean", "pressure_mean", "speed_std", "pressure_std" },
+                new string[] { DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), TimeSpan.FromSeconds(currentSeqTime).ToString(), array[0], array[1], array[2], array[3] }, idSubCycle.ToString());
+
+            if (areAlarmActive[0]) // Si l'alarme est toujours active alors on l'a désactive
             {
-                string[] info = new string[] { "1", currentPhaseParameters[3] };
+                AlarmManagement.InactivateAlarm(3, 1); // Alarme température trop haute
+                areAlarmActive[0] = false;
+            }
+            //*
+            if (!isCycleStopped && currentPhaseParameters[1] == "0") // Si la prochaine séquence est une séquence de poids et que le cycle n'est pas arrêté
+            {
+                if (RS232Pump.IsOpen() && isPumpFree) RS232Pump.SetCommand("!C802 0");
+                RS232Pump.FreeUse();
+                isPumpFree = false;
+            }
+            else if (!isCycleStopped && currentPhaseParameters[1] == "1") // Si la prochaine séquence est une séquence speedmixer et que le cycle n'est pas arrêté
+            {
+                RS232Pump.FreeUse();
+                isPumpFree = false;
+            }
+            else if (currentPhaseParameters[1] == null || currentPhaseParameters[1] == "" || isCycleStopped) // Si c'est fini
+            {
+                if (RS232Pump.IsOpen() && isPumpFree) RS232Pump.SetCommand("!C802 0");
+                RS232Pump.FreeUse();
+                isPumpFree = false;
 
-                // On arrête les timers (celle qui gère le temps de la séquence, la température du cold trap et celle qui gère la dispo de la pompe)
-                sequenceTimer.Stop();
-                tempControlTimer.Stop();
-                pumpNotFreeTimer.Stop();
+                comment = isCycleStopped ? "Cycle interrompu" : "";
+            }
+            else
+            {
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Je ne sais pas, je ne sais plus, je suis perdu");
+            }
 
-                // Peut-être pas, à voir
-                while (sequenceTimer.Enabled) ;
-                while (tempControlTimer.Enabled) ;
-                while (pumpNotFreeTimer.Enabled) ;
-                MessageBox.Show("2");
+            General.EndSequence(currentPhaseParameters, frameMain, frameInfoCycle, idCycle, idSubCycle, isTest, comment);
+            //*/
+            /*
+            if (!isCycleStopped && currentPhaseParameters[1] == "0") // Si la prochaine séquence est une séquence de poids et que le cycle n'est pas arrêté
+            {
+                if (RS232Pump.IsOpen() && isPumpFree) RS232Pump.SetCommand("!C802 0");
+                RS232Pump.FreeUse();
+                isPumpFree = false;
+                frameMain.Content = new Pages.SubCycle.CycleWeight(frameMain, frameInfoCycle, currentPhaseParameters[2], idCycle, idSubCycle, "cycle_speedmixer", isTest);
+            }
+            else if (!isCycleStopped && currentPhaseParameters[1] == "1") // Si la prochaine séquence est une séquence speedmixer et que le cycle n'est pas arrêté
+            {
+                RS232Pump.FreeUse();
+                isPumpFree = false;
 
-                General.CurrentCycleInfo.UpdateCurrentSpeedMixerInfo(new string[] { "Terminé" });
-                thisCycleInfo.Add(info);
+                frameMain.Content = new Pages.SubCycle.CycleSpeedMixer(frameMain, frameInfoCycle, currentPhaseParameters[2], idCycle, idSubCycle, "cycle_speedmixer", isTest);
+            }
+            else if (currentPhaseParameters[1] == null || currentPhaseParameters[1] == "" || isCycleStopped) // Si c'est fini
+            {
+                if (RS232Pump.IsOpen() && isPumpFree) RS232Pump.SetCommand("!C802 0");
+                RS232Pump.FreeUse();
+                isPumpFree = false;
 
-                if (!db.IsConnected()) db.Connect(); // Il va falloir supprimer ça
+                string lastAlarmId = MyDatabase.GetMax("audit_trail", "id").ToString();
+                comment = isCycleStopped ? "Cycle interrompu" : "";
+                MyDatabase.Update_Row("cycle", new string[] { "date_time_end_cycle", "last_alarm_id", "comment" }, new string[] { DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), lastAlarmId, comment }, idCycle.ToString());
 
-                db.SelectFromTemp("AVG(speed), AVG(pressure), STD(speed), STD(pressure)");
-                string[] array = db.ReadNext();
-                db.Close_reader();
-                MessageBox.Show("3");
+                MessageBox.Show("C'est fini, merci d'être passé");
+                General.CurrentCycleInfo.StopSequence();
+                General.PrintReport(idCycle);
+                MessageBox.Show("Rapport généré");
 
-                db.Update_Row("cycle_speedmixer", 
-                    new string[] { "date_time_end", "time_mix_eff", "speed_mean", "pressure_mean", "speed_std", "pressure_std" }, 
-                    new string[] { DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), TimeSpan.FromSeconds(currentSeqTime).ToString(), array[0], array[1], array[2], array[3] }, idSubCycle.ToString());
+                // On cache le panneau d'information
+                General.CurrentCycleInfo.SetVisibility(false);
 
-                if (areAlarmActive[0]) // Si l'alarme est toujours active alors on l'a désactive
+                if (isTest)
                 {
-                    AlarmManagement.InactivateAlarm(3, 1); // Alarme température trop haute
-                    areAlarmActive[0] = false;
-                }
-
-                if (!isCycleStopped && currentPhaseParameters[1] == "0") // Si la prochaine séquence est une séquence de poids et que le cycle n'est pas arrêté
-                {
-                    if (RS232Pump.IsOpen() && isPumpFree) RS232Pump.SetCommand("!C802 0");
-                    RS232Pump.FreeUse();
-                    isPumpFree = false;
-                    mainFrame.Content = new Pages.SubCycle.CycleWeight(mainFrame, currentPhaseParameters[2], thisCycleInfo, idCycle, idSubCycle, "cycle_speedmixer");
-                }
-                else if (!isCycleStopped && currentPhaseParameters[1] == "1") // Si la prochaine séquence est une séquence speedmixer et que le cycle n'est pas arrêté
-                {
-                    RS232Pump.FreeUse();
-                    isPumpFree = false;
-
-                    mainFrame.Content = new Pages.SubCycle.CycleSpeedMixer(mainFrame, currentPhaseParameters[2], thisCycleInfo, idCycle, idSubCycle, "cycle_speedmixer");
-                }
-                else if (currentPhaseParameters[1] == null || currentPhaseParameters[1] == "" || isCycleStopped) // Si c'est fini
-                {
-                    if (RS232Pump.IsOpen() && isPumpFree) RS232Pump.SetCommand("!C802 0");
-                    RS232Pump.FreeUse();
-                    isPumpFree = false;
-
-                    string lastAlarmId = db.GetMax("audit_trail", "id").ToString();
-                    string comment = isCycleStopped ? "Cycle interrompu" : "";
-                    db.Update_Row("cycle", new string[] { "date_time_end_cycle", "last_alarm_id", "comment" }, new string[] { DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), lastAlarmId, comment }, idCycle.ToString());
-
-                    MessageBox.Show("C'est fini, merci d'être passé");
-                    General.CurrentCycleInfo.InitializeSequenceNumber();
-                    General.PrintReport(idCycle);
-
-                    // On cache le panneau d'information
-                    General.CurrentCycleInfo.SetVisibility(false);
-                    mainFrame.Content = new Pages.Status();
+                    string[] recipeName = MyDatabase.GetOneRow("cycle", "recipe_name", new string[] { "id" }, new string[] { idCycle.ToString() });
+                    frameMain.Content = new Pages.Recipe(Action.Modify, frameMain, frameInfoCycle, recipeName.Length == 0 ? "" : recipeName[0]);
                 }
                 else
                 {
-                    MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Je ne sais pas, je ne sais plus, je suis perdu");
+                    frameMain.Content = new Pages.Status();
                 }
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - EndSequence - " + ex.Message);
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Je ne sais pas, je ne sais plus, je suis perdu");
             }
-            finally
-            {
-                Dispose();
-            }
+            //*/
+
+            Dispose();
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -576,9 +640,9 @@ namespace FPO_WPF_Test.Pages.SubCycle
         }
         private void thisFrame_ContentRendered(object sender, EventArgs e)
         {
-            if (mainFrame.Content != this)
+            if (frameMain.Content != this)
             {
-                mainFrame.ContentRendered -= thisFrame_ContentRendered;
+                frameMain.ContentRendered -= thisFrame_ContentRendered;
                 if(!isSequenceOver) stopCycle();
             }
 

@@ -17,7 +17,7 @@ namespace Driver.RS232.Pump
         private static string data;
         private static string lastCommand;
         private static bool isFree;
-        private static MyDatabase db = new MyDatabase();
+        //private static MyDatabase db = new MyDatabase();
         private static int nAlarms = 1;
         public static bool[] areAlarmActive = new bool[nAlarms];
         private static bool[] wereAlarmActive = new bool[nAlarms];

@@ -34,6 +34,9 @@ namespace FPO_WPF_Test
         private string application_nameField = "Application";
         private string application_versionField = "Version";
 
+        private string watermarkText = "Non destiné à l'usage humain";
+        private XFont fontWatermark = new XFont("BankGothic Lt BT", 60);
+
         //
         // Info font
         //
@@ -172,9 +175,10 @@ namespace FPO_WPF_Test
 
         private PdfDocument document = new PdfDocument();
         List<XGraphics> gfxs = new List<XGraphics>();
-        private MyDatabase db = new MyDatabase();
+        //private MyDatabase db = new MyDatabase();
         private DateTime generationDateTime = DateTime.Now;
         private int pagesNumber = 1;
+        private bool isTest;
 
         // Colors
         private XSolidBrush BrushGrey0 = new XSolidBrush(XColor.FromArgb(100, 100, 100));
@@ -220,6 +224,7 @@ namespace FPO_WPF_Test
             gfxs[pagesNumber - 1].DrawString(application_nameField + ": " + General.application_name + " - " + application_versionField + ": " + General.application_version,
                 new XFont(fontDoc, fontFooterSize),
                 XBrushes.Black, x: margin, y: page.Height - margin - marginH_Footer, XStringFormats.BottomLeft);
+
 
             return margin + heightLogo;
         }
@@ -657,11 +662,11 @@ namespace FPO_WPF_Test
             string[] array;
             if (firstAlarmId != lastAlarmId && lastAlarmId != -1)
             {
-                db.SendCommand_ReadAlarms(firstAlarmId, lastAlarmId);
+                MyDatabase.SendCommand_ReadAlarms(firstAlarmId, lastAlarmId);
 
                 do
                 {
-                    array = db.ReadNext();
+                    array = MyDatabase.ReadNext();
 
                     if (array.Count() != 0)
                     {
@@ -724,7 +729,7 @@ namespace FPO_WPF_Test
             {
                 for (int i = 0; i < historicAlarms.Count; i++)
                 {
-                    array = db.GetOneRow("audit_trail", "date_time, description", new string[] { "id" }, new string[] { historicAlarms[i].id.ToString() });
+                    array = MyDatabase.GetOneRow("audit_trail", "date_time, description", new string[] { "id" }, new string[] { historicAlarms[i].id.ToString() });
                     timestamp = array[0];
                     previousStatus = array[1];
                     alarm = timestamp + " - " + historicAlarms[i].Description + " - " + historicAlarms[i].Status.ToString();
@@ -877,6 +882,37 @@ namespace FPO_WPF_Test
             gfx.DrawString("Page " + i.ToString() + " sur " + pagesNumber.ToString(),
                 new XFont(fontDoc, fontFooterSize),
                 XBrushes.Black, x: page.Width - margin - gfx.MeasureString("Page 1 sur x", new XFont(fontDoc, fontFooterSize)).Width, y: page.Height - margin, XStringFormats.BottomLeft);
+
+            if (isTest)
+            {
+                // Variation 1: Draw a watermark as a text string.
+
+                // Get an XGraphics object for drawing beneath the existing content.
+                //gfx.Dispose();
+                //gfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Prepend);
+
+                // Get the size (in points) of the text.
+                var size = gfx.MeasureString(watermarkText, fontWatermark);
+
+                // Define a rotation transformation at the center of the page.
+                gfx.TranslateTransform(page.Width / 2, page.Height / 2);
+                gfx.RotateTransform(-Math.Atan(page.Height / page.Width) * 180 / Math.PI);
+                gfx.TranslateTransform(-page.Width / 2, -page.Height / 2);
+
+                // Create a string format.
+                var format = new XStringFormat();
+                format.Alignment = XStringAlignment.Near;
+                format.LineAlignment = XLineAlignment.Near;
+
+                // Create a dimmed red brush.
+                XBrush brush = new XSolidBrush(XColor.FromArgb(128, 255, 0, 0));
+
+                // Draw the string.
+                gfx.DrawString(watermarkText, fontWatermark, brush,
+                    new XPoint((page.Width - size.Width) / 2, (page.Height - size.Height) / 2),
+                    format);
+
+            }
         }
         private double calculateCommentHeight(PdfPage page, double y)
         {
@@ -890,7 +926,7 @@ namespace FPO_WPF_Test
             int seqNumber = 1;
 
             // Initialize cycle information
-            string[] array = db.GetOneRow("cycle", whereColumns: new string[] { "id" }, whereValues: new string[] { id });
+            string[] array = MyDatabase.GetOneRow("cycle", whereColumns: new string[] { "id" }, whereValues: new string[] { id });
 
             if (array.Length != 0)
             {
@@ -906,6 +942,7 @@ namespace FPO_WPF_Test
                 firstAlarmId = array[14] == "" ? -1 : int.Parse(array[14]);
                 lastAlarmId = array[15] == "" ? -1 : int.Parse(array[15]);
                 comment = array[16];
+                isTest = array[17] == "True" ? true : false;
 
                 System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
                 document = new PdfDocument();
@@ -930,7 +967,7 @@ namespace FPO_WPF_Test
                     try
                     {
                         tableId = int.Parse(array[1]);
-                        array = db.GetOneRow(tableNameSubCycles[tableId], whereColumns: new string[] { "id" }, whereValues: new string[] { array[2] });
+                        array = MyDatabase.GetOneRow(tableNameSubCycles[tableId], whereColumns: new string[] { "id" }, whereValues: new string[] { array[2] });
 
                         if (array.Length != 0)
                         {

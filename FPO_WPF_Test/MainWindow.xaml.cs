@@ -16,6 +16,9 @@ using System.DirectoryServices.AccountManagement;
 using System.Collections.Generic;
 using System.DirectoryServices;
 using System.Collections;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Graphics
 {
@@ -168,44 +171,23 @@ namespace FPO_WPF_Test
 
     public partial class MainWindow : Window
     {
-        private readonly MyDatabase db;
+        //private readonly MyDatabase db;
         private readonly NameValueCollection AuditTrailSettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
-
-        bool IsInGroupOld(string user, string group)
-        {
-            //using (var identity = new WindowsIdentity(user))
-            {
-                //WindowsIdentity identity = new WindowsIdentity(WindowsIdentity.GetCurrent().Name);
-                WindowsPrincipal principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
-                return principal.IsInRole(group);
-            }
-        }
-
-        private bool IsInGroup(WindowsIdentity user, string group)
-        {
-            WindowsPrincipal principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
-            return principal.IsInRole(group);
-        }
 
         public MainWindow()
         {/*
             ReportGeneration report = new ReportGeneration();
-            report.pdfGenerator("64");
+            report.pdfGenerator("191");
             MessageBox.Show("Fini");
             Close();//*/
 
-
-            string role = UserManagement.UpdateAccessTable(UserPrincipal.Current.DisplayName);
-
-            db = new MyDatabase();
-            //MessageBox.Show(IsInGroup("", @"BUILTIN\Users").ToString());
-
             string[] values = new string[] { WindowsIdentity.GetCurrent().Name, "Evènement", "Démarrage de l'application"};
-            db.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"], values);
+            MyDatabase.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"], values);
 
             InitializeComponent();
 
-            labelUser.Text = UserPrincipal.Current.DisplayName.ToLower() + ", " + role;
+            UpdateUser(username: UserPrincipal.Current.DisplayName.ToLower(), 
+                role: UserManagement.UpdateAccessTable(UserPrincipal.Current.DisplayName));
             labelSoftwareName.Text = General.application_name + " version " + General.application_version;
 
             if (true) frameMain.Content = new Pages.Status();
@@ -238,6 +220,8 @@ namespace FPO_WPF_Test
 
         public void UpdateUser(string username, string role)
         {
+            General.loggedUsername = username;
+            General.currentRole = role;
             labelUser.Text = username + ", " + role;
         }
 
@@ -269,7 +253,7 @@ namespace FPO_WPF_Test
         }
         private void FxProgramModify(object sender, RoutedEventArgs e)
         {
-            frameMain.Content = new Pages.Recipe(Action.Modify);
+            frameMain.Content = new Pages.Recipe(Action.Modify, frameMain, frameInfoCycle);
         }
         private void FxProgramCopy(object sender, RoutedEventArgs e)
         {
@@ -277,7 +261,7 @@ namespace FPO_WPF_Test
         }
         private void FxProgramDelete(object sender, RoutedEventArgs e)
         {
-
+            frameMain.Content = new Pages.Recipe(Action.Delete);
         }
         private async void FxAuditTrail(object sender, RoutedEventArgs e)
         {

@@ -18,7 +18,7 @@ namespace Driver.MODBUS
     {
         private static ModbusClient speedMixer;
         private static readonly NameValueCollection MySettings = ConfigurationManager.GetSection("MODBUS_Connection_Info") as NameValueCollection;
-        private static MyDatabase db = new MyDatabase();
+        //private static MyDatabase db = new MyDatabase();
         private static int nAlarms = 1;
         private static bool[] areAlarmActive = new bool[nAlarms];
         private static Task taskAlarmScan;
@@ -118,9 +118,9 @@ namespace Driver.MODBUS
             {
                 try
                 {
+                    speedMixer.WriteSingleRegister(3056, 0);    // Numéro du programme
                     speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
                     speedMixer.WriteSingleRegister(3053, 100);    // Commande pour lancer un programme
-                    speedMixer.WriteSingleRegister(3056, 0);    // Numéro du programme
 
                     //MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - STOP");
                 }
@@ -188,8 +188,17 @@ namespace Driver.MODBUS
 
             if (IsConnected())
             {
+                int vaccumScale;
+                int speedParameter;
+                int timeParameter;
+                int pressureParameter;
+                string speedFromDB;
+                string timeFromDB;
+                string pressureFromDB;
+
                 try
                 {
+
                     speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
 
                     // Name of the program
@@ -207,35 +216,14 @@ namespace Driver.MODBUS
                     speedMixer.WriteSingleRegister(3011, 0);
                     speedMixer.WriteSingleRegister(3012, 0);
 
-                    int speedParameter;
-                    int timeParameter;
-                    int pressureParameter;
-                    string speedFromDB;
-                    string timeFromDB;
-                    string pressureFromDB;
-                    int vaccumScale;
 
-                    for (int i = 0; i < 10; i++)
-                    {
-                        speedFromDB = array[12 + 3 * i];
-                        timeFromDB = array[13 + 3 * i];
-                        pressureFromDB = array[14 + 3 * i];
-
-                        speedParameter = (speedFromDB == "" || speedFromDB == null) ? 0 : int.Parse(speedFromDB);
-                        timeParameter = (timeFromDB == "" || timeFromDB == null) ? 0 : int.Parse(timeFromDB);
-                        pressureParameter = (pressureFromDB == "" || pressureFromDB == null) ? 0 : int.Parse(pressureFromDB);
-
-                        speedMixer.WriteSingleRegister(3013 + i, speedParameter);       // Vitesse des 10 phases
-                        speedMixer.WriteSingleRegister(3023 + i, timeParameter);        // Temps des 10 phases
-                        speedMixer.WriteSingleRegister(3033 + i, 10 * pressureParameter);    // Pression de vide des 10 phases
-                    }
 
                     speedMixer.WriteSingleRegister(3043, int.Parse(array[4]));  // Acceleration
                     speedMixer.WriteSingleRegister(3044, int.Parse(array[5]));  // Deceleration
                     speedMixer.WriteSingleRegister(3046, array[6] == "True" ? 1 : 0);    // Vacuum in Use (0=No ; 1=Yes)
-    
-//                    speedMixer.WriteSingleRegister(3048, 0);    // ça ne fonctionne pas, ça devrait être le choix du vent gas
-//                    speedMixer.WriteSingleRegister(3049, 0);    // Monitor type Je pense que ça ne fonctionne pas
+
+                    //                    speedMixer.WriteSingleRegister(3048, 0);    // ça ne fonctionne pas, ça devrait être le choix du vent gas
+                    //                    speedMixer.WriteSingleRegister(3049, 0);    // Monitor type Je pense que ça ne fonctionne pas
 
                     switch (array[9])
                     {
@@ -262,8 +250,33 @@ namespace Driver.MODBUS
 
                     speedMixer.WriteSingleRegister(3056, 0);    // Numéro du programme
                     speedMixer.WriteSingleRegister(3053, 1);    // Commande pour mettre à jour tout les paramètres
-                    //speedMixer.Disconnect();
-                    //MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Mission accomplie");
+
+                    //MessageBox.Show("Alors...");
+
+                    //speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
+
+                    for (int i = 0; i < 10; i++)
+                    {
+                        speedFromDB = array[12 + 3 * i];
+                        timeFromDB = array[13 + 3 * i];
+                        pressureFromDB = array[14 + 3 * i];
+
+                        //MessageBox.Show(timeFromDB);
+
+                        speedParameter = (speedFromDB == "" || speedFromDB == null) ? 0 : int.Parse(speedFromDB);
+                        timeParameter = (timeFromDB == "" || timeFromDB == null) ? 0 : int.Parse(timeFromDB);
+                        pressureParameter = (pressureFromDB == "" || pressureFromDB == null) ? 0 : int.Parse(pressureFromDB);
+
+                        speedMixer.WriteSingleRegister(3013 + i, speedParameter);       // Vitesse des 10 phases
+                        speedMixer.WriteSingleRegister(3023 + i, timeParameter);        // Temps des 10 phases
+                        speedMixer.WriteSingleRegister(3033 + i, 10 * pressureParameter);    // Pression de vide des 10 phases
+                    }
+
+                    speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
+                    speedMixer.WriteSingleRegister(3056, 0);    // Numéro du programme
+                    speedMixer.WriteSingleRegister(3053, 1);    // Commande pour mettre à jour tout les paramètres
+
+
                 }
                 catch (Exception ex)
                 {

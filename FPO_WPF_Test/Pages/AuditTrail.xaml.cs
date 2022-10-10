@@ -19,13 +19,15 @@ namespace FPO_WPF_Test.Pages
     /// </summary>
     public partial class AuditTrail : Page
     {
-        private MyDatabase db = new MyDatabase();
+        //private MyDatabase db = new MyDatabase();
         private ReadOnlyCollection<DbColumn> columns;
         private readonly NameValueCollection MySettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
         private bool tbBefSelToUpdate = false;
         private bool tbBefFull = false;
         private bool tbAftSelToUpdate = false;
         private bool tbAftFull = false;
+        private bool dpBefSelToUpdate = false;
+        private bool dpAftSelToUpdate = false;
 
         private int numberOfDaysBefore = 2;
 
@@ -38,36 +40,38 @@ namespace FPO_WPF_Test.Pages
             dpDateAfter.DisplayDateEnd = DateTime.Now;
             dpDateAfter.SelectedDateFormat = DatePickerFormat.Long;
 
-            dpDateBefore.SelectedDate = DateTime.Now.AddDays(-numberOfDaysBefore);
-            //dpDateBefore.DisplayDateStart = DateTime.Now.AddDays(-numberOfDaysBefore);
-            dpDateBefore.DisplayDateEnd = DateTime.Now.AddDays(-numberOfDaysBefore);
+            dpDateBefore.SelectedDate = dpDateAfter.DisplayDateStart;
+            dpDateBefore.DisplayDateEnd = dpDateAfter.SelectedDate;
             dpDateBefore.SelectedDateFormat = DatePickerFormat.Long;
 
             tbTimeBefore.Text = DateTime.Now.ToString("HH:mm:ss");
             tbTimeAfter.Text = tbTimeBefore.Text;
         }   
-
         ~AuditTrail()
         {
             //MessageBox.Show("Audit Trail: Au revoir");
         }
-
         private void LoadAuditTrail(object sender, RoutedEventArgs e)
         {
-            updateAuditTrail(DateTime.Now.AddDays(-numberOfDaysBefore), DateTime.Now);
+            updateAuditTrail();// DateTime.Now.AddDays(-numberOfDaysBefore), DateTime.Now);
         }
-
-        private void updateAuditTrail(DateTime dtBefore, DateTime dtAfter, string[] eventTypes = null)
+        private void updateAuditTrail()
         {
             DataTable dt = new DataTable();
             DataRow row;
             string[] array;
             string[] columnNames = MySettings["Columns"].Split(',');
+            DateTime dtBefore = Convert.ToDateTime(((DateTime)dpDateBefore.SelectedDate).ToString("dd.MM.yyyy") + " " + tbTimeBefore.Text);
+            DateTime dtAfter = Convert.ToDateTime(((DateTime)dpDateAfter.SelectedDate).ToString("dd.MM.yyyy") + " " + tbTimeAfter.Text);
+            List<string> eventTypes = new List<string>();
 
+            if ((bool)cbEvent.IsChecked) eventTypes.Add("Evènement");
+            if ((bool)cbAlarm.IsChecked) eventTypes.Add("Alarme");
+            if ((bool)cbWarning.IsChecked) eventTypes.Add("Alerte");
 
-            if (db.IsConnected()) // while loop is better
+            if (MyDatabase.IsConnected()) // while loop is better
             {
-                db.SendCommand_ReadAuditTrail(dtBefore: dtBefore, dtAfter: dtAfter, eventTypes: eventTypes, orderBy: "id", isOrderAsc: false);
+                MyDatabase.SendCommand_ReadAuditTrail(dtBefore: dtBefore, dtAfter: dtAfter, eventTypes: eventTypes.ToArray(), orderBy: "id", isOrderAsc: false);
 
                 //Création des colonnes
                 foreach (string columnName in columnNames)
@@ -78,10 +82,19 @@ namespace FPO_WPF_Test.Pages
                 //Ajout des lignes
                 do
                 {
-                    array = db.ReadNext();
+                    array = MyDatabase.ReadNext();
 
                     if (array.Count() != 0)
                     {
+                        try
+                        {
+                            array[1] = Convert.ToDateTime(array[1]).ToString("dd.MMMyyyy HH:mm:ss");
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+
                         row = dt.NewRow();
                         row.ItemArray = array;
                         dt.Rows.Add(row);
@@ -91,7 +104,7 @@ namespace FPO_WPF_Test.Pages
                 //Implémentation dans la DataGrid dataGridAuditTrail
                 dataGridAuditTrail.ItemsSource = dt.DefaultView;
                 dataGridAuditTrail.Columns[0].Visibility = Visibility.Collapsed;
-                //db.Disconnect();
+                //MyDatabase.Disconnect();
             }
             else
             {
@@ -102,16 +115,9 @@ namespace FPO_WPF_Test.Pages
                 dataGridAuditTrail.ItemsSource = dt.DefaultView;
             }
         }
-
         private void ButtonFilter_Click(object sender, RoutedEventArgs e)
         {
-            List<string> eventTypes = new List<string>();
-
-            if ((bool)cbEvent.IsChecked) eventTypes.Add("Evènement");
-            if ((bool)cbAlarm.IsChecked) eventTypes.Add("Alarme");
-            if ((bool)cbWarning.IsChecked) eventTypes.Add("Alerte");
-
-            updateAuditTrail(DateTime.Now.AddDays(-2), DateTime.Now, eventTypes.ToArray());
+            updateAuditTrail();
         }
         private void tbTimeBefore_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
@@ -131,7 +137,6 @@ namespace FPO_WPF_Test.Pages
                 tbBefFull = false;
             }
         }
-
         private void tbTimeBefore_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             TextBox textbox = sender as TextBox;
@@ -169,7 +174,6 @@ namespace FPO_WPF_Test.Pages
                 tbAftFull = false;
             }
         }
-
         private void tbTimeAfter_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             TextBox textbox = sender as TextBox;
@@ -189,7 +193,6 @@ namespace FPO_WPF_Test.Pages
                 tbAftFull = true;
             }
         }
-
         private void checkTime(TextBox textbox, int n)
         {
             int max = n == 0 ? 23 : (n == 1 ? 59 : 59);
@@ -238,7 +241,6 @@ namespace FPO_WPF_Test.Pages
 
             textbox.Text = nextText;
         }
-
         private void moveTimeCursor(TextBox textbox, bool left)
         {
             int n = (int)(textbox.CaretIndex / 3);
@@ -254,6 +256,30 @@ namespace FPO_WPF_Test.Pages
                 n = n == 2 ? 2 : n + 1;
             }
             textbox.Select(n * 3, 2);
+        }
+        private void dpDateBefore_LayoutUpdated(object sender, EventArgs e)
+        {
+            if (dpBefSelToUpdate)
+            {
+                dpDateAfter.DisplayDateStart = dpDateBefore.SelectedDate;
+                dpBefSelToUpdate = false;
+            }
+        }
+        private void dpDateBefore_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            dpBefSelToUpdate = true;
+        }
+        private void dpDateAfter_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            dpAftSelToUpdate = true;
+        }
+        private void dpDateAfter_LayoutUpdated(object sender, EventArgs e)
+        {
+            if (dpAftSelToUpdate)
+            {
+                dpDateBefore.DisplayDateEnd = dpDateAfter.SelectedDate;
+                dpAftSelToUpdate = false;
+            }
         }
     }
 }

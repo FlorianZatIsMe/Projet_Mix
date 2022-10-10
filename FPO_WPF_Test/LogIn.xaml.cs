@@ -27,7 +27,6 @@ namespace FPO_WPF_Test
             mainWindow = window;
             InitializeComponent();
         }
-
         private void ButtonOk_Click(object sender, RoutedEventArgs e)
         {
             PrincipalContext pc = new PrincipalContext(ContextType.Domain);
@@ -47,7 +46,6 @@ namespace FPO_WPF_Test
             }
 
         }
-
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)
         {
             this.Close();

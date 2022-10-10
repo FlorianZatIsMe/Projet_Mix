@@ -17,7 +17,7 @@ namespace Alarm_Management
         //public static List<Alarm> activeAlarms { get; }
         public static List<int> RAZalarms;
         public static Alarm[,] alarms;
-        private static MyDatabase db = new MyDatabase();
+        //private static MyDatabase db = new MyDatabase();
         private readonly static NameValueCollection AuditTrailSettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
         private readonly static Configuration.List MySettings = ConfigurationManager.GetSection("Alarm_Info/List") as Configuration.List;
         private readonly static Database.Configuration.Connection_Info HisSettings = ConfigurationManager.GetSection("Database/Connection_Info") as Database.Configuration.Connection_Info;
@@ -89,9 +89,11 @@ namespace Alarm_Management
                 AlarmStatus statusAfter = AlarmStatus.ACTIVE;
 
                 string[] values = new string[] { "Système", GetAlarmType(alarms[id1, id2].Type), GetAlarmDescription(id1, id2), statusBefore.ToString(), statusAfter.ToString() };
-                db.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values);
 
-                alarms[id1, id2].id = db.GetMax(AuditTrailSettings["Table_Name"], "id");
+                //MyDatabase.InsertRow("temp2", "description", new string[] { "InsertRow - NewAlarm" });
+                MyDatabase.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values);
+
+                alarms[id1, id2].id = MyDatabase.GetMax(AuditTrailSettings["Table_Name"], "id");
                 alarms[id1, id2].Status = statusAfter;
                 activeAlarms.Add(new Tuple<int, int>(id1, id2));
 
@@ -167,9 +169,11 @@ namespace Alarm_Management
                 if (statusAfter != AlarmStatus.None)
                 {
                     string[] values = new string[] { "Système", GetAlarmType(alarms[id1, id2].Type), GetAlarmDescription(id1, id2), statusBefore.ToString(), statusAfter.ToString() };
-                    db.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values);
 
-                    alarms[id1, id2].id = db.GetMax(AuditTrailSettings["Table_Name"], "id");
+                    //MyDatabase.InsertRow("temp2", "description", new string[] { "InsertRow - InactivateAlarm" });
+                    MyDatabase.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values);
+
+                    alarms[id1, id2].id = MyDatabase.GetMax(AuditTrailSettings["Table_Name"], "id");
                     alarms[id1, id2].Status = statusAfter;
 
                     if (statusAfter == AlarmStatus.INACTIVE)
@@ -215,9 +219,11 @@ namespace Alarm_Management
                 if (statusBefore != statusAfter)
                 {
                     string[] values = new string[] { "Système", GetAlarmType(alarms[id1, id2].Type), GetAlarmDescription(id1, id2), statusBefore.ToString(), statusAfter.ToString() };
-                    db.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values);
 
-                    alarms[id1, id2].id = db.GetMax(AuditTrailSettings["Table_Name"], "id");
+                    //MyDatabase.InsertRow("temp2", "description", new string[] { "InsertRow - AcknowledgeAlarm" });
+                    MyDatabase.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values);
+
+                    alarms[id1, id2].id = MyDatabase.GetMax(AuditTrailSettings["Table_Name"], "id");
                     alarms[id1, id2].Status = statusAfter;
 
                     if (statusAfter == AlarmStatus.ACK)

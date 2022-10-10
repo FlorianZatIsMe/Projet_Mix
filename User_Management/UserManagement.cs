@@ -15,7 +15,7 @@ namespace User_Management
 {
     public static class UserManagement
     {
-        private readonly static MyDatabase db = new MyDatabase();
+        //private readonly static MyDatabase db = new MyDatabase();
         private static bool[] CurrentAccessTable;
 
         public static string UpdateAccessTable(string username)
@@ -47,8 +47,8 @@ namespace User_Management
 
             if (role == null) role = "none";
 
-            db.SendCommand_Read("access_table", whereColumns: new string[] { "role" }, whereValues: new string[] { role });
-            CurrentAccessTable = db.ReadNextBool();
+            MyDatabase.SendCommand_Read("access_table", whereColumns: new string[] { "role" }, whereValues: new string[] { role });
+            CurrentAccessTable = MyDatabase.ReadNextBool();
             //MessageBox.Show(CurrentAccessTable[0].ToString() + CurrentAccessTable[1].ToString() + CurrentAccessTable[2].ToString() + CurrentAccessTable.Length.ToString());
             return role;
 
