@@ -24,13 +24,13 @@ namespace FPO_WPF_Test.Pages.SubCycle
     /// </summary>
     public partial class CycleInfo : Page // Les pages ne peuvent pas être static
     {
-        private List<WrapPanel> wrapPanels = new List<WrapPanel>();
+        private readonly List<WrapPanel> wrapPanels = new List<WrapPanel>();
         private static int seqNumber;
-        private static List<Tuple<int, int>> activeAlarms = new List<Tuple<int, int>>();
+        private readonly static List<Tuple<int, int>> activeAlarms = new List<Tuple<int, int>>();
         //private System.Timers.Timer checkAlarmsTimer;
         private Task taskCheckAlarm;
         //private MyDatabase db = new MyDatabase();
-        private Frame frameCycleInfo;
+        private readonly Frame frameCycleInfo;
         private bool isCheckAlarms_onGoing = true;
 
         public CycleInfo(string[] info, Frame frame)
@@ -80,24 +80,24 @@ namespace FPO_WPF_Test.Pages.SubCycle
          * 
          * Version: 1.0
          */
-        private async void checkAlarms_Task()
+        private async void CheckAlarms_Task()
         {
             while(isCheckAlarms_onGoing)
             {
                 string[] array;
                 // S'il y a un évènement d'alarme qui n'a pas été affiché...
-                if (!activeAlarms.SequenceEqual(AlarmManagement.activeAlarms))
+                if (!activeAlarms.SequenceEqual(AlarmManagement.ActiveAlarms))
                 {
                     // On parcours toutes les alarmes actives
-                    for (int i = 0; i < AlarmManagement.activeAlarms.Count; i++)
+                    for (int i = 0; i < AlarmManagement.ActiveAlarms.Count; i++)
                     {
                         // Si l'alarme active qu'on regarde n'a pas été affichée...
-                        if (!activeAlarms.Contains(AlarmManagement.activeAlarms[i]))
+                        if (!activeAlarms.Contains(AlarmManagement.ActiveAlarms[i]))
                         {
                             // On met dans la variable array, l'enregistrement d'audit trail de l'alarme en question
                             array = MyDatabase.GetOneRow(tableName: "audit_trail",
                                 whereColumns: new string[] { "id" },
-                                whereValues: new string[] { AlarmManagement.alarms[AlarmManagement.activeAlarms[i].Item1, AlarmManagement.activeAlarms[i].Item2].id.ToString() });
+                                whereValues: new string[] { AlarmManagement.alarms[AlarmManagement.ActiveAlarms[i].Item1, AlarmManagement.ActiveAlarms[i].Item2].id.ToString() });
 
                             // S'il n'y a pas eu d'erreur, on affiche les infos de l'alarme
                             if (array.Count() != 0)
@@ -109,14 +109,14 @@ namespace FPO_WPF_Test.Pages.SubCycle
                             }
                             else
                             {
-                                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - checkAlarmsTimer_OnTimedEvent : Je n'aime pas ça " + AlarmManagement.alarms[AlarmManagement.activeAlarms[i].Item1, AlarmManagement.activeAlarms[i].Item2].id.ToString());
+                                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - checkAlarmsTimer_OnTimedEvent : Je n'aime pas ça " + AlarmManagement.alarms[AlarmManagement.ActiveAlarms[i].Item1, AlarmManagement.ActiveAlarms[i].Item2].id.ToString());
                             }
                         }
                     }
 
                     // activeAlarms = AlarmManagement.activeAlarms mais en plus chiant
                     activeAlarms.Clear();
-                    for (int i = 0; i < AlarmManagement.activeAlarms.Count; i++) activeAlarms.Add(AlarmManagement.activeAlarms[i]);
+                    for (int i = 0; i < AlarmManagement.ActiveAlarms.Count; i++) activeAlarms.Add(AlarmManagement.ActiveAlarms[i]);
                 }
 
                 // S'il y a une Remise A Zéro d'une alarme qui n'a pas été affichée...
@@ -151,27 +151,37 @@ namespace FPO_WPF_Test.Pages.SubCycle
         }
         public void NewInfoWeight(string[] info)
         {
-            WrapPanel wrapPanel = new WrapPanel();
-            wrapPanel.Margin = new Thickness(0, 10, 0, 0);
+            WrapPanel wrapPanel = new WrapPanel
+            {
+                Margin = new Thickness(0, 10, 0, 0)
+            };
 
-            TextBlock productName = new TextBlock();
-            productName.Foreground = Brushes.Wheat;
-            productName.Text = "Produit pesé: " + info[0];
+            TextBlock productName = new TextBlock
+            {
+                Foreground = Brushes.Wheat,
+                Text = "Produit pesé: " + info[0]
+            };
 
-            TextBlock min = new TextBlock();
-            min.Foreground = Brushes.Wheat;
-            min.Margin = new Thickness(20, 0, 0, 0);
-            min.Text = "Minimum: " + info[1];
+            TextBlock min = new TextBlock
+            {
+                Foreground = Brushes.Wheat,
+                Margin = new Thickness(20, 0, 0, 0),
+                Text = "Minimum: " + info[1]
+            };
 
-            TextBlock max = new TextBlock();
-            max.Foreground = Brushes.Wheat;
-            max.Margin = new Thickness(20, 0, 0, 0);
-            max.Text = "Maximum: " + info[2];
+            TextBlock max = new TextBlock
+            {
+                Foreground = Brushes.Wheat,
+                Margin = new Thickness(20, 0, 0, 0),
+                Text = "Maximum: " + info[2]
+            };
 
-            TextBlock actualWeight = new TextBlock();
-            actualWeight.Foreground = Brushes.Wheat;
-            actualWeight.Margin = new Thickness(20, 0, 0, 0);
-            actualWeight.Text = "Masse pesée: -";
+            TextBlock actualWeight = new TextBlock
+            {
+                Foreground = Brushes.Wheat,
+                Margin = new Thickness(20, 0, 0, 0),
+                Text = "Masse pesée: -"
+            };
 
             wrapPanel.Children.Add(productName);
             wrapPanel.Children.Add(min);
@@ -183,17 +193,23 @@ namespace FPO_WPF_Test.Pages.SubCycle
         }
         public void NewInfoSpeedMixer(string[] info)
         {
-            WrapPanel wrapPanel = new WrapPanel();
-            wrapPanel.Margin = new Thickness(0, 10, 0, 0);
+            WrapPanel wrapPanel = new WrapPanel
+            {
+                Margin = new Thickness(0, 10, 0, 0)
+            };
 
-            TextBlock programName = new TextBlock();
-            programName.Foreground = Brushes.Wheat;
-            programName.Text = "Nom du mélange: " + info[0];
+            TextBlock programName = new TextBlock
+            {
+                Foreground = Brushes.Wheat,
+                Text = "Nom du mélange: " + info[0]
+            };
 
-            TextBlock status = new TextBlock();
-            status.Foreground = Brushes.Wheat;
-            status.Margin = new Thickness(20, 0, 0, 0);
-            status.Text = "Status: En attente";
+            TextBlock status = new TextBlock
+            {
+                Foreground = Brushes.Wheat,
+                Margin = new Thickness(20, 0, 0, 0),
+                Text = "Status: En attente"
+            };
 
             wrapPanel.Children.Add(programName);
             wrapPanel.Children.Add(status);
@@ -211,13 +227,17 @@ namespace FPO_WPF_Test.Pages.SubCycle
         }
         public void AddRow(string rowText)
         {
-            WrapPanel wrapPanel = new WrapPanel();
-            wrapPanel.Margin = new Thickness(0, 10, 0, 0);
+            WrapPanel wrapPanel = new WrapPanel
+            {
+                Margin = new Thickness(0, 10, 0, 0)
+            };
 
-            TextBlock actualWeight = new TextBlock();
-            actualWeight.Foreground = Brushes.Wheat;
-//            actualWeight.Margin = new Thickness(0, 10, 0, 0);
-            actualWeight.Text = rowText;
+            TextBlock actualWeight = new TextBlock
+            {
+                Foreground = Brushes.Wheat,
+                //            actualWeight.Margin = new Thickness(0, 10, 0, 0);
+                Text = rowText
+            };
 
             wrapPanel.Children.Add(actualWeight);
             StackMain.Children.Add(wrapPanel);
@@ -234,7 +254,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             {
                 //MessageBox.Show("UpdateSequenceNumber " + activeAlarms.Count.ToString() + AlarmManagement.activeAlarms.Count.ToString());
                 //checkAlarmsTimer.Start();
-                taskCheckAlarm = Task.Factory.StartNew(() => checkAlarms_Task());
+                taskCheckAlarm = Task.Factory.StartNew(() => CheckAlarms_Task());
             }
         }
         public void InitializeSequenceNumber()

@@ -19,9 +19,9 @@ namespace Driver.MODBUS
         private static ModbusClient speedMixer;
         private static readonly NameValueCollection MySettings = ConfigurationManager.GetSection("MODBUS_Connection_Info") as NameValueCollection;
         //private static MyDatabase db = new MyDatabase();
-        private static int nAlarms = 1;
-        private static bool[] areAlarmActive = new bool[nAlarms];
-        private static Task taskAlarmScan;
+        private readonly static int nAlarms = 1;
+        private readonly static bool[] areAlarmActive = new bool[nAlarms];
+        //private readonly static Task taskAlarmScan;
         private static bool isModbusActive;
 
         static SpeedMixerModbus()
@@ -36,7 +36,8 @@ namespace Driver.MODBUS
             }
 
             isModbusActive = false;
-            taskAlarmScan = Task.Factory.StartNew(() => scanAlarms());
+            //taskAlarmScan = Task.Factory.StartNew(() => ScanAlarms());
+            Task.Factory.StartNew(() => ScanAlarms());
         }
         /*
         ~SpeedMixerModbus()
@@ -44,7 +45,7 @@ namespace Driver.MODBUS
             Disconnect();
             MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - SpeedMixer: Au revoir");
         }*/
-        private static async void scanAlarms()
+        private static async void ScanAlarms()
         {
             while (true)
             {
@@ -306,7 +307,7 @@ namespace Driver.MODBUS
 
                     for (int i = 0; i < 8; i++)
                     {
-                        status[i] = (uintMessage & mask) == (0x01 << i) ? true : false;
+                        status[i] = (uintMessage & mask) == (0x01 << i);
                         //MessageBox.Show(i.ToString() + " - " + (status[i]).ToString());
                         mask <<= 1;
                     }

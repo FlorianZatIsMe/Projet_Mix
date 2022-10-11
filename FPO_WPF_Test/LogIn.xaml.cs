@@ -21,13 +21,13 @@ namespace FPO_WPF_Test
     /// </summary>
     public partial class LogIn : Window
     {
-        MainWindow mainWindow;
+        readonly MainWindow mainWindow;
         public LogIn(MainWindow window)
         {
             mainWindow = window;
             InitializeComponent();
         }
-        private void ButtonOk_Click(object sender, RoutedEventArgs e)
+        private void Click()
         {
             PrincipalContext pc = new PrincipalContext(ContextType.Domain);
             bool isCredentialValid = pc.ValidateCredentials(username.Text, password.Password);
@@ -44,11 +44,25 @@ namespace FPO_WPF_Test
             {
                 MessageBox.Show("Nom d'utilisateur ou mot de passe incorrecte");
             }
-
+        }
+        private void ButtonOk_Click(object sender, RoutedEventArgs e)
+        {
+            Click();
         }
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                Click();
+            }
+            else if (e.Key == Key.Escape)
+            {
+                this.Close();
+            }
         }
     }
 }

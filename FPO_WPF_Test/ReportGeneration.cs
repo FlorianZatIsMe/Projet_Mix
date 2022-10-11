@@ -15,39 +15,39 @@ namespace FPO_WPF_Test
 {
     internal class ReportGeneration
     {
-        private string folderPath = @"C:\Temp\Reports\";
-        private string templateNumber = "DHS-LTRMxxx Rev: 001";
+        private readonly string folderPath = @"C:\Temp\Reports\";
+        private readonly string templateNumber = "DHS-LTRMxxx Rev: 001";
 
         //
         // Header / Footer
         //
 
-        private double margin = 25;
-        private double marginH_Footer = 15;
+        private readonly double margin = 25;
+        private readonly double marginH_Footer = 15;
         private double heightFooter;
 
-        private XImage logo = XImage.FromFile("Resources/Integra-Logo.png");
-        private double widthLogo = 100;
+        private readonly XImage logo = XImage.FromFile("Resources/Integra-Logo.png");
+        private readonly double widthLogo = 100;
         private double heightLogo;
 
-        private string generationDateTimeField = "Date et heure de génération";
-        private string application_nameField = "Application";
-        private string application_versionField = "Version";
+        private readonly string generationDateTimeField = "Date et heure de génération";
+        private readonly string application_nameField = "Application";
+        private readonly string application_versionField = "Version";
 
-        private string watermarkText = "Non destiné à l'usage humain";
-        private XFont fontWatermark = new XFont("BankGothic Lt BT", 60);
+        private readonly string watermarkText = "Non destiné à l'usage humain";
+        private readonly XFont fontWatermark = new XFont("BankGothic Lt BT", 60);
 
         //
         // Info font
         //
-        private string fontTitleName = "Times New Roman";
-        private double fontTitleSize = 20;
-        private double fontSubTitleSize = 10;
+        private readonly string fontTitleName = "Times New Roman";
+        private readonly double fontTitleSize = 20;
+        private readonly double fontSubTitleSize = 10;
 
-        private string fontDoc = "Arial";
-        private double fontBodySize1 = 10;
-        private double fontBodySize2 = 9;
-        private double fontFooterSize = 10;
+        private readonly string fontDoc = "Arial";
+        private readonly double fontBodySize1 = 10;
+        private readonly double fontBodySize2 = 9;
+        private readonly double fontFooterSize = 10;
 
         private double fontDoc_fontTitleSize_Height;
         private double fontDoc_fontBodySize1_Height;
@@ -55,104 +55,106 @@ namespace FPO_WPF_Test
         //
         // Info titre rapport
         //
-        private double rectTitleHeight = 30;
-        private double rectTitleOutlineSize = 1.2;
-        private double rectSubTitleOutlineSize = 0.8;
-        private double marginH_Title_SubT = 5;
-        private double marginL_SubT = 10;
+        private readonly double rectTitleHeight = 30;
+        private readonly double rectTitleOutlineSize = 1.2;
+        private readonly double rectSubTitleOutlineSize = 0.8;
+        private readonly double marginH_Title_SubT = 5;
+        private readonly double marginL_SubT = 10;
 
-        private string docTitle = "Rapport de cycle";
+        private readonly string docTitle = "Rapport de cycle";
 
-        private string jobNumberField = "JOB #";
-        private string batchNumberField = "LOT #";
-        private string qtyNumberField = "QTY";
-        private string itemNumberField = "ITEM #";
+        private readonly string jobNumberField = "JOB #";
+        private readonly string batchNumberField = "LOT #";
+        private readonly string qtyNumberField = "QTY";
+        private readonly string itemNumberField = "ITEM #";
 
         //
         // generateGeneralInfo
         // 
-        private double marginH_GeneralInfo = 25;
-        private double marginH_GeneralInfoItems = 8;
+        private readonly double marginH_GeneralInfo = 25;
+        private readonly double marginH_GeneralInfoItems = 8;
 
-        private string recipeNameVersionField = "ID recette et version";
-        private string equipmentNameField = "ID équipement";
-        private string dtStartCycleField = "Début du cycle";
-        private string dtEndCycleField = "Fin du cycle";
-        private string cycleTimeField = "Temps de cycle";
-        private string userField = "Utilisateur";
+        private readonly string recipeNameVersionField = "ID recette et version";
+        private readonly string equipmentNameField = "ID équipement";
+        private readonly string dtStartCycleField = "Début du cycle";
+        private readonly string dtEndCycleField = "Fin du cycle";
+        private readonly string cycleTimeField = "Temps de cycle";
+        private readonly string userField = "Utilisateur";
 
         // Info tables Séquences
-        private double marginL_Tables = 5;
-        private double rectTablesSize = 0.5;
-        private string sequenceField = "Séquence";
+        private readonly double marginL_Tables = 5;
+        private readonly double rectTablesSize = 0.5;
+        private readonly string sequenceField = "Séquence";
+
+        private readonly string[] tableNameSubCycles = new string[] { "cycle_weight", "cycle_speedmixer" }; // Pas bien ça, il faut faire référence au fichier de config et même ça devrait une constante globale. Non ?
 
         //
         // generateWeightSeq
         //
-        private double weightSeq_RowHeight = 25;
-        private string weightSeq_SeqField = "Pesée";
-        private string weightSeq_manualWeight = "(manuelle)";
-        private string weightSeq_autoWeight = "(automatique)";
-        private string weightSeq_productField = "Produit: ";
-        private string weightSeq_DateTimeField = "Date et heure de pesée";
-        private string weightSeq_ValueField = "Valeur pesée";
-        private string weightSeq_setpointField = "Valeur nominal";
-        private string weightSeq_minimumField = "Minimum";
-        private string weightSeq_maximumField = "Maximum";
-        private string weightSeq_statusField = "Pass / Fail";
-        private string weightSeq_statusPASS = "PASS";
-        private string weightSeq_statusFAIL = "FAIL";
-        private int weightSeq_statusColumnNumber = 4;
+        private readonly double weightSeq_RowHeight = 25;
+        private readonly string weightSeq_SeqField = "Pesée";
+        private readonly string weightSeq_manualWeight = "(manuelle)";
+        private readonly string weightSeq_autoWeight = "(automatique)";
+        private readonly string weightSeq_productField = "Produit: ";
+        private readonly string weightSeq_DateTimeField = "Date et heure de pesée";
+        private readonly string weightSeq_ValueField = "Valeur pesée";
+        private readonly string weightSeq_setpointField = "Valeur nominal";
+        private readonly string weightSeq_minimumField = "Minimum";
+        private readonly string weightSeq_maximumField = "Maximum";
+        private readonly string weightSeq_statusField = "Pass / Fail";
+        private readonly string weightSeq_statusPASS = "PASS";
+        private readonly string weightSeq_statusFAIL = "FAIL";
+        private readonly int weightSeq_statusColumnNumber = 4;
 
         //
         // generateSpeedMixerSeq
         // 
-        private double smSeq_marginL_Cells = 10; // Et marginL_Tables alors ?
-        private double smSeq_RowHeight = 25;
-        private string smSeq_SeqField = "SpeedMixer";
-        private string smSeq_dtStartField = "Début séquence";
-        private string smSeq_dtEndField = "Fin séquence";
-        private string smSeq_timeMixThField = "Durée Mix théorique";
-        private int smSeq_timeMixThId = 2;
-        private string smSeq_timeMixEffField = "Durée Mix effective";
-        private string smSeq_timeSeqEffField = "Durée séquence";
+        private readonly double smSeq_marginL_Cells = 10; // Et marginL_Tables alors ?
+        private readonly double smSeq_RowHeight = 25;
+        private readonly string smSeq_SeqField = "SpeedMixer";
+        private readonly string smSeq_dtStartField = "Début séquence";
+        private readonly string smSeq_dtEndField = "Fin séquence";
+        private readonly string smSeq_timeMixThField = "Durée Mix théorique";
+        private readonly int smSeq_timeMixThId = 2;
+        private readonly string smSeq_timeMixEffField = "Durée Mix effective";
+        private readonly string smSeq_timeSeqEffField = "Durée séquence";
 
-        private string smSeq_descriptionField = "Description";
-        private string smSeq_speedField = "Vitesse";
-        private string smSeq_pressureField = "Pression";
-        private string smSeq_recipeParamField = "Paramètre de recette";
-        private int smSeq_recipeParamId = 1;
-        private string smSeq_meanField = "Moyenne";
-        private int smSeq_meanId = 2;
-        private string smSeq_stdField = "Ecart type";
+        private readonly string smSeq_descriptionField = "Description";
+        private readonly string smSeq_speedField = "Vitesse";
+        private readonly string smSeq_pressureField = "Pression";
+        private readonly string smSeq_recipeParamField = "Paramètre de recette";
+        private readonly int smSeq_recipeParamId = 1;
+        private readonly string smSeq_meanField = "Moyenne";
+        private readonly int smSeq_meanId = 2;
+        private readonly string smSeq_stdField = "Ecart type";
 
-        string smSeq_speedUnit = "RPM";
+        private readonly string smSeq_speedUnit = "RPM";
 
         //
         // generateAlarmHistory
         //
-        private double Alarm_marginB_Title = 15;
-        private double Alarm_marginB_Alarms = 5;
-        private string Alarm_Title = "Historique des alarmes";
-        private string Alarm_Continued = "(suite)";
-        private string Alarm_NoAlarm = "Il n'y a pas eu d'alarme pendant le cycle";
+        private readonly double Alarm_marginB_Title = 15;
+        private readonly double Alarm_marginB_Alarms = 5;
+        private readonly string Alarm_Title = "Historique des alarmes";
+        private readonly string Alarm_Continued = "(suite)";
+        private readonly string Alarm_NoAlarm = "Il n'y a pas eu d'alarme pendant le cycle";
 
         //
         // generateCommentSignature
         //
-        private double marginH_TitleComment = 20;
-        private double marginB_TitleComment = 10;
-        private double margin_CommentText = 10;
-        private string CommentTitle = "Commentaires";
-        private string signatureUserName = "Nom d'utilisateur";
-        private string signatureDate = "Date";
-        private string signatureVISA = "VISA utilisateur";
-        private double rectCommentOutlineSize = 0.5;
-        private double rectSignatureOutlineSize = 1;
-        private double signatureRowHeight = 30;
-        private double minCommentHeight = 100;
-        private double cycleResultRowHeight = 30;
-        private string cycleResultText = "Résultat de cycle (barrer mention inutile): PASS / FAIL";
+        private readonly double marginH_TitleComment = 20;
+        private readonly double marginB_TitleComment = 10;
+        private readonly double margin_CommentText = 10;
+        private readonly string CommentTitle = "Commentaires";
+        private readonly string signatureUserName = "Nom d'utilisateur";
+        private readonly string signatureDate = "Date";
+        private readonly string signatureVISA = "VISA utilisateur";
+        private readonly double rectCommentOutlineSize = 0.5;
+        private readonly double rectSignatureOutlineSize = 1;
+        private readonly double signatureRowHeight = 30;
+        private readonly double minCommentHeight = 100;
+        private readonly double cycleResultRowHeight = 30;
+        private readonly string cycleResultText = "Résultat de cycle (barrer mention inutile): PASS / FAIL";
 
         //
         // Info cycle (arguments du rapport)
@@ -174,21 +176,21 @@ namespace FPO_WPF_Test
         //***************************************************
 
         private PdfDocument document = new PdfDocument();
-        List<XGraphics> gfxs = new List<XGraphics>();
+        private readonly List<XGraphics> gfxs = new List<XGraphics>();
         //private MyDatabase db = new MyDatabase();
-        private DateTime generationDateTime = DateTime.Now;
+        private readonly DateTime generationDateTime = DateTime.Now;
         private int pagesNumber = 1;
         private bool isTest;
 
         // Colors
-        private XSolidBrush BrushGrey0 = new XSolidBrush(XColor.FromArgb(100, 100, 100));
-        private XSolidBrush BrushGrey1 = new XSolidBrush(XColor.FromArgb(192, 192, 192));
-        private XSolidBrush BrushGrey2 = new XSolidBrush(XColor.FromArgb(217, 217, 217));
-        private XSolidBrush BrushGrey3 = new XSolidBrush(XColor.FromArgb(242, 242, 242));
-        private XSolidBrush BrushGreen1 = new XSolidBrush(XColor.FromArgb(0, 97, 0));
-        private XSolidBrush BrushGreen2 = new XSolidBrush(XColor.FromArgb(198, 239, 206));
-        private XSolidBrush BrushRed1 = new XSolidBrush(XColor.FromArgb(156, 0, 0));
-        private XSolidBrush BrushRed2 = new XSolidBrush(XColor.FromArgb(255, 199, 206));
+        private readonly XSolidBrush BrushGrey0 = new XSolidBrush(XColor.FromArgb(100, 100, 100));
+        private readonly XSolidBrush BrushGrey1 = new XSolidBrush(XColor.FromArgb(192, 192, 192));
+        private readonly XSolidBrush BrushGrey2 = new XSolidBrush(XColor.FromArgb(217, 217, 217));
+        private readonly XSolidBrush BrushGrey3 = new XSolidBrush(XColor.FromArgb(242, 242, 242));
+        private readonly XSolidBrush BrushGreen1 = new XSolidBrush(XColor.FromArgb(0, 97, 0));
+        private readonly XSolidBrush BrushGreen2 = new XSolidBrush(XColor.FromArgb(198, 239, 206));
+        private readonly XSolidBrush BrushRed1 = new XSolidBrush(XColor.FromArgb(156, 0, 0));
+        private readonly XSolidBrush BrushRed2 = new XSolidBrush(XColor.FromArgb(255, 199, 206));
 
         public ReportGeneration()
         {
@@ -205,7 +207,7 @@ namespace FPO_WPF_Test
             lastAlarmId = -1;
             comment = "";
         }
-        private double generateHeader(PdfPage page)
+        private double GenerateHeader(PdfPage page)
         {
             //generateCroquis1(page);
 
@@ -228,7 +230,7 @@ namespace FPO_WPF_Test
 
             return margin + heightLogo;
         }
-        private double generateSecondHeader(PdfPage page)
+        private double GenerateSecondHeader(PdfPage page)
         {
             // Info traçabilité
             XRect rect;
@@ -239,9 +241,9 @@ namespace FPO_WPF_Test
             rect.Y += heightLogo / 2;
             gfxs[pagesNumber - 1].DrawString(traceabilityText2, new XFont(fontDoc, fontBodySize1), XBrushes.Black, rect, XStringFormats.TopCenter);
 
-            return generateHeader(page);
+            return GenerateHeader(page);
         }
-        private double generateFirstTitle(PdfPage page, double y)
+        private double GenerateFirstTitle(PdfPage page, double y)
         {
             XRect rect;
             string[,] tableValues = new string[,] {
@@ -283,7 +285,7 @@ namespace FPO_WPF_Test
 
             return rect.Y + rect.Height;
         }
-        private double generateGeneralInfo(PdfPage page, double y)
+        private double GenerateGeneralInfo(PdfPage page, double y)
         {
             string cycleTime;
 
@@ -311,21 +313,23 @@ namespace FPO_WPF_Test
                 cycleTimeField + ": " + cycleTime,
                 userField + ": " + user };
 
-            XRect rect;
+            //XRect rect;
 
             for (int i = 0; i < values.Length; i++)
             {
-                rect = new XRect(x: margin + (i % 2) * ((page.Width - 2 * margin) / 2), y: y + (int)(i / 2) * generalInfoHeight, width: (page.Width - 2 * margin) / 2, height: generalInfoHeight);
+                //rect = new XRect(x: margin + (i % 2) * ((page.Width - 2 * margin) / 2), y: y + (int)(i / 2) * generalInfoHeight, width: (page.Width - 2 * margin) / 2, height: generalInfoHeight);
                 gfxs[pagesNumber - 1].DrawString(values[i], new XFont(fontDoc, fontBodySize1), XBrushes.Black, x: margin + (i % 2) * ((page.Width - 2 * margin) / 2), y: y + marginH_GeneralInfo + (int)(i / 2) * generalInfoHeight, XStringFormats.TopLeft);
             }
 
             return y + marginH_GeneralInfo + (int)((values.Length - 1) / 2) * generalInfoHeight + textHeight;
         }
-        private double generateWeightSeq(PdfPage page, int n, double y, string[] array)
+        private double GenerateWeightSeq(PdfPage page, int n, double y, string[] array)
         {
+            if (array.Length == 0) array = new string[11];
+
             string product = array[3];
             string wasWeightManual = array[4];
-            string dateTime = array[5] == "" ? na : array[5];
+            string dateTime = (array[5] == "" || array[5] == null) ? na : array[5];
             string actualValue;
             string setpoint;
             string minimum;
@@ -382,7 +386,6 @@ namespace FPO_WPF_Test
                     status = weightSeq_statusFAIL;
                 }
             }
-
 
             string weightTypeText = wasWeightManual == "True" ? " " + weightSeq_manualWeight : 
                                    (wasWeightManual == "False" ? " " + weightSeq_autoWeight : "");
@@ -452,7 +455,7 @@ namespace FPO_WPF_Test
             }
             return returnValue;
         }
-        private double generateSpeedMixerSeq(PdfPage page, int n, double y, string[] array)
+        private double GenerateSpeedMixerSeq(PdfPage page, int n, double y, string[] array)
         {
             string dtStartSpeedMixerSeq = array[3] == "" ? na : array[3];
             string dtEndSpeedMixerSeq = array[4] == "" ? na : array[4];
@@ -533,7 +536,7 @@ namespace FPO_WPF_Test
                 { smSeq_stdField, speedSTD, pressureSTD } };
             double xShift2 = (page.Width - 2 * margin) / (tableValues2.GetLength(0) + 1);
 
-            if (isIndextoLow(page, returnValue)) return -1;
+            if (IsIndextoLow(page, returnValue)) return -1;
             
             // Séquence SpeedMixer
             rect = new XRect(x: margin, y: y, width: page.Width - 2 * margin, height: smSeq_RowHeight);
@@ -622,14 +625,14 @@ namespace FPO_WPF_Test
 
             return returnValue;
         }
-        private double generateAlarmHistory(PdfPage page, double y)
+        private double GenerateAlarmHistory(PdfPage page, double y)
         {
             List<Alarm> historicAlarms = new List<Alarm>();
             double minAlarmHeight = page.Height / 2;
 
             double currentY = y;
             double heightAlarmText = fontDoc_fontBodySize1_Height;
-            string[] historicAlarms_s = new string[historicAlarms.Count];
+            //string[] historicAlarms_s = new string[historicAlarms.Count];
             string alarm;
             string timestamp;
             string description;
@@ -646,7 +649,7 @@ namespace FPO_WPF_Test
                 page = document.AddPage();
                 gfxs.Add(XGraphics.FromPdfPage(page));
                 gfxs[pagesNumber - 1] = gfxs[pagesNumber - 1];
-                currentY = generateSecondHeader(page);
+                currentY = GenerateSecondHeader(page);
             }
             else
             {
@@ -684,13 +687,13 @@ namespace FPO_WPF_Test
                         currentY += Alarm_marginB_Alarms + heightAlarmText;
 
                         // Si on a atteint le bas de la page, on crée un nouvelle page
-                        if (isIndextoLow(page, currentY + Alarm_marginB_Alarms + heightAlarmText))
+                        if (IsIndextoLow(page, currentY + Alarm_marginB_Alarms + heightAlarmText))
                         {
                             pagesNumber++;
                             page = document.AddPage();
                             gfxs.Add(XGraphics.FromPdfPage(page));
                             gfxs[pagesNumber - 1] = gfxs[pagesNumber - 1];
-                            currentY = generateSecondHeader(page);
+                            currentY = GenerateSecondHeader(page);
 
                             gfxs[pagesNumber - 1].DrawString(Alarm_Title + " " + Alarm_Continued,
                                 new XFont(fontDoc, fontTitleSize),
@@ -760,23 +763,23 @@ namespace FPO_WPF_Test
             }*/
             return currentY - Alarm_marginB_Alarms;
         }
-        private void generateCommentSignature(PdfPage page, double y)
+        private void GenerateCommentSignature(PdfPage page, double y)
         {
             double currentY = y;
             XRect rect;
             double commentHeight;
             string[] arraySignature = new string[] { signatureUserName, "", signatureDate, "" };
 
-            if(calculateCommentHeight(page, y) < minCommentHeight)
+            if(CalculateCommentHeight(page, y) < minCommentHeight)
             {
                 // New page
                 pagesNumber++;
                 page = document.AddPage();
                 gfxs.Add(XGraphics.FromPdfPage(page));
-                currentY = generateSecondHeader(page);
+                currentY = GenerateSecondHeader(page);
             }
 
-            commentHeight = calculateCommentHeight(page, currentY);
+            commentHeight = CalculateCommentHeight(page, currentY);
 
             // Commentaire titre
             gfxs[pagesNumber - 1].DrawString(CommentTitle,
@@ -823,7 +826,7 @@ namespace FPO_WPF_Test
             gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectSignatureOutlineSize), rect);
 
         }
-        private void generateCroquis1(PdfPage page)
+        private void GenerateCroquis1(PdfPage page)
         {
             // Header / Footer
             gfxs[pagesNumber - 1].DrawLine(XPens.LightGray,
@@ -848,7 +851,7 @@ namespace FPO_WPF_Test
                 x1: 0, y1: page.Height - margin - heightFooter,
                 x2: page.Width, y2: page.Height - margin - heightFooter);
         }
-        private void generateCroquis2(PdfPage page)
+        private void GenerateCroquis2(PdfPage page)
         {
             double xShiftTotal = page.Width - margin - marginL_SubT - (margin + marginL_SubT);
             double widthLogo = this.widthLogo;
@@ -873,11 +876,11 @@ namespace FPO_WPF_Test
                 x2: margin + marginL_SubT + (3 * xShiftTotal / 4), y2: margin + heightLogo + rectTitleHeight + marginH_Title_SubT + rectTitleHeight);
             //gfx.DrawRectangle(new XPen(XColors.Blue, rectSubTitleOutlineSize), rectSubTitle_Items);
         }
-        private bool isIndextoLow(PdfPage page, double y)
+        private bool IsIndextoLow(PdfPage page, double y)
         {
             return y > (page.Height - margin - heightFooter);
         }
-        private void updatePagination(PdfPage page, XGraphics gfx, int i)
+        private void UpdatePagination(PdfPage page, XGraphics gfx, int i)
         {
             gfx.DrawString("Page " + i.ToString() + " sur " + pagesNumber.ToString(),
                 new XFont(fontDoc, fontFooterSize),
@@ -900,9 +903,11 @@ namespace FPO_WPF_Test
                 gfx.TranslateTransform(-page.Width / 2, -page.Height / 2);
 
                 // Create a string format.
-                var format = new XStringFormat();
-                format.Alignment = XStringAlignment.Near;
-                format.LineAlignment = XLineAlignment.Near;
+                var format = new XStringFormat
+                {
+                    Alignment = XStringAlignment.Near,
+                    LineAlignment = XLineAlignment.Near
+                };
 
                 // Create a dimmed red brush.
                 XBrush brush = new XSolidBrush(XColor.FromArgb(128, 255, 0, 0));
@@ -914,35 +919,34 @@ namespace FPO_WPF_Test
 
             }
         }
-        private double calculateCommentHeight(PdfPage page, double y)
+        private double CalculateCommentHeight(PdfPage page, double y)
         {
             return page.Height - y - marginB_TitleComment - fontDoc_fontTitleSize_Height - cycleResultRowHeight - 2 * signatureRowHeight - heightFooter - margin;
         }
-        public void pdfGenerator(string id)
+        public void PdfGenerator(string id)
         {
             bool isReportOK = true;
-            string[] tableNameSubCycles = new string[] { "cycle_weight", "cycle_speedmixer" }; // Pas bien ça, il faut faire référence au fichier de config et même ça devrait une constante globale. Non ?
             int tableId;
             int seqNumber = 1;
 
             // Initialize cycle information
-            string[] array = MyDatabase.GetOneRow("cycle", whereColumns: new string[] { "id" }, whereValues: new string[] { id });
+            string[] cycleInfo = MyDatabase.GetOneRow("cycle", whereColumns: new string[] { "id" }, whereValues: new string[] { id });
 
-            if (array.Length != 0)
+            if (cycleInfo.Length != 0)
             {
-                jobNumber = array[3];
-                batchNumber = array[4];
-                qtyNumber = array[5] + array[6];
-                itemNumber = array[7];
-                recipeNameVersion = array[8] + " - Version " + array[9];
-                equipmentName = array[10];
-                dtStartCycle = array[11];
-                dtEndCycle = array[12];
-                user = array[13];
-                firstAlarmId = array[14] == "" ? -1 : int.Parse(array[14]);
-                lastAlarmId = array[15] == "" ? -1 : int.Parse(array[15]);
-                comment = array[16];
-                isTest = array[17] == "True" ? true : false;
+                jobNumber = cycleInfo[3];
+                batchNumber = cycleInfo[4];
+                qtyNumber = cycleInfo[5] + cycleInfo[6];
+                itemNumber = cycleInfo[7];
+                recipeNameVersion = cycleInfo[8] + " - Version " + cycleInfo[9];
+                equipmentName = cycleInfo[10];
+                dtStartCycle = cycleInfo[11];
+                dtEndCycle = cycleInfo[12];
+                user = cycleInfo[13];
+                firstAlarmId = cycleInfo[14] == "" ? -1 : int.Parse(cycleInfo[14]);
+                lastAlarmId = cycleInfo[15] == "" ? -1 : int.Parse(cycleInfo[15]);
+                comment = cycleInfo[16];
+                isTest = cycleInfo[17] == "True";
 
                 System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
                 document = new PdfDocument();
@@ -958,85 +962,51 @@ namespace FPO_WPF_Test
                 heightFooter = 2 * marginH_Footer;
 
                 double currentY;
-                currentY = generateHeader(page);
-                currentY = generateFirstTitle(page, currentY);
-                currentY = generateGeneralInfo(page, currentY + marginH_GeneralInfo);
+                currentY = GenerateHeader(page);
+                currentY = GenerateFirstTitle(page, currentY);
+                currentY = GenerateGeneralInfo(page, currentY + marginH_GeneralInfo);
 
-                while (array[1] != null && array[1] != "")
+                while (cycleInfo[1] != null && cycleInfo[1] != "")
                 {
-                    try
+                    tableId = int.Parse(cycleInfo[1]);
+                    cycleInfo = MyDatabase.GetOneRow(tableNameSubCycles[tableId], whereColumns: new string[] { "id" }, whereValues: new string[] { cycleInfo[2] });
+                    
+                    if (cycleInfo.Length != 0)
                     {
-                        tableId = int.Parse(array[1]);
-                        array = MyDatabase.GetOneRow(tableNameSubCycles[tableId], whereColumns: new string[] { "id" }, whereValues: new string[] { array[2] });
-
-                        if (array.Length != 0)
+                        if (tableId == 0)
                         {
-                            if (tableId == 0)
-                            {
-                                currentY = generateWeightSeq(page, seqNumber, currentY + smSeq_marginL_Cells, array);
-                            }
-                            else if (tableId == 1)
-                            {
-                                currentY = generateSpeedMixerSeq(page, seqNumber, currentY + smSeq_marginL_Cells, array);
-                            }
-                            else
-                            {
-                                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Et bah alors !");
-                            }
+                            currentY = GenerateWeightSeq(page, seqNumber, currentY + smSeq_marginL_Cells, cycleInfo);
+                        }
+                        else if (tableId == 1)
+                        {
+                            currentY = GenerateSpeedMixerSeq(page, seqNumber, currentY + smSeq_marginL_Cells, cycleInfo);
                         }
                         else
                         {
-                            array = new string[0];
-                            isReportOK = false;
-                            MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Oups, je sais pas ce qui s'est passé");
+                            MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Et bah alors !");
                         }
-                        seqNumber++;
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        array = new string[0];
+                        cycleInfo = new string[2];
                         isReportOK = false;
-                        MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - C'est pas bon ça: " + ex.Message);
+                        MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Oups, je sais pas ce qui s'est passé");
                     }
+                    seqNumber++;
                 }
-
-                if (array.Length != 0)
-                {/*
-                    for (int i = 0; i < 7; i++)
-                    {
-                        if (i % 2 == 0) currentY = generateWeightSeq(page, i + 1, currentY + 3 * marginH_Title_SubT, array);
-                        else currentY = generateSpeedMixerSeq(page, i + 1, currentY + smSeq_marginL_Cells);
-
-                        if (currentY == -1)
-                        {
-                            // New page
-                            pagesNumber++;
-                            page = document.AddPage();
-                            gfxs.Add(XGraphics.FromPdfPage(page));
-                            currentY = generateSecondHeader(page);
-
-                            if (i % 2 == 0) currentY = generateWeightSeq(page, i + 1, currentY + 3 * marginH_Title_SubT, array);
-                            else currentY = generateSpeedMixerSeq(page, i + 1, currentY + smSeq_marginL_Cells);
-                        }
-                    }*/
-                }
-                else
-                {
-                    MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Weight - C'est pas bon ça");
-                }
-
 
                 // Historique d'alarme
-                currentY = generateAlarmHistory(page, currentY);
+                currentY = GenerateAlarmHistory(page, currentY);
 
-                generateCommentSignature(page, currentY + marginH_TitleComment);
+                GenerateCommentSignature(page, currentY + marginH_TitleComment);
 
-                for (int i = 0; i < document.Pages.Count; i++) updatePagination(document.Pages[i], gfxs[i], i + 1);
+                for (int i = 0; i < document.Pages.Count; i++) UpdatePagination(document.Pages[i], gfxs[i], i + 1);
 
                 string filename = folderPath + generationDateTime.Year.ToString() + "." + generationDateTime.Month.ToString("00") + "." + generationDateTime.Day.ToString("00") + "_" +
                     generationDateTime.Hour.ToString("00") + "." + generationDateTime.Minute.ToString("00") + "." + generationDateTime.Second.ToString("00") + "_" +
                     jobNumber + "_" + batchNumber + "_" + itemNumber + ".pdf";
                 if (isReportOK) document.Save(filename);
+                //document.Save(filename);
             }
             else
             {

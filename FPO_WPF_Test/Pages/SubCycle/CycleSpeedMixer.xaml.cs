@@ -35,35 +35,35 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
     public partial class CycleSpeedMixer : Page, IDisposable
     {
-        private Frame frameMain;
-        private Frame frameInfoCycle;
+        private readonly Frame frameMain;
+        private readonly Frame frameInfoCycle;
         //private MyDatabase db = new MyDatabase();
         private readonly string[] currentPhaseParameters;
         //private List<string[]> thisCycleInfo;
-        private int idCycle;
-        private int idPrevious;
-        private string tablePrevious;
-        private int idSubCycle;
-        private bool isTest;
+        private readonly int idCycle;
+        private readonly int idPrevious;
+        private readonly string tablePrevious;
+        private readonly int idSubCycle;
+        private readonly bool isTest;
 
         private bool hasSequenceStarted;
         private bool isSequenceOver;
         private bool isCycleStopped;
 
-        private Task taskGetStatus;
-        private int timeGetStatus = 500;
+        private readonly Task taskGetStatus;
+        private readonly int timeGetStatus = 500;
 
-        private System.Timers.Timer sequenceTimer;
+        private readonly System.Timers.Timer sequenceTimer;
         private int currentPhaseTime;
         private int currentPhaseNumber;
         private int currentSeqTime;
 
-        private System.Timers.Timer pumpNotFreeTimer;
+        private readonly System.Timers.Timer pumpNotFreeTimer;
         private bool isPumpFree;
         private bool wasPumpActivated;
         private int pumpNotFreeSince;
 
-        private System.Timers.Timer tempControlTimer;
+        private readonly System.Timers.Timer tempControlTimer;
         private bool isTempOK;
         private int tempTooHotSince;
 
@@ -73,8 +73,8 @@ namespace FPO_WPF_Test.Pages.SubCycle
         private readonly int timeoutSequenceTooLong = 60;
         private readonly int timeoutSequenceBlocked = 90;
 
-        private static int nAlarms = 1;
-        private static bool[] areAlarmActive = new bool[nAlarms];
+        private readonly static int nAlarms = 1;
+        private readonly static bool[] areAlarmActive = new bool[nAlarms];
 
         private int currentSpeed;
         private decimal currentPressure;
@@ -100,32 +100,38 @@ namespace FPO_WPF_Test.Pages.SubCycle
             idPrevious = idPrevious_arg;
             tablePrevious = tablePrevious_arg;
             isTest = isTest_arg;
-            frameMain.ContentRendered += new EventHandler(thisFrame_ContentRendered);
+            frameMain.ContentRendered += new EventHandler(ThisFrame_ContentRendered);
             //thisCycleInfo = cycleInfo;
             isSequenceOver = false;     // la séquence n'est pas terminée
             hasSequenceStarted = false; // la séquence n'a pas démarré
             isCycleStopped = false;     // ne cycle n'a pas été arrêté
 
             // Initialisation des timers
-            sequenceTimer = new System.Timers.Timer();
-            sequenceTimer.Interval = 1000;
-            sequenceTimer.Elapsed += seqTimer_OnTimedEvent;
-            sequenceTimer.AutoReset = true;
+            sequenceTimer = new System.Timers.Timer
+            {
+                Interval = 1000,
+                AutoReset = true
+            };
+            sequenceTimer.Elapsed += SeqTimer_OnTimedEvent;
             currentPhaseNumber = 1;     // la phase en cours est la première
             currentSeqTime = 0;
 
-            pumpNotFreeTimer = new System.Timers.Timer();
-            pumpNotFreeTimer.Interval = 1000;
-            pumpNotFreeTimer.Elapsed += pumpNotFreeTimer_OnTimedEvent;
-            pumpNotFreeTimer.AutoReset = true;
+            pumpNotFreeTimer = new System.Timers.Timer
+            {
+                Interval = 1000,
+                AutoReset = true
+            };
+            pumpNotFreeTimer.Elapsed += PumpNotFreeTimer_OnTimedEvent;
             isPumpFree = false;         // la pompe n'est pas disponible
             wasPumpActivated = false;   // la pompe n'a pas encore été commandée
             pumpNotFreeSince = 0;       // Initialisation de la valeur du timer
 
-            tempControlTimer = new System.Timers.Timer();
-            tempControlTimer.Interval = 1000;
-            tempControlTimer.Elapsed += tempTooHotTimer_OnTimedEvent;
-            tempControlTimer.AutoReset = true;
+            tempControlTimer = new System.Timers.Timer
+            {
+                Interval = 1000,
+                AutoReset = true
+            };
+            tempControlTimer.Elapsed += TempTooHotTimer_OnTimedEvent;
             tempTooHotSince = 0;        // Initialisation de la valeur du timer
 
             currentSpeed = 0;
@@ -145,14 +151,6 @@ namespace FPO_WPF_Test.Pages.SubCycle
             {
                 MyDatabase.CreateTempTable("speed DECIMAL(5,1) NOT NULL, pressure DECIMAL(5,1) NOT NULL");
 
-                /*
-                MyDatabase.InsertRow("temp", "speed, pressure", new string[] { "10", "36" });
-                MyDatabase.InsertRow("temp", "speed, pressure", new string[] { "20", "92" });
-                MyDatabase.InsertRow("temp", "speed, pressure", new string[] { "30", "28" });
-                MyDatabase.InsertRow("temp", "speed, pressure", new string[] { "40", "15" });
-                MyDatabase.InsertRow("temp", "speed, pressure", new string[] { "50", "43" });
-                */
-
                 // currentPhaseParameters =  liste des paramètres pour notre séquence
                 this.currentPhaseParameters = MyDatabase.GetOneRow("recipe_speedmixer", whereColumns: new string[] { "id" }, whereValues: new string[] { id });
 
@@ -169,9 +167,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
                 string columns = "date_time_start, time_mix_th, pressure_unit, speed_min, speed_max, pressure_min, pressure_max";
                 string[] values = new string[] { DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), TimeSpan.FromSeconds(timeTh_seconds).ToString(), currentPhaseParameters[9], currentPhaseParameters[42], currentPhaseParameters[43], currentPhaseParameters[44], currentPhaseParameters[45] };
-                //string[] values = new string[] { this.currentPhaseParameters[3], setpoint.ToString(), min.ToString(), max.ToString(), this.currentPhaseParameters[6], this.currentPhaseParameters[7] };
 
-                //MyDatabase.InsertRow("temp2", "description", new string[] { "InsertRow - CycleSpeedMixer" });
                 MyDatabase.InsertRow("cycle_speedmixer", columns, values);
                 idSubCycle = MyDatabase.GetMax("cycle_speedmixer", "id");
 
@@ -182,42 +178,12 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 if (this.currentPhaseParameters.Count() != 0) // S'il n'y a pas eu d'erreur...
                 {
                     tbPhaseName.Text = this.currentPhaseParameters[3];
-                    /*
-                    // Pump initializsation
-                    // Si la connection RS232 avec la pompe est ouverte et que personne d'autre n'utilise la pompe
-                    if (RS232Pump.IsOpen() && RS232Pump.IsFree())
-                    {
-                        RS232Pump.BlockUse();   // On bloque l'utilisation de la pompe par quelqu'un d'autre
-                        isPumpFree = true;      // Et on dit que la pompe est dispo
-
-                        if (currentPhaseParameters[6] == "True") RS232Pump.SetCommand("!C802 1");   // Si on contrôle la pression, on démarre la pompe
-                        else RS232Pump.SetCommand("!C802 0"); // Sinon on arrête la pompe 
-                    }
-                    else
-                    { 
-                        //isPumpFree = false;    // Sinon la pompe n'est pas dispo
-                        pumpNotFreeTimer.Start();
-
-                        if (RS232Pump.IsOpen())
-                        {
-                            MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Connexion avec la pompe déjà en cours, tu vois");
-                        }
-                        else
-                        {
-                            MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Connexion avec la pompe impossible");
-                        }
-                    }*/
-
-
 
                     pumpNotFreeTimer.Start();
-                    tempControlTimer.Start(); // On lance le timer de contrôle de la température
-
-
-
+                    if(currentPhaseParameters[11] == "True") tempControlTimer.Start(); // On lance le timer de contrôle de la température
 
                     SpeedMixerModbus.SetProgram(this.currentPhaseParameters); // On met à jour tout les paramètres dans le speedmixer
-                    taskGetStatus = Task.Factory.StartNew(() => sequenceController()); // On lance la tâche de vérification du status et d'autre choses sûrement
+                    taskGetStatus = Task.Factory.StartNew(() => SequenceController()); // On lance la tâche de vérification du status et d'autre choses sûrement
                 }
             }
             else
@@ -271,7 +237,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             Dispose(disposing: false);
             MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Disconnection done");
         }
-        private async void sequenceController()
+        private async void SequenceController()
         {
             bool[] status = new bool[8];
 
@@ -364,7 +330,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 EndSequence();
             });
         }
-        private void tempTooHotTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        private void TempTooHotTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
             //
             // Il faudrait montrer la valeur du timer et un message qui informe l'utilisateur de la déconnexion de la pompe
@@ -395,7 +361,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                         tempControlTimer.Stop();
 
                         MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - TIMEOUT pendant le cycle !!! C'est fini, il fait beaucoup trop chaud");
-                        stopCycle();
+                        StopCycle();
                     }
                 }
                 else
@@ -405,7 +371,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                         tempControlTimer.Stop();
 
                         MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - TIMEOUT avant le cycle !!! C'est fini, il fait beaucoup trop chaud");
-                        stopCycle();
+                        StopCycle();
                     }
                 }
             }
@@ -425,7 +391,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 }
             }
         }
-        private void pumpNotFreeTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        private void PumpNotFreeTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
             //
             // Il faudrait montrer la valeur du timer et un message qui informe l'utilisateur de la déconnexion de la pompe                        // Ici on va afficher un ruban qui dit qu'on démarre le timer est en cours
@@ -471,12 +437,12 @@ namespace FPO_WPF_Test.Pages.SubCycle
                     else
                     {
                         MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - TIMEOUT !!! Il faut arrêter le cycle maintenant, ALARME !!!");
-                        stopCycle();
+                        StopCycle();
                     }
                 }
             }
         }
-        private void seqTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        private void SeqTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
             currentSeqTime++; // On met à jour le temps total du mix, quand est-ce qu'il s'arrête ?
 
@@ -495,7 +461,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             else if (currentPhaseTime == -timeoutSequenceTooLong)
             {
                 MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - C'est normal que ça traîne comme ça ? Attention je vais arrêter le timer");
-                stopCycle();
+                StopCycle();
             }
             else if (currentPhaseTime == -timeoutSequenceBlocked)
             {
@@ -523,9 +489,6 @@ namespace FPO_WPF_Test.Pages.SubCycle
         }
         private void EndSequence()
         {
-
-            //string[] info = new string[] { "1", currentPhaseParameters[3] };
-
             // On arrête les timers (celle qui gère le temps de la séquence, la température du cold trap et celle qui gère la dispo de la pompe)
             sequenceTimer.Stop();
             tempControlTimer.Stop();
@@ -581,7 +544,15 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Je ne sais pas, je ne sais plus, je suis perdu");
             }
 
-            General.EndSequence(currentPhaseParameters, frameMain, frameInfoCycle, idCycle, idSubCycle, isTest, comment);
+            if (isCycleStopped)
+            {
+                General.EndSequence(recipeParameters: currentPhaseParameters, frameMain: frameMain, frameInfoCycle: frameInfoCycle, idCycle: idCycle, previousSeqType: 1, previousSeqId: idSubCycle.ToString(), isTest: isTest, comment: comment);
+            }
+            else
+            {
+                General.NextSequence(currentPhaseParameters, frameMain, frameInfoCycle, idCycle, idSubCycle, 1, isTest, comment);
+
+            }
             //*/
             /*
             if (!isCycleStopped && currentPhaseParameters[1] == "0") // Si la prochaine séquence est une séquence de poids et que le cycle n'est pas arrêté
@@ -636,18 +607,18 @@ namespace FPO_WPF_Test.Pages.SubCycle
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            stopCycle();
+            StopCycle();
         }
-        private void thisFrame_ContentRendered(object sender, EventArgs e)
+        private void ThisFrame_ContentRendered(object sender, EventArgs e)
         {
             if (frameMain.Content != this)
             {
-                frameMain.ContentRendered -= thisFrame_ContentRendered;
-                if(!isSequenceOver) stopCycle();
+                frameMain.ContentRendered -= ThisFrame_ContentRendered;
+                if(!isSequenceOver) StopCycle();
             }
 
         } 
-        private void stopCycle()
+        private void StopCycle()
         {
             //
             // Fait quelque chose pour le rapport

@@ -23,13 +23,13 @@ namespace FPO_WPF_Test.Pages.SubCycle
 {
     public partial class PreCycle : Page
     {
-        private Frame frameMain = new Frame();
-        private Frame frameInfoCycle = new Frame();
-        private List<string> ProgramNames = new List<string>();
-        private List<string> ProgramIDs = new List<string>();
+        private readonly Frame frameMain = new Frame();
+        private readonly Frame frameInfoCycle = new Frame();
+        private readonly List<string> ProgramNames = new List<string>();
+        private readonly List<string> ProgramIDs = new List<string>();
         //private MyDatabase db = new MyDatabase();
-        private List<string[]> thisCycleInfo = new List<string[]>();
-        private readonly NameValueCollection MySettings = ConfigurationManager.GetSection("Database/Recipe") as NameValueCollection;
+        //private readonly List<string[]> thisCycleInfo = new List<string[]>();
+        //private readonly NameValueCollection MySettings = ConfigurationManager.GetSection("Database/Recipe") as NameValueCollection;
 
         public PreCycle(Frame frameMain_arg, Frame inputInfoCycleFrame)
         {
@@ -39,7 +39,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
             General.Update_RecipeNames(cbxProgramName, ProgramNames, ProgramIDs, MyDatabase.RecipeStatus.PROD);
         }
-        private void fxOK(object sender, RoutedEventArgs e)
+        private void FxOK(object sender, RoutedEventArgs e)
         {/*
             string[] array;
             string[] preCycleInfo = new string[] { ProgramNames[cbxProgramName.SelectedIndex], tbOFnumber.Text, tbFinalWeight.Text };
@@ -148,11 +148,11 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 }*/
             }
         }
-        private void fxAnnuler(object sender, RoutedEventArgs e)
+        private void FxAnnuler(object sender, RoutedEventArgs e)
         {
             frameMain.Content = new Status();
         }
-        private void tbOFnumber_KeyDown(object sender, KeyEventArgs e)
+        private void TbOFnumber_KeyDown(object sender, KeyEventArgs e)
         {
             TextBox textbox = sender as TextBox;   
 
@@ -169,7 +169,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 }
             }
         }
-        private void tbFinalWeight_KeyDown(object sender, KeyEventArgs e)
+        private void TbFinalWeight_KeyDown(object sender, KeyEventArgs e)
         {
             TextBox textbox = sender as TextBox;
 

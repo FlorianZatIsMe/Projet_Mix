@@ -9,8 +9,8 @@ namespace Driver.ColdTrap
 {
     public static class ColdTrap
     {
-        private static Task myTask;
-        private static DigitalSingleChannelReader myDigitalReader;
+        private readonly static Task myTask;
+        private readonly static DigitalSingleChannelReader myDigitalReader;
         static ColdTrap()
         {
             try

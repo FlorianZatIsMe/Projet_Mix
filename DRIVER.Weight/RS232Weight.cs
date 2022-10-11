@@ -14,17 +14,17 @@ namespace DRIVER.RS232.Weight
 {
     public static class RS232Weight
     {
-        private static SerialPort scaleConnection;
+        private readonly static SerialPort scaleConnection;
         private static string receivedData;
         private static decimal weight;
         private static bool isWeightStable;
         private static string lastCommand;
         private static bool isFree;
         //private static MyDatabase db = new MyDatabase();
-        private static int nAlarms = 1;
+        private readonly static int nAlarms = 1;
         public static bool[] areAlarmActive = new bool[nAlarms];
-        private static bool[] wereAlarmActive = new bool[nAlarms];
-        private static Task taskAlarmScan;
+        //private readonly static bool[] wereAlarmActive = new bool[nAlarms];
+        //private readonly static Task taskAlarmScan;
         private static bool isRS232Active;
 
         static RS232Weight()
@@ -32,23 +32,26 @@ namespace DRIVER.RS232.Weight
             isWeightStable = false;
             isRS232Active = false;
 
-            scaleConnection = new SerialPort();
-            scaleConnection.BaudRate = 9600;
-            scaleConnection.DataBits = 8;
-            scaleConnection.Parity = Parity.None;
-            scaleConnection.StopBits = StopBits.One;
-            scaleConnection.Handshake = Handshake.XOnXOff;
-            scaleConnection.NewLine = "\n";
-            scaleConnection.PortName = "COM6";
+            scaleConnection = new SerialPort
+            {
+                BaudRate = 9600,
+                DataBits = 8,
+                Parity = Parity.None,
+                StopBits = StopBits.One,
+                Handshake = Handshake.XOnXOff,
+                NewLine = "\n",
+                PortName = "COM6"
+            };
 
             lastCommand = "";
 
-            scaleConnection.DataReceived += new SerialDataReceivedEventHandler(weightReceivedData);
+            scaleConnection.DataReceived += new SerialDataReceivedEventHandler(WeightReceivedData);
             isFree = true;
 
-            taskAlarmScan = Task.Factory.StartNew(() => scanAlarms());
+            //taskAlarmScan = Task.Factory.StartNew(() => scanAlarms());
+            Task.Factory.StartNew(() => ScanAlarms());
         }
-        private static async void scanAlarms()
+        private static async void ScanAlarms()
         {
             while (true)
             {
@@ -133,7 +136,7 @@ namespace DRIVER.RS232.Weight
         {
             return isWeightStable;
         }
-        private static void weightReceivedData(object sender, SerialDataReceivedEventArgs e)
+        private static void WeightReceivedData(object sender, SerialDataReceivedEventArgs e)
         {
             receivedData = scaleConnection.ReadLine();
             //MessageBox.Show(data);

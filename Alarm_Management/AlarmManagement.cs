@@ -13,14 +13,14 @@ namespace Alarm_Management
 {
     public static class AlarmManagement
     {
-        public static List<Tuple<int, int>> activeAlarms { get; }
+        public static List<Tuple<int, int>> ActiveAlarms { get; }
         //public static List<Alarm> activeAlarms { get; }
         public static List<int> RAZalarms;
         public static Alarm[,] alarms;
         //private static MyDatabase db = new MyDatabase();
         private readonly static NameValueCollection AuditTrailSettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
-        private readonly static Configuration.List MySettings = ConfigurationManager.GetSection("Alarm_Info/List") as Configuration.List;
-        private readonly static Database.Configuration.Connection_Info HisSettings = ConfigurationManager.GetSection("Database/Connection_Info") as Database.Configuration.Connection_Info;
+        //private readonly static Configuration.List MySettings = ConfigurationManager.GetSection("Alarm_Info/List") as Configuration.List;
+        //private readonly static Database.Configuration.Connection_Info HisSettings = ConfigurationManager.GetSection("Database/Connection_Info") as Database.Configuration.Connection_Info;
 
         public struct Alarm
         {
@@ -54,7 +54,7 @@ namespace Alarm_Management
         }
         static AlarmManagement()
         {
-            activeAlarms = new List<Tuple<int, int>>();
+            ActiveAlarms = new List<Tuple<int, int>>();
             //RAZalarms = new List<Alarm>();
             RAZalarms = new List<int>();
             alarms = new Alarm[4, 2];
@@ -95,25 +95,25 @@ namespace Alarm_Management
 
                 alarms[id1, id2].id = MyDatabase.GetMax(AuditTrailSettings["Table_Name"], "id");
                 alarms[id1, id2].Status = statusAfter;
-                activeAlarms.Add(new Tuple<int, int>(id1, id2));
+                ActiveAlarms.Add(new Tuple<int, int>(id1, id2));
 
                 if (statusBefore == AlarmStatus.INACTIVE)
                 {
-                    for (int i = 0; i < activeAlarms.Count; i++)
+                    for (int i = 0; i < ActiveAlarms.Count; i++)
                     {
-                        if (activeAlarms[i].Item1 == id1 && activeAlarms[i].Item2 == id2)
+                        if (ActiveAlarms[i].Item1 == id1 && ActiveAlarms[i].Item2 == id2)
                         {
                             n = i;
                             break;
                         }
                     }
 
-                    if (n != -1) activeAlarms.RemoveAt(n);
+                    if (n != -1) ActiveAlarms.RemoveAt(n);
                     else MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Très bizarre...");
                 }
 
 
-                for (int i = 0; i < activeAlarms.Count(); i++)
+                for (int i = 0; i < ActiveAlarms.Count(); i++)
                 {
                     //MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - " + i.ToString() + ", " + activeAlarms[i].id.ToString() + ", " + activeAlarms[i].Description + ", " + activeAlarms[i].Status.ToString());
                 }
@@ -128,9 +128,9 @@ namespace Alarm_Management
         {
             int n = -1;
 
-            for (int i = 0; i < activeAlarms.Count; i++)
+            for (int i = 0; i < ActiveAlarms.Count; i++)
             {
-                if (activeAlarms[i].Item1 == id1 && activeAlarms[i].Item2 == id2)
+                if (ActiveAlarms[i].Item1 == id1 && ActiveAlarms[i].Item2 == id2)
                 {
                     n = i;
                     break;
@@ -178,14 +178,14 @@ namespace Alarm_Management
 
                     if (statusAfter == AlarmStatus.INACTIVE)
                     {
-                        activeAlarms.Add(new Tuple<int, int>(id1, id2));
+                        ActiveAlarms.Add(new Tuple<int, int>(id1, id2));
                     }
                     else if (statusAfter == AlarmStatus.RAZ)
                     {
                         RAZalarms.Add(alarms[id1, id2].id);
                     }
 
-                    activeAlarms.RemoveAt(n);
+                    ActiveAlarms.RemoveAt(n);
                 }
             }
             else
@@ -193,7 +193,7 @@ namespace Alarm_Management
                 MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Tu sais pas ce que tu fais c'est pas vrai !");
             }
 
-            for (int i = 0; i < activeAlarms.Count(); i++)
+            for (int i = 0; i < ActiveAlarms.Count(); i++)
             {
                 //MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - " + i.ToString() + ", " + activeAlarms[i].id.ToString() + ", " + activeAlarms[i].Description + ", " + activeAlarms[i].Status.ToString());
             }
@@ -202,9 +202,9 @@ namespace Alarm_Management
         {
             int n = -1;
 
-            for (int i = 0; i < activeAlarms.Count; i++)
+            for (int i = 0; i < ActiveAlarms.Count; i++)
             {
-                if (activeAlarms[i].Item1 == id1 && activeAlarms[i].Item2 == id2)
+                if (ActiveAlarms[i].Item1 == id1 && ActiveAlarms[i].Item2 == id2)
                 {
                     n = i;
                     break;
@@ -228,17 +228,17 @@ namespace Alarm_Management
 
                     if (statusAfter == AlarmStatus.ACK)
                     {
-                        activeAlarms.Add(new Tuple<int, int>(id1, id2));
+                        ActiveAlarms.Add(new Tuple<int, int>(id1, id2));
                     }
                     else if (statusAfter == AlarmStatus.RAZACK)
                     {
                         RAZalarms.Add(alarms[id1, id2].id);
                     }
 
-                    activeAlarms.RemoveAt(n);
+                    ActiveAlarms.RemoveAt(n);
                 }
 
-                for (int i = 0; i < activeAlarms.Count(); i++)
+                for (int i = 0; i < ActiveAlarms.Count(); i++)
                 {
                     //MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - " + i.ToString() + ", " + activeAlarms[i].id.ToString() + ", " + activeAlarms[i].Description + ", " + activeAlarms[i].Status.ToString());
                 }

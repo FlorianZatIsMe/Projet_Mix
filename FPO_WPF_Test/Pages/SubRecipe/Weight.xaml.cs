@@ -29,8 +29,8 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         private const int IdMin = 4;
         private const int IdMax = 5;
 
-        private Frame parentFrame;
-        private bool[] FormatControl = new bool[ControlNumber];
+        private readonly Frame parentFrame;
+        private readonly bool[] FormatControl = new bool[ControlNumber];
         private bool CurrentFormatControl_tbBarcode;
         //private General g = new General();
         public Weight()
@@ -77,13 +77,13 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             tbMin.Text = decimal.Parse(array[9]).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
             tbMax.Text = decimal.Parse(array[10]).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
 
-            tbProduct_LostFocus(tbProduct, new RoutedEventArgs());
-            if ((bool)cbIsBarcode.IsChecked) tbBarcode_LostFocus(tbBarcode, new RoutedEventArgs());
+            TbProduct_LostFocus(tbProduct, new RoutedEventArgs());
+            if ((bool)cbIsBarcode.IsChecked) TbBarcode_LostFocus(tbBarcode, new RoutedEventArgs());
             else FormatControl[IdBarcode] = false;
-            tbDecimalNumber_LostFocus(tbDecimalNumber, new RoutedEventArgs());
-            tbSetpoint_LostFocus(tbSetpoint, new RoutedEventArgs());
-            tbMin_LostFocus(tbMin, new RoutedEventArgs());
-            tbMax_LostFocus(tbMax, new RoutedEventArgs());
+            TbDecimalNumber_LostFocus(tbDecimalNumber, new RoutedEventArgs());
+            TbSetpoint_LostFocus(tbSetpoint, new RoutedEventArgs());
+            TbMin_LostFocus(tbMin, new RoutedEventArgs());
+            TbMax_LostFocus(tbMax, new RoutedEventArgs());
         }
         public string[] GetPage()
         {
@@ -101,13 +101,14 @@ namespace FPO_WPF_Test.Pages.SubRecipe
 
             return array;
         }
-        private void cbIsBarcode_Checked(object sender, RoutedEventArgs e)
+        private void CbIsBarcode_Checked(object sender, RoutedEventArgs e)
         {
             tbBarcode.Visibility = Visibility.Visible;
             labelBarcode.Visibility = Visibility.Visible;
+            if(tbBarcode.Text != "") TbBarcode_LostFocus(tbBarcode, new RoutedEventArgs());
             FormatControl[IdBarcode] = CurrentFormatControl_tbBarcode;
         }
-        private void cbIsBarcode_Unchecked(object sender, RoutedEventArgs e)
+        private void CbIsBarcode_Unchecked(object sender, RoutedEventArgs e)
         {
             tbBarcode.Visibility = Visibility.Hidden;
             labelBarcode.Visibility = Visibility.Hidden;
@@ -117,7 +118,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         {
             cbIsBarcode.IsChecked = true;
         }
-        private void tbProduct_LostFocus(object sender, RoutedEventArgs e)
+        private void TbProduct_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdProduct;
@@ -132,7 +133,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
             //MessageBox.Show(FormatControl[i].ToString());
         }
-        private void tbBarcode_LostFocus(object sender, RoutedEventArgs e)
+        private void TbBarcode_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdBarcode;
@@ -148,9 +149,9 @@ namespace FPO_WPF_Test.Pages.SubRecipe
 
             CurrentFormatControl_tbBarcode = FormatControl[i];
 
-            //MessageBox.Show(FormatControl[i].ToString());
+            MessageBox.Show(FormatControl[i].ToString());
         }
-        private void tbDecimalNumber_LostFocus(object sender, RoutedEventArgs e)
+        private void TbDecimalNumber_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdDecimalNumber;
@@ -177,7 +178,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
             //MessageBox.Show(FormatControl[i].ToString());
         }
-        private void tbSetpoint_LostFocus(object sender, RoutedEventArgs e)
+        private void TbSetpoint_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdSetpoint;
@@ -203,7 +204,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
             //MessageBox.Show(FormatControl[i].ToString());
         }
-        private void tbMin_LostFocus(object sender, RoutedEventArgs e)
+        private void TbMin_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdMin;
@@ -229,7 +230,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
             //MessageBox.Show(FormatControl[i].ToString());
         }
-        private void tbMax_LostFocus(object sender, RoutedEventArgs e)
+        private void TbMax_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdMax;

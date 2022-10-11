@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Globalization;
 using static FPO_WPF_Test.Pages.Recipe;
 
 namespace FPO_WPF_Test.Pages.SubRecipe
@@ -28,7 +29,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         private const int IdAcceleration = 1;
         private const int IdDeceleration = 2;
         private const int IdSCurve = 3;
-        private const int IdSpeed00 = 4;
+        private const int IdSpeed00 = 4;/*
         private const int IdSpeed01 = 5;
         private const int IdSpeed02 = 6;
         private const int IdSpeed03 = 7;
@@ -37,8 +38,8 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         private const int IdSpeed06 = 10;
         private const int IdSpeed07 = 11;
         private const int IdSpeed08 = 12;
-        private const int IdSpeed09 = 13;
-        private const int IdTime00 = 14;
+        private const int IdSpeed09 = 13;*/
+        private const int IdTime00 = 14;/*
         private const int IdTime01 = 15;
         private const int IdTime02 = 16;
         private const int IdTime03 = 17;
@@ -47,8 +48,8 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         private const int IdTime06 = 20;
         private const int IdTime07 = 21;
         private const int IdTime08 = 22;
-        private const int IdTime09 = 23;
-        private const int IdPressure00 = 24;
+        private const int IdTime09 = 23;*/
+        private const int IdPressure00 = 24;/*
         private const int IdPressure01 = 25;
         private const int IdPressure02 = 26;
         private const int IdPressure03 = 27;
@@ -57,19 +58,19 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         private const int IdPressure06 = 30;
         private const int IdPressure07 = 31;
         private const int IdPressure08 = 32;
-        private const int IdPressure09 = 33;
+        private const int IdPressure09 = 33;*/
         private const int IdSpeedMin = 34;
         private const int IdSpeedMax = 35;
         private const int IdPressureMin = 36;
         private const int IdPressureMax = 37;
 
-        private Frame parentFrame;
+        private readonly Frame parentFrame;
         private readonly WrapPanel[] wrapPanels = new WrapPanel[PhasesNumber];
         private readonly CheckBox[] checkBoxes = new CheckBox[PhasesNumber];
         private readonly TextBox[] speeds = new TextBox[PhasesNumber];
         private readonly TextBox[] times = new TextBox[PhasesNumber];
         private readonly TextBox[] pressures = new TextBox[PhasesNumber];
-        private bool[] FormatControl = new bool[ControlNumber];
+        private readonly bool[] FormatControl = new bool[ControlNumber];
         //private General g = new General();
 
         public SpeedMixer()
@@ -198,7 +199,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         {
             parentFrame.Content = new Weight(parentFrame, tbSeqNumber.Text);
         }
-        public void setSeqNumber(string n)
+        public void SetSeqNumber(string n)
         {
             tbSeqNumber.Text = n;
         }
@@ -206,7 +207,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         {
             parentFrame.Content = null;
         }
-        private void cbPhase_Unchecked(object sender, RoutedEventArgs e)
+        private void CbPhase_Unchecked(object sender, RoutedEventArgs e)
         {
             CheckBox checkbox = sender as CheckBox;
             int id = -1;// = int.Parse(checkbox.Name.Substring(checkbox.Name.Length - 2, 2)) + 1;
@@ -244,7 +245,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 MessageBox.Show(ex.Message);
             }
         }
-        private void cbPhase_Checked(object sender, RoutedEventArgs e)
+        private void CbPhase_Checked(object sender, RoutedEventArgs e)
         {
             CheckBox checkbox = sender as CheckBox;
             int id = -1;// = int.Parse(checkbox.Name.Substring(checkbox.Name.Length - 2, 2)) + 1;
@@ -290,10 +291,10 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             tbSCurve.Text = array[10];
             cbColdTrap.IsChecked = array[11] == "True";
 
-            tbProgramName_LostFocus(tbProgramName, new RoutedEventArgs());
-            tbAcceleration_LostFocus(tbAcceleration, new RoutedEventArgs());
-            tbDeceleration_LostFocus(tbDeceleration, new RoutedEventArgs());
-            tbSCurve_LostFocus(tbSCurve, new RoutedEventArgs());
+            TbProgramName_LostFocus(tbProgramName, new RoutedEventArgs());
+            TbAcceleration_LostFocus(tbAcceleration, new RoutedEventArgs());
+            TbDeceleration_LostFocus(tbDeceleration, new RoutedEventArgs());
+            TbSCurve_LostFocus(tbSCurve, new RoutedEventArgs());
 
             i = 0;
             while (i != 10 && array[12 + 3 * i] != "")
@@ -307,9 +308,9 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                     checkBoxes[i].IsChecked = true;
                 }
 
-                tbSpeed_LostFocus(speeds[i], new RoutedEventArgs());
-                tbTime_LostFocus(times[i], new RoutedEventArgs());
-                tbPression_LostFocus(pressures[i], new RoutedEventArgs());
+                TbSpeed_LostFocus(speeds[i], new RoutedEventArgs());
+                TbTime_LostFocus(times[i], new RoutedEventArgs());
+                TbPression_LostFocus(pressures[i], new RoutedEventArgs());
 
                 i++;
             }
@@ -319,10 +320,10 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             tbPressureMin.Text = array[44];
             tbPressureMax.Text = array[45];
 
-            tbSpeedMin_LostFocus(tbSpeedMin, new RoutedEventArgs());
-            tbSpeedMax_LostFocus(tbSpeedMax, new RoutedEventArgs());
-            tbPressureMin_LostFocus(tbPressureMin, new RoutedEventArgs());
-            tbPressureMax_LostFocus(tbPressureMax, new RoutedEventArgs());
+            TbSpeedMin_LostFocus(tbSpeedMin, new RoutedEventArgs());
+            TbSpeedMax_LostFocus(tbSpeedMax, new RoutedEventArgs());
+            TbPressureMin_LostFocus(tbPressureMin, new RoutedEventArgs());
+            TbPressureMax_LostFocus(tbPressureMax, new RoutedEventArgs());
         }
         public string[] GetPage()
         {
@@ -343,20 +344,20 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             i = 0;
             do
             {
-                array[12 - n + 3 * i] = speeds[i].Text;
-                array[13 - n + 3 * i] = times[i].Text;
-                array[14 - n + 3 * i] = pressures[i].Text;
+                array[12 - n + 3 * i] = int.Parse(speeds[i].Text, NumberStyles.AllowThousands).ToString();
+                array[13 - n + 3 * i] = int.Parse(times[i].Text, NumberStyles.AllowThousands).ToString();
+                array[14 - n + 3 * i] = int.Parse(pressures[i].Text, NumberStyles.AllowThousands).ToString();
                 i++;
             } while (i != 10 && (bool)checkBoxes[i].IsChecked);
 
-            array[42 - n] = tbSpeedMin.Text;
-            array[43 - n] = tbSpeedMax.Text;
-            array[44 - n] = tbPressureMin.Text;
-            array[45 - n] = tbPressureMax.Text;
+            array[42 - n] = int.Parse(tbSpeedMin.Text, NumberStyles.AllowThousands).ToString();
+            array[43 - n] = int.Parse(tbSpeedMax.Text, NumberStyles.AllowThousands).ToString();
+            array[44 - n] = int.Parse(tbPressureMin.Text, NumberStyles.AllowThousands).ToString();
+            array[45 - n] = int.Parse(tbPressureMax.Text, NumberStyles.AllowThousands).ToString();
 
             return array;
         }
-        private void tbProgramName_LostFocus(object sender, RoutedEventArgs e)
+        private void TbProgramName_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdProgramName;
@@ -371,7 +372,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
             //MessageBox.Show(FormatControl[i].ToString());
         }
-        private void tbAcceleration_LostFocus(object sender, RoutedEventArgs e)
+        private void TbAcceleration_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdAcceleration;
@@ -386,7 +387,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
             //MessageBox.Show(FormatControl[i].ToString());
         }
-        private void tbDeceleration_LostFocus(object sender, RoutedEventArgs e)
+        private void TbDeceleration_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdDeceleration;
@@ -401,7 +402,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
             //MessageBox.Show(FormatControl[i].ToString());
         }
-        private void tbSCurve_LostFocus(object sender, RoutedEventArgs e)
+        private void TbSCurve_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdSCurve;
@@ -416,7 +417,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
             //MessageBox.Show(FormatControl[i].ToString());
         }
-        private void tbSpeed_LostFocus(object sender, RoutedEventArgs e)
+        private void TbSpeed_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdSpeed00;
@@ -439,7 +440,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 }
             }
         }
-        private void tbTime_LostFocus(object sender, RoutedEventArgs e)
+        private void TbTime_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdTime00;
@@ -462,7 +463,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 }
             }
         }
-        private void tbPression_LostFocus(object sender, RoutedEventArgs e)
+        private void TbPression_LostFocus(object sender, RoutedEventArgs e)
         {
             //pressures[0] = tbPression00;
             TextBox textBox = sender as TextBox;
@@ -486,7 +487,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 }
             }
         }
-        private void tbSpeedMin_LostFocus(object sender, RoutedEventArgs e)
+        private void TbSpeedMin_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdSpeedMin;
@@ -501,7 +502,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
             //MessageBox.Show(FormatControl[i].ToString());
         }
-        private void tbSpeedMax_LostFocus(object sender, RoutedEventArgs e)
+        private void TbSpeedMax_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdSpeedMax;
@@ -516,7 +517,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
             //MessageBox.Show(FormatControl[i].ToString());
         }
-        private void tbPressureMin_LostFocus(object sender, RoutedEventArgs e)
+        private void TbPressureMin_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdPressureMin;
@@ -531,7 +532,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
             //MessageBox.Show(FormatControl[i].ToString());
         }
-        private void tbPressureMax_LostFocus(object sender, RoutedEventArgs e)
+        private void TbPressureMax_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
             int i = IdPressureMax;

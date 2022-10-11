@@ -30,75 +30,24 @@ namespace FPO_WPF_Test.Pages
         private readonly string[] status;
         private bool isFrameLoaded;
         private readonly NameValueCollection MySettings = ConfigurationManager.GetSection("Database/Recipe") as NameValueCollection;
-        private readonly Action CurrentAction;
-        private List<string> ProgramNames = new List<string>();
-        private List<string> ProgramIDs = new List<string>();
-        private bool isCbxToModifAvailable = false;
-        private bool isCbxToDeleteAvailable = false;
-        private string currentRecipeName;
+        //private readonly Action CurrentAction;
+        private readonly List<string> ProgramNames = new List<string>();
+        private readonly List<string> ProgramIDs = new List<string>();
+        private readonly bool isCbxToModifAvailable = false;
+        private readonly bool isCbxToDeleteAvailable = false;
+        //private string currentRecipeName;
         private string currentRecipeVersion;
         private string currentRecipeStatus;
-        private Frame frameMain;
-        private Frame frameInfoCycle;
+        private readonly Frame frameMain;
+        private readonly Frame frameInfoCycle;
 
-        public class BaseA
-        {
-            public int ID = 0;
-        }
-        public class AA : BaseA
-        {
-            public int AID = 0;
-        }
-        public class AB : BaseA
-        {
-            public int BID = 1;
-        }
-        public class AC : BaseA
-        {
-            public int CID = 0;
-        }
-        public static class Util
-        {
-            public static T Foo<T>(object obj)
-            {
-                // Do actual stuff here
-                return default(T);
-            }
-        }
-        public Recipe()
-        {
-            var list = new List<BaseA>
-            {
-             new AA(),
-             new AB(),
-             new AC(),
-            };
-            AA aa = list[1] as AA;
-            if (aa != null)
-            {
-                int id = aa.AID;
-                MessageBox.Show("Cool");
-            }
-        }
-        public void DoFooWith(object blob)
-        {
-            // Get the containing class
-            var utilType = typeof(Util);
-
-            // Get the method we want to invoke
-            var baseMethod = utilType.GetMethod("Foo", new Type[] { typeof(object) });
-            // Get a "type-specific" variant
-            var typedForBlob = baseMethod.MakeGenericMethod(blob.GetType());
-            // And invoke it
-            var res = typedForBlob.Invoke(null, new[] { blob });
-        }
         public Recipe(Action action, Frame frameMain_arg = null, Frame frameInfoCycle_arg = null, string recipeName = "")
         {
             nRow = 1;
             //db = new MyDatabase();
             status = MySettings["Status"].Split(',');
             isFrameLoaded = false;
-            CurrentAction = action;
+            //CurrentAction = action;
             InitializeComponent();
 
             switch (action)
@@ -154,13 +103,6 @@ namespace FPO_WPF_Test.Pages
                 nRow--;
             }
             isFrameLoaded = true;
-        }
-        private void Frame_test(object sender, RoutedEventArgs e)
-        {
-            Frame frame = sender as Frame;
-            Grid grid = frame.Parent as Grid;
-
-            MessageBox.Show(gridMain.RowDefinitions.Count().ToString() + " Row: " + Grid.GetRow(frame).ToString());
         }
         private void New_Sequence_Click(object sender, RoutedEventArgs e)
         {
@@ -318,7 +260,7 @@ namespace FPO_WPF_Test.Pages
                 else
                 {
                     MessageBox.Show("Not good, not good at all");
-                    result = false;
+                    //result = false;
                 }
 
                 if (isFormatOk) // Si toutes les séquences sont correctement renseignée, on mets à jour la base de données
@@ -400,7 +342,7 @@ namespace FPO_WPF_Test.Pages
                 {
                     nextSeqType = array[1];
                     nextSeqID = array[2];
-                    currentRecipeName = array[3];
+                    //currentRecipeName = array[3];
                     currentRecipeVersion = array[4];
                     currentRecipeStatus = status[int.Parse(array[5])];
 
@@ -467,7 +409,7 @@ namespace FPO_WPF_Test.Pages
                                 MessageBox.Show("Elle est cassée ta recette, tu me demandes une séquence qui n'existe pas è_é");
                                 nextSeqID = "";
                             }
-                            MyDatabase.signal(mutexID);
+                            MyDatabase.Signal(mutexID);
                         }
                         else {
                             MessageBox.Show("Je ne comprends pas... Pourquoi je ne vois pas de frame...");
@@ -499,7 +441,6 @@ namespace FPO_WPF_Test.Pages
             gridMain.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) });
 
             Frame frame = new Frame();
-            //frame.MouseDoubleClick += new MouseButtonEventHandler(Frame_test);
             frame.ContentRendered += Frame_ContentRendered;
 
             if (seqType == MySettings["SubRecipeWeight_SeqType"])
@@ -533,7 +474,7 @@ namespace FPO_WPF_Test.Pages
                     else if (frame.Content.GetType().Equals(typeof(SubRecipe.SpeedMixer)))
                     {
                         SubRecipe.SpeedMixer currentpage = frame.Content as SubRecipe.SpeedMixer;
-                        currentpage.setSeqNumber(i.ToString());
+                        currentpage.SetSeqNumber(i.ToString());
                         i++;
                     }
                 }
@@ -603,7 +544,7 @@ namespace FPO_WPF_Test.Pages
                 MyDatabase.ConnectAsync();
             }
         }
-        private void cbxPgmToModify_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CbxPgmToModify_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (isCbxToModifAvailable)
             {
@@ -675,7 +616,7 @@ namespace FPO_WPF_Test.Pages
         private void ButtonActDel_Click(object sender, RoutedEventArgs e)
         {
             int currentIndex = cbxPgmToActDelete.SelectedIndex;
-            int index0;
+            //int index0;
             string[] array;
 
             //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
@@ -709,7 +650,7 @@ namespace FPO_WPF_Test.Pages
                                 ProgramIDs.RemoveAt(currentIndex);
                                 ProgramNames.RemoveAt(currentIndex);
 
-                                cbxAddDefaultText(cbxPgmToActDelete, currentIndex);
+                                CbxAddDefaultText(cbxPgmToActDelete, currentIndex);
                                 MessageBox.Show("D'accord, faisons comme ça");
                             }
                         }
@@ -735,7 +676,7 @@ namespace FPO_WPF_Test.Pages
                                 }
 
                                 // mettre ça dans une fonction et on recommence tout
-                                cbxAddDefaultText(cbxPgmToActDelete, currentIndex);
+                                CbxAddDefaultText(cbxPgmToActDelete, currentIndex);
                                 MessageBox.Show("Si tu insistes");
                             }
                         }
@@ -752,7 +693,7 @@ namespace FPO_WPF_Test.Pages
                             ProgramIDs.RemoveAt(currentIndex);
                             ProgramNames.RemoveAt(currentIndex);
 
-                            cbxAddDefaultText(cbxPgmToActDelete, currentIndex);
+                            CbxAddDefaultText(cbxPgmToActDelete, currentIndex);
                             /*
                             index0 = (ProgramIDs.Count > 1 && currentIndex == 0) ? 1 : 0;
                             ProgramNames.Insert(index0, "Veuillez sélectionner une recette");
@@ -775,7 +716,7 @@ namespace FPO_WPF_Test.Pages
                 MyDatabase.ConnectAsync();
             }
         }
-        private void cbxAddDefaultText(ComboBox comboBox, int index)
+        private void CbxAddDefaultText(ComboBox comboBox, int index)
         {
             //MessageBox.Show(ProgramIDs.Count.ToString());
             int index0 = (ProgramIDs.Count > 0 && index == 0) ? 1 : 0;
@@ -797,7 +738,7 @@ namespace FPO_WPF_Test.Pages
 
             comboBox.Items.Refresh();
         }
-        private void rbActivateDelete_Checked(object sender, RoutedEventArgs e)
+        private void RbActivateDelete_Checked(object sender, RoutedEventArgs e)
         {
             RadioButton radioButton = sender as RadioButton;
 
@@ -830,10 +771,11 @@ namespace FPO_WPF_Test.Pages
 
             if (finalWeight > 0)
             {
-                MessageBox.Show("Assurez-vous d'avoir sauvegarder la recette avant de la tester");
-                string id = ProgramIDs[cbxPgmToModify.SelectedIndex];
-
-                General.StartCycle(id, "NA", finalWeight.ToString(), frameMain, frameInfoCycle, true);
+                if (MessageBox.Show("Voulez-vous démarrer le cycle? Assurez-vous d'avoir sauvegarder la recette avant de la tester", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    string id = ProgramIDs[cbxPgmToModify.SelectedIndex];
+                    General.StartCycle(id, "NA", finalWeight.ToString(), frameMain, frameInfoCycle, true);
+                }
             }
             else
             {

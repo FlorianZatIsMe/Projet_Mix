@@ -45,12 +45,12 @@
                 </WrapPanel>
                 <WrapPanel>
                     <TextBlock Margin="0,10,0,0" Foreground="Wheat" Text="Produit"/>
-                    <TextBox x:Name="tbProduct" Margin="10,10,0,0" Width="200" LostFocus="tbProduct_LostFocus"/>
+                    <TextBox x:Name="tbProduct" Margin="10,10,0,0" Width="200" LostFocus="TbProduct_LostFocus"/>
                 </WrapPanel>
                 <WrapPanel>
-                    <CheckBox x:Name="cbIsBarcode" Margin="0,10,0,0" Foreground="Wheat" Content="Contrôle du code barres" Checked="cbIsBarcode_Checked" Unchecked="cbIsBarcode_Unchecked"/>
+                    <CheckBox x:Name="cbIsBarcode" Margin="0,10,0,0" Foreground="Wheat" Content="Contrôle du code barres" Checked="CbIsBarcode_Checked" Unchecked="CbIsBarcode_Unchecked"/>
                     <TextBlock x:Name="labelBarcode" Margin="30,10,0,0" Foreground="Wheat" Text="Code barres"/>
-                    <TextBox x:Name="tbBarcode" Margin="10,10,0,0" Width="200" LostFocus="tbBarcode_LostFocus"/>
+                    <TextBox x:Name="tbBarcode" Margin="10,10,0,0" Width="200" LostFocus="TbBarcode_LostFocus"/>
                 </WrapPanel>
                 <WrapPanel>
                     <TextBlock Margin="0,10,0,0" Foreground="Wheat" Text="Format"/>
@@ -62,19 +62,19 @@
                     </ComboBox>
                     <TextBlock Margin="30,10,0,0" Foreground="Wheat" Text="Nombre de chiffre après la virgule"/>
 
-                    <TextBox x:Name="tbDecimalNumber" Margin="20,10,0,0" Width="200" LostFocus="tbDecimalNumber_LostFocus"/>
+                    <TextBox x:Name="tbDecimalNumber" Margin="20,10,0,0" Width="200" LostFocus="TbDecimalNumber_LostFocus"/>
                 </WrapPanel>
                 <WrapPanel>
                     <TextBlock Margin="0,10,0,0" Foreground="Wheat" Text="Cible"/>
-                    <TextBox x:Name="tbSetpoint" Margin="10,10,0,0" Width="200" LostFocus="tbSetpoint_LostFocus"/>
+                    <TextBox x:Name="tbSetpoint" Margin="10,10,0,0" Width="200" LostFocus="TbSetpoint_LostFocus"/>
                 </WrapPanel>
                 <WrapPanel>
                     <TextBlock Margin="0,10,0,0" Foreground="Wheat" Text="Minimum"/>
-                    <TextBox x:Name="tbMin" Margin="10,10,0,0" Width="200" LostFocus="tbMin_LostFocus"/>
+                    <TextBox x:Name="tbMin" Margin="10,10,0,0" Width="200" LostFocus="TbMin_LostFocus"/>
                 </WrapPanel>
                 <WrapPanel>
                     <TextBlock Margin="0,10,0,0" Foreground="Wheat" Text="Maximum"/>
-                    <TextBox x:Name="tbMax" Margin="10,10,0,0" Width="200" LostFocus="tbMax_LostFocus"/>
+                    <TextBox x:Name="tbMax" Margin="10,10,0,0" Width="200" LostFocus="TbMax_LostFocus"/>
                 </WrapPanel>
             </StackPanel>
         </Grid>

@@ -20,7 +20,7 @@ namespace FPO_WPF_Test.Pages
     public partial class AuditTrail : Page
     {
         //private MyDatabase db = new MyDatabase();
-        private ReadOnlyCollection<DbColumn> columns;
+        //private ReadOnlyCollection<DbColumn> columns;
         private readonly NameValueCollection MySettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
         private bool tbBefSelToUpdate = false;
         private bool tbBefFull = false;
@@ -29,7 +29,7 @@ namespace FPO_WPF_Test.Pages
         private bool dpBefSelToUpdate = false;
         private bool dpAftSelToUpdate = false;
 
-        private int numberOfDaysBefore = 2;
+        private readonly int numberOfDaysBefore = 2;
 
         public AuditTrail()
         {
@@ -53,9 +53,9 @@ namespace FPO_WPF_Test.Pages
         }
         private void LoadAuditTrail(object sender, RoutedEventArgs e)
         {
-            updateAuditTrail();// DateTime.Now.AddDays(-numberOfDaysBefore), DateTime.Now);
+            UpdateAuditTrail();// DateTime.Now.AddDays(-numberOfDaysBefore), DateTime.Now);
         }
-        private void updateAuditTrail()
+        private void UpdateAuditTrail()
         {
             DataTable dt = new DataTable();
             DataRow row;
@@ -117,13 +117,13 @@ namespace FPO_WPF_Test.Pages
         }
         private void ButtonFilter_Click(object sender, RoutedEventArgs e)
         {
-            updateAuditTrail();
+            UpdateAuditTrail();
         }
-        private void tbTimeBefore_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void TbTimeBefore_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             tbBefSelToUpdate = true;
         }
-        private void tbTimeBefore_LayoutUpdated(object sender, EventArgs e)
+        private void TbTimeBefore_LayoutUpdated(object sender, EventArgs e)
         {
             if (tbBefSelToUpdate)
             {
@@ -133,22 +133,22 @@ namespace FPO_WPF_Test.Pages
             }
             else if (tbBefFull)
             {
-                moveTimeCursor(tbTimeBefore, false);
+                MoveTimeCursor(tbTimeBefore, false);
                 tbBefFull = false;
             }
         }
-        private void tbTimeBefore_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void TbTimeBefore_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             TextBox textbox = sender as TextBox;
 
             if (e.Key == System.Windows.Input.Key.Right)
             {
-                moveTimeCursor(textbox, false);
+                MoveTimeCursor(textbox, false);
                 tbBefSelToUpdate = true;
             }
             else if (e.Key == System.Windows.Input.Key.Left)
             {
-                moveTimeCursor(textbox, true);
+                MoveTimeCursor(textbox, true);
                 tbBefSelToUpdate = true;
             }
             else if (textbox.Text.Length == 7)
@@ -156,11 +156,11 @@ namespace FPO_WPF_Test.Pages
                 tbBefFull = true;
             }
         }
-        private void tbTimeAfter_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void TbTimeAfter_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             tbAftSelToUpdate = true;
         }
-        private void tbTimeAfter_LayoutUpdated(object sender, EventArgs e)
+        private void TbTimeAfter_LayoutUpdated(object sender, EventArgs e)
         {
             if (tbAftSelToUpdate)
             {
@@ -170,22 +170,22 @@ namespace FPO_WPF_Test.Pages
             }
             else if (tbAftFull)
             {
-                moveTimeCursor(tbTimeAfter, false);
+                MoveTimeCursor(tbTimeAfter, false);
                 tbAftFull = false;
             }
         }
-        private void tbTimeAfter_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void TbTimeAfter_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             TextBox textbox = sender as TextBox;
 
             if (e.Key == System.Windows.Input.Key.Right)
             {
-                moveTimeCursor(textbox, false);
+                MoveTimeCursor(textbox, false);
                 tbAftSelToUpdate = true;
             }
             else if (e.Key == System.Windows.Input.Key.Left)
             {
-                moveTimeCursor(textbox, true);
+                MoveTimeCursor(textbox, true);
                 tbAftSelToUpdate = true;
             }
             else if (textbox.Text.Length == 7)
@@ -193,7 +193,7 @@ namespace FPO_WPF_Test.Pages
                 tbAftFull = true;
             }
         }
-        private void checkTime(TextBox textbox, int n)
+        private void CheckTime(TextBox textbox, int n)
         {
             int max = n == 0 ? 23 : (n == 1 ? 59 : 59);
             string nextText;
@@ -241,11 +241,11 @@ namespace FPO_WPF_Test.Pages
 
             textbox.Text = nextText;
         }
-        private void moveTimeCursor(TextBox textbox, bool left)
+        private void MoveTimeCursor(TextBox textbox, bool left)
         {
             int n = (int)(textbox.CaretIndex / 3);
 
-            checkTime(textbox, n);
+            CheckTime(textbox, n);
 
             if (left)
             {
@@ -257,7 +257,7 @@ namespace FPO_WPF_Test.Pages
             }
             textbox.Select(n * 3, 2);
         }
-        private void dpDateBefore_LayoutUpdated(object sender, EventArgs e)
+        private void DpDateBefore_LayoutUpdated(object sender, EventArgs e)
         {
             if (dpBefSelToUpdate)
             {
@@ -265,15 +265,15 @@ namespace FPO_WPF_Test.Pages
                 dpBefSelToUpdate = false;
             }
         }
-        private void dpDateBefore_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void DpDateBefore_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             dpBefSelToUpdate = true;
         }
-        private void dpDateAfter_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void DpDateAfter_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             dpAftSelToUpdate = true;
         }
-        private void dpDateAfter_LayoutUpdated(object sender, EventArgs e)
+        private void DpDateAfter_LayoutUpdated(object sender, EventArgs e)
         {
             if (dpAftSelToUpdate)
             {

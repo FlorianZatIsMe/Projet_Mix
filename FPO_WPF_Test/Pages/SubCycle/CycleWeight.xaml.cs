@@ -23,13 +23,13 @@ namespace FPO_WPF_Test.Pages.SubCycle
     /// </summary>
     public partial class CycleWeight : Page, IDisposable
     {
-        private Frame frameMain;
-        private Frame frameInfoCycle;
-        private int idCycle;
-        private int idPrevious;
-        private bool isTest;
-        private string tablePrevious;
-        private int idSubCycle;
+        private readonly Frame frameMain;
+        private readonly Frame frameInfoCycle;
+        private readonly int idCycle;
+        private readonly int idPrevious;
+        private readonly bool isTest;
+        private readonly string tablePrevious;
+        private readonly int idSubCycle;
         //private MyDatabase db = new MyDatabase();
         private readonly string[] currentPhaseParameters;
         //private List<string[]> thisCycleInfo;
@@ -39,7 +39,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
         //private readonly string unit; to use later maybe
         private bool isScanningStep;
         private bool isSequenceOver;
-        private Task taskGetWeight;
+        private readonly Task taskGetWeight;
         private bool isBalanceFree;
         private bool wasBalanceFreeOnce;
         private bool isWeightCorrect;
@@ -53,7 +53,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             idPrevious = idPrevious_arg;
             tablePrevious = tablePrevious_arg;
             isTest = isTest_arg;
-            frameMain.ContentRendered += new EventHandler(thisFrame_ContentRendered);
+            frameMain.ContentRendered += new EventHandler(ThisFrame_ContentRendered);
             //thisCycleInfo = cycleInfo;
             isSequenceOver = false;
             isWeightCorrect = false;
@@ -120,7 +120,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 MyDatabase.ConnectAsync();
             }
 
-            taskGetWeight = Task.Factory.StartNew(() => getWeight());
+            taskGetWeight = Task.Factory.StartNew(() => GetWeight());
         }
         protected virtual void Dispose(bool disposing)
         {
@@ -143,7 +143,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
-        private async void getWeight()
+        private async void GetWeight()
         {
             decimal currentWeight;
 
@@ -229,11 +229,14 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
                 General.CurrentCycleInfo.UpdateCurrentWeightInfo(new string[] { tbWeight.Text });
 
-                //string[] info = new string[] { "0", currentPhaseParameters[3], tbWeight.Text, min.ToString(), max.ToString() };
-
                 MyDatabase.Update_Row("cycle_weight", new string[] { "was_weight_manual", "date_time", "actual_value" }, new string[] { isBalanceFree ? "0" : "1", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), tbWeight.Text }, idSubCycle.ToString());
 
-                General.EndSequence(currentPhaseParameters, frameMain, frameInfoCycle, idCycle, idSubCycle, isTest);
+                if (currentPhaseParameters[1] == "1") // Si la prochaine séquence est une séquence speedmixer
+                {
+                    MessageBox.Show("Mettez le produit dans le speedmixer et fermer le capot");
+                }
+
+                General.NextSequence(currentPhaseParameters, frameMain, frameInfoCycle, idCycle, idSubCycle, 0, isTest);
 
                 /*
                 if (currentPhaseParameters[1] == "0") // Si la prochaine séquence est une séquence de poids
@@ -271,7 +274,8 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 else
                 {
                     MessageBox.Show("Je ne sais pas, je ne sais plus, je suis perdu");
-                }*/
+                }
+                */
             }
             else
             {
@@ -280,7 +284,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
             Dispose(disposing: true);
         }
-        private async void tbScan_LostFocusAsync(object sender, RoutedEventArgs e)
+        private async void TbScan_LostFocusAsync(object sender, RoutedEventArgs e)
         {
             if (isScanningStep)
             {
@@ -291,7 +295,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 textbox.Focus();
             }
         }
-        private void tbScan_KeyDown(object sender, KeyEventArgs e)
+        private void TbScan_KeyDown(object sender, KeyEventArgs e)
         {
             TextBox textbox = sender as TextBox;
 
@@ -301,6 +305,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 {
                     isScanningStep = false;
                     labelScan.Visibility = Visibility.Collapsed;
+                    tbScan.Visibility = Visibility.Collapsed;
                     gridMain.Visibility = Visibility.Visible;
                 }
                 else
@@ -310,20 +315,24 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 }
             }
         }
-        private void thisFrame_ContentRendered(object sender, EventArgs e)
+        private void ThisFrame_ContentRendered(object sender, EventArgs e)
         {
             if (frameMain.Content != this)
             {
-                frameMain.ContentRendered -= thisFrame_ContentRendered;
-
                 if (!isWeightCorrect)
                 {
-                    MyDatabase.Update_Row("cycle", new string[] { "date_time_end_cycle", "comment" }, new string[] { DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), "Cycle interrompu"}, idCycle.ToString());
+                    frameMain.ContentRendered -= ThisFrame_ContentRendered;
 
+                    General.EndSequence(recipeParameters: currentPhaseParameters, frameMain: frameMain, frameInfoCycle: frameInfoCycle, idCycle: idCycle, previousSeqType: 0, previousSeqId: idSubCycle.ToString(), isTest: isTest, comment: "Cycle interrompu");
+
+                    /*
                     string[] recipeParameters = currentPhaseParameters;
-
                     int previousSeqType = 0;
                     string previousSeqId = idSubCycle.ToString();
+                    string comment = "Cycle interrompu";
+
+                    MyDatabase.Update_Row("cycle", new string[] { "date_time_end_cycle", "comment" }, new string[] { DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), comment}, idCycle.ToString());
+
                     string nextSeqId;
                     int nextRecipeSeqType;
                     bool isNextRcpSeqTpOK;
@@ -336,49 +345,53 @@ namespace FPO_WPF_Test.Pages.SubCycle
                     //TimeSpan timeTh;
                     int i;
 
+                    // On boucle tant qu'on est pas arrivé au bout de la recette
                     while (recipeParameters[1] != "" && recipeParameters[1] != null)
                     {
                         nextRecipeSeqType = int.Parse(recipeParameters[1]);
                         recipeParameters = MyDatabase.GetOneRow(tableNameSubRecipes[int.Parse(recipeParameters[1])], whereColumns: new string[] { "id" }, whereValues: new string[] { recipeParameters[2] });
 
+                        // Si la prochaine étape est un pesage on prépare les données à mettre dans la table cycle_weight (valuesSubCycle)
                         if (nextRecipeSeqType == 0)
                         {
                             valuesSubCycle = new string[] { recipeParameters[3], recipeParameters[8], recipeParameters[9], recipeParameters[10], recipeParameters[6], recipeParameters[7] };
                             isNextRcpSeqTpOK = true;
                         }
+                        // Sinon si c'est un mix on prépare les données à mettre dans la table cycle_speedmixer (valuesSubCycle)
                         else if (nextRecipeSeqType == 1)
                         {
                             i = 0;
                             while (i != 10 && recipeParameters[12 + 3 * i] != "")
                             {
                                 timeTh_seconds += int.Parse(recipeParameters[13 + 3 * i]);
-
                                 i++;
                             }
-
-                            //MessageBox.Show("timeTh: " + timeTh_seconds.ToString());
-                            //timeTh = TimeSpan.FromSeconds(timeTh_seconds);
 
                             valuesSubCycle = new string[] { TimeSpan.FromSeconds(timeTh_seconds).ToString(), recipeParameters[9], recipeParameters[42], recipeParameters[43], recipeParameters[44], recipeParameters[45] };
                             isNextRcpSeqTpOK = true;
                             timeTh_seconds = 0;
                         }
+                        // Sinon il y a un problème
                         else
                         {
                             MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Mais non, tu déconnes !");
                             isNextRcpSeqTpOK = false;
                         }
 
-                        if (isNextRcpSeqTpOK)
+                        if (isNextRcpSeqTpOK) // S'il n'y a pas eu de problème
                         {
+                            // On insert les infos de recettes dans la bonne table
                             MyDatabase.InsertRow(tableNameSubCycles[nextRecipeSeqType],
                                 columnNamesSubCycles[nextRecipeSeqType],
                                 valuesSubCycle);
 
+                            // On met à jour les infos "type" et "id" de la séquence qu'on vient de renseigner dans la précédente séquence
                             nextSeqId = MyDatabase.GetMax(tableNameSubCycles[nextRecipeSeqType], "id").ToString();
                             MyDatabase.Update_Row(tableNameSubCycles[previousSeqType],
                                 new string[] { "next_seq_type", "next_seq_id" },
                                 new string[] { nextRecipeSeqType.ToString(), nextSeqId }, previousSeqId);
+
+                            // La dernière séquence devient l'ancienne
                             previousSeqType = nextRecipeSeqType;
                             previousSeqId = nextSeqId;
                         }
@@ -403,7 +416,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                     else
                     {
                         frameMain.Content = new Pages.Status();
-                    }
+                    }*/
 
                     Dispose(disposing: true); // Il va peut-être falloir sortir ça du "if"
                 }

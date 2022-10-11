@@ -24,6 +24,6 @@
         </Grid>
 
         <TextBlock x:Name="labelScan" Text="#" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <TextBox x:Name="tbScan" Margin="0" Visibility="Visible" Width="100" Height="30" HorizontalAlignment="Right" LostFocus="tbScan_LostFocusAsync" KeyDown="tbScan_KeyDown"/>
+        <TextBox x:Name="tbScan" Margin="0" Visibility="Visible" Width="100" Height="30" HorizontalAlignment="Right" LostFocus="TbScan_LostFocusAsync" KeyDown="TbScan_KeyDown"/>
     </Grid>
 </Page>

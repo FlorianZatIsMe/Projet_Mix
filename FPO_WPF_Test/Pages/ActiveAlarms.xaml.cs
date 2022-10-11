@@ -27,17 +27,12 @@ namespace FPO_WPF_Test.Pages
     {
         //private MyDatabase db;
         private readonly NameValueCollection MySettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
-        public ActiveAlarms()
-        {
-            //db = new MyDatabase();
-            InitializeComponent();
-        }
-
+        public ActiveAlarms() { InitializeComponent(); }
         private void ButtonAckAll_Click(object sender, RoutedEventArgs e)
         {
             List<Tuple<int, int>> listId = new List<Tuple<int, int>>();
 
-            foreach (Tuple<int, int> id in AlarmManagement.activeAlarms)
+            foreach (Tuple<int, int> id in AlarmManagement.ActiveAlarms)
             {
                 listId.Add(id);
             }
@@ -49,19 +44,18 @@ namespace FPO_WPF_Test.Pages
 
             LoadAlarms(sender, e);
         }
-
         private void LoadAlarms(object sender, RoutedEventArgs e)
         {
             DataTable dt = new DataTable();
             DataRow row;
             string[] array;
             string[] columnNames = MySettings["Columns"].Split(',');
-            int i = 0;
+            //int i = 0;
             List<string> listId = new List<string>();
 
             if (MyDatabase.IsConnected()) // while loop is better
             {
-                foreach (Tuple<int,int> id in AlarmManagement.activeAlarms)
+                foreach (Tuple<int,int> id in AlarmManagement.ActiveAlarms)
                 {
                     listId.Add(AlarmManagement.alarms[id.Item1, id.Item2].id.ToString());
                 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FPO_WPF_Test"
         mc:Ignorable="d"
-        Title="LogIn" Height="Auto" Width="Auto" SizeToContent="WidthAndHeight" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="LogIn" Height="Auto" Width="Auto" SizeToContent="WidthAndHeight" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" PreviewKeyDown="Window_PreviewKeyDown">
     <StackPanel Margin="20">
         <WrapPanel>
             <TextBlock Text="Nom d'utilisateur" Margin="0,0,20,0"/>

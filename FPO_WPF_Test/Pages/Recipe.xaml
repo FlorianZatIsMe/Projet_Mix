@@ -31,7 +31,7 @@
                 <ComboBox x:Name="cbxPgmToModify" 
                           Margin="10,0,0,0" 
                           Width="Auto" 
-                          SelectionChanged="cbxPgmToModify_SelectionChanged" 
+                          SelectionChanged="CbxPgmToModify_SelectionChanged" 
                           IsSynchronizedWithCurrentItem="True"/>
 
                 <WrapPanel x:Name="panelInfoRecipe" Visibility="Collapsed">
@@ -60,7 +60,7 @@
                                  Foreground="Wheat"
                                  HorizontalAlignment="Left" 
                                  VerticalAlignment="Top" 
-                                 Checked="rbActivateDelete_Checked"/>
+                                 Checked="RbActivateDelete_Checked"/>
                     <RadioButton x:Name="rbDelete" 
                                  IsEnabled="True"
                                  Content="Désactiver/Supprimer recette"
@@ -68,7 +68,7 @@
                                  HorizontalAlignment="Left"
                                  Margin="0,5,0,0"
                                  VerticalAlignment="Top" 
-                                 IsChecked="True" Checked="rbActivateDelete_Checked"/>
+                                 IsChecked="True" Checked="RbActivateDelete_Checked"/>
                 </StackPanel>
                 <TextBlock Foreground="Wheat" Margin="20,4,0,0" Text="Nom du programme" VerticalAlignment="Center"/>
                 <ComboBox x:Name="cbxPgmToActDelete" 
