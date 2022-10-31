@@ -63,6 +63,7 @@ namespace FPO_WPF_Test.Pages
             DateTime dtBefore = Convert.ToDateTime(((DateTime)dpDateBefore.SelectedDate).ToString("dd.MM.yyyy") + " " + tbTimeBefore.Text);
             DateTime dtAfter = Convert.ToDateTime(((DateTime)dpDateAfter.SelectedDate).ToString("dd.MM.yyyy") + " " + tbTimeAfter.Text);
             List<string> eventTypes = new List<string>();
+            int mutexID = -1;
 
             if ((bool)cbEvent.IsChecked) eventTypes.Add("Evènement");
             if ((bool)cbAlarm.IsChecked) eventTypes.Add("Alarme");
@@ -70,9 +71,17 @@ namespace FPO_WPF_Test.Pages
 
             if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
-            if (MyDatabase.IsConnected()) // while loop is better
+            if (!MyDatabase.IsConnected()) // while loop is better
             {
-                MyDatabase.SendCommand_ReadAuditTrail(dtBefore: dtBefore, dtAfter: dtAfter, eventTypes: eventTypes.ToArray(), orderBy: "id", isOrderAsc: false);
+                dt.Columns.Add(new DataColumn("Erreur"));
+                row = dt.NewRow();
+                row.ItemArray = new string[] { "Base de données déconnectée" };
+                dt.Rows.Add(row);
+                dataGridAuditTrail.ItemsSource = dt.DefaultView;
+            }
+            else
+            {
+                mutexID = MyDatabase.SendCommand_ReadAuditTrail(dtBefore: dtBefore, dtAfter: dtAfter, eventTypes: eventTypes.ToArray(), orderBy: "id", isOrderAsc: false, isMutexReleased: false);
 
                 //Création des colonnes
                 foreach (string columnName in columnNames)
@@ -83,7 +92,7 @@ namespace FPO_WPF_Test.Pages
                 //Ajout des lignes
                 do
                 {
-                    array = MyDatabase.ReadNext();
+                    array = MyDatabase.ReadNext(mutexID);
 
                     if (array.Count() != 0)
                     {
@@ -107,15 +116,8 @@ namespace FPO_WPF_Test.Pages
                 dataGridAuditTrail.Columns[0].Visibility = Visibility.Collapsed;
                 //MyDatabase.Disconnect();
             }
-            else
-            {
-                dt.Columns.Add(new DataColumn("Erreur"));
-                row = dt.NewRow();
-                row.ItemArray = new string[] { "Base de données déconnectée" };
-                dt.Rows.Add(row);
-                dataGridAuditTrail.ItemsSource = dt.DefaultView;
-            }
-            MyDatabase.Disconnect();
+
+            MyDatabase.Disconnect(mutexID);
         }
         private void ButtonFilter_Click(object sender, RoutedEventArgs e)
         {

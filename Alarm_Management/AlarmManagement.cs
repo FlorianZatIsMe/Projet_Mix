@@ -26,7 +26,6 @@ namespace Alarm_Management
         ACK,
         None
     }
-
     public class Alarm
     {
         public int id;
@@ -70,27 +69,28 @@ namespace Alarm_Management
             alarms[3, 1] = new Alarm("Température trop haute pendant le cycle", AlarmType.Alarm);
             alarms[4, 0] = new Alarm("Backup automatique complet de la base de données échoué aprés 3 tentatives", AlarmType.Warning);
         }
-
         public static void NewAlarm(int id1, int id2)
         {
             int n = -1;
             int mutexID = -1;
             bool isAlarmNotActive = alarms[id1, id2].Status != AlarmStatus.ACTIVE && 
                                     alarms[id1, id2].Status != AlarmStatus.ACK;
-            MessageBox.Show("Bon");
-            bool wasDbConnected;
+            //MessageBox.Show("Bon");
+            //bool wasDbConnected;
 
+            mutexID = MyDatabase.Connect(false);
+            /*
             if (!MyDatabase.IsConnected())
             {
                 mutexID = MyDatabase.Connect(false);
-                wasDbConnected = false;
+                //wasDbConnected = false;
             }
             else 
             {
                 mutexID = MyDatabase.Wait();
-                wasDbConnected = true;
-            }
-            MessageBox.Show("alors ???");
+                //wasDbConnected = true;
+            }*/
+            //MessageBox.Show("alors ???");
 
             if (isAlarmNotActive) // Si l'alarme n'est pas active, on peut la créer
             //if (n == -1 || (activeAlarms[n].Status != AlarmStatus.ACTIVE && activeAlarms[n].Status != AlarmStatus.ACK))
@@ -133,10 +133,12 @@ namespace Alarm_Management
             {
                 MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Ce n'est pas bien ce que vous faite Monsieur, on ne crée pas d'alarme si elle est déjà active...");
             }
-            //MessageBox.Show("New alarm 2");
+            //MessageBox.Show(MyDatabase.GetMutexIDsCount().ToString());
 
-            if (!wasDbConnected) MyDatabase.Disconnect(mutex: mutexID);
-            else MyDatabase.Signal(mutexID);
+            MyDatabase.Disconnect(mutex: mutexID);
+
+            //if (MyDatabase.GetMutexIDsCount() == 1) MyDatabase.Disconnect(mutex: mutexID);
+            //else MyDatabase.Signal(mutexID);
         }
         public void InactivateAlarm(int id1, int id2)
         {

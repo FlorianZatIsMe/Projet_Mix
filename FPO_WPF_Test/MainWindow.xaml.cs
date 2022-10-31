@@ -25,6 +25,7 @@ using Alarm_Management;
 using System.Linq;
 using NLog;
 using NLog.Common;
+using System.Threading;
 
 namespace FPO_WPF_Test
 {
@@ -113,7 +114,7 @@ namespace FPO_WPF_Test
             //
             RS232Weight.Initialize();
             RS232Pump.Initialize();
-            MessageBox.Show("ça dit quoi ?");
+            //MessageBox.Show("ça dit quoi ?");
             SpeedMixerModbus.Initialize();
             /*
             if (RS232Pump.IsOpen())

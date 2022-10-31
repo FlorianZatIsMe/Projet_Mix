@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Data.Common;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Threading;
 using System.IO;
 using System.Text;
 using Microsoft.Extensions.Configuration;
@@ -29,7 +30,9 @@ namespace Database
         private readonly static List<int> mutexIDs = new List<int>();
         private static int lastMutexID = 0;
         private static bool isScanTaskRunning = true;
+        private static readonly System.Timers.Timer scanConnectTimer;
         public static IConfig config;
+        private static ManualResetEvent signal = new ManualResetEvent(true);
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -42,7 +45,16 @@ namespace Database
         }
         static MyDatabase()
         {
+            // Initialisation des timers
+            scanConnectTimer = new System.Timers.Timer
+            {
+                Interval = 1000,
+                AutoReset = false
+            };
+            scanConnectTimer.Elapsed += ScanConnectTimer_OnTimedEvent;
+
             Connect();
+            scanConnectTimer.Start();
             //*
             IConfiguration configuration = new Microsoft.Extensions.Configuration.ConfigurationBuilder()
             .AddJsonFile("appSettings.json", optional: false)
@@ -54,9 +66,21 @@ namespace Database
 
             //MessageBox.Show(config.FileWriterDestination + ", " + config.MaxRandomInt.ToString() + ", " + config.RandomIntCount.ToString());
         }
+        private static void ScanConnectTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            logger.Info("Mais Bonjour");
+
+            if (!IsConnected())
+            {
+                Connect();
+                logger.Info("ScanConnect" + IsConnected().ToString());
+            }
+
+            scanConnectTimer.Enabled = true;
+        }
         private static async void ScanConnect()
         {
-
+            MessageBox.Show("Je n'ai rien à dire");
             // to change for a timer
 
             while (isScanTaskRunning)
@@ -92,54 +116,76 @@ namespace Database
                 logger.Error(ex.Message);
             }
         }
-        public static int Wait()
+        public static int Wait(int mutex = -1)
         {
-            int mutexID = GetNextMutex();
-            mutexIDs.Add(mutexID);
-            while (mutexIDs[0] != mutexID) Task.Delay(25);
+            int mutexID;
 
+            if (mutex == -1)
+            {
+                mutexID = GetNextMutex();
+                mutexIDs.Add(mutexID);
+                while (mutexIDs[0] != mutexID) signal.WaitOne();
+                signal.Reset();
+            }
+            else
+            {
+                mutexID = mutex;
+            }
+
+            //while (mutexIDs[0] != mutexID) Task.Delay(25);
             logger.Debug("Wait " + GetMutexIDs());
 
             return mutexID;
         }
         public static int Connect(bool isMutexReleased = true)
         {
-            int mutexID = GetNextMutex();
-            mutexIDs.Add(mutexID);
-            while (mutexIDs[0] != mutexID) Task.Delay(25);
+            //int mutexID = GetNextMutex();
+            //mutexIDs.Add(mutexID);
+            //while (mutexIDs[0] != mutexID) Task.Delay(25);
 
-            logger.Debug("Connect " + isMutexReleased.ToString() + GetMutexIDs());
+            int mutexID = Wait();
 
-            MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder
+            if (IsConnected())
             {
-                Server = MySettings.DB_Features.Server,
-                UserID = MySettings.DB_Features.UserID,
-                Password = MySettings.DB_Features.Password,
-                Database = MySettings.DB_Features.Database,
-                AllowZeroDateTime = true,
-                Pooling = true,
-                MinimumPoolSize = 2
-            };
-
-            connection = new MySqlConnection(builder.ConnectionString);
-
-            try { connection.Open(); }
-            catch (Exception ex)
-            {
-                logger.Error(ex.Message);
+                logger.Debug("No Connect " + isMutexReleased.ToString() + GetMutexIDs());
             }
+            else
+            {
+                logger.Debug("Connect " + isMutexReleased.ToString() + GetMutexIDs());
 
-            isScanTaskRunning = true;
+                MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder
+                {
+                    Server = MySettings.DB_Features.Server,
+                    UserID = MySettings.DB_Features.UserID,
+                    Password = MySettings.DB_Features.Password,
+                    Database = MySettings.DB_Features.Database,
+                    AllowZeroDateTime = true,
+                    Pooling = true,
+                    MinimumPoolSize = 2
+                };
 
-            // this needs to change put a timer instead
+                connection = new MySqlConnection(builder.ConnectionString);
 
-            scanTask = Task.Factory.StartNew(() => ScanConnect());
+                try { connection.Open(); }
+                catch (Exception ex)
+                {
+                    logger.Error(ex.Message);
+                }
+
+                isScanTaskRunning = true;
+
+                // this needs to change put a timer instead
+
+                scanConnectTimer.Start();
+                //scanTask = Task.Factory.StartNew(() => ScanConnect());
+            }
 
             if (isMutexReleased) Signal(mutexID);
             return mutexID;
         }
         public static void Disconnect(int mutex = -1)
         {
+            /*
             int mutexID;
 
             if (mutex == -1)
@@ -152,14 +198,22 @@ namespace Database
                 mutexID = mutex;
             }
             while (mutexIDs[0] != mutexID) Task.Delay(25);
+            */
+            int mutexID = Wait(mutex);
 
-            logger.Debug("Disconnect " + GetMutexIDs());
-            /*
-             * Try something
-             */
-            isScanTaskRunning = false;
-            scanTask.Wait(2000);
-            connection.Close();
+            if (mutexIDs.Count != 1)
+            {
+                logger.Debug("No Disconnect" + GetMutexIDs());
+            }
+            else
+            {
+                logger.Debug("Disconnect " + GetMutexIDs());
+                scanConnectTimer.Stop();
+
+                //isScanTaskRunning = false;
+                //scanTask.Wait(2000);
+                connection.Close();
+            }
 
             Signal(mutexID);
             //MessageBox.Show("MAIS ICI !!!");
@@ -172,10 +226,10 @@ namespace Database
         }
         public static void SendCommand_readAllRecipe(string tableName, string[] whereColumns, string[] whereValues, int mutex = -1)
         {
-            //wait();
+            /*
             int mutexID;
 
-            if (mutex ==-1)
+            if (mutex == -1)
             {
                 mutexID = GetNextMutex();
                 mutexIDs.Add(mutexID);
@@ -185,6 +239,8 @@ namespace Database
                 mutexID = mutex;
             }
             while (mutexIDs[0] != mutexID) Task.Delay(25);
+            */
+            int mutexID = Wait(mutex);
 
             logger.Debug("SendCommand_readAllRecipe " + tableName + GetMutexIDs());
 
@@ -232,6 +288,7 @@ namespace Database
         }
         public static int SendCommand_Read(string tableName, string selectColumns = "*", string[] whereColumns = null, string[] whereValues = null, string orderBy = null, bool isOrderAsc = true, string groupBy = null, bool isMutexReleased = true, int mutex = -1)
         {
+            /*
             int mutexID;
 
             if (mutex == -1)
@@ -244,6 +301,8 @@ namespace Database
                 mutexID = mutex;
             }
             while (mutexIDs[0] != mutexID) Task.Delay(25);
+            */
+            int mutexID = Wait(mutex);
 
             string whereColumns_s = "";
             if (whereColumns != null)
@@ -321,6 +380,7 @@ namespace Database
         }
         public static int SendCommand(string commandText, bool isMutexReleased = true, int mutex = -1)
         {
+            /*
             int mutexID;
 
             if (mutex == -1)
@@ -333,6 +393,8 @@ namespace Database
                 mutexID = mutex;
             }
             while (mutexIDs[0] != mutexID) Task.Delay(25);
+            */
+            int mutexID = Wait(mutex);
 
             logger.Debug("SendCommand_Read " + commandText + GetMutexIDs());
 
@@ -365,15 +427,13 @@ namespace Database
         }
         public static List<string> GetTablesName()
         {
-            //wait();
-            int mutexID;
+            int mutexID = Wait();
+            //mutexID = GetNextMutex();
+            //mutexIDs.Add(mutexID);
+            //while (mutexIDs[0] != mutexID) Task.Delay(25);
+
             List<string> list = new List<string>();
             string[] array;
-
-            mutexID = GetNextMutex();
-            mutexIDs.Add(mutexID);
-
-            while (mutexIDs[0] != mutexID) Task.Delay(25);
 
             logger.Debug("SendCommand_GetTablesName " + GetMutexIDs());
 
@@ -413,11 +473,11 @@ namespace Database
             Signal(mutexID);
             return list;
         }
-        public static void SendCommand_ReadAuditTrail(DateTime dtBefore, DateTime dtAfter, string[] eventTypes =  null, string orderBy = null, bool isOrderAsc = true)
+        public static int SendCommand_ReadAuditTrail(DateTime dtBefore, DateTime dtAfter, string[] eventTypes =  null, string orderBy = null, bool isOrderAsc = true, bool isMutexReleased = true)
         {
-            //wait();
-            int mutexID = GetNextMutex();
-            mutexIDs.Add(mutexID);
+            int mutexID = Wait();
+            //int mutexID = GetNextMutex();
+            //mutexIDs.Add(mutexID);
 
             while (mutexIDs[0] != mutexID) Task.Delay(25);
 
@@ -486,15 +546,15 @@ namespace Database
                 }
             }
 
-            Signal(mutexID);
+            if (isMutexReleased) Signal(mutexID);
+            return mutexID;
         }
         public static void SendCommand_ReadAlarms(int firstId = -1, int lastId = -1, bool readAlert = false)
         {
-            //wait();
-            int mutexID = GetNextMutex();
-            mutexIDs.Add(mutexID);
-
-            while (mutexIDs[0] != mutexID) Task.Delay(25);
+            int mutexID = Wait();
+            //int mutexID = GetNextMutex();
+            //mutexIDs.Add(mutexID);
+            //while (mutexIDs[0] != mutexID) Task.Delay(25);
 
             logger.Debug("SendCommand_ReadAlarms " + GetMutexIDs());
 
@@ -541,7 +601,7 @@ namespace Database
         }
         public static int SendCommand_ReadPart(string tableName, int start, int end, string selectColumns = "*", bool isMutexReleased = true, int mutex = -1)
         {
-            //wait();
+            /*
             int mutexID;
 
             if (mutex == -1)
@@ -554,6 +614,8 @@ namespace Database
                 mutexID = mutex;
             }
             while (mutexIDs[0] != mutexID) Task.Delay(25);
+            */
+            int mutexID = Wait(mutex);
 
             logger.Debug("SendCommand_ReadPart " + tableName + " " + selectColumns + " " + start.ToString() + " " + end.ToString() + GetMutexIDs());
 
@@ -586,11 +648,10 @@ namespace Database
         }
         public static void SendCommand_GetLastRecipes(RecipeStatus status = RecipeStatus.PRODnDRAFT)
         {
-            //wait();
-            int mutexID = GetNextMutex();
-            mutexIDs.Add(mutexID);
-
-            while (mutexIDs[0] != mutexID) Task.Delay(25);
+            int mutexID = Wait();
+            //int mutexID = GetNextMutex();
+            //mutexIDs.Add(mutexID);
+            //while (mutexIDs[0] != mutexID) Task.Delay(25);
 
             logger.Debug("SendCommand_GetLastRecipes" + GetMutexIDs());
 
@@ -638,7 +699,7 @@ namespace Database
         }
         public static string[] ReadNext(int mutex = -1)
         {
-            //wait();
+            /*
             int mutexID;
 
             if (mutex == -1)
@@ -651,6 +712,8 @@ namespace Database
                 mutexID = mutex;
             }
             while (mutexIDs[0] != mutexID) Task.Delay(25);
+            */
+            int mutexID = Wait(mutex);
 
             logger.Debug("ReadNext" + GetMutexIDs());
 
@@ -698,11 +761,10 @@ namespace Database
         }
         public static bool[] ReadNextBool()
         {
-            //wait();
-            int mutexID = GetNextMutex();
-            mutexIDs.Add(mutexID);
-
-            while (mutexIDs[0] != mutexID) Task.Delay(25);
+            int mutexID = Wait();
+            //int mutexID = GetNextMutex();
+            //mutexIDs.Add(mutexID);
+            //while (mutexIDs[0] != mutexID) Task.Delay(25);
 
             logger.Debug("ReadNextBool " + GetMutexIDs());
 
@@ -752,11 +814,10 @@ namespace Database
         }
         public static string[] GetOneRow(string tableName, string selectColumns = "*", string[] whereColumns = null, string[] whereValues = null)
         {
-            //wait();
-            int mutexID = GetNextMutex();
-            mutexIDs.Add(mutexID);
-
-            while (mutexIDs[0] != mutexID) Task.Delay(25);
+            int mutexID = Wait();
+            //int mutexID = GetNextMutex();
+            //mutexIDs.Add(mutexID);
+            //while (mutexIDs[0] != mutexID) Task.Delay(25);
 
             logger.Debug("GetOneRow" + GetMutexIDs());
 
@@ -787,6 +848,7 @@ namespace Database
         }
         public static int GetMax(string tableName, string column, string[] whereColumns = null, string[] whereValues = null, int mutex = -1)
         {
+            /*
             int mutexID;
 
             if (mutex == -1)
@@ -799,6 +861,8 @@ namespace Database
                 mutexID = mutex;
             }
             while (mutexIDs[0] != mutexID) Task.Delay(25);
+            */
+            int mutexID = Wait(mutex);
 
             logger.Debug("GetMax " + tableName + GetMutexIDs());
 
@@ -877,8 +941,8 @@ namespace Database
         }
         public static bool InsertRow(string tableName, string columnFields, string[] values, int mutex = -1)
         {
+            /*
             int mutexID;
-            bool result = false;
 
             if (mutex == -1)
             {
@@ -890,6 +954,10 @@ namespace Database
                 mutexID = mutex;
             }
             while (mutexIDs[0] != mutexID) Task.Delay(25);
+            */
+            int mutexID = Wait(mutex);
+
+            bool result = false;
 
             logger.Debug("InsertRow " + GetMutexIDs());
 
@@ -947,11 +1015,10 @@ namespace Database
         }
         public static bool Update_Row(string tableName, string[] setColumns, string[] setValues, string id)
         {
-            //wait();
-            int mutexID = GetNextMutex();
-            mutexIDs.Add(mutexID);
-
-            while (mutexIDs[0] != mutexID) Task.Delay(25);
+            int mutexID = Wait();
+            //int mutexID = GetNextMutex();
+            //mutexIDs.Add(mutexID);
+            //while (mutexIDs[0] != mutexID) Task.Delay(25);
 
             logger.Debug("Update_Row" + GetMutexIDs());
 
@@ -1007,11 +1074,10 @@ namespace Database
         }
         public static bool DeleteRow(string tableName, string[] whereColumns, string[] whereValues)
         {
-            //wait();
-            int mutexID = GetNextMutex();
-            mutexIDs.Add(mutexID);
-
-            while (mutexIDs[0] != mutexID) Task.Delay(25);
+            int mutexID = Wait();
+            //int mutexID = GetNextMutex();
+            //mutexIDs.Add(mutexID);
+            //while (mutexIDs[0] != mutexID) Task.Delay(25);
 
             logger.Debug("DeleteRow " + tableName + GetMutexIDs());
 
@@ -1066,11 +1132,10 @@ namespace Database
         }
         public static bool DeleteRows(string tableName, DateTime lastRecordDate)
         {
-            //wait();
-            int mutexID = GetNextMutex();
-            mutexIDs.Add(mutexID);
-
-            while (mutexIDs[0] != mutexID) Task.Delay(25);
+            int mutexID = Wait();
+            //int mutexID = GetNextMutex();
+            //mutexIDs.Add(mutexID);
+            //while (mutexIDs[0] != mutexID) Task.Delay(25);
 
             logger.Debug("DeleteRows " + tableName + GetMutexIDs());
 
@@ -1111,12 +1176,10 @@ namespace Database
         }
         public static void CreateTempTable(string fields)
         {
-
-            //wait();
-            int mutexID = GetNextMutex();
-            mutexIDs.Add(mutexID);
-
-            while (mutexIDs[0] != mutexID) Task.Delay(25);
+            int mutexID = Wait();
+            //int mutexID = GetNextMutex();
+            //mutexIDs.Add(mutexID);
+            //while (mutexIDs[0] != mutexID) Task.Delay(25);
 
             logger.Debug("CreateTempTable " + fields + GetMutexIDs());
 
@@ -1164,12 +1227,10 @@ namespace Database
         }
         public static void SelectFromTemp(string select)
         {
-
-            //wait();
-            int mutexID = GetNextMutex();
-            mutexIDs.Add(mutexID);
-
-            while (mutexIDs[0] != mutexID) Task.Delay(25);
+            int mutexID = Wait();
+            //int mutexID = GetNextMutex();
+            //mutexIDs.Add(mutexID);
+            //while (mutexIDs[0] != mutexID) Task.Delay(25);
 
             logger.Debug("SelectFromTemp " + select + GetMutexIDs());
 
@@ -1244,11 +1305,13 @@ namespace Database
             if (mutex == mutexIDs[0])
             {
                 mutexIDs.RemoveAt(0);
+                signal.Set();
                 logger.Debug("Signal " + GetMutexIDs());
             }
             else
             {
                 logger.Error("Signal - On a un problème chef " + GetMutexIDs());
+                MessageBox.Show("C'est pas bon ça, regarde le log");
             }
         }
         private static string GetMutexIDs()
@@ -1260,6 +1323,10 @@ namespace Database
             }
 
             return text.TrimEnd('_');
+        }
+        public static int GetMutexIDsCount()
+        {
+            return mutexIDs.Count;
         }
         private static void WriteInTextFile2(string title)
         {
