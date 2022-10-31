@@ -77,7 +77,7 @@ namespace Alarm_Management
             int mutexID = -1;
             bool isAlarmNotActive = alarms[id1, id2].Status != AlarmStatus.ACTIVE && 
                                     alarms[id1, id2].Status != AlarmStatus.ACK;
-            MessageBox.Show("Bon, on est bon ou bien ?");
+            MessageBox.Show("Bon, c'est fois-ci tout va bien");
             bool wasDbConnected;
 
             if (!MyDatabase.IsConnected())
