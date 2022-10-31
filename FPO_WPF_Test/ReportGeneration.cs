@@ -1,8 +1,10 @@
-﻿using Database;
+﻿using Alarm_Management;
+using Database;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Principal;
@@ -931,7 +933,7 @@ namespace FPO_WPF_Test
 
             // Initialize cycle information
             string[] cycleInfo = MyDatabase.GetOneRow("cycle", whereColumns: new string[] { "id" }, whereValues: new string[] { id });
-
+            
             if (cycleInfo.Length != 0)
             {
                 jobNumber = cycleInfo[3];
@@ -948,7 +950,7 @@ namespace FPO_WPF_Test
                 comment = cycleInfo[16];
                 isTest = cycleInfo[17] == "True";
 
-                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+                Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
                 document = new PdfDocument();
 
                 PdfPage page = document.AddPage();
@@ -1002,10 +1004,16 @@ namespace FPO_WPF_Test
 
                 for (int i = 0; i < document.Pages.Count; i++) UpdatePagination(document.Pages[i], gfxs[i], i + 1);
 
+                /*
                 string filename = folderPath + generationDateTime.Year.ToString() + "." + generationDateTime.Month.ToString("00") + "." + generationDateTime.Day.ToString("00") + "_" +
                     generationDateTime.Hour.ToString("00") + "." + generationDateTime.Minute.ToString("00") + "." + generationDateTime.Second.ToString("00") + "_" +
                     jobNumber + "_" + batchNumber + "_" + itemNumber + ".pdf";
-                if (isReportOK) document.Save(filename);
+                */
+
+                string fileName = folderPath + generationDateTime.ToString("yyyy.MM.dd_HH.mm.ss") + "_" +
+                    jobNumber + "_" + batchNumber + "_" + itemNumber + ".pdf";
+
+                if (isReportOK && !File.Exists(fileName)) document.Save(fileName);
                 //document.Save(filename);
             }
             else

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Database.Configuration
+namespace Database.Configuration_old
 {
     public class DB_Features : ConfigurationElement
     {

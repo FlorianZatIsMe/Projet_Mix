@@ -13,6 +13,8 @@ using System.Windows;
 
 namespace User_Management
 {
+
+
     public static class UserManagement
     {
         //private readonly static MyDatabase db = new MyDatabase();

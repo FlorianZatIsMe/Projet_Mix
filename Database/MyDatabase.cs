@@ -11,22 +11,27 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.IO;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 
 namespace Database
 {
     public static class MyDatabase
     {
-        private static readonly Configuration.Connection_Info MySettings = ConfigurationManager.GetSection("Database/Connection_Info") as Configuration.Connection_Info;
+        private static readonly Configuration_old.Connection_Info MySettings = System.Configuration.ConfigurationManager.GetSection("Database/Connection_Info") as Configuration_old.Connection_Info;
         //private static readonly NameValueCollection ConnectionAttempSettings = ConfigurationManager.GetSection("Database/Connection_Attempt") as NameValueCollection;
         private static MySqlConnection connection;
         private static MySqlDataReader reader;
         public static List<int> AlarmListID = new List<int>();
         public static List<string> AlarmListDescription = new List<string>();
         public static List<string> AlarmListStatus = new List<string>();
-        private readonly static System.Timers.Timer ConnectTimer;
+        private static Task scanTask;
         //private static bool dbReady = true;
         private readonly static List<int> mutexIDs = new List<int>();
         private static int lastMutexID = 0;
+        private static bool isScanTaskRunning = true;
+        public static IConfig config;
+
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public enum RecipeStatus
         {
@@ -35,109 +40,35 @@ namespace Database
             OBSOLETE,
             PRODnDRAFT
         }
-        private static int GetNextMutex()
-        { // Assure toi que cette fonction ne peut être appelé plusieurs fois en même temps
-            lastMutexID = (lastMutexID + 1) % 200;
-            return lastMutexID;
-        }
-        public static void Signal(int mutex)
-        {
-            if (mutex == mutexIDs[0])
-            {
-                WriteInTextFile2("signal");
-                mutexIDs.RemoveAt(0);
-            }
-            else
-            {
-                WriteInTextFile2("signal - On a un problème chef");
-            }
-        }
-        private static void WriteInTextFile2(string title)
-        {/*
-            string text = title + ": ";
-            for (int j = 0; j < mutexIDs.Count; j++)
-            {
-                text = text + mutexIDs[j].ToString() + " ";
-            }
-
-            string fileName = @"C:\Temp\Bonjour.txt";
-            if (!File.Exists(fileName))
-            {
-                using (FileStream fs = File.Create(fileName)) { }
-            }
-
-
-            if (File.Exists(fileName))
-            {
-                try
-                {
-                    using (FileStream fs = File.Open(fileName, FileMode.Append))
-                    {
-                        byte[] author = new UTF8Encoding(true).GetBytes(DateTime.Now.ToString() + " " + text + "\n");
-                        fs.Write(author, 0, author.Length);
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(DateTime.Now.ToString() + " - " + ex);
-                }
-            }//*/
-        }
-        private static void WriteInTextFile(string text, int i)
-        {/*
-            string fileName = @"C:\Temp\Bonjour.txt";
-            if (!File.Exists(fileName)) 
-            {
-                using (FileStream fs = File.Create(fileName)) { }
-            }
-
-            if (File.Exists(fileName))
-            {
-                try
-                {
-                    using (FileStream fs = File.Open(fileName, FileMode.Append))
-                    {
-                        byte[] author = new UTF8Encoding(true).GetBytes(DateTime.Now.ToString() + " " + text + "\n");
-                        fs.Write(author, 0, author.Length);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(DateTime.Now.ToString() + " - " + ex);
-                }
-            }//*/
-        }
         static MyDatabase()
         {
-            if (MySettings == null)
-            {
-                MessageBox.Show("Database Settings are not defined");
-            }
-            else
-            {
-                Connect();
+            Connect();
+            //*
+            IConfiguration configuration = new Microsoft.Extensions.Configuration.ConfigurationBuilder()
+            .AddJsonFile("appSettings.json", optional: false)
+            .Build();
 
-                //CreateTempTable2("date_time  TIMESTAMP, description CHAR(100)");
+            config = configuration.Get<Config>();
+            //*/
 
-                // Initialisation des timers
-                ConnectTimer = new System.Timers.Timer
-                {
-                    Interval = 1000
-                };
-                ConnectTimer.Elapsed += SeqTimer_OnTimedEvent;
-                ConnectTimer.AutoReset = true;
 
-                ConnectTimer.Start();
-
-            }
+            //MessageBox.Show(config.FileWriterDestination + ", " + config.MaxRandomInt.ToString() + ", " + config.RandomIntCount.ToString());
         }
-        private static void SeqTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e) 
+        private static async void ScanConnect()
         {
-            if (!IsConnected())
+
+            // to change for a timer
+
+            while (isScanTaskRunning)
             {
-                MessageBox.Show("seqTimer_OnTimedEvent " + IsConnected().ToString());
-                Connect();
+                //WriteInTextFile("ScanConnect " + IsConnected().ToString(), 13);
+
+                if (!IsConnected())
+                {
+                    Connect();
+                    logger.Info("ScanConnect" + IsConnected().ToString());
+                }
+                await Task.Delay(config.ScanConnect_Timer);
             }
         }
         public static async void ConnectAsync()
@@ -158,19 +89,26 @@ namespace Database
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                logger.Error(ex.Message);
             }
         }
-        public static void Connect()
+        public static int Wait()
         {
-            //wait();
             int mutexID = GetNextMutex();
             mutexIDs.Add(mutexID);
-
             while (mutexIDs[0] != mutexID) Task.Delay(25);
 
-            WriteInTextFile("Connect", 0);
-            WriteInTextFile2("wait");
+            logger.Debug("Wait " + GetMutexIDs());
+
+            return mutexID;
+        }
+        public static int Connect(bool isMutexReleased = true)
+        {
+            int mutexID = GetNextMutex();
+            mutexIDs.Add(mutexID);
+            while (mutexIDs[0] != mutexID) Task.Delay(25);
+
+            logger.Debug("Connect " + isMutexReleased.ToString() + GetMutexIDs());
 
             MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder
             {
@@ -179,23 +117,52 @@ namespace Database
                 Password = MySettings.DB_Features.Password,
                 Database = MySettings.DB_Features.Database,
                 AllowZeroDateTime = true,
+                Pooling = true,
+                MinimumPoolSize = 2
             };
 
             connection = new MySqlConnection(builder.ConnectionString);
 
             try { connection.Open(); }
-            catch (Exception) {}
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+            }
 
-            Signal(mutexID);
-            //dbReady = true;
+            isScanTaskRunning = true;
+
+            // this needs to change put a timer instead
+
+            scanTask = Task.Factory.StartNew(() => ScanConnect());
+
+            if (isMutexReleased) Signal(mutexID);
+            return mutexID;
         }
-        public static void Disconnect()
+        public static void Disconnect(int mutex = -1)
         {
+            int mutexID;
+
+            if (mutex == -1)
+            {
+                mutexID = GetNextMutex();
+                mutexIDs.Add(mutexID);
+            }
+            else
+            {
+                mutexID = mutex;
+            }
+            while (mutexIDs[0] != mutexID) Task.Delay(25);
+
+            logger.Debug("Disconnect " + GetMutexIDs());
             /*
              * Try something
              */
-            ConnectTimer.Stop();
+            isScanTaskRunning = false;
+            scanTask.Wait(2000);
             connection.Close();
+
+            Signal(mutexID);
+            //MessageBox.Show("MAIS ICI !!!");
         }
         public static bool IsConnected()
         {
@@ -218,10 +185,16 @@ namespace Database
                 mutexID = mutex;
             }
             while (mutexIDs[0] != mutexID) Task.Delay(25);
-            WriteInTextFile("SendCommand_readAllRecipe " + tableName, 1);
-            WriteInTextFile2("wait");
 
-            if (IsConnected())
+            logger.Debug("SendCommand_readAllRecipe " + tableName + GetMutexIDs());
+
+
+            if (!IsConnected())
+            {
+                logger.Error("Connection à la base de données échouée");
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand_readAllRecipe - Connection à la base de données échouée");
+            }
+            else
             {
                 Close_reader();
                 /*
@@ -249,20 +222,16 @@ namespace Database
                 }
                 catch (Exception e)
                 {
+                    logger.Error("SendCommand_readAllRecipe - " + e.Message);
                     MessageBox.Show("SendCommand_readAllRecipe - " + e.Message);
-                    reader =  null;
+                    reader = null;
                 }
             }
-            else
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand_readAllRecipe - Connection à la base de données échouée");
-            }
-            if(mutex == -1) Signal(mutexID);
-            //dbReady = true;
+
+            if (mutex == -1) Signal(mutexID);
         }
         public static int SendCommand_Read(string tableName, string selectColumns = "*", string[] whereColumns = null, string[] whereValues = null, string orderBy = null, bool isOrderAsc = true, string groupBy = null, bool isMutexReleased = true, int mutex = -1)
         {
-            //wait();
             int mutexID;
 
             if (mutex == -1)
@@ -277,22 +246,31 @@ namespace Database
             while (mutexIDs[0] != mutexID) Task.Delay(25);
 
             string whereColumns_s = "";
-            for (int j = 0; j < whereColumns.Length; j++)
+            if (whereColumns != null)
             {
-                whereColumns_s = whereColumns_s + whereColumns[j] + " ";
+                for (int j = 0; j < whereColumns.Length; j++)
+                {
+                    whereColumns_s = whereColumns_s + whereColumns[j] + " ";
+                }
             }
 
             string whereValues_s = "";
-            for (int j = 0; j < whereValues.Length; j++)
+            if (whereValues != null)
             {
-                whereValues_s = whereValues_s + whereValues[j] + " ";
+                for (int j = 0; j < whereValues.Length; j++)
+                {
+                    whereValues_s = whereValues_s + whereValues[j] + " ";
+                }
             }
 
-
-            WriteInTextFile("SendCommand_Read " + tableName + " " + selectColumns + " " + whereColumns_s + " " + whereValues_s + " " + mutexID.ToString(), 2);
-            WriteInTextFile2("wait");
-
-            if (IsConnected())
+            logger.Debug("SendCommand_Read " + tableName + " " + selectColumns + " " + whereColumns_s + " " + whereValues_s + GetMutexIDs());
+            
+            if (!IsConnected())
+            {
+                logger.Error("SendCommand_Read - Connection à la base de données échouée");
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand_Read - Connection à la base de données échouée");
+            }
+            else
             {
                 Close_reader();
 
@@ -313,13 +291,17 @@ namespace Database
 
                 MySqlCommand command = connection.CreateCommand();
                 command.CommandText = @"SELECT " + selectColumns + " FROM " + tableName + whereArg + groupByArg + orderArg;
-                //MessageBox.Show(command.CommandText + " - id: " + whereValues[0]);
                 if (whereColumns != null && whereValues != null)
                 {
                     isCommandOk = SetCommand(command, whereColumns, whereValues);
                 }
 
-                if (isCommandOk)
+                if (!isCommandOk)
+                {
+                    logger.Error("SendCommand_Read - Création de la commande incorrecte");
+                    MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand_Read - Création de la commande incorrecte");
+                }
+                else
                 {
                     try
                     {
@@ -328,20 +310,108 @@ namespace Database
                     catch (Exception ex)
                     {
                         reader = null;
-                        MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - " + ex.Message);
+                        logger.Error("SendCommand_Read - " + ex.Message);
+                        MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand_Read - " + ex.Message);
                     }
                 }
-                else
-                {
-                    MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand_Read - Création de la commande incorrecte");
-                }
+            }
+
+            if (mutex == -1 && isMutexReleased) Signal(mutexID);
+            return mutexID;
+        }
+        public static int SendCommand(string commandText, bool isMutexReleased = true, int mutex = -1)
+        {
+            int mutexID;
+
+            if (mutex == -1)
+            {
+                mutexID = GetNextMutex();
+                mutexIDs.Add(mutexID);
             }
             else
             {
-                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand_Read - Connection à la base de données échouée");
+                mutexID = mutex;
             }
+            while (mutexIDs[0] != mutexID) Task.Delay(25);
+
+            logger.Debug("SendCommand_Read " + commandText + GetMutexIDs());
+
+            if (!IsConnected())
+            {
+                logger.Error("SendCommand - Connection à la base de données échouée");
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand - Connection à la base de données échouée");
+            }
+            else
+            {
+                Close_reader();
+
+                MySqlCommand command = connection.CreateCommand();
+                command.CommandText = commandText;
+
+                try
+                {
+                    reader = command.ExecuteReader();
+                }
+                catch (Exception ex)
+                {
+                    reader = null;
+                    logger.Error(ex.Message);
+                    MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - " + ex.Message);
+                }
+            }
+
             if (mutex == -1 && isMutexReleased) Signal(mutexID);
             return mutexID;
+        }
+        public static List<string> GetTablesName()
+        {
+            //wait();
+            int mutexID;
+            List<string> list = new List<string>();
+            string[] array;
+
+            mutexID = GetNextMutex();
+            mutexIDs.Add(mutexID);
+
+            while (mutexIDs[0] != mutexID) Task.Delay(25);
+
+            logger.Debug("SendCommand_GetTablesName " + GetMutexIDs());
+
+            if (!IsConnected())
+            {
+                logger.Error("Connection à la base de données échouée");
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand - Connection à la base de données échouée");
+            }
+            else
+            {
+                Close_reader();
+
+                MySqlCommand command = connection.CreateCommand();
+                command.CommandText = "SELECT table_name FROM information_schema.tables WHERE table_schema = \""+ MySettings.DB_Features.Database + "\" AND table_type = \"BASE TABLE\";";
+
+                try
+                {
+                    reader = command.ExecuteReader();
+
+                    array = ReadNext(mutexID);
+
+                    while (array.Length != 0)
+                    {
+                        list.Add(array[0]);
+                        array = ReadNext(mutexID);
+                    }
+
+                    Close_reader();
+                }
+                catch (Exception ex)
+                {
+                    reader = null;
+                    MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - " + ex.Message);
+                }
+            }
+
+            Signal(mutexID);
+            return list;
         }
         public static void SendCommand_ReadAuditTrail(DateTime dtBefore, DateTime dtAfter, string[] eventTypes =  null, string orderBy = null, bool isOrderAsc = true)
         {
@@ -351,10 +421,14 @@ namespace Database
 
             while (mutexIDs[0] != mutexID) Task.Delay(25);
 
-            WriteInTextFile("SendCommand_ReadAuditTrail", 3);
-            WriteInTextFile2("wait");
+            logger.Debug("SendCommand_ReadAuditTrail " + GetMutexIDs());
 
-            if (IsConnected())
+            if (!IsConnected())
+            {
+                logger.Error("Connection à la base de données échouée");
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand_ReadAuditTrail - Connection à la base de données échouée");
+            }
+            else
             {
                 Close_reader();
 
@@ -394,7 +468,11 @@ namespace Database
                     }
                 }
                 //MessageBox.Show(command.CommandText);
-                if (isCommandOk)
+                if (!isCommandOk)
+                {
+                    MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Création de la commande incorrecte");
+                }
+                else
                 {
                     try
                     {
@@ -406,17 +484,9 @@ namespace Database
                         MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - " + ex.Message);
                     }
                 }
-                else
-                {
-                    MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Création de la commande incorrecte");
-                }
             }
-            else
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand_ReadAuditTrail - Connection à la base de données échouée");
-            }
+
             Signal(mutexID);
-            //dbReady = true;
         }
         public static void SendCommand_ReadAlarms(int firstId = -1, int lastId = -1, bool readAlert = false)
         {
@@ -425,21 +495,28 @@ namespace Database
             mutexIDs.Add(mutexID);
 
             while (mutexIDs[0] != mutexID) Task.Delay(25);
-            WriteInTextFile("SendCommand_ReadAlarms", 3);
-            WriteInTextFile2("wait");
 
-            if (IsConnected())
+            logger.Debug("SendCommand_ReadAlarms " + GetMutexIDs());
+
+            if (!IsConnected())
+            {
+                logger.Error("Connection à la base de données échouée");
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand_ReadAlarms - Connection à la base de données échouée");
+            }
+            else
             {
                 Close_reader();
 
                 bool isCommandOk = firstId == -1 || firstId < lastId;
-                string whereId = firstId == -1 ? "" : "id >= @firstId AND id <= @lastId AND ";
+                string whereId = firstId == -1 ? "" : "id >= @0 AND id <= @1 AND ";
                 string eventType = readAlert ? "(event_type = 'Alarme' OR event_type = 'Alerte')" : "event_type = 'Alarme'";
 
                 MySqlCommand command = connection.CreateCommand();
                 command.CommandText = @"SELECT * FROM audit_trail WHERE " + whereId + eventType;
                 //MessageBox.Show(command.CommandText);
                 if (firstId != -1) SetCommand(command, new string[] { "firstId", "lastId" }, new string[] { firstId.ToString(), lastId.ToString() });
+
+                MessageBox.Show(command.CommandText);
 
                 if (isCommandOk)
                 {
@@ -458,12 +535,54 @@ namespace Database
                     MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand_ReadAlarms: Création de la commande incorrecte");
                 }
             }
-            else
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand_ReadAlarms - Connection à la base de données échouée");
-            }
+
             Signal(mutexID);
             //dbReady = true;
+        }
+        public static int SendCommand_ReadPart(string tableName, int start, int end, string selectColumns = "*", bool isMutexReleased = true, int mutex = -1)
+        {
+            //wait();
+            int mutexID;
+
+            if (mutex == -1)
+            {
+                mutexID = GetNextMutex();
+                mutexIDs.Add(mutexID);
+            }
+            else
+            {
+                mutexID = mutex;
+            }
+            while (mutexIDs[0] != mutexID) Task.Delay(25);
+
+            logger.Debug("SendCommand_ReadPart " + tableName + " " + selectColumns + " " + start.ToString() + " " + end.ToString() + GetMutexIDs());
+
+            if (!IsConnected())
+            {
+                logger.Error("Connection à la base de données échouée");
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand_ReadPart - Connection à la base de données échouée");
+            }
+            else
+            {
+                Close_reader();
+
+                MySqlCommand command = connection.CreateCommand();
+                command.CommandText = @"SELECT " + selectColumns + " FROM " + tableName + " WHERE id > " + start.ToString() + " AND id < " + end.ToString();
+                //MessageBox.Show(command.CommandText);
+
+                try
+                {
+                    reader = command.ExecuteReader();
+                }
+                catch (Exception ex)
+                {
+                    reader = null;
+                    MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand_ReadPart - " + ex.Message);
+                }
+            }
+
+            if (mutex == -1 && isMutexReleased) Signal(mutexID);
+            return mutexID;
         }
         public static void SendCommand_GetLastRecipes(RecipeStatus status = RecipeStatus.PRODnDRAFT)
         {
@@ -473,15 +592,19 @@ namespace Database
 
             while (mutexIDs[0] != mutexID) Task.Delay(25);
 
-            WriteInTextFile("SendCommand_GetLastRecipes", 5);
-            WriteInTextFile2("wait");
+            logger.Debug("SendCommand_GetLastRecipes" + GetMutexIDs());
 
             // only prod pour la prod
             // only draft pour les tests de recette
             // only obsolete pour faire revivre une vieille recette
             // prod and draft pour modifier une recette
 
-            if (IsConnected())
+            if (!IsConnected())
+            {
+                logger.Error("Connection à la base de données échouée");
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand_GetLastRecipes - Connection à la base de données échouée");
+            }
+            else
             {
                 Close_reader();
 
@@ -509,10 +632,7 @@ namespace Database
                     MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - " + e.Message);
                 }
             }
-            else
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand_GetLastRecipes - Connection à la base de données échouée");
-            }
+
             Signal(mutexID);
             //dbReady = true;
         }
@@ -531,41 +651,48 @@ namespace Database
                 mutexID = mutex;
             }
             while (mutexIDs[0] != mutexID) Task.Delay(25);
-            WriteInTextFile("ReadNext", 8);
-            WriteInTextFile2("wait");
 
-            string[] array;
+            logger.Debug("ReadNext" + GetMutexIDs());
 
-            if (IsConnected())
+            string[] array = new string[0];
+
+            if (!IsConnected())
+            {
+                logger.Error("Connection à la base de données échouée");
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - ReadNext - Connection à la base de données échouée");
+            }
+            else
             {
                 if (!IsReaderNotAvailable())
                 {
                     array = new string[reader.FieldCount];
 
-                    if (reader.Read())
+                    try
                     {
-                        for (int i = 0; i < reader.FieldCount; i++)
+                        if (reader.Read())
                         {
-                            array[i] = reader[i].ToString();
+                            for (int i = 0; i < reader.FieldCount; i++)
+                            {
+                                array[i] = reader[i].ToString();
+                            }
+                        }
+                        else
+                        {
+                            array = new string[0];
                         }
                     }
-                    else
+                    catch (Exception ex)
                     {
+                        MessageBox.Show(IsConnected().ToString() + " - " + ex.Message);
                         array = new string[0];
                     }
-
-                    //return array;
                 }
                 else
                 {
                     array = new string[0];
                 }
             }
-            else
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - ReadNext - Connection à la base de données échouée");
-                array = new string[0];
-            }
+
             if (mutex == -1) Signal(mutexID);
             return array;
         }
@@ -577,12 +704,16 @@ namespace Database
 
             while (mutexIDs[0] != mutexID) Task.Delay(25);
 
-            WriteInTextFile("ReadNextBool", 8);
-            WriteInTextFile2("wait");
+            logger.Debug("ReadNextBool " + GetMutexIDs());
 
-            bool[] array;
+            bool[] array = new bool[0];
 
-            if (IsConnected())
+            if (!IsConnected())
+            {
+                logger.Error("Connection à la base de données échouée");
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - ReadNextBool - Connection à la base de données échouée");
+            }
+            else
             {
                 if (!IsReaderNotAvailable())
                 {
@@ -607,11 +738,7 @@ namespace Database
                     array = new bool[0];
                 }
             }
-            else
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - ReadNextBool - Connection à la base de données échouée");
-                array = new bool[0];
-            }
+
             Signal(mutexID);
             return array;
         }
@@ -631,12 +758,16 @@ namespace Database
 
             while (mutexIDs[0] != mutexID) Task.Delay(25);
 
-            WriteInTextFile("GetOneRow " + tableName, 8);
-            WriteInTextFile2("wait");
+            logger.Debug("GetOneRow" + GetMutexIDs());
 
             string[] array = new string[0];
 
-            if (IsConnected())
+            if (!IsConnected())
+            {
+                logger.Error("Connection à la base de données échouée");
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - GetOneRow - Connection à la base de données échouée");
+            }
+            else
             {
                 SendCommand_Read(tableName, selectColumns, whereColumns, whereValues, mutex: mutexID);
 
@@ -649,28 +780,36 @@ namespace Database
                 }
                 Close_reader();
             }
-            else
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - GetOneRow - Connection à la base de données échouée");
-            }
+
             Signal(mutexID);
             //dbReady = true;
             return array;
         }
-        public static int GetMax(string tableName, string column, string[] whereColumns = null, string[] whereValues = null)
+        public static int GetMax(string tableName, string column, string[] whereColumns = null, string[] whereValues = null, int mutex = -1)
         {
-            //wait();
-            int mutexID = GetNextMutex();
-            mutexIDs.Add(mutexID);
+            int mutexID;
 
+            if (mutex == -1)
+            {
+                mutexID = GetNextMutex();
+                mutexIDs.Add(mutexID);
+            }
+            else
+            {
+                mutexID = mutex;
+            }
             while (mutexIDs[0] != mutexID) Task.Delay(25);
 
-            WriteInTextFile("GetMax " + tableName, 9);
-            WriteInTextFile2("wait");
+            logger.Debug("GetMax " + tableName + GetMutexIDs());
 
             int result = -1;
 
-            if (IsConnected())
+            if (!IsConnected())
+            {
+                logger.Error("Connection à la base de données échouée");
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - GetMax - Connection à la base de données échouée");
+            }
+            else
             {
                 Close_reader();
 
@@ -726,31 +865,40 @@ namespace Database
                     MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - GetMax - " + ex.Message);
                 }
             }
-            else
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - GetMax - Connection à la base de données échouée");
-            }
-            Signal(mutexID);
-            //dbReady = true;
+
+            if (mutex == -1) Signal(mutexID);
             return result;
         }
-        public static bool InsertRow(string tableName, string columnFields, string[] values)
+        public static ReadOnlyCollection<DbColumn> GetColumnCollection()
         {
-            //wait();
-            int mutexID = GetNextMutex();
-            mutexIDs.Add(mutexID);
+            //if (IsReaderNotAvailable()) return null;
 
+            return reader.GetColumnSchema();
+        }
+        public static bool InsertRow(string tableName, string columnFields, string[] values, int mutex = -1)
+        {
+            int mutexID;
+            bool result = false;
+
+            if (mutex == -1)
+            {
+                mutexID = GetNextMutex();
+                mutexIDs.Add(mutexID);
+            }
+            else
+            {
+                mutexID = mutex;
+            }
             while (mutexIDs[0] != mutexID) Task.Delay(25);
 
-            WriteInTextFile("InsertRow " + tableName, 10);
-            WriteInTextFile2("wait");
+            logger.Debug("InsertRow " + GetMutexIDs());
 
-            bool result = false;
-            // it must change !!!
-            //Disconnect();
-            //Connect();
-
-            if (IsConnected())
+            if (!IsConnected())
+            {
+                logger.Error("Connection à la base de données échouée");
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - InsertRow - Connection à la base de données échouée");
+            }
+            else
             {
                 Close_reader();
 
@@ -758,7 +906,11 @@ namespace Database
                 string[] valueTags = new string[valuesNumber];
                 string valueFields = "";
 
-                if (columnFields.Split().Count() == valuesNumber)
+                if (columnFields.Split().Count() != valuesNumber)
+                {
+                    MessageBox.Show("SendCommand_insertRecord: C'est pas bien ce que tu fais là");
+                }
+                else
                 {
                     for (int i = 0; i < valuesNumber - 1; i++)
                     {
@@ -779,9 +931,7 @@ namespace Database
                     try
                     {
                         reader = command.ExecuteReader();
-                        //command.ExecuteReader();
                         Close_reader();
-                        //Disconnect();
                         result = true;
                     }
                     catch (Exception ex)
@@ -790,18 +940,9 @@ namespace Database
                     }
 
                 }
-                else
-                {
-                    MessageBox.Show("SendCommand_insertRecord: C'est pas bien ce que tu fais là");
-                }
+            }
 
-            }
-            else
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - InsertRow - Connection à la base de données échouée");
-            }
-            Signal(mutexID);
-            //dbReady = true;
+            if (mutex == -1) Signal(mutexID);
             return result;
         }
         public static bool Update_Row(string tableName, string[] setColumns, string[] setValues, string id)
@@ -812,12 +953,16 @@ namespace Database
 
             while (mutexIDs[0] != mutexID) Task.Delay(25);
 
-            WriteInTextFile("Update_Row " + tableName, 11);
-            WriteInTextFile2("wait");
+            logger.Debug("Update_Row" + GetMutexIDs());
 
             bool result = false;
 
-            if (IsConnected())
+            if (!IsConnected())
+            {
+                logger.Error("Connection à la base de données échouée");
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Update_Row - Connection à la base de données échouée");
+            }
+            else
             {
                 Close_reader();
 
@@ -855,10 +1000,7 @@ namespace Database
 
                 reader.Close();
             }
-            else
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Update_Row - Connection à la base de données échouée");
-            }
+
             Signal(mutexID);
             //dbReady = true;
             return result;
@@ -871,12 +1013,16 @@ namespace Database
 
             while (mutexIDs[0] != mutexID) Task.Delay(25);
 
-            WriteInTextFile("DeleteRow " + tableName, 12);
-            WriteInTextFile2("wait");
+            logger.Debug("DeleteRow " + tableName + GetMutexIDs());
 
             bool result = false;
 
-            if (IsConnected())
+            if (!IsConnected())
+            {
+                logger.Error("Connection à la base de données échouée");
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - DeleteRow - Connection à la base de données échouée");
+            }
+            else
             {
                 Close_reader();
 
@@ -913,10 +1059,52 @@ namespace Database
                     MessageBox.Show("Je n'ai pas pu supprimer la ligne demandée");
                 }
             }
-            else
+
+            Signal(mutexID);
+            //dbReady = true;
+            return result;
+        }
+        public static bool DeleteRows(string tableName, DateTime lastRecordDate)
+        {
+            //wait();
+            int mutexID = GetNextMutex();
+            mutexIDs.Add(mutexID);
+
+            while (mutexIDs[0] != mutexID) Task.Delay(25);
+
+            logger.Debug("DeleteRows " + tableName + GetMutexIDs());
+
+            bool result = false;
+
+            if (!IsConnected())
             {
+                logger.Error("Connection à la base de données échouée");
                 MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - DeleteRow - Connection à la base de données échouée");
             }
+            else
+            {
+                Close_reader();
+
+                string whereArg;
+                MySqlCommand command;
+                bool isCommandOk = true;
+
+                command = connection.CreateCommand();
+                command.CommandText = @"DELETE FROM " + tableName + " WHERE date_time < \"" + lastRecordDate.ToString("yyyy-MM-dd HH:mm:ss") + "\"";
+
+                try
+                {
+                    reader = command.ExecuteReader();
+                    Close_reader();
+                    result = true;
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                    Close_reader();
+                }
+            }
+
             Signal(mutexID);
             //dbReady = true;
             return result;
@@ -930,10 +1118,14 @@ namespace Database
 
             while (mutexIDs[0] != mutexID) Task.Delay(25);
 
-            WriteInTextFile("CreateTempTable " + fields, 13);
-            WriteInTextFile2("wait");
+            logger.Debug("CreateTempTable " + fields + GetMutexIDs());
 
-            if (IsConnected())
+            if (!IsConnected())
+            {
+                logger.Error("Connection à la base de données échouée");
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand_readAllRecipe - Connection à la base de données échouée");
+            }
+            else
             {
                 Close_reader();
 
@@ -942,13 +1134,13 @@ namespace Database
 
                 try
                 {
-                    command.CommandText = @"DROP TABLE temp";
+                    command.CommandText = @"DROP TABLE IF EXISTS temp";
                     reader = command.ExecuteReader();
                     Close_reader();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    //MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - CreateTempTable: " + ex.Message);
+                    logger.Error(command.CommandText + " " + ex.Message);
                 }
 
                 try
@@ -960,60 +1152,16 @@ namespace Database
                 }
                 catch (Exception ex)
                 {
+                    logger.Error(command.CommandText + " " + ex.Message);
                     MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - CreateTempTable: " + ex.Message);
                 }
 
                 Close_reader();
             }
-            else
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand_readAllRecipe - Connection à la base de données échouée");
-            }
+
             Signal(mutexID);
             //dbReady = true;
         }
-        /*public static void CreateTempTable2(string fields)
-        {
-            while (!dbReady) Task.Delay(25);
-            dbReady = false;
-            if (IsConnected())
-            {
-                Close_reader();
-
-                // On supprimer la table temp si jamais elle existe
-                MySqlCommand command = connection.CreateCommand();
-
-                try
-                {
-                    command.CommandText = @"DROP TABLE temp2";
-                    reader = command.ExecuteReader();
-                    Close_reader();
-                }
-                catch (Exception)
-                {
-                    //MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - CreateTempTable: " + ex.Message);
-                }
-
-                try
-                {
-                    command.CommandText = @"CREATE TABLE temp2 (" +
-                        "id  INT NOT NULL auto_increment PRIMARY KEY," +
-                        fields + ")";
-                    reader = command.ExecuteReader();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - CreateTempTable: " + ex.Message);
-                }
-
-                Close_reader();
-            }
-            else
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand_readAllRecipe - Connection à la base de données échouée");
-            }
-            dbReady = true;
-        }*/
         public static void SelectFromTemp(string select)
         {
 
@@ -1023,10 +1171,14 @@ namespace Database
 
             while (mutexIDs[0] != mutexID) Task.Delay(25);
 
-            WriteInTextFile("SelectFromTemp " + select, 14);
-            WriteInTextFile2("wait");
+            logger.Debug("SelectFromTemp " + select + GetMutexIDs());
 
-            if (IsConnected())
+            if (!IsConnected())
+            {
+                logger.Error("Connection à la base de données échouée");
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SelectFromTemp - Connection à la base de données échouée");
+            }
+            else
             {
                 Close_reader();
 
@@ -1041,10 +1193,7 @@ namespace Database
                     MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SelectFromTemp: " + ex.Message);
                 }
             }
-            else
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SelectFromTemp - Connection à la base de données échouée");
-            }
+
             Signal(mutexID);
             //dbReady = true;
         }
@@ -1056,11 +1205,13 @@ namespace Database
 
             if (columns != null && values != null && columns.Count() == values.Count())
             {
-                arg = prefix + columns[0] + "=@" + columns[0];
+                //arg = prefix + columns[0] + "=@" + columns[0];
+                arg = prefix + columns[0] + "=@0";
 
                 for (int i = 1; i < columns.Count(); i++)
                 {
-                    arg += separator + columns[i] + "=@" + columns[i];
+                    //arg += separator + columns[i] + "=@" + columns[i];
+                    arg += separator + columns[i] + "=@" + i.ToString();
                 }
             }
             else
@@ -1076,12 +1227,101 @@ namespace Database
             {
                 for (int i = 0; i < columns.Count(); i++)
                 {
-                    command.Parameters.AddWithValue("@" + columns[i], values[i]);
+                    command.Parameters.AddWithValue("@" + i.ToString(), values[i]);
                 }
                 return true;
             }
 
             return false;
+        }
+        private static int GetNextMutex()
+        { // Assure toi que cette fonction ne peut être appelé plusieurs fois en même temps
+            lastMutexID = (lastMutexID + 1) % 200;
+            return lastMutexID;
+        }
+        public static void Signal(int mutex)
+        {
+            if (mutex == mutexIDs[0])
+            {
+                mutexIDs.RemoveAt(0);
+                logger.Debug("Signal " + GetMutexIDs());
+            }
+            else
+            {
+                logger.Error("Signal - On a un problème chef " + GetMutexIDs());
+            }
+        }
+        private static string GetMutexIDs()
+        {
+            string text = " ";
+            for (int i = 0; i < mutexIDs.Count; i++)
+            {
+                text = text + mutexIDs[i].ToString() + "_";
+            }
+
+            return text.TrimEnd('_');
+        }
+        private static void WriteInTextFile2(string title)
+        {
+            string text = title + ": ";
+            for (int j = 0; j < mutexIDs.Count; j++)
+            {
+                text = text + mutexIDs[j].ToString() + " ";
+            }
+
+            Console.WriteLine(DateTime.Now.ToString() + " " + text);
+            /*
+
+            string fileName = @"C:\Temp\Bonjour.txt";
+            if (!File.Exists(fileName))
+            {
+                using (FileStream fs = File.Create(fileName)) { }
+            }
+
+
+            if (File.Exists(fileName))
+            {
+                try
+                {
+                    using (FileStream fs = File.Open(fileName, FileMode.Append))
+                    {
+                        byte[] author = new UTF8Encoding(true).GetBytes(DateTime.Now.ToString() + " " + text + "\n");
+                        fs.Write(author, 0, author.Length);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(DateTime.Now.ToString() + " - " + ex);
+                }
+            }//*/
+        }
+        private static void WriteInTextFile(string text, int i)
+        {
+
+            Console.WriteLine(DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss_ff") + " " + text);
+            /*
+            string fileName = @"C:\Temp\Bonjour.txt";
+            if (!File.Exists(fileName)) 
+            {
+                using (FileStream fs = File.Create(fileName)) { }
+            }
+
+            if (File.Exists(fileName))
+            {
+                try
+                {
+                    using (FileStream fs = File.Open(fileName, FileMode.Append))
+                    {
+                        byte[] author = new UTF8Encoding(true).GetBytes(DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss_ff") + " " + text + "\n");
+                        fs.Write(author, 0, author.Length);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss_ff") + " - " + ex);
+                }
+            }//*/
         }
     }
 }

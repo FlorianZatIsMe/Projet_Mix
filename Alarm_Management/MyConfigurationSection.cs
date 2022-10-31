@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Alarm_Management.Configuration
+namespace Alarm_Management.Configuration_old
 {
     public class List : ConfigurationSection
     {

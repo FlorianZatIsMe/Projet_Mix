@@ -11,76 +11,85 @@ using System.Configuration;
 
 namespace Alarm_Management
 {
-    public static class AlarmManagement
+    public enum AlarmType
+    {
+        Alarm,
+        Warning,
+        None
+    }
+    public enum AlarmStatus
+    {
+        RAZ,
+        RAZACK,
+        ACTIVE,
+        INACTIVE,
+        ACK,
+        None
+    }
+
+    public class Alarm
+    {
+        public int id;
+        public readonly string Description;
+        public readonly AlarmType Type;
+        public AlarmStatus Status;
+
+        public Alarm(string description, AlarmType type)
+        {
+            id = -1;
+            Description = description;
+            Type = type;
+            Status = AlarmStatus.RAZ;
+        }
+    }
+
+    public class AlarmManagement
     {
         public static List<Tuple<int, int>> ActiveAlarms { get; }
         //public static List<Alarm> activeAlarms { get; }
         public static List<int> RAZalarms;
-        public static Alarm[,] alarms;
+        public static Alarm[,] alarms { get; }
         //private static MyDatabase db = new MyDatabase();
         private readonly static NameValueCollection AuditTrailSettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
         //private readonly static Configuration.List MySettings = ConfigurationManager.GetSection("Alarm_Info/List") as Configuration.List;
         //private readonly static Database.Configuration.Connection_Info HisSettings = ConfigurationManager.GetSection("Database/Connection_Info") as Database.Configuration.Connection_Info;
 
-        public struct Alarm
-        {
-            public int id;
-            public readonly string Description;
-            public readonly AlarmType Type;
-            public AlarmStatus Status;
 
-            public Alarm(string description, AlarmType type)
-            {
-                id = -1;
-                Description = description;
-                Type = type;
-                Status = AlarmStatus.RAZ;
-            }
-        }
-        public enum AlarmType
-        {
-            Alarm,
-            Warning,
-            None
-        }
-        public enum AlarmStatus
-        {
-            RAZ,
-            RAZACK,
-            ACTIVE,
-            INACTIVE,
-            ACK,
-            None
-        }
         static AlarmManagement()
         {
             ActiveAlarms = new List<Tuple<int, int>>();
             //RAZalarms = new List<Alarm>();
             RAZalarms = new List<int>();
-            alarms = new Alarm[4, 2];
+            alarms = new Alarm[5, 2];
 
             alarms[0, 0] = new Alarm("Connexion à la balance échouée", AlarmType.Alarm);
             alarms[1, 0] = new Alarm("Connexion au SpeedMixer échouée", AlarmType.Alarm);
+            alarms[1, 1] = new Alarm("Erreur du speedmixer pendant un cycle", AlarmType.Alarm);
             alarms[2, 0] = new Alarm("Connexion à la pompe à vide échouée", AlarmType.Alarm);
             alarms[3, 0] = new Alarm("Connexion au piège froid échouée", AlarmType.Alarm);
             alarms[3, 1] = new Alarm("Température trop haute pendant le cycle", AlarmType.Alarm);
+            alarms[4, 0] = new Alarm("Backup automatique complet de la base de données échoué aprés 3 tentatives", AlarmType.Warning);
         }
+
         public static void NewAlarm(int id1, int id2)
         {
-            //MessageBox.Show((MySettings.Alarm_Features.ID_List+1).ToString());
-
             int n = -1;
+            int mutexID = -1;
             bool isAlarmNotActive = alarms[id1, id2].Status != AlarmStatus.ACTIVE && 
                                     alarms[id1, id2].Status != AlarmStatus.ACK;
-            /*
-            for (int i = 0; i < activeAlarms.Count; i++)
+            MessageBox.Show("Bon");
+            bool wasDbConnected;
+            if (!MyDatabase.IsConnected())
             {
-                if (activeAlarms[i].Description == alarms[id1, id2].Description)
-                {
-                    n = i;
-                    break;
-                }
-            }*/
+                mutexID = MyDatabase.Connect(false);
+                wasDbConnected = false;
+            }
+            else 
+            {
+                mutexID = MyDatabase.Wait();
+                wasDbConnected = true;
+            }
+            MessageBox.Show("alors ???");
 
             if (isAlarmNotActive) // Si l'alarme n'est pas active, on peut la créer
             //if (n == -1 || (activeAlarms[n].Status != AlarmStatus.ACTIVE && activeAlarms[n].Status != AlarmStatus.ACK))
@@ -88,12 +97,12 @@ namespace Alarm_Management
                 AlarmStatus statusBefore = alarms[id1, id2].Status;
                 AlarmStatus statusAfter = AlarmStatus.ACTIVE;
 
-                string[] values = new string[] { "Système", GetAlarmType(alarms[id1, id2].Type), GetAlarmDescription(id1, id2), statusBefore.ToString(), statusAfter.ToString() };
+                string[] values = new string[] { "système", GetAlarmType(alarms[id1, id2].Type), GetAlarmDescription(id1, id2), statusBefore.ToString(), statusAfter.ToString() };
 
                 //MyDatabase.InsertRow("temp2", "description", new string[] { "InsertRow - NewAlarm" });
-                MyDatabase.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values);
-
-                alarms[id1, id2].id = MyDatabase.GetMax(AuditTrailSettings["Table_Name"], "id");
+                MyDatabase.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values, mutex: mutexID);
+                
+                alarms[id1, id2].id = MyDatabase.GetMax(AuditTrailSettings["Table_Name"], "id", mutex: mutexID);
                 alarms[id1, id2].Status = statusAfter;
                 ActiveAlarms.Add(new Tuple<int, int>(id1, id2));
 
@@ -123,10 +132,27 @@ namespace Alarm_Management
             {
                 MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Ce n'est pas bien ce que vous faite Monsieur, on ne crée pas d'alarme si elle est déjà active...");
             }
+            //MessageBox.Show("New alarm 2");
+
+            if (!wasDbConnected) MyDatabase.Disconnect(mutex: mutexID);
+            else MyDatabase.Signal(mutexID);
         }
-        public static void InactivateAlarm(int id1, int id2)
+        public void InactivateAlarm(int id1, int id2)
         {
             int n = -1;
+            int mutexID;
+
+            bool wasDbConnected;
+            if (!MyDatabase.IsConnected())
+            {
+                mutexID = MyDatabase.Connect(false);
+                wasDbConnected = false;
+            }
+            else
+            {
+                mutexID = MyDatabase.Wait();
+                wasDbConnected = true;
+            }
 
             for (int i = 0; i < ActiveAlarms.Count; i++)
             {
@@ -197,10 +223,25 @@ namespace Alarm_Management
             {
                 //MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - " + i.ToString() + ", " + activeAlarms[i].id.ToString() + ", " + activeAlarms[i].Description + ", " + activeAlarms[i].Status.ToString());
             }
+            if (!wasDbConnected) MyDatabase.Disconnect(mutex: mutexID);
+            else MyDatabase.Signal(mutexID);
         }
         public static void AcknowledgeAlarm(int id1, int id2)
         {
             int n = -1;
+            int mutexID;
+
+            bool wasDbConnected;
+            if (!MyDatabase.IsConnected())
+            {
+                mutexID = MyDatabase.Connect(false);
+                wasDbConnected = false;
+            }
+            else
+            {
+                mutexID = MyDatabase.Wait();
+                wasDbConnected = true;
+            }
 
             for (int i = 0; i < ActiveAlarms.Count; i++)
             {
@@ -210,6 +251,7 @@ namespace Alarm_Management
                     break;
                 }
             }
+            //MessageBox.Show(wasDbConnected.ToString() + n.ToString());
 
             if (n != -1)
             {
@@ -221,9 +263,9 @@ namespace Alarm_Management
                     string[] values = new string[] { "Système", GetAlarmType(alarms[id1, id2].Type), GetAlarmDescription(id1, id2), statusBefore.ToString(), statusAfter.ToString() };
 
                     //MyDatabase.InsertRow("temp2", "description", new string[] { "InsertRow - AcknowledgeAlarm" });
-                    MyDatabase.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values);
+                    MyDatabase.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values, mutex: mutexID);
 
-                    alarms[id1, id2].id = MyDatabase.GetMax(AuditTrailSettings["Table_Name"], "id");
+                    alarms[id1, id2].id = MyDatabase.GetMax(AuditTrailSettings["Table_Name"], "id", mutex: mutexID);
                     alarms[id1, id2].Status = statusAfter;
 
                     if (statusAfter == AlarmStatus.ACK)
@@ -248,6 +290,8 @@ namespace Alarm_Management
             {
                 MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Tu sais pas ce que tu fais c'est pas vrai !");
             }
+            if (!wasDbConnected) MyDatabase.Disconnect(mutex: mutexID);
+            else MyDatabase.Signal(mutexID);
         }
         public static string GetAlarmType(AlarmType type)
         {

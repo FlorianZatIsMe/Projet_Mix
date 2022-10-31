@@ -23,6 +23,8 @@ namespace Driver.MODBUS
         private readonly static bool[] areAlarmActive = new bool[nAlarms];
         //private readonly static Task taskAlarmScan;
         private static bool isModbusActive;
+        private static readonly System.Timers.Timer scanAlarmTimer;
+        private static readonly AlarmManagement alarmManagement = new AlarmManagement();
 
         static SpeedMixerModbus()
         {
@@ -30,14 +32,18 @@ namespace Driver.MODBUS
             {
                 MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Modbus Settings are not defined");
             }
-            else
-            {
-                //Connect();
-            }
 
-            isModbusActive = false;
             //taskAlarmScan = Task.Factory.StartNew(() => ScanAlarms());
-            Task.Factory.StartNew(() => ScanAlarms());
+            //Task.Factory.StartNew(() => ScanAlarms());
+
+            // Initialisation des timers
+            scanAlarmTimer = new System.Timers.Timer
+            {
+                Interval = 1000,
+                AutoReset = false
+            };
+            scanAlarmTimer.Elapsed += ScanAlarmTimer_OnTimedEvent;
+            scanAlarmTimer.Start();
         }
         /*
         ~SpeedMixerModbus()
@@ -45,6 +51,24 @@ namespace Driver.MODBUS
             Disconnect();
             MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - SpeedMixer: Au revoir");
         }*/
+        private static void ScanAlarmTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            if (isModbusActive && !IsConnected() && !areAlarmActive[0])
+            {
+                AlarmManagement.NewAlarm(1, 0);
+                areAlarmActive[0] = true;
+            }
+            else if (IsConnected() && areAlarmActive[0])
+            {
+                alarmManagement.InactivateAlarm(1, 0);
+                areAlarmActive[0] = false;
+            }
+
+            if (isModbusActive && !IsConnected()) Connect();
+
+            //MessageBox.Show("Salut");
+            scanAlarmTimer.Enabled = true;
+        }
         private static async void ScanAlarms()
         {
             while (true)
@@ -52,43 +76,30 @@ namespace Driver.MODBUS
                 if (isModbusActive && !IsConnected() && !areAlarmActive[0])
                 {
                     AlarmManagement.NewAlarm(1, 0);
-                    //AlarmManagement.NewAlarm(AlarmManagement.alarms[1, 0]);
-                    //db.NewAlarm("ALARM 01.01 - Connexion au SpeedMixer échouée");
                     areAlarmActive[0] = true;
                 }
                 else if (IsConnected() && areAlarmActive[0])
                 {
-                    AlarmManagement.InactivateAlarm(1, 0);
-                    //AlarmManagement.InactivateAlarm(AlarmManagement.alarms[1, 0]);
-                    //db.InactivateAlarm("ALARM 01.01 - Connexion au SpeedMixer échouée");
+                    alarmManagement.InactivateAlarm(1, 0);
                     areAlarmActive[0] = false;
                 }
-                else
-                {
-                    //MessageBox.Show(isModbusActive.ToString() + IsConnected().ToString() + areAlarmActive[0].ToString());
-                }
+
+                if (isModbusActive && !IsConnected()) Connect();
+
                 await Task.Delay(1000);
             }
+        }
+        public static void Initialize()
+        {
+            Connect();
+            isModbusActive = true;
         }
         public static void Connect()
         {
             speedMixer = new ModbusClient(MySettings["IP_address"].ToString(), int.Parse(MySettings["port"]));    //Ip-Address and Port of Modbus-TCP-Server
 
-            try
-            {
-                speedMixer.Connect();                   //Connect to Server
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
-            if (!IsConnected())
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Modbus connection failed");
-            }
-
-            isModbusActive = true;
+            try { speedMixer.Connect(); }
+            catch (Exception) { }
         }
         public static void Disconnect()
         {
@@ -109,83 +120,11 @@ namespace Driver.MODBUS
                 return false;
             }
 
-            return speedMixer.Connected; // c'est nul ce truc
-        }
-        public static void RunProgram()
-        {
-            if (!IsConnected()) Connect();
-
-            if (IsConnected())
-            {
-                try
-                {
-                    speedMixer.WriteSingleRegister(3056, 0);    // Numéro du programme
-                    speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
-                    speedMixer.WriteSingleRegister(3053, 100);    // Commande pour lancer un programme
-
-                    //MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - STOP");
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            }
-            else
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Problème de connection avec le SpeedMixer");
-            }
-        }
-        public static void StopProgram()
-        {
-            if (!IsConnected()) Connect();
-
-            if (IsConnected())
-            {
-                try
-                {
-                    speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
-                    speedMixer.WriteSingleRegister(3053, 200);  // Commande pour lancer un programme
-                    speedMixer.WriteSingleRegister(3056, 0);    // Numéro du programme
-
-                    //MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - STOP");
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            }
-            else
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Problème de connection avec le SpeedMixer");
-            }
-        }
-        public static void ResetErrorProgram()
-        {
-            if (!IsConnected()) Connect();
-
-            if (IsConnected())
-            {
-                try
-                {
-                    speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
-                    speedMixer.WriteSingleRegister(3053, 300);  // Commande pour lancer un programme
-                    speedMixer.WriteSingleRegister(3056, 0);    // Numéro du programme
-
-                    //MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - STOP");
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            }
-            else
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Problème de connection avec le SpeedMixer");
-            }
+            return speedMixer.Available(1000); // c'est nul ce truc
         }
         public static void SetProgram(string[] array)
         {
-            if (!IsConnected()) Connect();
+            //if (!IsConnected()) Connect();
 
             if (IsConnected())
             {
@@ -276,12 +215,84 @@ namespace Driver.MODBUS
                     speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
                     speedMixer.WriteSingleRegister(3056, 0);    // Numéro du programme
                     speedMixer.WriteSingleRegister(3053, 1);    // Commande pour mettre à jour tout les paramètres
-
-
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - SpeedMixerModbus.cs, SetProgram(string[] array)" + ex.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Problème de connection avec le SpeedMixer");
+            }
+        }
+        public static void RunProgram()
+        {
+            //if (!IsConnected()) Connect();
+
+            if (IsConnected())
+            {
+                try
+                {
+                    speedMixer.WriteSingleRegister(3056, 0);    // Numéro du programme
+                    speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
+                    speedMixer.WriteSingleRegister(3053, 100);    // Commande pour lancer un programme
+
+                    //MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - STOP");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Problème de connection avec le SpeedMixer");
+            }
+        }
+        public static void StopProgram()
+        {
+            //if (!IsConnected()) Connect();
+
+            if (IsConnected())
+            {
+                try
+                {
+                    speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
+                    speedMixer.WriteSingleRegister(3053, 200);  // Commande pour stopper un programme
+                    speedMixer.WriteSingleRegister(3056, 0);    // Numéro du programme
+
+                    //MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - STOP");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Problème de connection avec le SpeedMixer");
+            }
+        }
+        public static void ResetErrorProgram()
+        {
+            //if (!IsConnected()) Connect();
+
+            if (IsConnected())
+            {
+                try
+                {
+                    //speedMixer.WriteMultipleRegisters(3053, new int[] { 300 });
+
+                    //speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
+                    speedMixer.WriteSingleRegister(3053, 300);  // Commande pour lancer un programme
+                    //speedMixer.WriteSingleRegister(3056, 0);    // Numéro du programme
+
+                    //MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - STOP");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
                 }
             }
             else
@@ -295,7 +306,7 @@ namespace Driver.MODBUS
             bool[] status = new bool[8];
             UInt16 mask = 0x01;
 
-            if (!IsConnected()) Connect();
+            //if (!IsConnected()) Connect();
 
             if (IsConnected())
             {
@@ -312,20 +323,21 @@ namespace Driver.MODBUS
                         mask <<= 1;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    // Peut-être générer une alarme à la place
+                    //MessageBox.Show(ex.Message);
                 }
             }
             else
             {
-                MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Problème de connection avec le SpeedMixer");
+                //MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Problème de connection avec le SpeedMixer");
             }
             return status;
         }
         public static int GetPressure()
         {
-            if (!IsConnected()) Connect();
+            //if (!IsConnected()) Connect();
 
             if (IsConnected())
             {
@@ -348,7 +360,7 @@ namespace Driver.MODBUS
         }
         public static int GetSpeed()
         {
-            if (!IsConnected()) Connect();
+            //if (!IsConnected()) Connect();
 
             if (IsConnected())
             {

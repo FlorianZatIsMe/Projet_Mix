@@ -29,7 +29,23 @@ namespace FPO_WPF_Test
         private static readonly string[] tableNameSubCycles = new string[] { "cycle_weight", "cycle_speedmixer" }; // Pas bien ça, il faut faire référence au fichier de config et même ça devrait une constante globale. Non ?
         private static readonly string[] tableNameSubRecipes = new string[] { "recipe_weight", "recipe_speedmixer" }; // Pas bien ça, il faut faire référence au fichier de config et même ça devrait une constante globale. Non ?
         private static readonly string[] columnNamesSubCycles = new string[] { "product, setpoint, minimum, maximum, unit, decimal_number", "time_mix_th, pressure_unit, speed_min, speed_max, pressure_min, pressure_max" }; // Pas bien ça, il faut faire référence au fichier de config et même ça devrait une constante globale. Non ?
+        public static readonly string auditTrail_BackupDesc = "Backup complet de la base de donnée réussi";
+        public static readonly string auditTrail_RestoreDesc = "Restauration complète de la base de donnée réussi";
+        public static readonly string auditTrail_ArchiveDesc = "Archivage de la base de donnée réussi";
+        public static readonly string auditTrail_RestArchDesc = "Restauration de l'archivage de la base de donnée réussi";
+        public static int count = 0;
+        public static string text;
+        public static DateTime NextBackupTime;
+        public static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+        static General()
+        {
+            NextBackupTime = Convert.ToDateTime("12:00");
+            if (General.NextBackupTime.CompareTo(DateTime.Now) < 0)
+            {
+                General.NextBackupTime = General.NextBackupTime.AddDays(1);
+            }
+        }
         public static bool Verify_Format(TextBox textBox, bool isNotNull, bool isNumber, int parameter, decimal min = -1, decimal max = -1)
         {
             /*
@@ -37,8 +53,6 @@ namespace FPO_WPF_Test
              *              - si isNumber = false : le nombre de caractère max
              *              - si isNumber = true : le nombre de chiffre après la virgule
              */
-
-            
 
             bool result = true;
 
@@ -153,7 +167,7 @@ namespace FPO_WPF_Test
             string nextSeqType;
             string nextSeqID;
 
-            //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+            if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
             if (MyDatabase.IsConnected()) // while loop is better
             {
@@ -289,7 +303,6 @@ namespace FPO_WPF_Test
                 MessageBox.Show("Je ne sais pas, je ne sais plus, je suis perdu");
             }
         }
-
         public static void EndSequence(string[] recipeParameters, Frame frameMain, Frame frameInfoCycle, int idCycle, int previousSeqType, string previousSeqId, bool isTest, string comment = "")
         {
             MyDatabase.Update_Row("cycle", new string[] { "date_time_end_cycle", "comment" }, new string[] { DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), comment }, idCycle.ToString());
@@ -371,12 +384,12 @@ namespace FPO_WPF_Test
                 string[] recipeName = MyDatabase.GetOneRow("cycle", "recipe_name", new string[] { "id" }, new string[] { idCycle.ToString() });
                 frameMain.Content = new Pages.Recipe(Action.Modify, frameMain, frameInfoCycle, recipeName.Length == 0 ? "" : recipeName[0]);
             }
-            else
+            else 
             {
                 frameMain.Content = new Pages.Status();
+                MyDatabase.Disconnect();
             }
         }
-
         public static void PrintReport(int id)
         {
             ReportGeneration report = new ReportGeneration();

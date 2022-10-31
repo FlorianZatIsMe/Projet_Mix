@@ -43,6 +43,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             CurrentFormatControl_tbBarcode = false;
             InitializeComponent();
             tbSeqNumber.Text = seqNumber;
+
         }
         private void RadioButton_Click_1(object sender, RoutedEventArgs e)
         {
@@ -116,7 +117,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         }
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            cbIsBarcode.IsChecked = true;
+            //cbIsBarcode.IsChecked = true;
         }
         private void TbProduct_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -149,7 +150,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
 
             CurrentFormatControl_tbBarcode = FormatControl[i];
 
-            MessageBox.Show(FormatControl[i].ToString());
+            //MessageBox.Show(FormatControl[i].ToString());
         }
         private void TbDecimalNumber_LostFocus(object sender, RoutedEventArgs e)
         {

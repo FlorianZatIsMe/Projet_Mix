@@ -9,7 +9,7 @@
       Title="Recipe"
       Background="#524E4F">
 
-        <Grid>
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="45"/>
             <RowDefinition Height="40"/>
@@ -19,10 +19,10 @@
         <Grid Grid.Row="0" x:Name="gridNewRecipe" Visibility="Collapsed">
             <WrapPanel Margin="10, 10, 0, 0">
                 <TextBlock Foreground="Wheat" Text="Nom du programme"/>
-                <TextBox x:Name="tbProgramName" Margin="20, 0, 0, 0" Width="120"/>
+                <TextBox x:Name="tbRecipeNameNew" Margin="20, 0, 0, 0" Width="120"/>
                 <Button Content="Nouvelle séquence" Width="120" Margin="20, 0, 0, 0"  HorizontalAlignment="Left" VerticalAlignment="center" Click="New_Sequence_Click"/>
             </WrapPanel>
-            <Button Content="Créer recette" Width="Auto" Margin="0, 0, 10, 0" HorizontalAlignment="Right" VerticalAlignment="center" Click="WriteDB_Click"/>
+            <Button Content="Créer recette" Width="Auto" Margin="0, 0, 10, 0" HorizontalAlignment="Right" VerticalAlignment="center" Click="ButtonCreate_Click"/>
         </Grid>
 
         <Grid Grid.Row="0" x:Name="gridModify_Recipe" Visibility="Collapsed">
@@ -48,6 +48,30 @@
                 </WrapPanel>
             </WrapPanel>
             <Button Content="Modifier recette" Width="Auto" Margin="0, 0, 10, 0" HorizontalAlignment="Right" VerticalAlignment="center" Click="ButtonModify_Click"/>
+        </Grid>
+
+        <Grid Grid.Row="0" x:Name="gridCopy_Recipe" Visibility="Collapsed">
+            <WrapPanel Margin="10, 10, 0, 0">
+                <TextBlock Foreground="Wheat" Margin="0,4,0,0" Text="Nom du nouveau programme"/>
+                <TextBox x:Name="tbRecipeNameCpy" Margin="10, 4, 0, 0" Width="100"/>
+
+                <TextBlock Foreground="Wheat" Margin="20,4,0,0" Text="Nom du programme à copier"/>
+                <ComboBox x:Name="cbxPgmToCopy" 
+                          Margin="10,0,0,0" 
+                          Width="Auto" 
+                          SelectionChanged="CbxPgmToCopy_SelectionChanged" 
+                          IsSynchronizedWithCurrentItem="True"/>
+
+                <WrapPanel x:Name="panelVersionRecipe" Visibility="Collapsed">
+                    <TextBlock Foreground="Wheat" Margin="20, 4, 0, 0" Text="Version: "/>
+                    <ComboBox x:Name="cbxVersionToCopy" 
+                          Margin="10,0,0,0" 
+                          Width="Auto" 
+                          SelectionChanged="CbxVersionToCopy_SelectionChanged" 
+                          IsSynchronizedWithCurrentItem="True"/>
+                </WrapPanel>
+            </WrapPanel>
+            <Button Content="Copier recette" Width="Auto" Margin="0, 0, 10, 0" HorizontalAlignment="Right" VerticalAlignment="center" Click="ButtonCopy_Click"/>
         </Grid>
 
         <Grid Grid.Row="0" x:Name="gridDelete_Recipe" Visibility="Collapsed">
@@ -86,8 +110,9 @@
             </WrapPanel>
             <Button x:Name="btDelAct" Content="Supprimer recette" Width="Auto" Margin="0, 0, 10, 0" HorizontalAlignment="Right" VerticalAlignment="center" Click="ButtonActDel_Click"/>
         </Grid>
+        
         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
             <Grid x:Name="gridMain"></Grid>
         </ScrollViewer>
-        </Grid>
+    </Grid>
 </Page>

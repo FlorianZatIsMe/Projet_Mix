@@ -23,6 +23,8 @@ namespace Driver.RS232.Pump
         //private readonly static bool[] wereAlarmActive = new bool[nAlarms];
         //private readonly static Task taskAlarmScan;
         private static bool isRS232Active;
+        private static readonly System.Timers.Timer scanAlarmTimer;
+        private static readonly AlarmManagement alarmManagement;
 
         static RS232Pump()
         {
@@ -42,8 +44,38 @@ namespace Driver.RS232.Pump
             pump.DataReceived += new SerialDataReceivedEventHandler(RecivedData);
             isFree = true;
 
-            //taskAlarmScan = Task.Factory.StartNew(() => scanAlarms());
-            Task.Factory.StartNew(() => ScanAlarms());
+            //taskAlarmScan = Task.Factory.StartNew(() => ScanAlarms());
+            //Task.Factory.StartNew(() => ScanAlarms());
+
+            // Initialisation des timers
+            scanAlarmTimer = new System.Timers.Timer
+            {
+                Interval = 1000,
+                AutoReset = false
+            };
+            scanAlarmTimer.Elapsed += ScanAlarmTimer_OnTimedEvent;
+            scanAlarmTimer.Start();
+        }
+        private static void ScanAlarmTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            if (isRS232Active && !IsOpen() && !areAlarmActive[0])
+            {
+                AlarmManagement.NewAlarm(2, 0);
+                areAlarmActive[0] = true;
+            }
+            else if (IsOpen() && areAlarmActive[0])
+            {
+                alarmManagement.InactivateAlarm(2, 0);
+                areAlarmActive[0] = false;
+            }
+
+            if (isRS232Active && !IsOpen())
+            {
+                Open();
+            }
+
+            //MessageBox.Show("Salut");
+            scanAlarmTimer.Enabled = true;
         }
         private static async void ScanAlarms()
         {
@@ -56,37 +88,29 @@ namespace Driver.RS232.Pump
                 }
                 else if (IsOpen() && areAlarmActive[0])
                 {
-                    AlarmManagement.InactivateAlarm(2, 0);
+                    alarmManagement.InactivateAlarm(2, 0);
                     areAlarmActive[0] = false;
                 }
                 
                 if (isRS232Active && !IsOpen())
                 {
-                    try { pump.Open(); }
-                    catch (Exception) {}
+                    Open();
                 }
                 await Task.Delay(1000);
             }
+        }
+        public static void Initialize()
+        {
+            Open();
+            isRS232Active = true;
         }
         public static void BlockUse() { isFree = false; }
         public static void FreeUse() { isFree = true; }
         public static bool IsFree() { return isFree; }
         public static void Open()
         {
-            if (!IsOpen())
-            {
-                try
-                {
-                    pump.Open();
-                    //pump.WriteLine("!C802 0");
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-
-                isRS232Active = true;
-            }
+            try { pump.Open(); }
+            catch (Exception) { }
         }
         public static bool IsOpen()
         {

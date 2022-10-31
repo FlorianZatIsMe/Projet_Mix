@@ -1,8 +1,11 @@
 ﻿using Database;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.Data.Common;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -33,21 +36,29 @@ namespace FPO_WPF_Test.Pages
         //private readonly Action CurrentAction;
         private readonly List<string> ProgramNames = new List<string>();
         private readonly List<string> ProgramIDs = new List<string>();
+        private readonly List<string> ProgramVersions = new List<string>();
         private readonly bool isCbxToModifAvailable = false;
+        private bool isCbxToCopyAvailable = false;
+        private bool isCbxVersionCpyAvailable = false;
         private readonly bool isCbxToDeleteAvailable = false;
         //private string currentRecipeName;
         private string currentRecipeVersion;
         private string currentRecipeStatus;
         private readonly Frame frameMain;
         private readonly Frame frameInfoCycle;
+        private bool curMethodDoneOnGoing;
+
+        private static readonly string exportFolder = @"C:\Temp\Exports\";
+        private static readonly string fileExtension_table = ".tbl";
 
         public Recipe(Action action, Frame frameMain_arg = null, Frame frameInfoCycle_arg = null, string recipeName = "")
         {
             nRow = 1;
-            //db = new MyDatabase();
             status = MySettings["Status"].Split(',');
+            frameMain = frameMain_arg;
+            //frameMain.ContentRendered += new EventHandler(FrameMain_ContentRendered);
             isFrameLoaded = false;
-            //CurrentAction = action;
+            if (!MyDatabase.IsConnected()) MyDatabase.Connect();
             InitializeComponent();
 
             switch (action)
@@ -57,7 +68,6 @@ namespace FPO_WPF_Test.Pages
                     Create_NewSequence(MySettings["SubRecipeWeight_SeqType"]);
                     break;
                 case Action.Modify: // pour ça je pense qu'une comboBox est suffisant, on puet imaginer une fenêtre intermédiaire avec une liste et une champ pour filtrer mais ça me semble pas applicable à notre besoin
-                    frameMain = frameMain_arg;
                     frameInfoCycle = frameInfoCycle_arg;
                     gridModify_Recipe.Visibility = Visibility.Visible;
                     General.Update_RecipeNames(cbxPgmToModify, ProgramNames, ProgramIDs, MyDatabase.RecipeStatus.PRODnDRAFT);
@@ -77,6 +87,9 @@ namespace FPO_WPF_Test.Pages
                     }
                     break;
                 case Action.Copy:
+                    gridCopy_Recipe.Visibility = Visibility.Visible;
+                    General.Update_RecipeNames(cbxPgmToCopy, ProgramNames, ProgramIDs, MyDatabase.RecipeStatus.PRODnDRAFT);
+                    isCbxToCopyAvailable = true;
                     break;
                 case Action.Delete:
                     gridDelete_Recipe.Visibility = Visibility.Visible;
@@ -86,61 +99,13 @@ namespace FPO_WPF_Test.Pages
                 default:
                     break;
             }
+            //MessageBox.Show("Recipe");
+            // Si on a testé une recette et qu'on revient ici alors on ne se déconnecte pas
+            if (action != Action.Modify || recipeName == "") MyDatabase.Disconnect();
         }
         ~Recipe()
         {
 
-        }
-        private void Frame_ContentRendered(object sender, EventArgs e)
-        {
-            Frame frame = sender as Frame;
-            
-            if (frame.Content == null)
-            {
-                Grid grid = frame.Parent as Grid;
-                grid.Children.Remove(frame);
-                Update_SequenceNumbers();
-                nRow--;
-            }
-            isFrameLoaded = true;
-        }
-        private void New_Sequence_Click(object sender, RoutedEventArgs e)
-        {
-            Create_NewSequence(MySettings["SubRecipeWeight_SeqType"]);
-        }
-        private void WriteDB_Click(object sender, RoutedEventArgs e)
-        {
-            string recipeName = tbProgramName.Text;
-            int newVersion;
-            string[] whereColumns = new string[] { MySettings["Column_Recipe_name"] };
-
-            if (recipeName != "")
-            {
-                //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
-
-                if (MyDatabase.IsConnected())
-                {
-                    newVersion = MyDatabase.GetMax(MySettings["Table_Name"], MySettings["Column_Recipe_version"], whereColumns, new string[] { recipeName }) + 1;
-
-                    if (newVersion == 1)
-                    {
-                        Create_NewRecipe(recipeName, newVersion, MySettings["Recipe_Status_Draft"]);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Le nom de la recette existe déjà");
-                    }
-
-                    //MyDatabase.Disconnect();
-                    //MessageBox.Show("Ouf, ça c'est fait");
-                }
-                else {
-                    MessageBox.Show("Not good brotha");
-                }
-            }
-            else {
-                MessageBox.Show("You should know by now that a recipe name can't be empty...");
-            }
         }
 
         /* Create_NewRecipe()
@@ -151,7 +116,7 @@ namespace FPO_WPF_Test.Pages
          * Remarque pour celui qui utilise cette méthode: assure toi que le programme est connecté à la base de données et déconnecte toi après
          * 
          */
-        private bool Create_NewRecipe(string recipeName, int new_version, string status)
+        private bool Create_NewRecipe(string recipeName, int new_version, string status, bool isRecipeCreated = true)
         {
             int i = 1;
             int n;
@@ -176,12 +141,29 @@ namespace FPO_WPF_Test.Pages
 
             //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
+            if(recipeName == "")
+            {
+                MessageBox.Show("You should know by now that a recipe name can't be empty...");
+                return false;
+            }
+
             if (MyDatabase.IsConnected()) // while loop is better
             {
                 nextSeqID = new int[] { MyDatabase.GetMax(MySettings["SubRecipes_Table_Name"].Split(',')[int.Parse(MySettings["SubRecipeWeight_SeqType"])], "id"), MyDatabase.GetMax(MySettings["SubRecipes_Table_Name"].Split(',')[int.Parse(MySettings["SubRecipeSpeedMixer_SeqType"])], "id") };
 
                 if (new_version != 0) // && previousStatus == MySettings["Recipe_Status_Production"])
                 {
+                    // Si on créer une nouvelle recette (version = 1)
+                    if (new_version == 1)
+                    {
+                        // On contrôle si la recette n'existe pas déjà
+                        if (isRecipeCreated && MyDatabase.GetMax(MySettings["Table_Name"], MySettings["Column_Recipe_version"], new string[] { MySettings["Column_Recipe_name"] }, new string[] { recipeName }) != 0)
+                        {
+                            MessageBox.Show("Le nom de la recette existe déjà");
+                            return false;
+                        }
+                    }
+
                     foreach (UIElement element in gridMain.Children) // Pour chaque element de la grille principale (gridMain)...
                     {
                         if (element.GetType().Equals(typeof(Frame))) // Si c'est une frame...
@@ -317,6 +299,8 @@ namespace FPO_WPF_Test.Pages
                 MyDatabase.ConnectAsync();
                 result = false;
             }
+            //MessageBox.Show("Create recipe");
+            //MyDatabase.Disconnect();
             return result;
         }
         private async void Display_Recipe(string id)
@@ -369,40 +353,44 @@ namespace FPO_WPF_Test.Pages
                     {
                         isFrameLoaded = false;
                         Create_NewSequence(nextSeqType);
+
                         while (!isFrameLoaded) await Task.Delay(25); // On attend que la frame créée (New_Sequence(nextSeqType == "1");) a été chargé
                         isFrameLoaded = false;
 
                         if (gridMain.Children[gridMain.Children.Count - 1].GetType().Equals(typeof(Frame))) // Si le dernier élément de la grille gridMain est une frame on continue
                         {
-                                MyDatabase.Close_reader(); // On ferme le reader de la db pour pouvoir lancer une autre requête
+                            MyDatabase.Close_reader(); // On ferme le reader de la db pour pouvoir lancer une autre requête
 
                             //MyDatabase.SendCommand_readAllRecipe(dbSubRecipeName[int.Parse(nextSeqType)], MySettings["Column_id"].Split(','), new string[] { nextSeqID });
                             int mutexID = MyDatabase.SendCommand_Read(tableName: dbSubRecipeName[int.Parse(nextSeqType)], whereColumns: MySettings["Column_id"].Split(','), whereValues: new string[] { nextSeqID }, isMutexReleased: false);
                             currentFrame = gridMain.Children[gridMain.Children.Count - 1] as Frame;
-                            
-                            if (nextSeqType == MySettings["SubRecipeWeight_SeqType"]) {
+
+                            if (nextSeqType == MySettings["SubRecipeWeight_SeqType"])
+                            {
                                 currentPage[int.Parse(nextSeqType)] = currentFrame.Content as SubRecipe.Weight;
                             }
-                            else if(nextSeqType == MySettings["SubRecipeSpeedMixer_SeqType"]) {
+                            else if (nextSeqType == MySettings["SubRecipeSpeedMixer_SeqType"])
+                            {
                                 currentPage[int.Parse(nextSeqType)] = currentFrame.Content as SubRecipe.SpeedMixer;
                             }
 
-                            //IL faut rajouter un petit mutex pour readnext
-
                             array = MyDatabase.ReadNext(mutexID);
-                            
-                            if (array.Count() == dbSubRecipeNColumns[int.Parse(nextSeqType)] && MyDatabase.ReadNext(mutexID).Count() == 0) {
-                                    if (nextSeqType == MySettings["SubRecipeWeight_SeqType"]) {
-                                    var tempPage = currentPage[int.Parse(nextSeqType)] as SubRecipe.Weight;
-                                        tempPage.SetPage(array);
-                                    }
-                                    else if (nextSeqType == MySettings["SubRecipeSpeedMixer_SeqType"]) {
-                                    var tempPage = currentPage[int.Parse(nextSeqType)] as SubRecipe.SpeedMixer;
-                                        tempPage.SetPage(array);
-                                    }
 
-                                    nextSeqType = array[1];
-                                    nextSeqID = array[2];
+                            if (array.Count() == dbSubRecipeNColumns[int.Parse(nextSeqType)] && MyDatabase.ReadNext(mutexID).Count() == 0)
+                            {
+                                if (nextSeqType == MySettings["SubRecipeWeight_SeqType"])
+                                {
+                                    var tempPage = currentPage[int.Parse(nextSeqType)] as SubRecipe.Weight;
+                                    tempPage.SetPage(array);
+                                }
+                                else if (nextSeqType == MySettings["SubRecipeSpeedMixer_SeqType"])
+                                {
+                                    var tempPage = currentPage[int.Parse(nextSeqType)] as SubRecipe.SpeedMixer;
+                                    tempPage.SetPage(array);
+                                }
+
+                                nextSeqType = array[1];
+                                nextSeqID = array[2];
                             }
                             else
                             {
@@ -411,7 +399,8 @@ namespace FPO_WPF_Test.Pages
                             }
                             MyDatabase.Signal(mutexID);
                         }
-                        else {
+                        else
+                        {
                             MessageBox.Show("Je ne comprends pas... Pourquoi je ne vois pas de frame...");
                         }
                     } while (nextSeqID != "");
@@ -419,29 +408,33 @@ namespace FPO_WPF_Test.Pages
 
                     //MessageBox.Show("Ouf c'est fini");
                 }
-                else {
-                    if (array.Count() == 0) {
+                else
+                {
+                    if (array.Count() == 0)
+                    {
                         MessageBox.Show("La recette demandée n'existe pas");
                     }
-                    else {
+                    else
+                    {
                         MessageBox.Show("C'est quoi ça ? La version demandée existe en plusieurs exemplaires !");
                     }
                 }
 
                 //MyDatabase.Disconnect();
             }
-            else {
+            else
+            {
                 MessageBox.Show("Not good brotha");
                 MyDatabase.ConnectAsync();
             }
-
+            curMethodDoneOnGoing = false;
         }
         private void Create_NewSequence(string seqType)
         {
             gridMain.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) });
 
             Frame frame = new Frame();
-            frame.ContentRendered += Frame_ContentRendered;
+            frame.ContentRendered += SubRecipeFrame_ContentRendered;
 
             if (seqType == MySettings["SubRecipeWeight_SeqType"])
             {
@@ -544,24 +537,66 @@ namespace FPO_WPF_Test.Pages
                 MyDatabase.ConnectAsync();
             }
         }
-        private void CbxPgmToModify_SelectionChanged(object sender, SelectionChangedEventArgs e)
+
+        // EVENTS
+
+        private void FrameMain_ContentRendered(object sender, EventArgs e)
+        {
+            if (frameMain.Content != this)
+            {
+                //MessageBox.Show("FrameMain_ContentRendered");
+                //MyDatabase.Disconnect();
+            }
+        }
+        private void SubRecipeFrame_ContentRendered(object sender, EventArgs e)
+        {
+            Frame frame = sender as Frame;
+
+            if (frame.Content == null)
+            {
+                Grid grid = frame.Parent as Grid;
+                grid.Children.Remove(frame);
+                Update_SequenceNumbers();
+                nRow--;
+            }
+            isFrameLoaded = true;
+        }
+        private void New_Sequence_Click(object sender, RoutedEventArgs e)
+        {
+            Create_NewSequence(MySettings["SubRecipeWeight_SeqType"]);
+        }
+        private void ButtonCreate_Click(object sender, RoutedEventArgs e)
+        {
+            if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+            Create_NewRecipe(tbRecipeNameNew.Text, 1, MySettings["Recipe_Status_Draft"]);
+            //MessageBox.Show("ButtonCreate_Click");
+            MyDatabase.Disconnect();
+        }
+        private async void CbxPgmToModify_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (isCbxToModifAvailable)
             {
+                if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+
                 ComboBox comboBox = sender as ComboBox;
+                curMethodDoneOnGoing = true;
                 Display_Recipe(ProgramIDs[comboBox.SelectedIndex]);
 
                 labelVersion.Text = currentRecipeVersion;
                 labelStatus.Text = currentRecipeStatus;
 
+                while (curMethodDoneOnGoing) await Task.Delay(25); 
+
                 panelInfoRecipe.Visibility = Visibility.Visible;
+                //MessageBox.Show("CbxPgmToModify_SelectionChanged");
+                MyDatabase.Disconnect();
             }
         }
         private void ButtonModify_Click(object sender, RoutedEventArgs e)
         {
             int currentIndex = cbxPgmToModify.SelectedIndex;
 
-            //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+            if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
             if (MyDatabase.IsConnected()) // while loop is better
             {
@@ -570,7 +605,7 @@ namespace FPO_WPF_Test.Pages
                     if (MessageBox.Show("Vous vous apprêtez à modifier une recette en production, une nouvelle version sera créée. Voulez-vous continuer?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
                         // Création d'une nouvelle recette, l'ancienne version sera obsolète
-                        if (Create_NewRecipe(ProgramNames[currentIndex], int.Parse(labelVersion.Text)+1, MySettings["Recipe_Status_Draft"]))
+                        if (Create_NewRecipe(ProgramNames[currentIndex], int.Parse(labelVersion.Text)+1, MySettings["Recipe_Status_Draft"], false))
                         {
                             MyDatabase.Update_Row("recipe", new string[] { "status" }, new string[] { MySettings["Recipe_Status_Obsolete"] }, ProgramIDs[currentIndex]);
                             ProgramIDs[currentIndex] = MyDatabase.GetMax("recipe", "id").ToString();
@@ -584,7 +619,7 @@ namespace FPO_WPF_Test.Pages
                     if (MessageBox.Show("Voulez vous libérer cette recette en production?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
                         // Modification de la recette puis modification du status en draft
-                        if(Create_NewRecipe(ProgramNames[currentIndex], int.Parse(labelVersion.Text), MySettings["Recipe_Status_Production"]))
+                        if(Create_NewRecipe(ProgramNames[currentIndex], int.Parse(labelVersion.Text), MySettings["Recipe_Status_Production"], false))
                         {
                             Delete_Recipe(ProgramIDs[currentIndex]);
                             ProgramIDs[currentIndex] = MyDatabase.GetMax("recipe", "id").ToString();
@@ -594,7 +629,7 @@ namespace FPO_WPF_Test.Pages
                     else
                     {
                         // Modification de la recette draft en cours
-                        if(Create_NewRecipe(ProgramNames[cbxPgmToModify.SelectedIndex], int.Parse(labelVersion.Text), MySettings["Recipe_Status_Draft"]))
+                        if(Create_NewRecipe(ProgramNames[cbxPgmToModify.SelectedIndex], int.Parse(labelVersion.Text), MySettings["Recipe_Status_Draft"], false))
                         {
                             Delete_Recipe(ProgramIDs[currentIndex]);
                             ProgramIDs[currentIndex] = MyDatabase.GetMax("recipe", "id").ToString();
@@ -605,13 +640,14 @@ namespace FPO_WPF_Test.Pages
                 {
                     MessageBox.Show("Tu ne devrais pas pouvoir faire ça");
                 }
-                //MyDatabase.Disconnect();
-            }
+            }/*
             else
             {
                 MessageBox.Show("La base de données n'est pas connecté");
                 MyDatabase.ConnectAsync();
-            }
+            }*/
+            //MessageBox.Show("ButtonModify_Click");
+            MyDatabase.Disconnect();
         }
         private void ButtonActDel_Click(object sender, RoutedEventArgs e)
         {
@@ -619,7 +655,7 @@ namespace FPO_WPF_Test.Pages
             //int index0;
             string[] array;
 
-            //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+            if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
             if (MyDatabase.IsConnected()) // while loop is better
             {
@@ -709,12 +745,14 @@ namespace FPO_WPF_Test.Pages
                         MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - ButtonActDel_Click - Comment t'as fait ça ?");
                     }
                 }
-            }
+            }/*
             else
             {
                 MessageBox.Show("La base de données n'est pas connecté");
                 MyDatabase.ConnectAsync();
-            }
+            }*/
+            //MessageBox.Show("ButtonActDel_Click");
+            MyDatabase.Disconnect();
         }
         private void CbxAddDefaultText(ComboBox comboBox, int index)
         {
@@ -740,10 +778,13 @@ namespace FPO_WPF_Test.Pages
         }
         private void RbActivateDelete_Checked(object sender, RoutedEventArgs e)
         {
-            RadioButton radioButton = sender as RadioButton;
 
             if (isCbxToDeleteAvailable)
             {
+                RadioButton radioButton = sender as RadioButton;
+
+                if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+
                 if (radioButton == rbActivate)
                 {
                     General.Update_RecipeNames(cbxPgmToActDelete, ProgramNames, ProgramIDs, MyDatabase.RecipeStatus.OBSOLETE);
@@ -754,6 +795,8 @@ namespace FPO_WPF_Test.Pages
                     General.Update_RecipeNames(cbxPgmToActDelete, ProgramNames, ProgramIDs, MyDatabase.RecipeStatus.PRODnDRAFT);
                     btDelAct.Content = "Supprimer recette";
                 }
+                //MessageBox.Show("RbActivateDelete_Checked");
+                MyDatabase.Disconnect();
             }
         }
         private void Test_Sequence_Click(object sender, RoutedEventArgs e)
@@ -782,5 +825,263 @@ namespace FPO_WPF_Test.Pages
                 MessageBox.Show("La masse final n'est pas correcte");
             }
         }
+        private async void CbxPgmToCopy_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isCbxToCopyAvailable)
+            {
+                if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+
+                isCbxVersionCpyAvailable = false;
+
+                ComboBox comboBox = sender as ComboBox;
+                curMethodDoneOnGoing = true;
+                Display_Recipe(ProgramIDs[comboBox.SelectedIndex]);
+
+                ProgramVersions.Clear();
+
+                if (MyDatabase.IsConnected())
+                {
+                    int mutexID = MyDatabase.SendCommand_Read(tableName: "recipe", selectColumns: "version",
+                        whereColumns: new string[] { "name" },
+                        whereValues: new string[] { ProgramNames[comboBox.SelectedIndex] }, orderBy: "version", isOrderAsc: false, 
+                        isMutexReleased: false);
+
+                    string[] array = MyDatabase.ReadNext(mutexID);
+
+                    while (array.Length != 0)
+                    {
+                        ProgramVersions.Add(array[0]);
+                        array = MyDatabase.ReadNext(mutexID);
+                    }
+                    MyDatabase.Signal(mutexID);
+
+                    cbxVersionToCopy.ItemsSource = ProgramVersions;
+
+                    if (ProgramVersions.Count > 0)
+                    {
+                        cbxVersionToCopy.SelectedIndex = 1;
+                        cbxVersionToCopy.Items.Refresh();
+                    }
+
+                    cbxVersionToCopy.SelectedIndex = 0;
+                    cbxVersionToCopy.Items.Refresh();
+
+                    isCbxVersionCpyAvailable = true;
+                }
+                else
+                {
+                    ProgramVersions.Add("###");
+                    ProgramVersions.Add("###");
+                    ProgramVersions.Add("###");
+
+                    cbxVersionToCopy.ItemsSource = ProgramVersions;
+                    cbxVersionToCopy.Items.Refresh();
+                    cbxVersionToCopy.SelectedIndex = 0;
+
+                    MessageBox.Show("Not good brotha");
+                }
+
+                while (curMethodDoneOnGoing) await Task.Delay(25);
+
+                panelVersionRecipe.Visibility = Visibility.Visible;
+                //MessageBox.Show("CbxPgmToCopy_SelectionChanged");
+                MyDatabase.Disconnect();
+            }
+        }
+        private void CbxVersionToCopy_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isCbxVersionCpyAvailable)
+            {
+                ComboBox comboBox = sender as ComboBox;
+
+                string[] array = MyDatabase.GetOneRow(tableName: "recipe", selectColumns: "id", 
+                    whereColumns: new string[] { "name", "version" }, 
+                    whereValues: new string[] { cbxPgmToCopy.Text, ProgramVersions[comboBox.SelectedIndex] });
+
+                //Task task = Task.Factory.StartNew(() => Display_Recipe(array[0]));
+                Display_Recipe(array[0]);
+            }
+        }
+        private void ButtonCopy_Click(object sender, RoutedEventArgs e)
+        {
+            if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+
+            if (Create_NewRecipe(tbRecipeNameCpy.Text, 1, MySettings["Recipe_Status_Draft"], false))
+            {
+                isCbxToCopyAvailable = false;
+                General.Update_RecipeNames(cbxPgmToCopy, ProgramNames, ProgramIDs, MyDatabase.RecipeStatus.PRODnDRAFT);
+                panelVersionRecipe.Visibility = Visibility.Collapsed;
+                isCbxToCopyAvailable = true;
+            }
+            //MessageBox.Show("ButtonCopy_Click");
+            MyDatabase.Disconnect();
+        }
+
+        // TOOLS
+        private static void CreateTextFile(string fileName, string folderPath)
+        {
+            if (!Directory.Exists(exportFolder))
+            {
+                Directory.CreateDirectory(exportFolder);
+            }
+
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            if (!File.Exists(fileName))
+            {
+                using (FileStream fs = File.Create(fileName)) { }
+            }
+        }
+        private static void WriteInTextFile(string fileName, string text)
+        {
+            if (File.Exists(fileName))
+            {
+                try
+                {
+                    using (FileStream fs = File.Open(fileName, FileMode.Append))
+                    {
+                        byte[] text_b = new UTF8Encoding(true).GetBytes(text + "\n");
+                        fs.Write(text_b, 0, text_b.Length);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - " + ex);
+                }
+            }
+            else
+            {
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Tu ne sais pas ce que tu fais avoue");
+            }
+        }
+        private static string[] ReadTextFile(string fileName)
+        {
+            string[] lines = new string[0];
+
+            if (File.Exists(fileName))
+            {
+                try
+                {
+                    lines = File.ReadLines(fileName).ToArray();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - " + ex);
+                }
+            }
+            else
+            {
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Tu t'es perdu non ?");
+            }
+
+            return lines;
+        }
+        public static void ExportTable(string tableName, string folderPath)
+        {
+            int start = 0;
+            int range = 500;
+            int end = 1 + range;
+            int mutexID = MyDatabase.SendCommand_ReadPart(tableName: tableName, start: start, end: end, isMutexReleased: false);
+            //int mutexID = MyDatabase.SendCommand_Read(tableName: tableName, isMutexReleased: false);
+
+            if (!MyDatabase.IsReaderNotAvailable())
+            {
+                string fileName = folderPath + @"\" + DateTime.Now.ToString("yyyy.MM.dd_HH.mm.ss") + "_" + tableName + fileExtension_table;
+                CreateTextFile(fileName, folderPath);
+                ReadOnlyCollection<DbColumn> columns = MyDatabase.GetColumnCollection();
+
+                string[] array;
+                string command1 = "INSERT INTO " + tableName + " (";
+                string command2;
+                int n = columns.Count;
+
+                for (int i = 1; i < n - 1; i++)
+                {
+                    command1 += columns[i].ColumnName + ", ";
+                }
+                command1 += columns[n - 1].ColumnName + ") VALUES (\"";
+
+                array = MyDatabase.ReadNext(mutexID);
+
+                while (array.Length != 0)
+                {
+                    while (array.Length != 0)
+                    {
+                        command2 = "";
+
+                        for (int i = 1; i < n - 1; i++)
+                        {
+                            command2 += array[i] + "\", \"";
+                        }
+                        command2 += array[n - 1] + "\");";
+
+                        WriteInTextFile(fileName, command1 + command2);
+                        array = MyDatabase.ReadNext(mutexID);
+                    }
+                    MyDatabase.Signal(mutexID);
+
+                    start += range;
+                    end += range;
+
+                    //MessageBox.Show("1");
+
+                    mutexID = MyDatabase.SendCommand_ReadPart(tableName: tableName, start: start, end: end, isMutexReleased: false);
+                    array = MyDatabase.ReadNext(mutexID);
+                }
+                MyDatabase.Signal(mutexID);
+                //MessageBox.Show("2");
+            }
+
+        }
+        public static void ExportAllTables()
+        {
+            string folderPath = exportFolder + @"\" + DateTime.Now.ToString("yyyy.MM.dd_HH.mm.ss") + "_" + "ExportAllTables";
+
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(exportFolder);
+            }
+
+            if (MyDatabase.IsConnected())
+            {
+                List<string> tablesName = MyDatabase.GetTablesName();
+
+                for (int i = 0; i < tablesName.Count; i++)
+                {
+                    ExportTable(tablesName[i], folderPath);
+                }
+
+            }
+            else
+            {
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Base de données pas connectée");
+            }
+        }
+        public static void ImportTable(string fileName)
+        {
+            string[] lines = ReadTextFile(fileName);
+
+            MessageBox.Show(lines.Length.ToString());
+
+            /*
+            string command = "";
+            int k = 0;
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                command += lines[i];
+
+                if (lines[i].EndsWith(";"))
+                {
+                    MyDatabase.SendCommand(command);
+                    command = "";
+                }
+            }*/
+        }
+
+        // VERIFIE LA CONNECTION DE LA BASE DE DONNéES PARTOUT !!!!! MOTHER FUCKER ¨¨
     }
 }

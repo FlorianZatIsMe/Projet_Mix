@@ -53,7 +53,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             idPrevious = idPrevious_arg;
             tablePrevious = tablePrevious_arg;
             isTest = isTest_arg;
-            frameMain.ContentRendered += new EventHandler(ThisFrame_ContentRendered);
+            frameMain.ContentRendered += new EventHandler(FrameMain_ContentRendered);
             //thisCycleInfo = cycleInfo;
             isSequenceOver = false;
             isWeightCorrect = false;
@@ -315,13 +315,13 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 }
             }
         }
-        private void ThisFrame_ContentRendered(object sender, EventArgs e)
+        private void FrameMain_ContentRendered(object sender, EventArgs e)
         {
             if (frameMain.Content != this)
             {
                 if (!isWeightCorrect)
                 {
-                    frameMain.ContentRendered -= ThisFrame_ContentRendered;
+                    frameMain.ContentRendered -= FrameMain_ContentRendered;
 
                     General.EndSequence(recipeParameters: currentPhaseParameters, frameMain: frameMain, frameInfoCycle: frameInfoCycle, idCycle: idCycle, previousSeqType: 0, previousSeqId: idSubCycle.ToString(), isTest: isTest, comment: "Cycle interrompu");
 

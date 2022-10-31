@@ -49,8 +49,8 @@
                 </WrapPanel>
                 <WrapPanel>
                     <CheckBox x:Name="cbIsBarcode" Margin="0,10,0,0" Foreground="Wheat" Content="Contrôle du code barres" Checked="CbIsBarcode_Checked" Unchecked="CbIsBarcode_Unchecked"/>
-                    <TextBlock x:Name="labelBarcode" Margin="30,10,0,0" Foreground="Wheat" Text="Code barres"/>
-                    <TextBox x:Name="tbBarcode" Margin="10,10,0,0" Width="200" LostFocus="TbBarcode_LostFocus"/>
+                    <TextBlock x:Name="labelBarcode" Margin="30,10,0,0" Foreground="Wheat" Text="Code barres" Visibility="Collapsed"/>
+                    <TextBox x:Name="tbBarcode" Margin="10,10,0,0" Width="200" LostFocus="TbBarcode_LostFocus" Visibility="Collapsed"/>
                 </WrapPanel>
                 <WrapPanel>
                     <TextBlock Margin="0,10,0,0" Foreground="Wheat" Text="Format"/>

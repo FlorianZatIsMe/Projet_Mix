@@ -11,7 +11,6 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 
-
 namespace FPO_WPF_Test.Pages
 {
     /// <summary>
@@ -69,6 +68,8 @@ namespace FPO_WPF_Test.Pages
             if ((bool)cbAlarm.IsChecked) eventTypes.Add("Alarme");
             if ((bool)cbWarning.IsChecked) eventTypes.Add("Alerte");
 
+            if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+
             if (MyDatabase.IsConnected()) // while loop is better
             {
                 MyDatabase.SendCommand_ReadAuditTrail(dtBefore: dtBefore, dtAfter: dtAfter, eventTypes: eventTypes.ToArray(), orderBy: "id", isOrderAsc: false);
@@ -114,6 +115,7 @@ namespace FPO_WPF_Test.Pages
                 dt.Rows.Add(row);
                 dataGridAuditTrail.ItemsSource = dt.DefaultView;
             }
+            MyDatabase.Disconnect();
         }
         private void ButtonFilter_Click(object sender, RoutedEventArgs e)
         {

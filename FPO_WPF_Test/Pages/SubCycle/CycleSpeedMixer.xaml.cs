@@ -50,8 +50,10 @@ namespace FPO_WPF_Test.Pages.SubCycle
         private bool isSequenceOver;
         private bool isCycleStopped;
 
-        private readonly Task taskGetStatus;
-        private readonly int timeGetStatus = 500;
+        private readonly Task taskSeqController;
+        private readonly int timeSeqController = 500;
+        private readonly Task taskCheckAlarms;
+        private readonly int timeCheckAlarms = 1000;
 
         private readonly System.Timers.Timer sequenceTimer;
         private int currentPhaseTime;
@@ -73,13 +75,17 @@ namespace FPO_WPF_Test.Pages.SubCycle
         private readonly int timeoutSequenceTooLong = 60;
         private readonly int timeoutSequenceBlocked = 90;
 
-        private readonly static int nAlarms = 1;
-        private readonly static bool[] areAlarmActive = new bool[nAlarms];
+        private readonly static int nAlarms = 2;
+        private readonly static bool[] areAlarmActive = new bool[nAlarms]; // 0: 3,1 Alarme température trop haute ; 1: 1,1 Erreur du speedmixer pendant un cycle
 
         private int currentSpeed;
         private decimal currentPressure;
 
         private bool disposedValue;
+
+        private bool[] status = new bool[8];
+
+        private AlarmManagement alarmManagement;
 
         /* public CycleSpeedMixer(Frame mainFrame_arg, string id, List<string[]> cycleInfo)
          * 
@@ -183,7 +189,8 @@ namespace FPO_WPF_Test.Pages.SubCycle
                     if(currentPhaseParameters[11] == "True") tempControlTimer.Start(); // On lance le timer de contrôle de la température
 
                     SpeedMixerModbus.SetProgram(this.currentPhaseParameters); // On met à jour tout les paramètres dans le speedmixer
-                    taskGetStatus = Task.Factory.StartNew(() => SequenceController()); // On lance la tâche de vérification du status et d'autre choses sûrement
+                    taskSeqController = Task.Factory.StartNew(() => SequenceController()); // On lance la tâche de vérification du status et d'autre choses sûrement
+                    taskCheckAlarms = Task.Factory.StartNew(() => CheckAlarms());
                 }
             }
             else
@@ -199,10 +206,15 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 if (disposing)
                 {
                     // TODO: supprimer l'état managé (objets managés)
-                    if (taskGetStatus != null)
+                    if (taskSeqController != null)
                     {
-                        taskGetStatus.Wait();
-                        taskGetStatus.Dispose();
+                        taskSeqController.Wait();
+                        taskSeqController.Dispose();
+                    }
+                    if (taskCheckAlarms != null)
+                    {
+                        taskCheckAlarms.Wait();
+                        taskCheckAlarms.Dispose();
                     }
                     if (sequenceTimer != null)
                     {
@@ -239,8 +251,6 @@ namespace FPO_WPF_Test.Pages.SubCycle
         }
         private async void SequenceController()
         {
-            bool[] status = new bool[8];
-
             while (!isSequenceOver) // tant que le cycle est en cours
             {
                 status = SpeedMixerModbus.GetStatus();
@@ -271,25 +281,26 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 {
                     if ((currentPhaseParameters[11] == "False" || isTempOK) && (wasPumpActivated || currentPhaseParameters[6] == "False")) // Si on ne conttrôle pas la température ou qu'elle est bonne et si la pompe a été commandée ou qu'on en a pas besoin, on démarre le cycle
                     {
-                        MessageBox.Show("Cliquez sur OK pour démarrer le speedmixer"); // Peut-être retirer ça s'il y a plusieurs cycle
-                        SpeedMixerModbus.RunProgram();
-
-                        this.Dispatcher.Invoke(() =>
+                        if (!status[2])
                         {
-                            tbPhaseNumber.Text = currentPhaseNumber.ToString() + " - " + currentPhaseParameters[10 + 3 * currentPhaseNumber] + "s";
-                            currentPhaseTime = int.Parse(currentPhaseParameters[10 + 3 * currentPhaseNumber]);
-                            tbPhaseTime.Text = currentPhaseTime.ToString();
-                        });
+                            MessageBox.Show("Cliquez sur OK pour démarrer le speedmixer"); // Peut-être retirer ça s'il y a plusieurs cycle
+                            SpeedMixerModbus.RunProgram();
 
-                        hasSequenceStarted = true; // le programme a démarré
+                            this.Dispatcher.Invoke(() =>
+                            {
+                                tbPhaseNumber.Text = currentPhaseNumber.ToString() + " - " + currentPhaseParameters[10 + 3 * currentPhaseNumber] + "s";
+                                currentPhaseTime = int.Parse(currentPhaseParameters[10 + 3 * currentPhaseNumber]);
+                                tbPhaseTime.Text = currentPhaseTime.ToString();
+                            });
 
-
-
-                        sequenceTimer.Start();
-
-
-
-
+                            hasSequenceStarted = true; // le programme a démarré
+                            sequenceTimer.Start();
+                        }
+                        else
+                        {
+                            SpeedMixerModbus.ResetErrorProgram();
+                            MessageBox.Show("done");
+                        }
                     }
                 }
                 // Si le programme est en cours
@@ -315,7 +326,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                     isSequenceOver = true; // le cycle est fini, du coup on arrête de le contrôler
                 }
 
-                await Task.Delay(timeGetStatus);
+                await Task.Delay(timeSeqController);
                 //MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - GO");
             }
 
@@ -387,7 +398,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 else if (isTempOK && areAlarmActive[0])
                 {
                     areAlarmActive[0] = false;
-                    AlarmManagement.InactivateAlarm(3, 1); // Alarme température trop haute
+                    alarmManagement.InactivateAlarm(3, 1); // Alarme température trop haute
                 }
             }
         }
@@ -487,6 +498,27 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 }
             }
         }
+        private async void CheckAlarms()
+        {
+
+            while (!hasSequenceStarted) await Task.Delay(timeCheckAlarms);
+
+            while (hasSequenceStarted && !isSequenceOver)
+            {
+                if (!areAlarmActive[1] && status[2])
+                {
+                    AlarmManagement.NewAlarm(1,1);
+                    areAlarmActive[1] = true;
+                }
+                else if (areAlarmActive[1] && !status[2])
+                {
+                    alarmManagement.InactivateAlarm(1, 1);
+                    areAlarmActive[1] = false;
+                }
+
+                await Task.Delay(timeCheckAlarms);
+            }
+        }
         private void EndSequence()
         {
             // On arrête les timers (celle qui gère le temps de la séquence, la température du cold trap et celle qui gère la dispo de la pompe)
@@ -516,9 +548,15 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
             if (areAlarmActive[0]) // Si l'alarme est toujours active alors on l'a désactive
             {
-                AlarmManagement.InactivateAlarm(3, 1); // Alarme température trop haute
+                alarmManagement.InactivateAlarm(3, 1); // Alarme température trop haute
                 areAlarmActive[0] = false;
             }
+            if (areAlarmActive[1])
+            {
+                alarmManagement.InactivateAlarm(1, 1);
+                areAlarmActive[1] = false;
+            }
+
             //*
             if (!isCycleStopped && currentPhaseParameters[1] == "0") // Si la prochaine séquence est une séquence de poids et que le cycle n'est pas arrêté
             {
