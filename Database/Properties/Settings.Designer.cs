@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace FPO_WPF_Test.Properties {
+namespace Database.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -25,10 +25,10 @@ namespace FPO_WPF_Test.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("système")]
-        public string AuditTrail_SystemUsername {
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int scanConnectTimer_Interval {
             get {
-                return ((string)(this["AuditTrail_SystemUsername"]));
+                return ((int)(this["scanConnectTimer_Interval"]));
             }
         }
     }

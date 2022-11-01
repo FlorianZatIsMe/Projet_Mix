@@ -59,6 +59,7 @@ namespace DRIVER.RS232.Weight
                 Interval = 1000,
                 AutoReset = false
             };
+
             scanAlarmTimer.Elapsed += ScanAlarmTimer_OnTimedEvent;
             scanAlarmTimer.Start();
         }
@@ -66,6 +67,7 @@ namespace DRIVER.RS232.Weight
         {
             if (isRS232Active && !IsOpen() && !areAlarmActive[0])
             {
+                MessageBox.Show("nouvelle alarm RS232");
                 AlarmManagement.NewAlarm(0, 0);
                 //db.NewAlarm("ALARM 00.01 - Connexion à la balance échouée");
                 areAlarmActive[0] = true;

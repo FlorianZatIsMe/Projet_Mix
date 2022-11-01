@@ -26,6 +26,7 @@ using System.Linq;
 using NLog;
 using NLog.Common;
 using System.Threading;
+using FPO_WPF_Test.Properties;
 
 namespace FPO_WPF_Test
 {
@@ -105,6 +106,8 @@ namespace FPO_WPF_Test
         {
             while (!isWindowLoaded) await Task.Delay(25);
 
+            AlarmManagement.Initialize(new IniInfo() { AuditTrail_SystemUsername = Settings.Default.AuditTrail_SystemUsername });
+
             // 
             //
             //
@@ -113,10 +116,9 @@ namespace FPO_WPF_Test
             //
             //
             RS232Weight.Initialize();
-            RS232Pump.Initialize();
-            //MessageBox.Show("ça dit quoi ?");
-            SpeedMixerModbus.Initialize();
             /*
+            RS232Pump.Initialize();
+            SpeedMixerModbus.Initialize();
             if (RS232Pump.IsOpen())
             {
                 RS232Pump.BlockUse();
@@ -149,10 +151,12 @@ namespace FPO_WPF_Test
             while (!wasBackupSucceeded && nBackupAttempt < 3)
             {
                 if (!MyDatabase.IsConnected()) mutexID = MyDatabase.Connect();
-                //else mutexID = MyDatabase.Wait();
 
-                Task<bool> task = Task<bool>.Factory.StartNew(() => Pages.Backup.ExecuteBackup("système"));
-                wasBackupSucceeded = task.Result;
+                //Task<bool> task = Task<bool>.Factory.StartNew(() => Pages.Backup.ExecuteBackup("système"));
+                //wasBackupSucceeded = task.Result;
+
+                wasBackupSucceeded = Pages.Backup.ExecuteBackup("système");
+
                 nBackupAttempt++;
                 if (!wasBackupSucceeded)
                 {

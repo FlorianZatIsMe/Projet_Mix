@@ -24,7 +24,6 @@ namespace Database
         public static List<int> AlarmListID = new List<int>();
         public static List<string> AlarmListDescription = new List<string>();
         public static List<string> AlarmListStatus = new List<string>();
-        private static Task scanTask;
         private readonly static List<int> mutexIDs = new List<int>();
         private static int lastMutexID = 0;
         private static bool StopScan = true;
@@ -47,7 +46,8 @@ namespace Database
             // Initialisation des timers
             scanConnectTimer = new System.Timers.Timer
             {
-                Interval = 1000,
+                
+                Interval = Properties.Settings.Default.scanConnectTimer_Interval,
                 AutoReset = false
             };
             scanConnectTimer.Elapsed += ScanConnectTimer_OnTimedEvent;

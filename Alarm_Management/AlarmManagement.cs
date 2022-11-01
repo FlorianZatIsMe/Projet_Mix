@@ -8,9 +8,32 @@ using System.Collections.Specialized;
 using System.Collections.Generic;
 using Database;
 using System.Configuration;
+using System.ComponentModel;
+using System.Collections;
+using Alarm_Management.Properties;
+using System.Threading.Tasks;
 
 namespace Alarm_Management
 {
+    //
+    //  Classes utilisées en lien avec le fichier de configuration pour détailler la liste d'alarmes
+    //
+    [SettingsSerializeAs(SettingsSerializeAs.Xml)]
+    public class ConfigAlarm
+    {
+        public int id1 { get; set; }
+        public int id2 { get; set; }
+        public string description { get; set; }
+        public AlarmType type { get; set; }
+    }
+
+    [SettingsSerializeAs(SettingsSerializeAs.Xml)]
+    public class ConfigAlarms
+    {
+        public ConfigAlarm[] configAlarms { get; set; }
+    }
+
+
     public enum AlarmType
     {
         Alarm,
@@ -42,25 +65,39 @@ namespace Alarm_Management
         }
     }
 
+
+    public struct IniInfo
+    {
+        public string AuditTrail_SystemUsername;
+    }
+
     public class AlarmManagement
     {
         public static List<Tuple<int, int>> ActiveAlarms { get; }
-        //public static List<Alarm> activeAlarms { get; }
         public static List<int> RAZalarms;
         public static Alarm[,] alarms { get; }
         //private static MyDatabase db = new MyDatabase();
         private readonly static NameValueCollection AuditTrailSettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
-        //private readonly static Configuration.List MySettings = ConfigurationManager.GetSection("Alarm_Info/List") as Configuration.List;
-        //private readonly static Database.Configuration.Connection_Info HisSettings = ConfigurationManager.GetSection("Database/Connection_Info") as Database.Configuration.Connection_Info;
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+        private static bool isInitialized = false;
+
+        // Future interface
+        private static string AuditTrail_SystemUsername;
 
         static AlarmManagement()
         {
+            ConfigAlarm[] configAlarms = Settings.Default.Alarms.configAlarms;
             ActiveAlarms = new List<Tuple<int, int>>();
-            //RAZalarms = new List<Alarm>();
             RAZalarms = new List<int>();
             alarms = new Alarm[5, 2];
 
+            for (int i = 0; i < configAlarms.Length; i++)
+            {
+                alarms[configAlarms[i].id1, configAlarms[i].id2] = new Alarm(configAlarms[i].description, configAlarms[i].type);
+                //MessageBox.Show(Settings.Default.Alarms.configAlarms[i].description.ToString());
+            }
+            /*
             alarms[0, 0] = new Alarm("Connexion à la balance échouée", AlarmType.Alarm);
             alarms[1, 0] = new Alarm("Connexion au SpeedMixer échouée", AlarmType.Alarm);
             alarms[1, 1] = new Alarm("Erreur du speedmixer pendant un cycle", AlarmType.Alarm);
@@ -68,29 +105,28 @@ namespace Alarm_Management
             alarms[3, 0] = new Alarm("Connexion au piège froid échouée", AlarmType.Alarm);
             alarms[3, 1] = new Alarm("Température trop haute pendant le cycle", AlarmType.Alarm);
             alarms[4, 0] = new Alarm("Backup automatique complet de la base de données échoué aprés 3 tentatives", AlarmType.Warning);
+            */
+        }
+        public static void Initialize(IniInfo info)
+        {
+            AuditTrail_SystemUsername = info.AuditTrail_SystemUsername;
+            isInitialized = true;
         }
         public static void NewAlarm(int id1, int id2)
         {
+            if (!isInitialized)
+            {
+                logger.Error("");
+                MessageBox.Show("C'est pas bon ça");
+            }
+
+
             int n = -1;
-            int mutexID = -1;
+            int mutexID;
             bool isAlarmNotActive = alarms[id1, id2].Status != AlarmStatus.ACTIVE && 
                                     alarms[id1, id2].Status != AlarmStatus.ACK;
-            //MessageBox.Show("Bon");
-            //bool wasDbConnected;
 
             mutexID = MyDatabase.Connect(false);
-            /*
-            if (!MyDatabase.IsConnected())
-            {
-                mutexID = MyDatabase.Connect(false);
-                //wasDbConnected = false;
-            }
-            else 
-            {
-                mutexID = MyDatabase.Wait();
-                //wasDbConnected = true;
-            }*/
-            //MessageBox.Show("alors ???");
 
             if (isAlarmNotActive) // Si l'alarme n'est pas active, on peut la créer
             //if (n == -1 || (activeAlarms[n].Status != AlarmStatus.ACTIVE && activeAlarms[n].Status != AlarmStatus.ACK))
@@ -98,7 +134,7 @@ namespace Alarm_Management
                 AlarmStatus statusBefore = alarms[id1, id2].Status;
                 AlarmStatus statusAfter = AlarmStatus.ACTIVE;
 
-                string[] values = new string[] { "système", GetAlarmType(alarms[id1, id2].Type), GetAlarmDescription(id1, id2), statusBefore.ToString(), statusAfter.ToString() };
+                string[] values = new string[] { AuditTrail_SystemUsername, GetAlarmType(alarms[id1, id2].Type), GetAlarmDescription(id1, id2), statusBefore.ToString(), statusAfter.ToString() };
 
                 //MyDatabase.InsertRow("temp2", "description", new string[] { "InsertRow - NewAlarm" });
                 MyDatabase.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values, mutex: mutexID);
