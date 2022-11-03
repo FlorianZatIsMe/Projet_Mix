@@ -123,7 +123,7 @@ namespace FPO_WPF_Test.Pages
             {
                 if (!MyDatabase.IsConnected()) MyDatabase.Connect();
                 MyDatabase.DeleteRows("audit_trail", lastRecordDate);
-                MyDatabase.InsertRow("audit_trail", "event_type, username, description", new string[] { "Evènement", username, General.auditTrail_ArchiveDesc });
+                MyDatabase.InsertRow_old("audit_trail", "event_type, username, description", new string[] { "Evènement", username, General.auditTrail_ArchiveDesc });
                 MyDatabase.Disconnect();
 
                 General.count = maxArchiveCount;
@@ -198,7 +198,7 @@ namespace FPO_WPF_Test.Pages
                 if (process.ExitCode == 0)
                 {
                     if (!MyDatabase.IsConnected()) MyDatabase.Connect();
-                    MyDatabase.InsertRow("audit_trail", "event_type, username, description", new string[] { "Evènement", username, General.auditTrail_RestArchDesc });
+                    MyDatabase.InsertRow_old("audit_trail", "event_type, username, description", new string[] { "Evènement", username, General.auditTrail_RestArchDesc });
                     MyDatabase.Disconnect();
 
                     General.count = nLines;

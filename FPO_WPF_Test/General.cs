@@ -190,7 +190,7 @@ namespace FPO_WPF_Test
 
                     string columns = "job_number, batch_number, quantity_value, quantity_unit, item_number, recipe_name, recipe_version, equipment_name, username, is_it_a_test";
                     string[] values = new string[] { OFnumber, OFnumber, finalWeight, "g", recipe_name, recipe_name, recipe_version, General.equipement_name, General.loggedUsername, isTest ? "1" : "0" };
-                    MyDatabase.InsertRow("cycle", columns, values);
+                    MyDatabase.InsertRow_old("cycle", columns, values);
                     int idCycle = MyDatabase.GetMax("cycle", "id");
 
                     while (nextSeqID != "" && nextSeqID != null)
@@ -223,7 +223,7 @@ namespace FPO_WPF_Test
 
                     General.CurrentCycleInfo.InitializeSequenceNumber(); //'2022-09-20 11:52:10
 
-                    MyDatabase.InsertRow("audit_trail", "username, event_type, description", new string[] { General.loggedUsername, "Evènement", "Départ cycle. Lot: " + OFnumber + ", Recette: " + recipe_name + " version " + recipe_version });
+                    MyDatabase.InsertRow_old("audit_trail", "username, event_type, description", new string[] { General.loggedUsername, "Evènement", "Départ cycle. Lot: " + OFnumber + ", Recette: " + recipe_name + " version " + recipe_version });
 
                     string firstAlarmId;
                     if (AlarmManagement.ActiveAlarms.Count > 0) firstAlarmId = AlarmManagement.alarms[AlarmManagement.ActiveAlarms[0].Item1, AlarmManagement.ActiveAlarms[0].Item2].id.ToString();
@@ -352,7 +352,7 @@ namespace FPO_WPF_Test
                 if (isNextRcpSeqTpOK) // S'il n'y a pas eu de problème
                 {
                     // On insert les infos de recettes dans la bonne table
-                    MyDatabase.InsertRow(tableNameSubCycles[nextRecipeSeqType],
+                    MyDatabase.InsertRow_old(tableNameSubCycles[nextRecipeSeqType],
                         columnNamesSubCycles[nextRecipeSeqType],
                         valuesSubCycle);
 

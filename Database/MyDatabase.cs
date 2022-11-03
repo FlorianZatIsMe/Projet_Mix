@@ -62,10 +62,26 @@ namespace Database
     {
         public AuditTrailInfo()
         {
-            List<Column> colList = new List<Column>();
             StringCollection colNames = Settings.Default.AuditTrail_ColNames;
-
             name = Settings.Default.AuditTrail_TableName;
+
+            List<Column> colList = new List<Column>();
+
+            for (int i = 0; i < colNames.Count; i++) colList.Add(new Column(colNames[i]));
+            columns = colList.ToArray();
+        }
+        public string name { get; }
+        public Column[] columns { get; set; }
+    }
+
+    public class RecipeInfo : ITableInfo
+    {
+        public RecipeInfo()
+        {
+            StringCollection colNames = Settings.Default.Recipe_ColNames;
+            name = Settings.Default.Recipe_TableName;
+
+            List<Column> colList = new List<Column>();
 
             for (int i = 0; i < colNames.Count; i++) colList.Add(new Column(colNames[i]));
             columns = colList.ToArray();
@@ -879,13 +895,13 @@ namespace Database
         {
             return currentReader.GetColumnSchema();
         }
-        public static bool InsertRow(string tableName, string columnFields, string[] values, int mutex = -1)
+        public static bool InsertRow_old(string tableName, string columnFields, string[] values, int mutex = -1)
         {
             int mutexID = Wait(mutex);
 
             bool result = false;
 
-            logger.Debug("InsertRow " + GetMutexIDs());
+            logger.Debug("InsertRow_old " + GetMutexIDs());
 
             if (!IsConnected())
             {
@@ -939,14 +955,15 @@ namespace Database
             if (mutex == -1) Signal(mutexID);
             return result;
         }
-        public static bool InsertRow_LV(ITableInfo tableInfo, int mutex = -1)
+        public static bool InsertRow(ITableInfo tableInfo, int mutex = -1)
         {
             int mutexID = Wait(mutex);
-            logger.Debug("InsertRow_LV" + GetMutexIDs());
+            logger.Debug("InsertRow" + GetMutexIDs());
 
             bool result = false;
-            List<string> colIdList = new List<string>();
-            List<string> colValList = new List<string>();
+            //List<string> colIdList = new List<string>();
+            //List<string> colValList = new List<string>();
+            List<int> indexList = new List<int>();
 
             if (!IsConnected()) {
                 logger.Error("Connection à la base de données échouée");
@@ -974,13 +991,15 @@ namespace Database
                 {
                     // Peut-être ici ajouter dans une liste de int qui reprend les i
 
-                    colIdList.Add(tableInfo.columns[i].id);
-                    colValList.Add(tableInfo.columns[i].value);
+                    //colIdList.Add(tableInfo.columns[i].id);
+                    //colValList.Add(tableInfo.columns[i].value);
+                    indexList.Add(i);
                     logger.Error(i.ToString() + ": " + tableInfo.columns[i].value + " - " + tableInfo.columns[i].id);
                 }
             }
 
-            int columnNumber = colIdList.Count();
+            int columnNumber = indexList.Count();
+            //int columnNumber = colIdList.Count();
             if (columnNumber == 0) {
                 logger.Error("Aucune valeur n'a été renseignée");
                 MessageBox.Show("");
@@ -996,18 +1015,20 @@ namespace Database
 
             for (int i = 0; i < columnNumber - 1; i++)
             {
-                columnFields = columnFields + colIdList[i] + ", ";
+                columnFields = columnFields + tableInfo.columns[indexList[i]].id + ", ";
+                //columnFields = columnFields + colIdList[i] + ", ";
                 valueFields = valueFields + "@" + i.ToString() + ", ";
                 logger.Error(i.ToString() + ": " + columnFields + " - " + valueFields);
             }
             logger.Error((columnNumber - 1).ToString() + ": " + columnFields + " - " + valueFields);
-            columnFields = columnFields + colIdList[columnNumber - 1];
+            columnFields = columnFields + tableInfo.columns[indexList[columnNumber - 1]].id;
             valueFields = valueFields + "@" + (columnNumber - 1).ToString();
 
             MySqlCommand command = connection.CreateCommand();
             command.CommandText = @"INSERT INTO " + tableInfo.name + " (" + columnFields + ") VALUES (" + valueFields + ");";
             logger.Error("Insert command: " + command.CommandText);
-            SetCommand(command, colIdList.ToArray(), colValList.ToArray());
+            SetCommand(command, tableInfo.columns, indexList.ToArray());
+            //SetCommand(command, colIdList.ToArray(), colValList.ToArray());
 
             try
             {
@@ -1025,7 +1046,7 @@ namespace Database
             return result;
         }
 
-        public static void InsertRow_2(ITableInfo tableInfo, int mutex = -1)
+        public static void InsertRow_3(ITableInfo tableInfo, int mutex = -1)
         {
             int mutexID = Wait();
 
@@ -1342,12 +1363,18 @@ namespace Database
 
             return arg;
         }
-        private static void SetCommand(MySqlCommand command, string[] values, int[] indexes)
+        private static void SetCommand(MySqlCommand command, Column[] columns, int[] indexes)
         {
+            if (columns.Count() < indexes.Count()) {
+                logger.Error("Il y a plus d'index que de colonne");
+                MessageBox.Show("");
+                return;
+            }
+
             for (int i = 0; i < indexes.Count(); i++)
             {
-                logger.Error("Value " + i.ToString() + ": " + values[indexes[i]].ToString());
-                command.Parameters.AddWithValue("@" + i.ToString(), values[indexes[i]]);
+                logger.Error("Value " + i.ToString() + ": " + columns[indexes[i]].value);
+                command.Parameters.AddWithValue("@" + i.ToString(), columns[indexes[i]].value);
             }
         }
         private static bool SetCommand(MySqlCommand command, string[] columns, string[] values)

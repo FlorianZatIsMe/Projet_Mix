@@ -135,7 +135,7 @@ namespace Alarm_Management
 
                 string[] values = new string[] { AuditTrail_SystemUsername, GetAlarmType(alarms[id1, id2].Type), GetAlarmDescription(id1, id2), statusBefore.ToString(), statusAfter.ToString() };
                 //MyDatabase.InsertRow("temp2", "description", new string[] { "InsertRow - NewAlarm" });
-                MyDatabase.InsertRow(MyDatabase.GetAuditTrail_TableName(), AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values, mutex: mutexID);
+                MyDatabase.InsertRow_old(MyDatabase.GetAuditTrail_TableName(), AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values, mutex: mutexID);
                 
                 alarms[id1, id2].id = MyDatabase.GetMax(AuditTrailSettings["Table_Name"], "id", mutex: mutexID);
                 alarms[id1, id2].Status = statusAfter;
@@ -240,7 +240,7 @@ namespace Alarm_Management
                     string[] values = new string[] { "Système", GetAlarmType(alarms[id1, id2].Type), GetAlarmDescription(id1, id2), statusBefore.ToString(), statusAfter.ToString() };
 
                     //MyDatabase.InsertRow("temp2", "description", new string[] { "InsertRow - InactivateAlarm" });
-                    MyDatabase.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values, mutex: mutexID);
+                    MyDatabase.InsertRow_old(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values, mutex: mutexID);
 
                     alarms[id1, id2].id = MyDatabase.GetMax(AuditTrailSettings["Table_Name"], "id", mutex: mutexID);
                     alarms[id1, id2].Status = statusAfter;
@@ -312,7 +312,7 @@ namespace Alarm_Management
                     string[] values = new string[] { "Système", GetAlarmType(alarms[id1, id2].Type), GetAlarmDescription(id1, id2), statusBefore.ToString(), statusAfter.ToString() };
 
                     //MyDatabase.InsertRow("temp2", "description", new string[] { "InsertRow - AcknowledgeAlarm" });
-                    MyDatabase.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values, mutex: mutexID);
+                    MyDatabase.InsertRow_old(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values, mutex: mutexID);
 
                     alarms[id1, id2].id = MyDatabase.GetMax(AuditTrailSettings["Table_Name"], "id", mutex: mutexID);
                     alarms[id1, id2].Status = statusAfter;

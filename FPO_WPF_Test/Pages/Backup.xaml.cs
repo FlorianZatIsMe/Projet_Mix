@@ -115,7 +115,7 @@ namespace FPO_WPF_Test.Pages
                 //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
                 // Si l'alarme est active, on la désactive
                 if (AlarmManagement.alarms[4, 0].Status == AlarmStatus.ACTIVE || AlarmManagement.alarms[4, 0].Status == AlarmStatus.ACK) AlarmManagement.InactivateAlarm(4, 0);
-                MyDatabase.InsertRow("audit_trail", "event_type, username, description", new string[] { "Evènement", username, General.auditTrail_BackupDesc });
+                MyDatabase.InsertRow_old("audit_trail", "event_type, username, description", new string[] { "Evènement", username, General.auditTrail_BackupDesc });
                 //MyDatabase.Disconnect();
 
                 General.count = 40;
@@ -209,7 +209,7 @@ namespace FPO_WPF_Test.Pages
                 if (process.ExitCode == 0)
                 {
                     if (!MyDatabase.IsConnected()) MyDatabase.Connect();
-                    MyDatabase.InsertRow("audit_trail", "event_type, username, description", new string[] { "Evènement", username, General.auditTrail_RestoreDesc });
+                    MyDatabase.InsertRow_old("audit_trail", "event_type, username, description", new string[] { "Evènement", username, General.auditTrail_RestoreDesc });
                     MyDatabase.Disconnect();
 
                     General.count = nLines;

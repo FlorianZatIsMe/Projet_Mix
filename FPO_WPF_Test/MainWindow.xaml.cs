@@ -82,7 +82,6 @@ namespace FPO_WPF_Test
             //MyDatabase.InsertRow_2("temp", new string[] { "speed", "pressure" }, new string[] { "1.2", "2.3" });
 
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-
             auditTrailInfo.columns[0].value = "";
             auditTrailInfo.columns[1].value = "";
             auditTrailInfo.columns[2].value = "Moi";
@@ -92,8 +91,18 @@ namespace FPO_WPF_Test
             //auditTrailInfo.columns[6].value = "0";
             auditTrailInfo.columns[7].value = "Non rien";
 
-            MyDatabase.InsertRow_LV(auditTrailInfo);
-            MessageBox.Show("done");
+            //MyDatabase.InsertRow(auditTrailInfo);
+
+            RecipeInfo recipeInfo = new RecipeInfo();
+            recipeInfo.columns[0].value = "";
+            recipeInfo.columns[1].value = "0";
+            recipeInfo.columns[2].value = "10";
+            recipeInfo.columns[3].value = "Test";
+            recipeInfo.columns[4].value = "1";
+            recipeInfo.columns[5].value = "0";
+
+            //MyDatabase.InsertRow(recipeInfo);
+
             InitializeComponent();
 
             UpdateUser(username: UserPrincipal.Current.DisplayName.ToLower(),
@@ -101,7 +110,7 @@ namespace FPO_WPF_Test
             labelSoftwareName.Text = General.application_name + " version " + General.application_version;
 
             string[] values = new string[] { General.loggedUsername, "Evènement", "Démarrage de l'application" };
-            MyDatabase.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"], values);
+            MyDatabase.InsertRow_old(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"], values);
 
             frameMain.Content = new Pages.Status();
             frameInfoCycle.Content = null;
@@ -175,7 +184,7 @@ namespace FPO_WPF_Test
                 nBackupAttempt++;
                 if (!wasBackupSucceeded)
                 {
-                    MyDatabase.InsertRow("audit_trail", "event_type, username, description", new string[] { "Evènement", "système", "Backup complet de la base de donnée échoué, essai " + nBackupAttempt.ToString() });
+                    MyDatabase.InsertRow_old("audit_trail", "event_type, username, description", new string[] { "Evènement", "système", "Backup complet de la base de donnée échoué, essai " + nBackupAttempt.ToString() });
                 }
                 MyDatabase.Disconnect();
             }

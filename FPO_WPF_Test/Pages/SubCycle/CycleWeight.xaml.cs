@@ -85,7 +85,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                     string columns = "product, setpoint, minimum, maximum, unit, decimal_number";
                     string[] values = new string[] { currentPhaseParameters[3], setpoint.ToString(), min.ToString(), max.ToString(), currentPhaseParameters[6], currentPhaseParameters[7] };
 
-                    MyDatabase.InsertRow("cycle_weight", columns, values);
+                    MyDatabase.InsertRow_old("cycle_weight", columns, values);
                     idSubCycle = MyDatabase.GetMax("cycle_weight", "id");
 
                     MyDatabase.Update_Row(tablePrevious, new string[] { "next_seq_type", "next_seq_id" }, new string[] { "0", idSubCycle.ToString() }, idPrevious.ToString());

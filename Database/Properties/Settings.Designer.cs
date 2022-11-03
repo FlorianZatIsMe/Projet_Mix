@@ -59,5 +59,31 @@ namespace Database.Properties {
                 return ((global::System.Collections.Specialized.StringCollection)(this["AuditTrail_ColNames"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("recipe")]
+        public string Recipe_TableName {
+            get {
+                return ((string)(this["Recipe_TableName"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <string>id</string>
+  <string>first_seq_type</string>
+  <string>first_seq_id</string>
+  <string>name</string>
+  <string>version</string>
+  <string>status</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection Recipe_ColNames {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["Recipe_ColNames"]));
+            }
+        }
     }
 }

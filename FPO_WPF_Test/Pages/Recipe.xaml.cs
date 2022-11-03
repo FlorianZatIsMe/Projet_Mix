@@ -253,13 +253,13 @@ namespace FPO_WPF_Test.Pages
 
                     for (i = n - 1; i > 0; i--)
                     {
-                        if (isRecordOk) isRecordOk = MyDatabase.InsertRow(tableNameSubRecipes[int.Parse(allValues[i - 1][0])], columnsSubRecipes[int.Parse(allValues[i - 1][0])], allValues[i]);
+                        if (isRecordOk) isRecordOk = MyDatabase.InsertRow_old(tableNameSubRecipes[int.Parse(allValues[i - 1][0])], columnsSubRecipes[int.Parse(allValues[i - 1][0])], allValues[i]);
                         else break; // S'il y a une erreur, on arrête la boucle
 
                         allValues[i - 1][1] = allValues[i - 1][0] == MySettings["SubRecipeWeight_SeqType"] ? MyDatabase.GetMax(MySettings["SubRecipes_Table_Name"].Split(',')[int.Parse(MySettings["SubRecipeWeight_SeqType"])], "id").ToString() : MyDatabase.GetMax(MySettings["SubRecipes_Table_Name"].Split(',')[int.Parse(MySettings["SubRecipeSpeedMixer_SeqType"])], "id").ToString();
                     }
 
-                    if (isRecordOk) isRecordOk = MyDatabase.InsertRow(MySettings["Table_Name"], columnsRecipe, allValues[0]);
+                    if (isRecordOk) isRecordOk = MyDatabase.InsertRow_old(MySettings["Table_Name"], columnsRecipe, allValues[0]);
 
                     // S'il y a eu une erreur, on supprime les lignes qui ont été créés.
                     if (!isRecordOk && i != n - 2)

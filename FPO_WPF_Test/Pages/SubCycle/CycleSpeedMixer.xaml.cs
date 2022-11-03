@@ -175,7 +175,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 string columns = "date_time_start, time_mix_th, pressure_unit, speed_min, speed_max, pressure_min, pressure_max";
                 string[] values = new string[] { DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), TimeSpan.FromSeconds(timeTh_seconds).ToString(), currentPhaseParameters[9], currentPhaseParameters[42], currentPhaseParameters[43], currentPhaseParameters[44], currentPhaseParameters[45] };
 
-                MyDatabase.InsertRow("cycle_speedmixer", columns, values);
+                MyDatabase.InsertRow_old("cycle_speedmixer", columns, values);
                 idSubCycle = MyDatabase.GetMax("cycle_speedmixer", "id");
 
                 MyDatabase.Update_Row(tablePrevious, new string[] { "next_seq_type", "next_seq_id" }, new string[] { "1", idSubCycle.ToString() }, idPrevious.ToString());
@@ -460,7 +460,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             currentSeqTime++; // On met à jour le temps total du mix, quand est-ce qu'il s'arrête ?
 
             //MyDatabase.InsertRow("temp2", "description", new string[] { "InsertRow - seqTimer_OnTimedEvent" });
-            MyDatabase.InsertRow("temp", "speed, pressure", new string[] { currentSpeed.ToString(), currentPressure.ToString() });
+            MyDatabase.InsertRow_old("temp", "speed, pressure", new string[] { currentSpeed.ToString(), currentPressure.ToString() });
 
             currentPhaseTime--;
             
