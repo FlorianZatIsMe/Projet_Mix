@@ -60,7 +60,7 @@ namespace Driver.MODBUS
             }
             else if (IsConnected() && areAlarmActive[0])
             {
-                alarmManagement.InactivateAlarm(1, 0);
+                AlarmManagement.InactivateAlarm(1, 0);
                 areAlarmActive[0] = false;
             }
 
@@ -80,7 +80,7 @@ namespace Driver.MODBUS
                 }
                 else if (IsConnected() && areAlarmActive[0])
                 {
-                    alarmManagement.InactivateAlarm(1, 0);
+                    AlarmManagement.InactivateAlarm(1, 0);
                     areAlarmActive[0] = false;
                 }
 

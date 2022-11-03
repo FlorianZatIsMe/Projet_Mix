@@ -27,7 +27,7 @@ namespace DRIVER.RS232.Weight
         //private readonly static Task taskAlarmScan;
         private static bool isRS232Active;
         private static readonly System.Timers.Timer scanAlarmTimer;
-        private static readonly AlarmManagement alarmManagement = new AlarmManagement();
+        //private static readonly AlarmManagement alarmManagement = new AlarmManagement();
 
         static RS232Weight()
         {
@@ -67,14 +67,13 @@ namespace DRIVER.RS232.Weight
         {
             if (isRS232Active && !IsOpen() && !areAlarmActive[0])
             {
-                MessageBox.Show("nouvelle alarm RS232");
                 AlarmManagement.NewAlarm(0, 0);
                 //db.NewAlarm("ALARM 00.01 - Connexion à la balance échouée");
                 areAlarmActive[0] = true;
             }
             else if (IsOpen() && areAlarmActive[0])
             {
-                alarmManagement.InactivateAlarm(0, 0);
+                AlarmManagement.InactivateAlarm(0, 0);
                 //db.InactivateAlarm("ALARM 00.01 - Connexion à la balance échouée");
                 areAlarmActive[0] = false;
             }
@@ -91,13 +90,11 @@ namespace DRIVER.RS232.Weight
             //MessageBox.Show("Salut");
             scanAlarmTimer.Enabled = true;
         }
-
         public static void Initialize()
         {
             Open();
             isRS232Active = true;
         }
-
         private static async void ScanAlarms()
         {
             while (true)
@@ -110,7 +107,7 @@ namespace DRIVER.RS232.Weight
                 }
                 else if (IsOpen() && areAlarmActive[0])
                 {
-                    alarmManagement.InactivateAlarm(0, 0);
+                    AlarmManagement.InactivateAlarm(0, 0);
                     //db.InactivateAlarm("ALARM 00.01 - Connexion à la balance échouée");
                     areAlarmActive[0] = false;
                 }

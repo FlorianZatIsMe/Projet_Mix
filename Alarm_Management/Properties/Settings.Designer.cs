@@ -25,6 +25,15 @@ namespace Alarm_Management.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("La classe n\'est pas initialisée")]
+        public string Error01 {
+            get {
+                return ((string)(this["Error01"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("\r\n          <ConfigAlarms xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=" +
             "\"http://www.w3.org/2001/XMLSchema-instance\">\r\n            <configAlarms>\r\n      " +
             "        <ConfigAlarm>\r\n                <id1>0</id1>\r\n                <id2>0</id2" +

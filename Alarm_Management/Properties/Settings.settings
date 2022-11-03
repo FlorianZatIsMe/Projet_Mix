@@ -2,6 +2,9 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Alarm_Management.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
+    <Setting Name="Error01" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">La classe n'est pas initialisée</Value>
+    </Setting>
     <Setting Name="Alarms" Type="Alarm_Management.ConfigAlarms" Scope="Application">
       <Value Profile="(Default)">
           &lt;ConfigAlarms xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;

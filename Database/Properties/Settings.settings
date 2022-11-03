@@ -5,5 +5,21 @@
     <Setting Name="scanConnectTimer_Interval" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1000</Value>
     </Setting>
+    <Setting Name="AuditTrail_TableName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">audit_trail</Value>
+    </Setting>
+    <Setting Name="AuditTrail_ColNames" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;id&lt;/string&gt;
+  &lt;string&gt;date_time&lt;/string&gt;
+  &lt;string&gt;username&lt;/string&gt;
+  &lt;string&gt;event_type&lt;/string&gt;
+  &lt;string&gt;description&lt;/string&gt;
+  &lt;string&gt;value_before&lt;/string&gt;
+  &lt;string&gt;value_after&lt;/string&gt;
+  &lt;string&gt;comment&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -116,10 +116,9 @@ namespace Alarm_Management
         {
             if (!isInitialized)
             {
-                logger.Error("");
-                MessageBox.Show("C'est pas bon ça");
+                logger.Error(Settings.Default.Error01);
+                MessageBox.Show(Settings.Default.Error01);
             }
-
 
             int n = -1;
             int mutexID;
@@ -135,9 +134,8 @@ namespace Alarm_Management
                 AlarmStatus statusAfter = AlarmStatus.ACTIVE;
 
                 string[] values = new string[] { AuditTrail_SystemUsername, GetAlarmType(alarms[id1, id2].Type), GetAlarmDescription(id1, id2), statusBefore.ToString(), statusAfter.ToString() };
-
                 //MyDatabase.InsertRow("temp2", "description", new string[] { "InsertRow - NewAlarm" });
-                MyDatabase.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values, mutex: mutexID);
+                MyDatabase.InsertRow(MyDatabase.GetAuditTrail_TableName(), AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values, mutex: mutexID);
                 
                 alarms[id1, id2].id = MyDatabase.GetMax(AuditTrailSettings["Table_Name"], "id", mutex: mutexID);
                 alarms[id1, id2].Status = statusAfter;
@@ -176,8 +174,14 @@ namespace Alarm_Management
             //if (MyDatabase.GetMutexIDsCount() == 1) MyDatabase.Disconnect(mutex: mutexID);
             //else MyDatabase.Signal(mutexID);
         }
-        public void InactivateAlarm(int id1, int id2)
+        public static void InactivateAlarm(int id1, int id2)
         {
+            if (!isInitialized)
+            {
+                logger.Error(Settings.Default.Error01);
+                MessageBox.Show(Settings.Default.Error01);
+            }
+
             int n = -1;
             int mutexID;
 
@@ -236,9 +240,9 @@ namespace Alarm_Management
                     string[] values = new string[] { "Système", GetAlarmType(alarms[id1, id2].Type), GetAlarmDescription(id1, id2), statusBefore.ToString(), statusAfter.ToString() };
 
                     //MyDatabase.InsertRow("temp2", "description", new string[] { "InsertRow - InactivateAlarm" });
-                    MyDatabase.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values);
+                    MyDatabase.InsertRow(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values, mutex: mutexID);
 
-                    alarms[id1, id2].id = MyDatabase.GetMax(AuditTrailSettings["Table_Name"], "id");
+                    alarms[id1, id2].id = MyDatabase.GetMax(AuditTrailSettings["Table_Name"], "id", mutex: mutexID);
                     alarms[id1, id2].Status = statusAfter;
 
                     if (statusAfter == AlarmStatus.INACTIVE)
@@ -267,6 +271,12 @@ namespace Alarm_Management
         }
         public static void AcknowledgeAlarm(int id1, int id2)
         {
+            if (!isInitialized)
+            {
+                logger.Error(Settings.Default.Error01);
+                MessageBox.Show(Settings.Default.Error01);
+            }
+
             int n = -1;
             int mutexID;
 

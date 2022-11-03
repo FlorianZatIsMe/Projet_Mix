@@ -85,6 +85,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
         private bool[] status = new bool[8];
 
+        private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private AlarmManagement alarmManagement;
 
         /* public CycleSpeedMixer(Frame mainFrame_arg, string id, List<string[]> cycleInfo)
@@ -253,6 +254,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
         {
             while (!isSequenceOver) // tant que le cycle est en cours
             {
+                logger.Debug("SequenceController");
                 status = SpeedMixerModbus.GetStatus();
 
                 currentPressure = (decimal)SpeedMixerModbus.GetPressure() / 10;
@@ -398,7 +400,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 else if (isTempOK && areAlarmActive[0])
                 {
                     areAlarmActive[0] = false;
-                    alarmManagement.InactivateAlarm(3, 1); // Alarme température trop haute
+                    AlarmManagement.InactivateAlarm(3, 1); // Alarme température trop haute
                 }
             }
         }
@@ -512,7 +514,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 }
                 else if (areAlarmActive[1] && !status[2])
                 {
-                    alarmManagement.InactivateAlarm(1, 1);
+                    AlarmManagement.InactivateAlarm(1, 1);
                     areAlarmActive[1] = false;
                 }
 
@@ -548,12 +550,12 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
             if (areAlarmActive[0]) // Si l'alarme est toujours active alors on l'a désactive
             {
-                alarmManagement.InactivateAlarm(3, 1); // Alarme température trop haute
+                AlarmManagement.InactivateAlarm(3, 1); // Alarme température trop haute
                 areAlarmActive[0] = false;
             }
             if (areAlarmActive[1])
             {
-                alarmManagement.InactivateAlarm(1, 1);
+                AlarmManagement.InactivateAlarm(1, 1);
                 areAlarmActive[1] = false;
             }
 

@@ -79,6 +79,21 @@ namespace FPO_WPF_Test
             Environment.Exit(1);
             //*/
 
+            //MyDatabase.InsertRow_2("temp", new string[] { "speed", "pressure" }, new string[] { "1.2", "2.3" });
+
+            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+
+            auditTrailInfo.columns[0].value = "";
+            auditTrailInfo.columns[1].value = "";
+            auditTrailInfo.columns[2].value = "Moi";
+            auditTrailInfo.columns[3].value = "Test";
+            auditTrailInfo.columns[4].value = "Je teste le nouveau InsertRow";
+            //auditTrailInfo.columns[5].value = "0";
+            //auditTrailInfo.columns[6].value = "0";
+            auditTrailInfo.columns[7].value = "Non rien";
+
+            MyDatabase.InsertRow_LV(auditTrailInfo);
+            MessageBox.Show("done");
             InitializeComponent();
 
             UpdateUser(username: UserPrincipal.Current.DisplayName.ToLower(),
@@ -115,8 +130,8 @@ namespace FPO_WPF_Test
             //
             //
             //
+            //*
             RS232Weight.Initialize();
-            /*
             RS232Pump.Initialize();
             SpeedMixerModbus.Initialize();
             if (RS232Pump.IsOpen())

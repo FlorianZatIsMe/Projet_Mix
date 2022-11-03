@@ -27,13 +27,29 @@ namespace FPO_WPF_Test.Pages
     {
         //private MyDatabase db;
         private readonly Frame frameMain;
-        private Task updateAlarmTask;
+        //private Task updateAlarmTask;
         private bool stopUpdating = false;
         private readonly NameValueCollection MySettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
+        private readonly System.Timers.Timer updateAlarmTimer;
+        private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         public ActiveAlarms(Frame frameMain_arg)
         {
+            // if alarm active and not connected... (to add)
+            if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+
             frameMain = frameMain_arg;
             frameMain.ContentRendered += new EventHandler(FrameMain_ContentRendered);
+
+            // Initialisation des timers
+            updateAlarmTimer = new System.Timers.Timer
+            {
+                Interval = 1000,
+                AutoReset = false
+            };
+
+            updateAlarmTimer.Elapsed += UpdateAlarmTimer_OnTimedEvent;
+
             InitializeComponent(); 
         }
         private void LoadAlarms()
@@ -42,9 +58,6 @@ namespace FPO_WPF_Test.Pages
             DataRow row;
             string[] array;
             string[] columnNames = MySettings["Columns"].Split(',');
-
-            // if alarm active and not connected... (to add)
-            if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
             if (MyDatabase.IsConnected()) // while loop is better
             {
@@ -90,8 +103,6 @@ namespace FPO_WPF_Test.Pages
                     dataGridAlarms.ItemsSource = dt.DefaultView;
                 });
             }
-            // if no alarm and not deconected... (to add)
-            MyDatabase.Disconnect();
         }
         private void ButtonAckAll_Click(object sender, RoutedEventArgs e)
         {
@@ -111,26 +122,29 @@ namespace FPO_WPF_Test.Pages
         }
         private void dataGridAlarms_Loaded(object sender, RoutedEventArgs e)
         {
-            updateAlarmTask = Task.Factory.StartNew(() => UpdateAlarms());
+            //updateAlarmTask = Task.Factory.StartNew(() => UpdateAlarms());
+            updateAlarmTimer.Start();
         }
         private void FrameMain_ContentRendered(object sender, EventArgs e)
         {
             if (frameMain.Content != this)
             {
+                // if no alarm and not deconected... (to add)
+                MyDatabase.Disconnect();
+
                 frameMain.ContentRendered -= FrameMain_ContentRendered;
                 stopUpdating = true;
-                updateAlarmTask.Dispose();
+                updateAlarmTimer.Stop();
+                //updateAlarmTask.Dispose();
                 //Dispose(disposing: true); // Il va peut-être falloir sortir ça du "if"
             }
 
         }
-        private async void UpdateAlarms()
+        private void UpdateAlarmTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-            while(!stopUpdating)
-            {
-                LoadAlarms();
-                await Task.Delay(1000);
-            }
+            logger.Debug("UpdateAlarmTimer");
+            LoadAlarms();
+            updateAlarmTimer.Enabled = true;
         }
     }
 }

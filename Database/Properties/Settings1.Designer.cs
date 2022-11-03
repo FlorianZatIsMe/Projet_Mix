@@ -32,31 +32,27 @@ namespace Database.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("bonjour monsieur")]
+        public string streetViewSetting {
+            get {
+                return ((string)(this["streetViewSetting"]));
+            }
+            set {
+                this["streetViewSetting"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("audit_trail")]
         public string AuditTrail_TableName {
             get {
                 return ((string)(this["AuditTrail_TableName"]));
             }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<ArrayOfString xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-  <string>id</string>
-  <string>date_time</string>
-  <string>username</string>
-  <string>event_type</string>
-  <string>description</string>
-  <string>value_before</string>
-  <string>value_after</string>
-  <string>comment</string>
-</ArrayOfString>")]
-        public global::System.Collections.Specialized.StringCollection AuditTrail_ColNames {
-            get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["AuditTrail_ColNames"]));
+            set {
+                this["AuditTrail_TableName"] = value;
             }
         }
     }

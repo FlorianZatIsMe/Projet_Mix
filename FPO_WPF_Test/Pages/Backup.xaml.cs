@@ -114,7 +114,7 @@ namespace FPO_WPF_Test.Pages
             {
                 //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
                 // Si l'alarme est active, on la désactive
-                if (AlarmManagement.alarms[4, 0].Status == AlarmStatus.ACTIVE || AlarmManagement.alarms[4, 0].Status == AlarmStatus.ACK) alarmManagement.InactivateAlarm(4, 0);
+                if (AlarmManagement.alarms[4, 0].Status == AlarmStatus.ACTIVE || AlarmManagement.alarms[4, 0].Status == AlarmStatus.ACK) AlarmManagement.InactivateAlarm(4, 0);
                 MyDatabase.InsertRow("audit_trail", "event_type, username, description", new string[] { "Evènement", username, General.auditTrail_BackupDesc });
                 //MyDatabase.Disconnect();
 

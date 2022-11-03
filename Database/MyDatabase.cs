@@ -13,9 +13,85 @@ using System.Threading;
 using System.IO;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using Database.Properties;
 
 namespace Database
 {
+
+
+
+    [SettingsSerializeAs(SettingsSerializeAs.Xml)]
+    public class AuditTrail_Columns
+    {
+        public Column id { get; set; }
+        public Column dateTime { get; set; }
+        public Column username { get; set; }
+        public Column eventType { get; set; }
+        public Column description { get; set; }
+        public Column valueBefore { get; set; }
+        public Column valueAfter { get; set; }
+        public Column comment { get; set; }
+    }
+
+    public interface IColumn
+    {
+        string name { get; }
+        string displayName { get; }
+        string value { get; set; }
+    }
+
+    public class Column
+    {
+        public string id { get; }
+        public string displayName { get; }
+        public string value { get; set; }
+        public Column(string name_arg = "", string displayName_arg = "")
+        {
+            id = name_arg;
+            displayName = displayName_arg;
+        }
+    }
+
+    public interface ITableInfo
+    {
+        string name { get; }
+        Column[] columns { get; set; }
+    }
+
+    public class AuditTrailInfo : ITableInfo
+    {
+        public AuditTrailInfo()
+        {
+            List<Column> colList = new List<Column>();
+            StringCollection colNames = Settings.Default.AuditTrail_ColNames;
+
+            name = Settings.Default.AuditTrail_TableName;
+
+            for (int i = 0; i < colNames.Count; i++) colList.Add(new Column(colNames[i]));
+            columns = colList.ToArray();
+        }
+        public string name { get; }
+        public Column[] columns { get; set; }
+    }
+
+    public class AuditTrail_InsertColumns
+    {
+        public string name;
+        public Column[] columnNames;
+        public string[] columnValues { get; set; }
+
+        public AuditTrail_InsertColumns()
+        {
+            StringCollection colNames = Settings.Default.AuditTrail_ColNames;
+            List<Column> colList = new List<Column>();
+
+            columnValues = new string[colNames.Count];
+
+            for (int i = 0; i < colNames.Count; i++) colList.Add(new Column(colNames[i]));
+            columnNames = colList.ToArray();
+        }
+    }
+
     public static class MyDatabase
     {
         private static readonly Configuration_old.Connection_Info MySettings = System.Configuration.ConfigurationManager.GetSection("Database/Connection_Info") as Configuration_old.Connection_Info;
@@ -26,8 +102,9 @@ namespace Database
         public static List<string> AlarmListStatus = new List<string>();
         private readonly static List<int> mutexIDs = new List<int>();
         private static int lastMutexID = 0;
-        private static bool StopScan = true;
+        private static bool StopScan = false;
         private static bool isScanTaskRunning = true;
+        private static bool isConnecting = false;
         private static readonly System.Timers.Timer scanConnectTimer;
         public static IConfig config;
         private static ManualResetEvent signal = new ManualResetEvent(true);
@@ -66,23 +143,13 @@ namespace Database
         }
         private static void ScanConnectTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-            if (StopScan)
+            //logger.Debug("ScanConnect");
+            if (!IsConnected())
             {
-                isScanTaskRunning = false;
+                Connect();
+                logger.Info("ScanConnect - Reconnexion" + IsConnected().ToString());
             }
-            else
-            {
-                logger.Debug("ScanConnect");
-
-                if (!IsConnected())
-                {
-                    Connect();
-                    logger.Info("ScanConnect - Reconnexion" + IsConnected().ToString());
-                }
-
-                scanConnectTimer.Enabled = true;
-            }
-
+            scanConnectTimer.Enabled = true;
         }
         public static async void ConnectAsync()
         {
@@ -124,21 +191,6 @@ namespace Database
             logger.Debug("Wait " + GetMutexIDs());
 
             return mutexID;
-
-            /*
-            int mutexID;
-
-            if (mutex == -1)
-            {
-                mutexID = GetNextMutex();
-                mutexIDs.Add(mutexID);
-            }
-            else
-            {
-                mutexID = mutex;
-            }
-            while (mutexIDs[0] != mutexID) Task.Delay(25);
-            */
         }
         public static int Connect(bool isMutexReleased = true)
         {
@@ -151,6 +203,7 @@ namespace Database
             else
             {
                 logger.Debug("Connect " + isMutexReleased.ToString() + GetMutexIDs());
+                isConnecting = true;
 
                 MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder
                 {
@@ -165,16 +218,17 @@ namespace Database
 
                 connection = new MySqlConnection(builder.ConnectionString);
 
-                try { connection.Open(); }
+                try { if(!StopScan) connection.Open(); }
                 catch (Exception ex)
                 {
                     logger.Error(ex.Message);
                 }
 
-                StopScan = false;
-                isScanTaskRunning = true;
-                scanConnectTimer.Start();
+                //isScanTaskRunning = true;
+                if(!StopScan) scanConnectTimer.Start();
                 //scanTask = Task.Factory.StartNew(() => ScanConnect());
+
+                isConnecting = false;
             }
 
             if (isMutexReleased) Signal(mutexID);
@@ -192,15 +246,21 @@ namespace Database
             {
                 logger.Debug("Disconnect " + GetMutexIDs());
 
-                while (isScanTaskRunning)
-                {
-                    StopScan = true;
-                    await Task.Delay(100);
-                    logger.Debug("Disconnect on going");
-                }
-
                 scanConnectTimer.Stop();
-                connection.Close();
+                StopScan = true;
+
+                while (isConnecting)
+                {
+                    logger.Debug("Disconnect on going");
+                    await Task.Delay(100);
+                }
+                StopScan = false;
+
+                try { connection.Close(); }
+                catch (Exception ex)
+                {
+                    logger.Error(ex.Message);
+                }
             }
 
             Signal(mutexID);
@@ -261,20 +321,6 @@ namespace Database
         }
         public static int SendCommand_Read(string tableName, string selectColumns = "*", string[] whereColumns = null, string[] whereValues = null, string orderBy = null, bool isOrderAsc = true, string groupBy = null, bool isMutexReleased = true, int mutex = -1)
         {
-            /*
-            int mutexID;
-
-            if (mutex == -1)
-            {
-                mutexID = GetNextMutex();
-                mutexIDs.Add(mutexID);
-            }
-            else
-            {
-                mutexID = mutex;
-            }
-            while (mutexIDs[0] != mutexID) Task.Delay(25);
-            */
             int mutexID = Wait(mutex);
 
             string whereColumns_s = "";
@@ -353,20 +399,6 @@ namespace Database
         }
         public static int SendCommand(string commandText, bool isMutexReleased = true, int mutex = -1)
         {
-            /*
-            int mutexID;
-
-            if (mutex == -1)
-            {
-                mutexID = GetNextMutex();
-                mutexIDs.Add(mutexID);
-            }
-            else
-            {
-                mutexID = mutex;
-            }
-            while (mutexIDs[0] != mutexID) Task.Delay(25);
-            */
             int mutexID = Wait(mutex);
 
             logger.Debug("SendCommand_Read " + commandText + GetMutexIDs());
@@ -446,8 +478,6 @@ namespace Database
         public static int SendCommand_ReadAuditTrail(DateTime dtBefore, DateTime dtAfter, string[] eventTypes =  null, string orderBy = null, bool isOrderAsc = true, bool isMutexReleased = true)
         {
             int mutexID = Wait();
-            //int mutexID = GetNextMutex();
-            //mutexIDs.Add(mutexID);
 
             while (mutexIDs[0] != mutexID) Task.Delay(25);
 
@@ -847,8 +877,6 @@ namespace Database
         }
         public static ReadOnlyCollection<DbColumn> GetColumnCollection()
         {
-            //if (IsReaderNotAvailable()) return null;
-
             return currentReader.GetColumnSchema();
         }
         public static bool InsertRow(string tableName, string columnFields, string[] values, int mutex = -1)
@@ -910,6 +938,155 @@ namespace Database
 
             if (mutex == -1) Signal(mutexID);
             return result;
+        }
+        public static bool InsertRow_LV(ITableInfo tableInfo, int mutex = -1)
+        {
+            int mutexID = Wait(mutex);
+            logger.Debug("InsertRow_LV" + GetMutexIDs());
+
+            bool result = false;
+            List<string> colIdList = new List<string>();
+            List<string> colValList = new List<string>();
+
+            if (!IsConnected()) {
+                logger.Error("Connection à la base de données échouée");
+                MessageBox.Show("Connection à la base de données échouée");
+                if (mutex == -1) Signal(mutexID);
+                return result;
+            }
+
+            if (tableInfo == null) {
+                logger.Error("tableInfo est null");
+                MessageBox.Show("");
+                if (mutex == -1) Signal(mutexID);
+                return result;
+            }
+            else if (tableInfo.columns == null || tableInfo.columns.Count() == 0) {
+                logger.Error("tableInfo.columns est vide");
+                MessageBox.Show("");
+                if (mutex == -1) Signal(mutexID);
+                return result;
+            }
+
+            for (int i = 0; i < tableInfo.columns.Count(); i++)
+            {
+                if (tableInfo.columns[i].value != "" && tableInfo.columns[i].value != null)
+                {
+                    // Peut-être ici ajouter dans une liste de int qui reprend les i
+
+                    colIdList.Add(tableInfo.columns[i].id);
+                    colValList.Add(tableInfo.columns[i].value);
+                    logger.Error(i.ToString() + ": " + tableInfo.columns[i].value + " - " + tableInfo.columns[i].id);
+                }
+            }
+
+            int columnNumber = colIdList.Count();
+            if (columnNumber == 0) {
+                logger.Error("Aucune valeur n'a été renseignée");
+                MessageBox.Show("");
+                if (mutex == -1) Signal(mutexID);
+                return result;
+            }
+
+            MySqlDataReader reader;
+            string valueFields = "";
+            string columnFields = "";
+
+            logger.Error("valuesNumber: " + columnNumber.ToString());
+
+            for (int i = 0; i < columnNumber - 1; i++)
+            {
+                columnFields = columnFields + colIdList[i] + ", ";
+                valueFields = valueFields + "@" + i.ToString() + ", ";
+                logger.Error(i.ToString() + ": " + columnFields + " - " + valueFields);
+            }
+            logger.Error((columnNumber - 1).ToString() + ": " + columnFields + " - " + valueFields);
+            columnFields = columnFields + colIdList[columnNumber - 1];
+            valueFields = valueFields + "@" + (columnNumber - 1).ToString();
+
+            MySqlCommand command = connection.CreateCommand();
+            command.CommandText = @"INSERT INTO " + tableInfo.name + " (" + columnFields + ") VALUES (" + valueFields + ");";
+            logger.Error("Insert command: " + command.CommandText);
+            SetCommand(command, colIdList.ToArray(), colValList.ToArray());
+
+            try
+            {
+                reader = command.ExecuteReader();
+                reader.Close();
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - InsertRow - " + tableInfo.name + " - " + ex.Message + " - " + DateTime.Now.ToString());
+            }
+
+            if (mutex == -1) Signal(mutexID);
+            return result;
+        }
+
+        public static void InsertRow_2(ITableInfo tableInfo, int mutex = -1)
+        {
+            int mutexID = Wait();
+
+            List<string> colNameList = new List<string>();
+            List<string> colValList = new List<string>();
+
+            if(tableInfo == null) {
+                logger.Error("tableInfo est null");
+                return;
+            }
+
+            if (tableInfo.columns == null || tableInfo.columns.Count() == 0) {
+                logger.Error("tableInfo.columnNames est vide");
+                return;
+            }
+
+            for (int i = 0; i < tableInfo.columns.Count(); i++)
+            {
+                if (tableInfo.columns[i].value != "" && tableInfo.columns[i].value != null)
+                {
+                    colValList.Add(tableInfo.columns[i].value);
+                    colNameList.Add(tableInfo.columns[i].id);
+                    logger.Error(i.ToString() + ": " + tableInfo.columns[i].value + " - " + tableInfo.columns[i].id);
+                }
+            }
+
+            //InsertRow_LV("audit_trail", colNameList.ToArray(), colValList.ToArray(), mutexID);
+
+            if (mutex == -1) Signal(mutexID);
+        }
+
+        public static void InsertRow_test(int mutex = -1)
+        {
+            //int mutexID = Wait();
+
+            AuditTrail_InsertColumns insertCol = new AuditTrail_InsertColumns();
+            insertCol.columnValues[0] = "";
+            insertCol.columnValues[1] = "";
+            insertCol.columnValues[2] = "Moi";
+            insertCol.columnValues[3] = "Test";
+            insertCol.columnValues[4] = "Je teste le nouveau InsertRow";
+            //insertCol.columnValues[5] = "0";
+            //insertCol.columnValues[6] = "0";
+            insertCol.columnValues[7] = "Non rien";
+
+            List<string> colNameList = new List<string>();
+            List<string> colValList = new List<string>();
+
+            for (int i = 0; i < insertCol.columnNames.Count(); i++)
+            {
+                if (insertCol.columnValues[i] != "" && insertCol.columnValues[i] != null)
+                {
+                    colValList.Add(insertCol.columnValues[i]);
+                    colNameList.Add(insertCol.columnNames[i].id);
+                    logger.Error(i.ToString() + ": " + insertCol.columnValues[i] + " - " + insertCol.columnNames[i].id);
+                }
+            }
+
+            //InsertRow_LV("audit_trail", colNameList.ToArray(), colValList.ToArray());
+
+            //if (mutex == -1) Signal(mutexID);
         }
         public static bool Update_Row(string tableName, string[] setColumns, string[] setValues, string id)
         {
@@ -1165,12 +1342,21 @@ namespace Database
 
             return arg;
         }
+        private static void SetCommand(MySqlCommand command, string[] values, int[] indexes)
+        {
+            for (int i = 0; i < indexes.Count(); i++)
+            {
+                logger.Error("Value " + i.ToString() + ": " + values[indexes[i]].ToString());
+                command.Parameters.AddWithValue("@" + i.ToString(), values[indexes[i]]);
+            }
+        }
         private static bool SetCommand(MySqlCommand command, string[] columns, string[] values)
         {
             if (columns.Count() == values.Count())
             {
                 for (int i = 0; i < columns.Count(); i++)
                 {
+                    logger.Error("Value " + i.ToString() + ": " + values[i].ToString());
                     command.Parameters.AddWithValue("@" + i.ToString(), values[i]);
                 }
                 return true;
@@ -1210,6 +1396,12 @@ namespace Database
         public static int GetMutexIDsCount()
         {
             return mutexIDs.Count;
+        }
+
+        // Interface à implémenter
+        public static string GetAuditTrail_TableName()
+        {
+            return Settings.Default.AuditTrail_TableName;
         }
     }
 }

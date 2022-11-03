@@ -65,7 +65,7 @@ namespace Driver.RS232.Pump
             }
             else if (IsOpen() && areAlarmActive[0])
             {
-                alarmManagement.InactivateAlarm(2, 0);
+                AlarmManagement.InactivateAlarm(2, 0);
                 areAlarmActive[0] = false;
             }
 
@@ -88,7 +88,7 @@ namespace Driver.RS232.Pump
                 }
                 else if (IsOpen() && areAlarmActive[0])
                 {
-                    alarmManagement.InactivateAlarm(2, 0);
+                    AlarmManagement.InactivateAlarm(2, 0);
                     areAlarmActive[0] = false;
                 }
                 
