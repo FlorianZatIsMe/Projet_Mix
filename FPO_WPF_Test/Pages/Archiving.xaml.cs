@@ -25,12 +25,14 @@ namespace FPO_WPF_Test.Pages
     /// </summary>
     public partial class Archiving : Page
     {
-        private static readonly string dbName = "db1";
-        private static readonly string archivingPath = @"C:\Temp\Archives\";
-        private static readonly string archiveExtFile = ".sql";
-        private static readonly int maxArchiveCount = 22;
-        private static string lastArchiveFileName;
-        private static int nLines;
+        private readonly string dbName = "db1";
+        private readonly string archivingPath = @"C:\Temp\Archives\";
+        private readonly string archiveExtFile = ".sql";
+        private readonly int maxArchiveCount = 22;
+        private string lastArchiveFileName;
+        private int nLines;
+
+        private AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
 
         public Archiving()
         {
@@ -84,7 +86,7 @@ namespace FPO_WPF_Test.Pages
                 MessageBox.Show("Veuillez sélectionner une date");
             }
         }
-        public static bool ExecuteArchive(string username, DateTime lastRecordDate)
+        public bool ExecuteArchive(string username, DateTime lastRecordDate)
         {
             bool isArchiveSucceeded = false;
             string lastRecordDate_s = lastRecordDate.ToString("yyyy-MM-dd HH:mm:ss");
@@ -123,7 +125,11 @@ namespace FPO_WPF_Test.Pages
             {
                 if (!MyDatabase.IsConnected()) MyDatabase.Connect();
                 MyDatabase.DeleteRows("audit_trail", lastRecordDate);
-                MyDatabase.InsertRow_old("audit_trail", "event_type, username, description", new string[] { "Evènement", username, General.auditTrail_ArchiveDesc });
+                auditTrailInfo.columns[auditTrailInfo.username].value = username;
+                auditTrailInfo.columns[auditTrailInfo.eventType].value = "Evènement";
+                auditTrailInfo.columns[auditTrailInfo.description].value = General.auditTrail_ArchiveDesc;
+                MyDatabase.InsertRow(auditTrailInfo);
+                //MyDatabase.InsertRow_done_old("audit_trail", "event_type, username, description", new string[] { "Evènement", username, General.auditTrail_ArchiveDesc });
                 MyDatabase.Disconnect();
 
                 General.count = maxArchiveCount;
@@ -164,7 +170,7 @@ namespace FPO_WPF_Test.Pages
                 MessageBox.Show("Veuillez sélectionner un fichier à restorer");
             }
         }
-        public static void ExecuteRestore(string username, string restoreFileName)
+        public void ExecuteRestore(string username, string restoreFileName)
         {
             if (File.Exists(archivingPath + restoreFileName))
             {
@@ -198,7 +204,11 @@ namespace FPO_WPF_Test.Pages
                 if (process.ExitCode == 0)
                 {
                     if (!MyDatabase.IsConnected()) MyDatabase.Connect();
-                    MyDatabase.InsertRow_old("audit_trail", "event_type, username, description", new string[] { "Evènement", username, General.auditTrail_RestArchDesc });
+                    auditTrailInfo.columns[auditTrailInfo.username].value = username;
+                    auditTrailInfo.columns[auditTrailInfo.eventType].value = "Evènement";
+                    auditTrailInfo.columns[auditTrailInfo.description].value = General.auditTrail_RestArchDesc;
+                    MyDatabase.InsertRow(auditTrailInfo);
+                    //MyDatabase.InsertRow_done_old("audit_trail", "event_type, username, description", new string[] { "Evènement", username, General.auditTrail_RestArchDesc });
                     MyDatabase.Disconnect();
 
                     General.count = nLines;

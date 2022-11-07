@@ -14,14 +14,17 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Globalization;
 using static FPO_WPF_Test.Pages.Recipe;
+using Database;
 
 namespace FPO_WPF_Test.Pages.SubRecipe
 {
     /// <summary>
     /// Logique d'interaction pour SpeedMixer.xaml
     /// </summary>
-    public partial class SpeedMixer : Page
+    public partial class SpeedMixer : Page, IRecipeSeq
     {
+        //public int seqType { get; }
+
         private const int ElementNumber = 46; // Nombre de colonne dans la base de données de recette
         private const int PhasesNumber = 10; // Nombre maximum de phase pendant une séquence speedmixer
         private const int ControlNumber = 38;
@@ -75,6 +78,8 @@ namespace FPO_WPF_Test.Pages.SubRecipe
 
         public SpeedMixer()
         {
+            //seqType = 1;
+
             InitializeComponent();
 
             wrapPanels[0] = Phase00;
@@ -277,7 +282,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 MessageBox.Show(ex.Message);
             }
         }
-        public void SetPage(string[] array)
+        public void SetPage_2(string[] array)
         {
             int i;
 
@@ -325,7 +330,11 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             TbPressureMin_LostFocus(tbPressureMin, new RoutedEventArgs());
             TbPressureMax_LostFocus(tbPressureMax, new RoutedEventArgs());
         }
-        public string[] GetPage()
+        public void SetPage(ISeqInfo seqInfo)
+        {
+
+        }
+        public string[] GetPage_2()
         {
             int i;
             int n = 1;
@@ -356,6 +365,38 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             array[45 - n] = int.Parse(tbPressureMax.Text, NumberStyles.AllowThousands).ToString();
 
             return array;
+        }
+        public ISeqInfo GetPage()
+        {
+            RecipeSpeedMixerInfo recipeSpeedMixerInfo = new RecipeSpeedMixerInfo();
+
+            recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.seqName].value = tbProgramName.Text;
+            recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.acceleration].value = tbAcceleration.Text;
+            recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.deceleration].value = tbDeceleration.Text;
+            recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.vaccum_control].value = (bool)cbVacuum.IsChecked ? "1" : "0";
+            recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.isVentgasAir].value = (bool)rbAir.IsChecked ? "1" : "0";
+            recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.monitorType].value = (bool)cbMonitorType.IsChecked ? "1" : "0";
+            recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.pressureUnit].value = cbxPressureUnit.Text;
+            recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.scurve].value = tbSCurve.Text;
+            recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.coldtrap].value = (bool)cbColdTrap.IsChecked ? "1" : "0";
+
+            int i = 0;
+            do
+            {
+                // peut-être ajouter un try ici (et partout ailleurs, dès qu'on fait un Parse quoi)
+                recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.speed00 + 3 * i].value = int.Parse(speeds[i].Text, NumberStyles.AllowThousands).ToString();
+                recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.time00 + 3 * i].value = int.Parse(times[i].Text, NumberStyles.AllowThousands).ToString();
+                recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.pressure00 + 3 * i].value = int.Parse(pressures[i].Text, NumberStyles.AllowThousands).ToString();
+                i++;
+            } while (i != 10 && (bool)checkBoxes[i].IsChecked);
+
+            recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.speedMin].value = int.Parse(tbSpeedMin.Text, NumberStyles.AllowThousands).ToString();
+            recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.speedMax].value = int.Parse(tbSpeedMax.Text, NumberStyles.AllowThousands).ToString();
+            recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.pressureMin].value = int.Parse(tbPressureMin.Text, NumberStyles.AllowThousands).ToString();
+            //recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.pressureMax].value = int.Parse(tbPressureMax.Text, NumberStyles.AllowThousands).ToString();
+            recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.pressureMax].value = tbPressureMax.Text;
+
+            return recipeSpeedMixerInfo;
         }
         private void TbProgramName_LostFocus(object sender, RoutedEventArgs e)
         {

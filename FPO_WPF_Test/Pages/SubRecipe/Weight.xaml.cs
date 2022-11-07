@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Database;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,8 +20,10 @@ namespace FPO_WPF_Test.Pages.SubRecipe
     /// <summary>
     /// Logique d'interaction pour Weight.xaml
     /// </summary>
-    public partial class Weight : Page
+    public partial class Weight : Page, IRecipeSeq
     {
+        //public int seqType { get; }
+
         private const int ControlNumber = 6;
         private const int IdProduct = 0;
         private const int IdBarcode = 1;
@@ -35,6 +38,8 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         //private General g = new General();
         public Weight()
         {
+            //seqType = 0;
+
             InitializeComponent();
         }
         public Weight(Frame frame, string seqNumber)
@@ -66,7 +71,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         {
             rbSpeedMixer.IsChecked = true;
         }
-        public void SetPage(string[] array)
+        public void SetPage_old(string[] array)
         {
             tbProduct.Text = array[3];
             cbIsBarcode.IsChecked = array[4] == "True";
@@ -86,7 +91,11 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             TbMin_LostFocus(tbMin, new RoutedEventArgs());
             TbMax_LostFocus(tbMax, new RoutedEventArgs());
         }
-        public string[] GetPage()
+        public void SetPage(ISeqInfo seqInfo)
+        {
+
+        }
+        public string[] GetPage_old()
         {
             int n = 1;
             string[] array = new string[11 - n];
@@ -101,6 +110,23 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             array[10 - n] = tbMax.Text;
 
             return array;
+        }
+        public ISeqInfo GetPage()
+        {
+            RecipeWeightInfo recipeWeightInfo = new RecipeWeightInfo();
+
+            // ICI, il faut faire du Parse et des try
+
+            recipeWeightInfo.columns[recipeWeightInfo.seqName].value = tbProduct.Text;
+            recipeWeightInfo.columns[recipeWeightInfo.isBarcodeUsed].value = (bool)cbIsBarcode.IsChecked ? "1" : "0";
+            recipeWeightInfo.columns[recipeWeightInfo.barcode].value = tbBarcode.Text;
+            recipeWeightInfo.columns[recipeWeightInfo.unit].value = cbxUnit.Text;
+            recipeWeightInfo.columns[recipeWeightInfo.decimalNumber].value = tbDecimalNumber.Text;
+            recipeWeightInfo.columns[recipeWeightInfo.setpoint].value = tbSetpoint.Text;
+            recipeWeightInfo.columns[recipeWeightInfo.min].value = tbMin.Text;
+            recipeWeightInfo.columns[recipeWeightInfo.max].value = tbMax.Text;
+
+            return recipeWeightInfo;
         }
         private void CbIsBarcode_Checked(object sender, RoutedEventArgs e)
         {

@@ -53,55 +53,28 @@ namespace FPO_WPF_Test
         private readonly AlarmManagement alarmManagement;
         private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+        private AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+        /*
+            auditTrailInfo.columns[auditTrailInfo.username].value = General.loggedUsername;
+            auditTrailInfo.columns[auditTrailInfo.eventType].value = "Evènement";
+            auditTrailInfo.columns[auditTrailInfo.description].value = "Démarrage de l'application";
+            MyDatabase.InsertRow(auditTrailInfo);
+         */
+
         public MainWindow()
         {
 #if DEBUG
-            LogManager.Configuration.Variables["myLevel"] = "Debug";
+            LogManager.Configuration.Variables["myLevel"] = "Trace";
             LogManager.Configuration.Variables["isRelease"] = "true";
 #else
             LogManager.Configuration.Variables["myLevel"] = "Error";
 #endif
-
             LogManager.ReconfigExistingLoggers(); // Explicit refresh of Layouts and updates active Logger-objects
+
             /*
-            logger.Trace("Trace");
-            logger.Debug("Debug");
-            logger.Info("Info");
-            logger.Warn("Warning");
-            logger.Error("Error");
-            logger.Fatal("Fatal");
-            //*/
-            /*
-            ReportGeneration report = new ReportGeneration();
-            report.PdfGenerator("194");
-            MessageBox.Show("Fini");
 
             Environment.Exit(1);
             //*/
-
-            //MyDatabase.InsertRow_2("temp", new string[] { "speed", "pressure" }, new string[] { "1.2", "2.3" });
-
-            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-            auditTrailInfo.columns[0].value = "";
-            auditTrailInfo.columns[1].value = "";
-            auditTrailInfo.columns[2].value = "Moi";
-            auditTrailInfo.columns[3].value = "Test";
-            auditTrailInfo.columns[4].value = "Je teste le nouveau InsertRow";
-            //auditTrailInfo.columns[5].value = "0";
-            //auditTrailInfo.columns[6].value = "0";
-            auditTrailInfo.columns[7].value = "Non rien";
-
-            //MyDatabase.InsertRow(auditTrailInfo);
-
-            RecipeInfo recipeInfo = new RecipeInfo();
-            recipeInfo.columns[0].value = "";
-            recipeInfo.columns[1].value = "0";
-            recipeInfo.columns[2].value = "10";
-            recipeInfo.columns[3].value = "Test";
-            recipeInfo.columns[4].value = "1";
-            recipeInfo.columns[5].value = "0";
-
-            //MyDatabase.InsertRow(recipeInfo);
 
             InitializeComponent();
 
@@ -109,12 +82,15 @@ namespace FPO_WPF_Test
                 role: UserManagement.UpdateAccessTable(UserPrincipal.Current.DisplayName));
             labelSoftwareName.Text = General.application_name + " version " + General.application_version;
 
-            string[] values = new string[] { General.loggedUsername, "Evènement", "Démarrage de l'application" };
-            MyDatabase.InsertRow_old(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"], values);
+            auditTrailInfo.columns[auditTrailInfo.username].value = General.loggedUsername;
+            auditTrailInfo.columns[auditTrailInfo.eventType].value = "Evènement";
+            auditTrailInfo.columns[auditTrailInfo.description].value = "Démarrage de l'application";
+            MyDatabase.InsertRow(auditTrailInfo);
+            //string[] values = new string[] { General.loggedUsername, "Evènement", "Démarrage de l'application" };
+            //MyDatabase.InsertRow_done_old(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"], values);
 
             frameMain.Content = new Pages.Status();
             frameInfoCycle.Content = null;
-
 
             // Initialisation des timers
             currentTimeTimer = new System.Timers.Timer
@@ -130,7 +106,7 @@ namespace FPO_WPF_Test
         {
             while (!isWindowLoaded) await Task.Delay(25);
 
-            AlarmManagement.Initialize(new IniInfo() { AuditTrail_SystemUsername = Settings.Default.AuditTrail_SystemUsername });
+            AlarmManagement.Initialize(new IniInfo() { AuditTrail_SystemUsername = Settings.Default.SystemUsername });
 
             // 
             //
@@ -142,7 +118,7 @@ namespace FPO_WPF_Test
             //*
             RS232Weight.Initialize();
             RS232Pump.Initialize();
-            SpeedMixerModbus.Initialize();
+            //SpeedMixerModbus.Initialize();
             if (RS232Pump.IsOpen())
             {
                 RS232Pump.BlockUse();
@@ -156,7 +132,6 @@ namespace FPO_WPF_Test
             MyDatabase.Signal(mutexID);
 
             DateTime dtLastBackup = Convert.ToDateTime(array[0]);
-            //MessageBox.Show(dtLastBackup.ToString() + " - " + General.NextBackupTime.AddDays(-1).ToString());
             if (dtLastBackup.CompareTo(General.NextBackupTime.AddDays(-1)) < 0)
             {
                 ExecuteBackupAuto();
@@ -172,22 +147,31 @@ namespace FPO_WPF_Test
             int nBackupAttempt = 0;
             int mutexID;
 
+            mutexID = MyDatabase.Connect(false);
+
             while (!wasBackupSucceeded && nBackupAttempt < 3)
             {
-                if (!MyDatabase.IsConnected()) mutexID = MyDatabase.Connect();
+                //if (!MyDatabase.IsConnected()) mutexID = MyDatabase.Connect(false);
+                //mutexID = MyDatabase.Connect(false);
 
                 //Task<bool> task = Task<bool>.Factory.StartNew(() => Pages.Backup.ExecuteBackup("système"));
                 //wasBackupSucceeded = task.Result;
 
-                wasBackupSucceeded = Pages.Backup.ExecuteBackup("système");
+                wasBackupSucceeded = Pages.Backup.ExecuteBackup("système", mutexID);
 
                 nBackupAttempt++;
                 if (!wasBackupSucceeded)
                 {
-                    MyDatabase.InsertRow_old("audit_trail", "event_type, username, description", new string[] { "Evènement", "système", "Backup complet de la base de donnée échoué, essai " + nBackupAttempt.ToString() });
+                    auditTrailInfo.columns[auditTrailInfo.username].value = Settings.Default.SystemUsername;
+                    auditTrailInfo.columns[auditTrailInfo.eventType].value = "Evènement";
+                    auditTrailInfo.columns[auditTrailInfo.description].value = "Backup complet de la base de donnée échoué, essai " + nBackupAttempt.ToString();
+                    MyDatabase.InsertRow(auditTrailInfo, mutexID);
+
+                    //MyDatabase.InsertRow_done_old("audit_trail", "event_type, username, description", new string[] { "Evènement", "système", "Backup complet de la base de donnée échoué, essai " + nBackupAttempt.ToString() });
                 }
-                MyDatabase.Disconnect();
             }
+
+            MyDatabase.Disconnect(mutexID);
 
             if (!wasBackupSucceeded) AlarmManagement.NewAlarm(4, 0);
 

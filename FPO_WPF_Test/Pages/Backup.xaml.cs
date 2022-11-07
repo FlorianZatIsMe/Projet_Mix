@@ -1,5 +1,6 @@
 ﻿using Alarm_Management;
 using Database;
+using FPO_WPF_Test.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,6 +33,9 @@ namespace FPO_WPF_Test.Pages
         private static string lastBackupFileName;
         private static int nLines;
         private static readonly AlarmManagement alarmManagement;
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
+        private static AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
 
         public Backup()
         {
@@ -70,10 +74,18 @@ namespace FPO_WPF_Test.Pages
             }
             MyDatabase.Disconnect();
 
-            if (task.Result) lbBackups.Items.Insert(0, new ListBoxItem() { Content = lastBackupFileName });
+            if (task.Result)
+            {
+                MessageBox.Show("Backup réussi");
+                lbBackups.Items.Insert(0, new ListBoxItem() { Content = lastBackupFileName });
+            }
+            else
+            {
+                MessageBox.Show("Backup échoué");
+            }
             lastBackupFileName = "";
         }
-        public static bool ExecuteBackup(string username)
+        public static bool ExecuteBackup(string username, int mutex = -1)
         {
             bool isBackupSucceeded = false;
 
@@ -115,37 +127,56 @@ namespace FPO_WPF_Test.Pages
                 //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
                 // Si l'alarme est active, on la désactive
                 if (AlarmManagement.alarms[4, 0].Status == AlarmStatus.ACTIVE || AlarmManagement.alarms[4, 0].Status == AlarmStatus.ACK) AlarmManagement.InactivateAlarm(4, 0);
-                MyDatabase.InsertRow_old("audit_trail", "event_type, username, description", new string[] { "Evènement", username, General.auditTrail_BackupDesc });
+
+                // c'est peut-être nul ça (je veux dire la gestion du mutex), il faut ajouter un wait non ?
+                logger.Warn("c'est peut-être nul ça (je veux dire la gestion du mutex), il faut ajouter un wait non ?");
+
+                auditTrailInfo.columns[auditTrailInfo.username].value = Settings.Default.SystemUsername;
+                auditTrailInfo.columns[auditTrailInfo.eventType].value = "Evènement";
+                auditTrailInfo.columns[auditTrailInfo.description].value = General.auditTrail_BackupDesc;
+                MyDatabase.InsertRow(auditTrailInfo, mutex);
+                //MyDatabase.InsertRow_done_old("audit_trail", "event_type, username, description", new string[] { "Evènement", username, General.auditTrail_BackupDesc }, mutex: mutex);
+
                 //MyDatabase.Disconnect();
 
                 General.count = 40;
-                MessageBox.Show("Backup réussi");
+                logger.Info("Backup réussi");
+                //MessageBox.Show("Backup réussi");
                 isBackupSucceeded = true;
 
                 DirectoryInfo backupDirInfo = new DirectoryInfo(backupPath);
+                logger.Trace(backupDirInfo.FullName);
                 //FileInfo[] files = backupDirInfo.GetFiles("*" + backupExtFile);
-                FileSystemInfo[] files = backupDirInfo.GetFileSystemInfos();
+                FileSystemInfo[] files = backupDirInfo.GetFileSystemInfos("*", SearchOption.TopDirectoryOnly);
+                logger.Trace(files.Length);
                 List<FileSystemInfo> orderedFiles = files.OrderBy(f => f.CreationTime).ToList();
                 // files.Where(f => f.Extension.Equals(".sql"))
                 DateTime dtNow = DateTime.Now.AddDays(-nDaysBefDelBackup);
                 int i;
                 for (i = 0; i < orderedFiles.Count; i++)
                 {
-                    if (orderedFiles[i].CreationTime.CompareTo(dtNow) < 0)
+                    logger.Trace(i.ToString() + " - " + orderedFiles[i].Name + " " + orderedFiles[i].Extension);
+
+                    if (orderedFiles[i].Extension != "")
                     {
-                        orderedFiles[i].Delete();
-                        MessageBox.Show(orderedFiles[i].CreationTime.ToString() + " deleted");
-                    }
-                    else
-                    {
-                        break;
+                        if (orderedFiles[i].CreationTime.CompareTo(dtNow) < 0)
+                        {
+                            orderedFiles[i].Delete();
+                            logger.Info(orderedFiles[i].CreationTime.ToString() + " deleted");
+                            //MessageBox.Show(orderedFiles[i].CreationTime.ToString() + " deleted");
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                 }
             }
             else
             {
                 if (File.Exists(backupPath + lastBackupFileName)) File.Delete(backupPath + lastBackupFileName);
-                MessageBox.Show("Backup échoué");
+                logger.Error("Backup échoué");
+                //MessageBox.Show("Backup échoué");
             }
             General.count = 0;
             General.text = "";
@@ -175,7 +206,7 @@ namespace FPO_WPF_Test.Pages
                 MessageBox.Show("Veuillez sélectionner un fichier à restorer");
             }
         }
-        public static void ExecuteRestore(string username, string restoreFileName)
+        private void ExecuteRestore(string username, string restoreFileName)
         {
             if (File.Exists(backupPath + restoreFileName))
             {
@@ -209,7 +240,12 @@ namespace FPO_WPF_Test.Pages
                 if (process.ExitCode == 0)
                 {
                     if (!MyDatabase.IsConnected()) MyDatabase.Connect();
-                    MyDatabase.InsertRow_old("audit_trail", "event_type, username, description", new string[] { "Evènement", username, General.auditTrail_RestoreDesc });
+                    
+                    auditTrailInfo.columns[auditTrailInfo.username].value = username;
+                    auditTrailInfo.columns[auditTrailInfo.eventType].value = "Evènement";
+                    auditTrailInfo.columns[auditTrailInfo.description].value = General.auditTrail_RestoreDesc;
+                    MyDatabase.InsertRow(auditTrailInfo);
+                    //MyDatabase.InsertRow_done_old("audit_trail", "event_type, username, description", new string[] { "Evènement", username, General.auditTrail_RestoreDesc });
                     MyDatabase.Disconnect();
 
                     General.count = nLines;

@@ -191,9 +191,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlarmManagement.cs" />
-    <Compile Include="Configuration.cs" />
-    <Compile Include="MyConfigurationElement.cs" />
-    <Compile Include="MyConfigurationSection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -208,7 +205,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="alarmList.json" />
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

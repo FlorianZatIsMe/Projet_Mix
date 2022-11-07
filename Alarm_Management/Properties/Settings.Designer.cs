@@ -63,5 +63,95 @@ namespace Alarm_Management.Properties {
                 return ((global::Alarm_Management.ConfigAlarms)(this["Alarms"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("L\'alarme est déjà active")]
+        public string Error02 {
+            get {
+                return ((string)(this["Error02"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("L\'alarme est inactive mais ne fait pas parti des alarmes actives")]
+        public string Error03 {
+            get {
+                return ((string)(this["Error03"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("L\'alarme ne fait pas parti des alarmes actives")]
+        public string Error04 {
+            get {
+                return ((string)(this["Error04"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("L\'alarme est déjà inactive")]
+        public string Error05 {
+            get {
+                return ((string)(this["Error05"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Statut de l\'alarme avant inactivation ou aquittement incorrect")]
+        public string Error06 {
+            get {
+                return ((string)(this["Error06"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Type d\'alarme incorrect")]
+        public string Error07 {
+            get {
+                return ((string)(this["Error07"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Je ne te crois pas, c\'est impossible")]
+        public string Error08 {
+            get {
+                return ((string)(this["Error08"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Alarme")]
+        public string AlarmType_Alarm {
+            get {
+                return ((string)(this["AlarmType_Alarm"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Alerte")]
+        public string AlarmType_Warning {
+            get {
+                return ((string)(this["AlarmType_Warning"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AlarmType_None {
+            get {
+                return ((string)(this["AlarmType_None"]));
+            }
+        }
     }
 }

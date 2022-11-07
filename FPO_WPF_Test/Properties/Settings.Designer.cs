@@ -26,9 +26,9 @@ namespace FPO_WPF_Test.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("système")]
-        public string AuditTrail_SystemUsername {
+        public string SystemUsername {
             get {
-                return ((string)(this["AuditTrail_SystemUsername"]));
+                return ((string)(this["SystemUsername"]));
             }
         }
     }

@@ -36,7 +36,10 @@ namespace FPO_WPF_Test
         public static int count = 0;
         public static string text;
         public static DateTime NextBackupTime;
-        public static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
+        private static AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+        private static CycleTableInfo cycleTableInfo = new CycleTableInfo();
 
         static General()
         {
@@ -188,9 +191,29 @@ namespace FPO_WPF_Test
                     string recipe_version = array[4];
                     //string recipe_status = MySettings["Status"].Split(',')[int.Parse(array[5])];
 
-                    string columns = "job_number, batch_number, quantity_value, quantity_unit, item_number, recipe_name, recipe_version, equipment_name, username, is_it_a_test";
-                    string[] values = new string[] { OFnumber, OFnumber, finalWeight, "g", recipe_name, recipe_name, recipe_version, General.equipement_name, General.loggedUsername, isTest ? "1" : "0" };
-                    MyDatabase.InsertRow_old("cycle", columns, values);
+                    //cycleTableInfo.columns[cycleTableInfo.id].value = "";
+                    //cycleTableInfo.columns[cycleTableInfo.nextSeqType].value = "1";
+                    //cycleTableInfo.columns[cycleTableInfo.nextSeqId].value = "2";
+                    cycleTableInfo.columns[cycleTableInfo.jobNumber].value = OFnumber;
+                    cycleTableInfo.columns[cycleTableInfo.batchNumber].value = OFnumber;
+                    cycleTableInfo.columns[cycleTableInfo.quantityValue].value = finalWeight;
+                    cycleTableInfo.columns[cycleTableInfo.quantityUnit].value = "g";
+                    cycleTableInfo.columns[cycleTableInfo.itemNumber].value = recipe_name;
+                    cycleTableInfo.columns[cycleTableInfo.recipeName].value = recipe_name;
+                    cycleTableInfo.columns[cycleTableInfo.recipeVersion].value = recipe_version;
+                    cycleTableInfo.columns[cycleTableInfo.equipmentName].value = equipement_name;
+                    //cycleTableInfo.columns[cycleTableInfo.dateTimeStartCycle].value = "2022-11-03 11:33:25";
+                    //cycleTableInfo.columns[cycleTableInfo.dateTimeEndCycle].value = "2022-11-03 12:33:25";
+                    cycleTableInfo.columns[cycleTableInfo.username].value = General.loggedUsername;
+                    //cycleTableInfo.columns[cycleTableInfo.firstAlarmId].value = "12";
+                    //cycleTableInfo.columns[cycleTableInfo.lastAlarmId].value = "13";
+                    //cycleTableInfo.columns[cycleTableInfo.comment].value = "14";
+                    cycleTableInfo.columns[cycleTableInfo.isItATest].value = isTest ? "1" : "0";
+                    MyDatabase.InsertRow(cycleTableInfo);
+
+                    //string columns = "job_number, batch_number, quantity_value, quantity_unit, item_number, recipe_name, recipe_version, equipment_name, username, is_it_a_test";
+                    //string[] values = new string[] { OFnumber, OFnumber, finalWeight, "g", recipe_name, recipe_name, recipe_version, General.equipement_name, General.loggedUsername, isTest ? "1" : "0" };
+                    //MyDatabase.InsertRow_done_old("cycle", columns, values);
                     int idCycle = MyDatabase.GetMax("cycle", "id");
 
                     while (nextSeqID != "" && nextSeqID != null)
@@ -223,7 +246,11 @@ namespace FPO_WPF_Test
 
                     General.CurrentCycleInfo.InitializeSequenceNumber(); //'2022-09-20 11:52:10
 
-                    MyDatabase.InsertRow_old("audit_trail", "username, event_type, description", new string[] { General.loggedUsername, "Evènement", "Départ cycle. Lot: " + OFnumber + ", Recette: " + recipe_name + " version " + recipe_version });
+                    auditTrailInfo.columns[auditTrailInfo.username].value = General.loggedUsername;
+                    auditTrailInfo.columns[auditTrailInfo.eventType].value = "Evènement";
+                    auditTrailInfo.columns[auditTrailInfo.description].value = "Départ cycle. Lot: " + OFnumber + ", Recette: " + recipe_name + " version " + recipe_version;
+                    MyDatabase.InsertRow(auditTrailInfo);
+                    //MyDatabase.InsertRow_done_old("audit_trail", "username, event_type, description", new string[] { General.loggedUsername, "Evènement", "Départ cycle. Lot: " + OFnumber + ", Recette: " + recipe_name + " version " + recipe_version });
 
                     string firstAlarmId;
                     if (AlarmManagement.ActiveAlarms.Count > 0) firstAlarmId = AlarmManagement.alarms[AlarmManagement.ActiveAlarms[0].Item1, AlarmManagement.ActiveAlarms[0].Item2].id.ToString();
@@ -274,29 +301,6 @@ namespace FPO_WPF_Test
             else if (currentPhaseParameters[1] == null || currentPhaseParameters[1] == "") // S'il n'y a pas de prochaine séquence 
             {
                 EndSequence(recipeParameters: currentPhaseParameters, frameMain: frameMain, frameInfoCycle: frameInfoCycle, idCycle: idCycle, previousSeqType: previousSeqType, previousSeqId: idSubCycle.ToString(), isTest: isTest, comment: comment);
-
-
-                /*
-                string lastAlarmId = MyDatabase.GetMax("audit_trail", "id").ToString();
-                MyDatabase.Update_Row("cycle", new string[] { "date_time_end_cycle", "last_alarm_id", "comment" }, new string[] { DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), lastAlarmId, comment }, idCycle.ToString());
-
-                MessageBox.Show("C'est fini, merci d'être passé");
-                General.CurrentCycleInfo.StopSequence();
-                General.PrintReport(idCycle);
-                MessageBox.Show("Rapport généré");
-
-                // On cache le panneau d'information
-                General.CurrentCycleInfo.SetVisibility(false);
-
-                if (isTest)
-                {
-                    string[] recipeName = MyDatabase.GetOneRow("cycle", "recipe_name", new string[] { "id" }, new string[] { idCycle.ToString() });
-                    frameMain.Content = new Pages.Recipe(Action.Modify, frameMain, frameInfoCycle, recipeName.Length == 0 ? "" : recipeName[0]);
-                }
-                else
-                {
-                    frameMain.Content = new Pages.Status();
-                }*/
             }
             else
             {
@@ -316,11 +320,76 @@ namespace FPO_WPF_Test
             //TimeSpan timeTh;
             int i;
 
+
+            ICycleSeqInfo cycleSeqInfo;
+            string row;
+
+            List<ICycleSeqInfo> cycleSeqTypes = new List<ICycleSeqInfo>()
+            {
+                new CycleWeightInfo(),
+                new CycleSpeedMixerInfo()
+            };
+
+            for (int j = 0; j < cycleSeqTypes.Count(); j++)
+            {
+                if (cycleSeqTypes[j].seqType != j) {
+                    logger.Error("Je veux pas être méchant mais tu ne sais pas coder");
+                    return;
+                }
+            }
+
+            if (previousSeqType < 0 || previousSeqType >= cycleSeqTypes.Count())
+            {
+                logger.Error("Mais non, tu déconnes ! " + previousSeqType.ToString());
+                MessageBox.Show("Mais non, tu déconnes ! " + previousSeqType.ToString());
+                return;
+            }
+
             // On boucle tant qu'on est pas arrivé au bout de la recette
             while (recipeParameters[1] != "" && recipeParameters[1] != null)
             {
+                // Note pour plus tard: ce serait bien de retirer les "1" et de les remplacer par un truc comme recipeWeightInfo.nextSeqType
                 nextRecipeSeqType = int.Parse(recipeParameters[1]);
                 recipeParameters = MyDatabase.GetOneRow(tableNameSubRecipes[int.Parse(recipeParameters[1])], whereColumns: new string[] { "id" }, whereValues: new string[] { recipeParameters[2] });
+
+                row = "recipeParameters ";
+                for (int j = 0; j < recipeParameters.Count(); j++)
+                {
+                    row = row + j.ToString() + "-" + recipeParameters[j] + " ";
+                }
+                logger.Trace(row);
+
+                if (nextRecipeSeqType < 0 || nextRecipeSeqType >= cycleSeqTypes.Count()) {
+                    logger.Error("Mais non, tu déconnes ! " + nextRecipeSeqType.ToString());
+                    MessageBox.Show("Mais non, tu déconnes ! " + nextRecipeSeqType.ToString());
+                    return;
+                }
+
+                cycleSeqInfo = cycleSeqTypes[nextRecipeSeqType];
+                cycleSeqInfo.SetRecipeParameters(recipeParameters);
+
+                row = cycleSeqInfo.GetType().ToString() + " ";
+                for (int j = 0; j < cycleSeqInfo.columns.Count(); j++)
+                {
+                    row = row + cycleSeqInfo.columns[j].id + ": " + cycleSeqInfo.columns[j].value + " ";
+                }
+                logger.Trace(row);
+
+                // On insert les infos de recettes dans la bonne table
+                MyDatabase.InsertRow(cycleSeqInfo);
+
+                // On met à jour les infos "type" et "id" de la séquence qu'on vient de renseigner dans la précédente séquence
+                nextSeqId = MyDatabase.GetMax(cycleSeqInfo.name, "id").ToString();
+                //nextSeqId = MyDatabase.GetMax(tableNameSubCycles[nextRecipeSeqType], "id").ToString();
+                MyDatabase.Update_Row(cycleSeqTypes[previousSeqType].name,
+                    new string[] { "next_seq_type", "next_seq_id" },
+                    new string[] { nextRecipeSeqType.ToString(), nextSeqId }, previousSeqId);
+
+                // La dernière séquence devient l'ancienne
+                previousSeqType = nextRecipeSeqType;
+                previousSeqId = nextSeqId;
+
+                /*
 
                 // Si la prochaine étape est un pesage on prépare les données à mettre dans la table cycle_weight (valuesSubCycle)
                 if (nextRecipeSeqType == 0)
@@ -350,9 +419,9 @@ namespace FPO_WPF_Test
                 }
 
                 if (isNextRcpSeqTpOK) // S'il n'y a pas eu de problème
-                {
+                {/*
                     // On insert les infos de recettes dans la bonne table
-                    MyDatabase.InsertRow_old(tableNameSubCycles[nextRecipeSeqType],
+                    MyDatabase.InsertRow_done_old(tableNameSubCycles[nextRecipeSeqType],
                         columnNamesSubCycles[nextRecipeSeqType],
                         valuesSubCycle);
 
@@ -366,6 +435,7 @@ namespace FPO_WPF_Test
                     previousSeqType = nextRecipeSeqType;
                     previousSeqId = nextSeqId;
                 }
+            */
             }
 
             string lastAlarmId = MyDatabase.GetMax("audit_trail", "id").ToString();

@@ -17,9 +17,7 @@ using Database.Properties;
 
 namespace Database
 {
-
-
-
+    //*
     [SettingsSerializeAs(SettingsSerializeAs.Xml)]
     public class AuditTrail_Columns
     {
@@ -32,64 +30,12 @@ namespace Database
         public Column valueAfter { get; set; }
         public Column comment { get; set; }
     }
-
     public interface IColumn
     {
         string name { get; }
         string displayName { get; }
         string value { get; set; }
     }
-
-    public class Column
-    {
-        public string id { get; }
-        public string displayName { get; }
-        public string value { get; set; }
-        public Column(string name_arg = "", string displayName_arg = "")
-        {
-            id = name_arg;
-            displayName = displayName_arg;
-        }
-    }
-
-    public interface ITableInfo
-    {
-        string name { get; }
-        Column[] columns { get; set; }
-    }
-
-    public class AuditTrailInfo : ITableInfo
-    {
-        public AuditTrailInfo()
-        {
-            StringCollection colNames = Settings.Default.AuditTrail_ColNames;
-            name = Settings.Default.AuditTrail_TableName;
-
-            List<Column> colList = new List<Column>();
-
-            for (int i = 0; i < colNames.Count; i++) colList.Add(new Column(colNames[i]));
-            columns = colList.ToArray();
-        }
-        public string name { get; }
-        public Column[] columns { get; set; }
-    }
-
-    public class RecipeInfo : ITableInfo
-    {
-        public RecipeInfo()
-        {
-            StringCollection colNames = Settings.Default.Recipe_ColNames;
-            name = Settings.Default.Recipe_TableName;
-
-            List<Column> colList = new List<Column>();
-
-            for (int i = 0; i < colNames.Count; i++) colList.Add(new Column(colNames[i]));
-            columns = colList.ToArray();
-        }
-        public string name { get; }
-        public Column[] columns { get; set; }
-    }
-
     public class AuditTrail_InsertColumns
     {
         public string name;
@@ -98,7 +44,7 @@ namespace Database
 
         public AuditTrail_InsertColumns()
         {
-            StringCollection colNames = Settings.Default.AuditTrail_ColNames;
+            StringCollection colNames = Settings.Default.AuditTrail_ColIds;
             List<Column> colList = new List<Column>();
 
             columnValues = new string[colNames.Count];
@@ -107,12 +53,12 @@ namespace Database
             columnNames = colList.ToArray();
         }
     }
-
+//*/
     public static class MyDatabase
     {
         private static readonly Configuration_old.Connection_Info MySettings = System.Configuration.ConfigurationManager.GetSection("Database/Connection_Info") as Configuration_old.Connection_Info;
         private static MySqlConnection connection;
-        private static MySqlDataReader currentReader;
+        private static MySqlDataReader reader;
         public static List<int> AlarmListID = new List<int>();
         public static List<string> AlarmListDescription = new List<string>();
         public static List<string> AlarmListStatus = new List<string>();
@@ -323,13 +269,13 @@ namespace Database
 
                 try
                 {
-                    currentReader = command.ExecuteReader();
+                    reader = command.ExecuteReader();
                 }
                 catch (Exception e)
                 {
                     logger.Error("SendCommand_readAllRecipe - " + e.Message);
                     MessageBox.Show("SendCommand_readAllRecipe - " + e.Message);
-                    currentReader = null;
+                    reader = null;
                 }
             }
 
@@ -399,11 +345,11 @@ namespace Database
                 {
                     try
                     {
-                        currentReader = command.ExecuteReader();
+                        reader = command.ExecuteReader();
                     }
                     catch (Exception ex)
                     {
-                        currentReader = null;
+                        reader = null;
                         logger.Error("SendCommand_Read - " + ex.Message);
                         MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand_Read - " + ex.Message);
                     }
@@ -433,11 +379,11 @@ namespace Database
 
                 try
                 {
-                    currentReader = command.ExecuteReader();
+                    reader = command.ExecuteReader();
                 }
                 catch (Exception ex)
                 {
-                    currentReader = null;
+                    reader = null;
                     logger.Error(ex.Message);
                     MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - " + ex.Message);
                 }
@@ -484,7 +430,7 @@ namespace Database
                 }
                 catch (Exception ex)
                 {
-                    currentReader = null;
+                    MyDatabase.reader = null;
                     MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - " + ex.Message);
                 }
             }
@@ -552,11 +498,11 @@ namespace Database
                 {
                     try
                     {
-                        currentReader = command.ExecuteReader();
+                        reader = command.ExecuteReader();
                     }
                     catch (Exception ex)
                     {
-                        currentReader = null;
+                        reader = null;
                         MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - " + ex.Message);
                     }
                 }
@@ -595,11 +541,11 @@ namespace Database
                 {
                     try
                     {
-                        currentReader = command.ExecuteReader();
+                        reader = command.ExecuteReader();
                     }
                     catch (Exception ex)
                     {
-                        currentReader = null;
+                        reader = null;
                         MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - " + ex.Message);
                     }
                 }
@@ -631,11 +577,11 @@ namespace Database
 
                 try
                 {
-                    currentReader = command.ExecuteReader();
+                    reader = command.ExecuteReader();
                 }
                 catch (Exception ex)
                 {
-                    currentReader = null;
+                    reader = null;
                     MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - SendCommand_ReadPart - " + ex.Message);
                 }
             }
@@ -679,11 +625,11 @@ namespace Database
 
                 try
                 {
-                    currentReader = command.ExecuteReader();
+                    reader = command.ExecuteReader();
                 }
                 catch (Exception e)
                 {
-                    currentReader = null;
+                    reader = null;
                     MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - " + e.Message);
                 }
             }
@@ -706,15 +652,15 @@ namespace Database
             {
                 if (!IsReaderNotAvailable())
                 {
-                    array = new string[currentReader.FieldCount];
+                    array = new string[reader.FieldCount];
 
                     try
                     {
-                        if (currentReader.Read())
+                        if (reader.Read())
                         {
-                            for (int i = 0; i < currentReader.FieldCount; i++)
+                            for (int i = 0; i < reader.FieldCount; i++)
                             {
-                                array[i] = currentReader[i].ToString();
+                                array[i] = reader[i].ToString();
                             }
                         }
                         else
@@ -754,13 +700,13 @@ namespace Database
             {
                 if (!IsReaderNotAvailable())
                 {
-                    array = new bool[currentReader.FieldCount - 2];
+                    array = new bool[reader.FieldCount - 2];
 
-                    if (currentReader.Read())
+                    if (reader.Read())
                     {
-                        for (int i = 0; i < currentReader.FieldCount - 2; i++)
+                        for (int i = 0; i < reader.FieldCount - 2; i++)
                         {
-                            array[i] = currentReader.GetBoolean(i + 2);
+                            array[i] = reader.GetBoolean(i + 2);
                         }
                     }
                     else
@@ -781,11 +727,11 @@ namespace Database
         }
         public static void Close_reader()
         {
-            if(!IsReaderNotAvailable()) currentReader.Close();
+            if(!IsReaderNotAvailable()) reader.Close();
         }
         public static bool IsReaderNotAvailable()
         {
-            return currentReader == null || currentReader.IsClosed;
+            return reader == null || reader.IsClosed;
         }
         public static string[] GetOneRow(string tableName, string selectColumns = "*", string[] whereColumns = null, string[] whereValues = null)
         {
@@ -862,15 +808,15 @@ namespace Database
 
                 try
                 {
-                    currentReader = command.ExecuteReader();
-                    currentReader.Read();
+                    reader = command.ExecuteReader();
+                    reader.Read();
 
-                    if (!currentReader.IsDBNull(0))
+                    if (!reader.IsDBNull(0))
                     {
-                        n = currentReader.GetInt32(0);
-                        currentReader.Read();
+                        n = reader.GetInt32(0);
+                        reader.Read();
 
-                        if (currentReader.FieldCount == 0) // je crois que cette vérification ne sert à rien, il faut vérifier que la requête le renvoie plus de résultat
+                        if (reader.FieldCount == 0) // je crois que cette vérification ne sert à rien, il faut vérifier que la requête le renvoie plus de résultat
                         {
                             n = -1;
                         }
@@ -893,9 +839,9 @@ namespace Database
         }
         public static ReadOnlyCollection<DbColumn> GetColumnCollection()
         {
-            return currentReader.GetColumnSchema();
+            return reader.GetColumnSchema();
         }
-        public static bool InsertRow_old(string tableName, string columnFields, string[] values, int mutex = -1)
+        public static bool InsertRow(string tableName, string columnFields, string[] values, int mutex = -1)
         {
             int mutexID = Wait(mutex);
 
@@ -940,7 +886,7 @@ namespace Database
 
                     try
                     {
-                        currentReader = command.ExecuteReader();
+                        reader = command.ExecuteReader();
                         Close_reader();
                         result = true;
                     }
@@ -961,79 +907,67 @@ namespace Database
             logger.Debug("InsertRow" + GetMutexIDs());
 
             bool result = false;
-            //List<string> colIdList = new List<string>();
-            //List<string> colValList = new List<string>();
             List<int> indexList = new List<int>();
 
             if (!IsConnected()) {
                 logger.Error("Connection à la base de données échouée");
                 MessageBox.Show("Connection à la base de données échouée");
-                if (mutex == -1) Signal(mutexID);
-                return result;
+                goto End;
             }
 
             if (tableInfo == null) {
                 logger.Error("tableInfo est null");
                 MessageBox.Show("");
-                if (mutex == -1) Signal(mutexID);
-                return result;
+                goto End;
             }
             else if (tableInfo.columns == null || tableInfo.columns.Count() == 0) {
                 logger.Error("tableInfo.columns est vide");
                 MessageBox.Show("");
-                if (mutex == -1) Signal(mutexID);
-                return result;
+                goto End;
             }
 
             for (int i = 0; i < tableInfo.columns.Count(); i++)
             {
                 if (tableInfo.columns[i].value != "" && tableInfo.columns[i].value != null)
                 {
-                    // Peut-être ici ajouter dans une liste de int qui reprend les i
-
-                    //colIdList.Add(tableInfo.columns[i].id);
-                    //colValList.Add(tableInfo.columns[i].value);
                     indexList.Add(i);
-                    logger.Error(i.ToString() + ": " + tableInfo.columns[i].value + " - " + tableInfo.columns[i].id);
+                    logger.Trace(i.ToString() + ": " + tableInfo.columns[i].id + " - " + tableInfo.columns[i].value);
                 }
             }
 
             int columnNumber = indexList.Count();
-            //int columnNumber = colIdList.Count();
             if (columnNumber == 0) {
                 logger.Error("Aucune valeur n'a été renseignée");
                 MessageBox.Show("");
-                if (mutex == -1) Signal(mutexID);
-                return result;
+                goto End;
             }
 
-            MySqlDataReader reader;
+            //MySqlDataReader reader;
             string valueFields = "";
             string columnFields = "";
 
-            logger.Error("valuesNumber: " + columnNumber.ToString());
+            logger.Trace("valuesNumber: " + columnNumber.ToString());
 
             for (int i = 0; i < columnNumber - 1; i++)
             {
                 columnFields = columnFields + tableInfo.columns[indexList[i]].id + ", ";
-                //columnFields = columnFields + colIdList[i] + ", ";
                 valueFields = valueFields + "@" + i.ToString() + ", ";
-                logger.Error(i.ToString() + ": " + columnFields + " - " + valueFields);
+                logger.Trace(i.ToString() + ": " + columnFields + " - " + valueFields);
             }
-            logger.Error((columnNumber - 1).ToString() + ": " + columnFields + " - " + valueFields);
             columnFields = columnFields + tableInfo.columns[indexList[columnNumber - 1]].id;
             valueFields = valueFields + "@" + (columnNumber - 1).ToString();
+            logger.Trace((columnNumber - 1).ToString() + ": " + columnFields + " - " + valueFields);
 
             MySqlCommand command = connection.CreateCommand();
             command.CommandText = @"INSERT INTO " + tableInfo.name + " (" + columnFields + ") VALUES (" + valueFields + ");";
-            logger.Error("Insert command: " + command.CommandText);
+            logger.Trace("Insert command: " + command.CommandText);
             SetCommand(command, tableInfo.columns, indexList.ToArray());
-            //SetCommand(command, colIdList.ToArray(), colValList.ToArray());
 
             try
             {
+                Close_reader(); // retirer l'un des 2 Close_reader()
                 reader = command.ExecuteReader();
-                reader.Close();
+                Close_reader();
                 result = true;
             }
             catch (Exception ex)
@@ -1042,72 +976,9 @@ namespace Database
                 MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - InsertRow - " + tableInfo.name + " - " + ex.Message + " - " + DateTime.Now.ToString());
             }
 
+            End:
             if (mutex == -1) Signal(mutexID);
             return result;
-        }
-
-        public static void InsertRow_3(ITableInfo tableInfo, int mutex = -1)
-        {
-            int mutexID = Wait();
-
-            List<string> colNameList = new List<string>();
-            List<string> colValList = new List<string>();
-
-            if(tableInfo == null) {
-                logger.Error("tableInfo est null");
-                return;
-            }
-
-            if (tableInfo.columns == null || tableInfo.columns.Count() == 0) {
-                logger.Error("tableInfo.columnNames est vide");
-                return;
-            }
-
-            for (int i = 0; i < tableInfo.columns.Count(); i++)
-            {
-                if (tableInfo.columns[i].value != "" && tableInfo.columns[i].value != null)
-                {
-                    colValList.Add(tableInfo.columns[i].value);
-                    colNameList.Add(tableInfo.columns[i].id);
-                    logger.Error(i.ToString() + ": " + tableInfo.columns[i].value + " - " + tableInfo.columns[i].id);
-                }
-            }
-
-            //InsertRow_LV("audit_trail", colNameList.ToArray(), colValList.ToArray(), mutexID);
-
-            if (mutex == -1) Signal(mutexID);
-        }
-
-        public static void InsertRow_test(int mutex = -1)
-        {
-            //int mutexID = Wait();
-
-            AuditTrail_InsertColumns insertCol = new AuditTrail_InsertColumns();
-            insertCol.columnValues[0] = "";
-            insertCol.columnValues[1] = "";
-            insertCol.columnValues[2] = "Moi";
-            insertCol.columnValues[3] = "Test";
-            insertCol.columnValues[4] = "Je teste le nouveau InsertRow";
-            //insertCol.columnValues[5] = "0";
-            //insertCol.columnValues[6] = "0";
-            insertCol.columnValues[7] = "Non rien";
-
-            List<string> colNameList = new List<string>();
-            List<string> colValList = new List<string>();
-
-            for (int i = 0; i < insertCol.columnNames.Count(); i++)
-            {
-                if (insertCol.columnValues[i] != "" && insertCol.columnValues[i] != null)
-                {
-                    colValList.Add(insertCol.columnValues[i]);
-                    colNameList.Add(insertCol.columnNames[i].id);
-                    logger.Error(i.ToString() + ": " + insertCol.columnValues[i] + " - " + insertCol.columnNames[i].id);
-                }
-            }
-
-            //InsertRow_LV("audit_trail", colNameList.ToArray(), colValList.ToArray());
-
-            //if (mutex == -1) Signal(mutexID);
         }
         public static bool Update_Row(string tableName, string[] setColumns, string[] setValues, string id)
         {
@@ -1144,7 +1015,7 @@ namespace Database
                 {
                     try
                     {
-                        currentReader = command.ExecuteReader();
+                        reader = command.ExecuteReader();
                         Close_reader();
                         result = true;
                     }
@@ -1158,7 +1029,7 @@ namespace Database
                     MessageBox.Show("Ce n'est pas très clair tout ça...");
                 }
 
-                currentReader.Close();
+                reader.Close();
             }
 
             Signal(mutexID);
@@ -1191,6 +1062,8 @@ namespace Database
                 command = connection.CreateCommand();
                 command.CommandText = @"DELETE FROM " + tableName + whereArg;
 
+                logger.Error(command.CommandText);
+
                 if (whereColumns != null && whereValues != null)
                 {
                     isCommandOk = SetCommand(command, whereColumns, whereValues);
@@ -1200,7 +1073,7 @@ namespace Database
                 {
                     try
                     {
-                        currentReader = command.ExecuteReader();
+                        reader = command.ExecuteReader();
                         Close_reader();
                         result = true;
                     }
@@ -1246,7 +1119,7 @@ namespace Database
 
                 try
                 {
-                    currentReader = command.ExecuteReader();
+                    reader = command.ExecuteReader();
                     Close_reader();
                     result = true;
                 }
@@ -1282,7 +1155,7 @@ namespace Database
                 try
                 {
                     command.CommandText = @"DROP TABLE IF EXISTS temp";
-                    currentReader = command.ExecuteReader();
+                    reader = command.ExecuteReader();
                     Close_reader();
                 }
                 catch (Exception ex)
@@ -1295,7 +1168,7 @@ namespace Database
                     command.CommandText = @"CREATE TABLE temp (" +
                         "id  INT NOT NULL auto_increment PRIMARY KEY," +
                         fields + ")";
-                    currentReader = command.ExecuteReader();
+                    reader = command.ExecuteReader();
                 }
                 catch (Exception ex)
                 {
@@ -1328,7 +1201,7 @@ namespace Database
                 {
                     MySqlCommand command = connection.CreateCommand();
                     command.CommandText = @"SELECT " + select + " FROM temp;";
-                    currentReader = command.ExecuteReader();
+                    reader = command.ExecuteReader();
                 }
                 catch (Exception ex)
                 {
@@ -1363,7 +1236,7 @@ namespace Database
 
             return arg;
         }
-        private static void SetCommand(MySqlCommand command, Column[] columns, int[] indexes)
+        private static void SetCommand(MySqlCommand command, List<Column> columns, int[] indexes)
         {
             if (columns.Count() < indexes.Count()) {
                 logger.Error("Il y a plus d'index que de colonne");
@@ -1373,7 +1246,7 @@ namespace Database
 
             for (int i = 0; i < indexes.Count(); i++)
             {
-                logger.Error("Value " + i.ToString() + ": " + columns[indexes[i]].value);
+                logger.Trace("Value " + i.ToString() + ": " + columns[indexes[i]].value);
                 command.Parameters.AddWithValue("@" + i.ToString(), columns[indexes[i]].value);
             }
         }

@@ -134,8 +134,7 @@ namespace FPO_WPF_Test.Pages
 
                 frameMain.ContentRendered -= FrameMain_ContentRendered;
                 stopUpdating = true;
-                updateAlarmTimer.Stop();
-                //updateAlarmTask.Dispose();
+                updateAlarmTimer.Dispose();
                 //Dispose(disposing: true); // Il va peut-être falloir sortir ça du "if"
             }
 

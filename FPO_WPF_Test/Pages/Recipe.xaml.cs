@@ -1,4 +1,5 @@
 ﻿using Database;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -26,6 +27,15 @@ namespace FPO_WPF_Test.Pages
     /// <summary>
     /// Logique d'interaction pour Recipe.xaml
     /// </summary>
+
+    public interface IRecipeSeq
+    {
+        //int seqType { get; }
+        void SetPage(ISeqInfo seqInfo);
+        ISeqInfo GetPage();
+        bool IsFormatOk();
+    }
+
     public partial class Recipe : Page
     {
         private int nRow;
@@ -50,6 +60,8 @@ namespace FPO_WPF_Test.Pages
 
         private static readonly string exportFolder = @"C:\Temp\Exports\";
         private static readonly string fileExtension_table = ".tbl";
+
+        private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public Recipe(Action action, Frame frameMain_arg = null, Frame frameInfoCycle_arg = null, string recipeName = "")
         {
@@ -120,188 +132,127 @@ namespace FPO_WPF_Test.Pages
         {
             int i = 1;
             int n;
-            int[] nextSeqID;
             string[] values = new string[1];
             List<string[]> allValues = new List<string[]>();
-            string columnsRecipe = MySettings["Columns_Recipe"];
-            string columnsSubRecipeWeight = MySettings["Columns_SubRecipe_Weight"];
-            string columnsSpeedMixer = MySettings["Columns_SubRecipe_SpeedMixer"];
-            string[] columnsSubRecipes = new string[] { columnsSubRecipeWeight, columnsSpeedMixer };
             string[] tableNameSubRecipes = MySettings["SubRecipes_Table_Name"].Split(',');
 
-            var currentPage = new List<Page>
-                {
-                    new SubRecipe.Weight(),
-                    new SubRecipe.SpeedMixer()
-                };
-            int currentType;
-            int previousType;
             bool isFormatOk = true;
-            bool result;
+            bool result = false;
+
+            string row;
 
             //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
-            if(recipeName == "")
-            {
+            List<ISeqInfo> seqInfoList = new List<ISeqInfo>();
+            IRecipeSeq recipeSeq;
+
+            if (!MyDatabase.IsConnected()) {
+                MessageBox.Show("La base de données n'est pas connecté");
+                return false;
+            }
+
+            if (recipeName == "") {
                 MessageBox.Show("You should know by now that a recipe name can't be empty...");
                 return false;
             }
 
-            if (MyDatabase.IsConnected()) // while loop is better
-            {
-                nextSeqID = new int[] { MyDatabase.GetMax(MySettings["SubRecipes_Table_Name"].Split(',')[int.Parse(MySettings["SubRecipeWeight_SeqType"])], "id"), MyDatabase.GetMax(MySettings["SubRecipes_Table_Name"].Split(',')[int.Parse(MySettings["SubRecipeSpeedMixer_SeqType"])], "id") };
-
-                if (new_version != 0) // && previousStatus == MySettings["Recipe_Status_Production"])
-                {
-                    // Si on créer une nouvelle recette (version = 1)
-                    if (new_version == 1)
-                    {
-                        // On contrôle si la recette n'existe pas déjà
-                        if (isRecipeCreated && MyDatabase.GetMax(MySettings["Table_Name"], MySettings["Column_Recipe_version"], new string[] { MySettings["Column_Recipe_name"] }, new string[] { recipeName }) != 0)
-                        {
-                            MessageBox.Show("Le nom de la recette existe déjà");
-                            return false;
-                        }
-                    }
-
-                    foreach (UIElement element in gridMain.Children) // Pour chaque element de la grille principale (gridMain)...
-                    {
-                        if (element.GetType().Equals(typeof(Frame))) // Si c'est une frame...
-                        {
-                            Frame frame = element as Frame;
-                            if (frame.Content.GetType().Equals(typeof(SubRecipe.Weight))) // Si la frame en question représente une séquence de pesée, on met à jour les bonnes variables pour la séquence
-                            {
-                                //MessageBox.Show("Weight - i = " + $"{i}");
-                                currentType = 0;
-                                currentPage[currentType] = frame.Content as SubRecipe.Weight;
-                            }
-                            else if (frame.Content.GetType().Equals(typeof(SubRecipe.SpeedMixer))) // Idem si la frame en question représente une séquence de mix
-                            {
-                                //MessageBox.Show("Speed Mixer - i = " + $"{i}");
-                                currentType = 1;
-                                currentPage[currentType] = frame.Content as SubRecipe.SpeedMixer;
-                            }
-                            else // Sinon il y a un problème, on met à -1 (valeur impossible) la variable currentType, voir "if (currentType != -1)" plus bas
-                            {
-                                MessageBox.Show("-1");
-                                currentType = -1;
-                            }
-
-                            if (currentType != -1) // Si la frame actuelle est valide...
-                            {
-                                if (i == 1) // Si la frame actuelle est la première, on enregistre les données de la recette dans le tableau "recipe"
-                                {
-                                    nextSeqID[currentType]++;
-                                    //values = new string[] { $"{currentType}", nextSeqID[currentType].ToString(), recipeName, new_version.ToString(), MySettings["Recipe_Status_Draft"] };
-                                    values = new string[] { $"{currentType}", "#", recipeName, new_version.ToString(), status };
-
-                                    allValues.Add(values);
-                                }
-                                else // Sinon on va s'occuper des tableaux recipe_weight et/ou recipe_speedmixer
-                                {
-                                    nextSeqID[currentType]++; // = nextSeqID[currentType] + 1;// (previousType == currentType ? 1 : 1);
-                                    values[0] = $"{currentType}";
-                                    values[1] = "#"; // nextSeqID[currentType].ToString();
-
-                                    allValues.Add(values);
-                                }
-
-                                // Ici on lit le contenu de la frame, qu'elle représente une séquence de pesée ou de mix
-                                if (currentType == int.Parse(MySettings["SubRecipeWeight_SeqType"]))
-                                {
-                                    var tempPage = currentPage[currentType] as SubRecipe.Weight;
-                                    values = tempPage.GetPage();
-                                    if (isFormatOk) isFormatOk = tempPage.IsFormatOk();
-                                    previousType = currentType;
-                                }
-                                else if (currentType == int.Parse(MySettings["SubRecipeSpeedMixer_SeqType"]))
-                                {
-                                    var tempPage = currentPage[currentType] as SubRecipe.SpeedMixer;
-                                    values = tempPage.GetPage();
-                                    if (isFormatOk) isFormatOk = tempPage.IsFormatOk();
-                                    previousType = currentType;
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Oups");
-                                    values = null;
-                                    result = false;
-                                }
-                                i++;
-                            }
-                            else
-                            {
-                                MessageBox.Show("Etrange... TRES étrange...");
-                                result = false;
-                            }
-                        }
-                    }
-
-                    allValues.Add(values); // On enregistre le dernier set de valeurs ici
-                }
-                else
-                {
-                    MessageBox.Show("Not good, not good at all");
-                    //result = false;
-                }
-
-                if (isFormatOk) // Si toutes les séquences sont correctement renseignée, on mets à jour la base de données
-                {
-                    bool isRecordOk;
-                    n = i;
-                    isRecordOk = true;
-
-                    for (i = n - 1; i > 0; i--)
-                    {
-                        if (isRecordOk) isRecordOk = MyDatabase.InsertRow_old(tableNameSubRecipes[int.Parse(allValues[i - 1][0])], columnsSubRecipes[int.Parse(allValues[i - 1][0])], allValues[i]);
-                        else break; // S'il y a une erreur, on arrête la boucle
-
-                        allValues[i - 1][1] = allValues[i - 1][0] == MySettings["SubRecipeWeight_SeqType"] ? MyDatabase.GetMax(MySettings["SubRecipes_Table_Name"].Split(',')[int.Parse(MySettings["SubRecipeWeight_SeqType"])], "id").ToString() : MyDatabase.GetMax(MySettings["SubRecipes_Table_Name"].Split(',')[int.Parse(MySettings["SubRecipeSpeedMixer_SeqType"])], "id").ToString();
-                    }
-
-                    if (isRecordOk) isRecordOk = MyDatabase.InsertRow_old(MySettings["Table_Name"], columnsRecipe, allValues[0]);
-
-                    // S'il y a eu une erreur, on supprime les lignes qui ont été créés.
-                    if (!isRecordOk && i != n - 2)
-                    {
-                        i++;
-
-                        do
-                        {
-                            MyDatabase.DeleteRow(tableNameSubRecipes[int.Parse(allValues[i][0])], new string[] { MySettings["Column_id"] }, new string[] { allValues[i][1] });
-                            i++;
-                        } while (allValues[i][1] != null);
-
-                        MessageBox.Show("La recette n'a pas pu être créé");
-                        result = false;
-                    }
-                    else if (!isRecordOk) 
-                    {
-                        MessageBox.Show("La recette n'a pas pu être créé");
-                        result = false;
-                    }
-                    else
-                    {
-                        result = true;
-                        MessageBox.Show("Jusqu'ici tout va bien");
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Les calculs sont pas bons");
-                    result = false;
-                }
-                //MyDatabase.Disconnect();
+            if (new_version <= 0) {
+                MessageBox.Show("Not good, not good at all");
+                return false;
             }
-            else
-            {
-                MessageBox.Show("La base de données n'est pas connecté");
-                MyDatabase.ConnectAsync();
-                result = false;
+
+            // Si on créer une nouvelle recette (version = 1)
+            // On contrôle si la recette n'existe pas déjà
+            if (new_version == 1 && 
+                isRecipeCreated && 
+                MyDatabase.GetMax(MySettings["Table_Name"], MySettings["Column_Recipe_version"], new string[] { MySettings["Column_Recipe_name"] }, new string[] { recipeName }) != 0) {
+                MessageBox.Show("Le nom de la recette existe déjà");
+                return false;
             }
-            //MessageBox.Show("Create recipe");
-            //MyDatabase.Disconnect();
-            return result;
+
+            // pourquoi faire ça, à voir...
+            //using (RecipeInfo recipeInfo = new RecipeInfo()) {}
+
+            RecipeInfo recipeInfo = new RecipeInfo();
+            recipeInfo.columns[recipeInfo.recipeName].value = recipeName;
+            recipeInfo.columns[recipeInfo.version].value = new_version.ToString();
+            recipeInfo.columns[recipeInfo.status].value = status;
+
+            seqInfoList.Add(recipeInfo);
+
+            foreach (UIElement element in gridMain.Children) // Pour chaque element de la grille principale (gridMain)...
+            {
+                if (element.GetType().Equals(typeof(Frame))) // Si c'est une frame...
+                {
+                    Frame frame = element as Frame;
+
+                    if (frame.Content.GetType().GetInterface(typeof(IRecipeSeq).Name) == null)
+                    {
+                        logger.Error(frame.Content.GetType().ToString());
+                        continue; // je crois que c'est juste à tester
+                    }
+
+                    recipeSeq = frame.Content as IRecipeSeq;
+
+                    isFormatOk = recipeSeq.IsFormatOk();
+                    if (isFormatOk) seqInfoList.Add(recipeSeq.GetPage());
+                    else break;
+                }
+            }
+
+            // Si toutes les séquences ne sont pas correctement renseignées, on sort de là
+            if (!isFormatOk) {
+                MessageBox.Show("Les calculs sont pas bons");
+                return false;
+            }
+
+            bool isRecordOk;
+            n = seqInfoList.Count();
+            isRecordOk = true;
+
+            for (i = n - 1; i > 0; i--)
+            {
+                if (isRecordOk)
+                {
+                    row = "InsertRow " + i.ToString() + " - ";
+                    for (int j = 0; j < seqInfoList[i].columns.Count(); j++)
+                    {
+                        row = row + seqInfoList[i].columns[j].id + ": " + seqInfoList[i].columns[j].value + " ";
+                    }
+                    logger.Trace(row);
+
+                    isRecordOk = MyDatabase.InsertRow(seqInfoList[i]);
+                    seqInfoList[i - 1].columns[seqInfoList[i - 1].nextSeqId].value = MyDatabase.GetMax(seqInfoList[i].name, "id").ToString();
+                    seqInfoList[i - 1].columns[seqInfoList[i - 1].nextSeqType].value = seqInfoList[i].seqType.ToString();
+                }
+                else break;
+            }
+            if (isRecordOk) isRecordOk = MyDatabase.InsertRow(seqInfoList[0]);
+
+            if(isRecordOk) {
+                MessageBox.Show("Jusqu'ici tout va bien");
+                return true;
+            }
+            // S'il y a eu une erreur, on supprime les lignes qui ont été créés.
+            else if (i != n - 2)
+            {
+                i++;
+
+                do
+                {
+                    logger.Trace("DeleteRow " + i.ToString() + ": " + seqInfoList[i + 1].name + " " + 
+                        seqInfoList[i].columns[seqInfoList[i].nextSeqId].id + " " +
+                        seqInfoList[i].columns[seqInfoList[i].nextSeqId].value);
+
+                    MyDatabase.DeleteRow(seqInfoList[i + 1].name,
+                        new string[] { seqInfoList[i].columns[seqInfoList[i].id].id },
+                        new string[] { seqInfoList[i].columns[seqInfoList[i].nextSeqId].value });
+                    i++;
+                } while (seqInfoList[i].columns[seqInfoList[i].nextSeqId].value != null);
+            }
+
+            MessageBox.Show("La recette n'a pas pu être créé");
+            return false;
         }
         private async void Display_Recipe(string id)
         {
@@ -381,12 +332,12 @@ namespace FPO_WPF_Test.Pages
                                 if (nextSeqType == MySettings["SubRecipeWeight_SeqType"])
                                 {
                                     var tempPage = currentPage[int.Parse(nextSeqType)] as SubRecipe.Weight;
-                                    tempPage.SetPage(array);
+                                    tempPage.SetPage_old(array);
                                 }
                                 else if (nextSeqType == MySettings["SubRecipeSpeedMixer_SeqType"])
                                 {
                                     var tempPage = currentPage[int.Parse(nextSeqType)] as SubRecipe.SpeedMixer;
-                                    tempPage.SetPage(array);
+                                    tempPage.SetPage_2(array);
                                 }
 
                                 nextSeqType = array[1];
@@ -435,6 +386,7 @@ namespace FPO_WPF_Test.Pages
 
             Frame frame = new Frame();
             frame.ContentRendered += SubRecipeFrame_ContentRendered;
+            frame.PreviewMouseDoubleClick += FrameTest;
 
             if (seqType == MySettings["SubRecipeWeight_SeqType"])
             {
@@ -449,6 +401,31 @@ namespace FPO_WPF_Test.Pages
             gridMain.Children.Add(frame);
             nRow++;
         }
+
+        private void FrameTest(object sender, MouseButtonEventArgs e)
+        {
+            Frame frame = sender as Frame;
+
+            if (frame.Content.GetType().GetInterface(typeof(IRecipeSeq).Name) != null)
+            {
+                IRecipeSeq recipeSeq = frame.Content as IRecipeSeq;
+                ISeqInfo seqInfo = recipeSeq.GetPage();
+
+                string row = "";
+                for (int j = 0; j < seqInfo.columns.Count(); j++)
+                {
+                    row = row + seqInfo.columns[j].value + " ";
+                }
+
+                MessageBox.Show(row);
+            }
+            else
+            {
+                MessageBox.Show(frame.Content.GetType().ToString());
+            }
+
+        }
+
         private void Update_SequenceNumbers()
         {
             int i = 1;
