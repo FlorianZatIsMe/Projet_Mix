@@ -494,17 +494,21 @@
       <Project>{9da604d9-06c8-4eff-9688-e9934ce25f40}</Project>
       <Name>Database</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Driver.MODBUS\Driver.MODBUS.csproj">
+    <ProjectReference Include="..\Driver.MODBUS\Driver_MODBUS.csproj">
       <Project>{fffc191f-46a5-44d6-9208-831505a35c23}</Project>
-      <Name>Driver.MODBUS</Name>
+      <Name>Driver_MODBUS</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Driver.RS232-Pump\Driver.RS232.Pump.csproj">
+    <ProjectReference Include="..\Driver.RS232-Pump\Driver_RS232_Pump.csproj">
       <Project>{2AC9C27E-6FAB-4EAA-AC2F-55691AFC24F6}</Project>
-      <Name>Driver.RS232.Pump</Name>
+      <Name>Driver_RS232_Pump</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DRIVER.Weight\DRIVER.RS232.Weight.csproj">
+    <ProjectReference Include="..\DRIVER.Weight\DRIVER_RS232_Weight.csproj">
       <Project>{24D3295E-C288-495D-AA65-345A32FAFB60}</Project>
-      <Name>DRIVER.RS232.Weight</Name>
+      <Name>DRIVER_RS232_Weight</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Driver_RS232\Driver_RS232.csproj">
+      <Project>{995498BD-68E4-4DAD-98C3-42563DBD79D8}</Project>
+      <Name>Driver_RS232</Name>
     </ProjectReference>
     <ProjectReference Include="..\User_Management\User_Management.csproj">
       <Project>{1596B98A-6BB1-45D8-A08D-891D9165CC03}</Project>

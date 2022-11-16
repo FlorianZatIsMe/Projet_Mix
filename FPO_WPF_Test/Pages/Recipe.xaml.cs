@@ -68,8 +68,14 @@ namespace FPO_WPF_Test.Pages
             nRow = 1;
             status = MySettings["Status"].Split(',');
             frameMain = frameMain_arg;
-            //frameMain.ContentRendered += new EventHandler(FrameMain_ContentRendered);
             isFrameLoaded = false;
+
+            MyDatabase.Initialize(new Database.IniInfo()
+            {
+                //AlarmType_Alarm = Settings.Default.AlarmType_Alarm,
+                //AlarmType_Warning = Settings.Default.AlarmType_Warning
+            });
+
             if (!MyDatabase.IsConnected()) MyDatabase.Connect();
             InitializeComponent();
 
@@ -386,7 +392,7 @@ namespace FPO_WPF_Test.Pages
 
             Frame frame = new Frame();
             frame.ContentRendered += SubRecipeFrame_ContentRendered;
-            frame.PreviewMouseDoubleClick += FrameTest;
+            //frame.PreviewMouseDoubleClick += FrameTest;
 
             if (seqType == MySettings["SubRecipeWeight_SeqType"])
             {
@@ -584,7 +590,11 @@ namespace FPO_WPF_Test.Pages
                         // Création d'une nouvelle recette, l'ancienne version sera obsolète
                         if (Create_NewRecipe(ProgramNames[currentIndex], int.Parse(labelVersion.Text)+1, MySettings["Recipe_Status_Draft"], false))
                         {
-                            MyDatabase.Update_Row("recipe", new string[] { "status" }, new string[] { MySettings["Recipe_Status_Obsolete"] }, ProgramIDs[currentIndex]);
+                            RecipeInfo recipeInfo = new RecipeInfo();
+                            recipeInfo.columns[recipeInfo.status].value = MySettings["Recipe_Status_Obsolete"];
+                            MyDatabase.Update_Row(recipeInfo, ProgramIDs[currentIndex]);
+
+                            //MyDatabase.Update_Row("recipe", new string[] { "status" }, new string[] { MySettings["Recipe_Status_Obsolete"] }, ProgramIDs[currentIndex]);
                             ProgramIDs[currentIndex] = MyDatabase.GetMax("recipe", "id").ToString();
                             labelStatus.Text = status[int.Parse(MySettings["Recipe_Status_Draft"])];
                             labelVersion.Text = (int.Parse(labelVersion.Text) + 1).ToString();
@@ -658,7 +668,11 @@ namespace FPO_WPF_Test.Pages
                         {
                             if (MessageBox.Show("Vous vous apprêtez à rendre obsolète la recette " + array[3] + " version " + array[4] + " actuellement en production. Voulez-vous continuer?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                             {
-                                MyDatabase.Update_Row("recipe", new string[] { "status" }, new string[] { MySettings["Recipe_Status_Obsolete"] }, ProgramIDs[currentIndex]);
+                                RecipeInfo recipeInfo = new RecipeInfo();
+                                recipeInfo.columns[recipeInfo.status].value = MySettings["Recipe_Status_Obsolete"];
+                                MyDatabase.Update_Row(recipeInfo, ProgramIDs[currentIndex]);
+
+                                //MyDatabase.Update_Row("recipe", new string[] { "status" }, new string[] { MySettings["Recipe_Status_Obsolete"] }, ProgramIDs[currentIndex]);
 
                                 ProgramIDs.RemoveAt(currentIndex);
                                 ProgramNames.RemoveAt(currentIndex);
@@ -676,7 +690,12 @@ namespace FPO_WPF_Test.Pages
                                 if (int.Parse(array[4]) > 1)
                                 {
                                     ProgramIDs[currentIndex] = MyDatabase.GetMax("recipe", "id", whereColumns: new string[] { "name" }, whereValues: new string[] { array[3] }).ToString();
-                                    MyDatabase.Update_Row("recipe", new string[] { "status" }, new string[] { MySettings["Recipe_Status_Production"] }, ProgramIDs[currentIndex]);
+
+                                    RecipeInfo recipeInfo = new RecipeInfo();
+                                    recipeInfo.columns[recipeInfo.status].value = MySettings["Recipe_Status_Production"];
+                                    MyDatabase.Update_Row(recipeInfo, ProgramIDs[currentIndex]);
+
+                                    //MyDatabase.Update_Row("recipe", new string[] { "status" }, new string[] { MySettings["Recipe_Status_Production"] }, ProgramIDs[currentIndex]);
                                 }
                                 else if (int.Parse(array[4]) == 1)
                                 {
@@ -702,7 +721,11 @@ namespace FPO_WPF_Test.Pages
                     {
                         if (MessageBox.Show("Vous vous apprêtez à faire revenir la recette " + array[3] + " version " + array[4] + " en production. Voulez-vous continuer?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                         {
-                            MyDatabase.Update_Row("recipe", new string[] { "status" }, new string[] { MySettings["Recipe_Status_Production"] }, ProgramIDs[currentIndex]);
+                            RecipeInfo recipeInfo = new RecipeInfo();
+                            recipeInfo.columns[recipeInfo.status].value = MySettings["Recipe_Status_Production"];
+                            MyDatabase.Update_Row(recipeInfo, ProgramIDs[currentIndex]);
+
+                            //MyDatabase.Update_Row("recipe", new string[] { "status" }, new string[] { MySettings["Recipe_Status_Production"] }, ProgramIDs[currentIndex]);
                             ProgramIDs.RemoveAt(currentIndex);
                             ProgramNames.RemoveAt(currentIndex);
 

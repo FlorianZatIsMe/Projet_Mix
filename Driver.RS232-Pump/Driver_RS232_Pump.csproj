@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{24D3295E-C288-495D-AA65-345A32FAFB60}</ProjectGuid>
+    <ProjectGuid>{2AC9C27E-6FAB-4EAA-AC2F-55691AFC24F6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DRIVER.Weight</RootNamespace>
-    <AssemblyName>DRIVER.Weight</AssemblyName>
+    <RootNamespace>Driver.RS232_Pump</RootNamespace>
+    <AssemblyName>Driver.RS232-Pump</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -185,7 +185,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="RS232Weight.cs" />
+    <Compile Include="RS232Pump.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -196,6 +196,10 @@
     <ProjectReference Include="..\Database\Database.csproj">
       <Project>{9DA604D9-06C8-4EFF-9688-E9934CE25F40}</Project>
       <Name>Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Driver_RS232\Driver_RS232.csproj">
+      <Project>{995498BD-68E4-4DAD-98C3-42563DBD79D8}</Project>
+      <Name>Driver_RS232</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -35,7 +35,6 @@ namespace FPO_WPF_Test.Pages
         private static readonly AlarmManagement alarmManagement;
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private static AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
 
         public Backup()
         {
@@ -131,6 +130,7 @@ namespace FPO_WPF_Test.Pages
                 // c'est peut-être nul ça (je veux dire la gestion du mutex), il faut ajouter un wait non ?
                 logger.Warn("c'est peut-être nul ça (je veux dire la gestion du mutex), il faut ajouter un wait non ?");
 
+                AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
                 auditTrailInfo.columns[auditTrailInfo.username].value = Settings.Default.SystemUsername;
                 auditTrailInfo.columns[auditTrailInfo.eventType].value = "Evènement";
                 auditTrailInfo.columns[auditTrailInfo.description].value = General.auditTrail_BackupDesc;
@@ -240,7 +240,8 @@ namespace FPO_WPF_Test.Pages
                 if (process.ExitCode == 0)
                 {
                     if (!MyDatabase.IsConnected()) MyDatabase.Connect();
-                    
+
+                    AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
                     auditTrailInfo.columns[auditTrailInfo.username].value = username;
                     auditTrailInfo.columns[auditTrailInfo.eventType].value = "Evènement";
                     auditTrailInfo.columns[auditTrailInfo.description].value = General.auditTrail_RestoreDesc;

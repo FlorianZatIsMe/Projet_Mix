@@ -1,0 +1,23 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Driver.MODBUS.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ScanAlarmTimer_Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="ConnectionInfo" Type="Driver_MODBUS.ConnectionInfo" Scope="User">
+      <Value Profile="(Default)">
+          &lt;ConnectionInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+            &lt;ipAddress&gt;localhost&lt;/ipAddress&gt;
+            &lt;port&gt;root&lt;/port&gt;
+          &lt;/ConnectionInfo&gt;
+        </Value>
+    </Setting>
+    <Setting Name="Alarm_Connection_id1" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="Alarm_Connection_id2" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -77,7 +77,6 @@ namespace Alarm_Management
 
         private static bool isInitialized = false;
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        private static AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
 
         // Future interface
         private static string AuditTrail_SystemUsername;
@@ -107,6 +106,11 @@ namespace Alarm_Management
         public static void Initialize(IniInfo info)
         {
             AuditTrail_SystemUsername = info.AuditTrail_SystemUsername;
+
+            MyDatabase.Initialize(new Database.IniInfo() { 
+                AlarmType_Alarm = Settings.Default.AlarmType_Alarm,
+                AlarmType_Warning = Settings.Default.AlarmType_Warning });
+
             isInitialized = true;
         }
         public static void NewAlarm(int id1, int id2)
@@ -133,6 +137,8 @@ namespace Alarm_Management
             AlarmStatus statusBefore = alarms[id1, id2].Status;
             AlarmStatus statusAfter = AlarmStatus.ACTIVE;
 
+
+            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
             auditTrailInfo.columns[auditTrailInfo.username].value = AuditTrail_SystemUsername;
             auditTrailInfo.columns[auditTrailInfo.eventType].value = GetAlarmType(alarms[id1, id2].Type);
             auditTrailInfo.columns[auditTrailInfo.description].value = GetAlarmDescription(id1, id2);
@@ -245,6 +251,7 @@ namespace Alarm_Management
 
             if (statusAfter != AlarmStatus.None)
             {
+                AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
                 auditTrailInfo.columns[auditTrailInfo.username].value = AuditTrail_SystemUsername;
                 auditTrailInfo.columns[auditTrailInfo.eventType].value = GetAlarmType(alarms[id1, id2].Type);
                 auditTrailInfo.columns[auditTrailInfo.description].value = GetAlarmDescription(id1, id2);
@@ -318,6 +325,7 @@ namespace Alarm_Management
                 wasDbConnected = true;
             }*/
 
+            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
             auditTrailInfo.columns[auditTrailInfo.username].value = AuditTrail_SystemUsername;
             auditTrailInfo.columns[auditTrailInfo.eventType].value = GetAlarmType(alarms[id1, id2].Type);
             auditTrailInfo.columns[auditTrailInfo.description].value = GetAlarmDescription(id1, id2);

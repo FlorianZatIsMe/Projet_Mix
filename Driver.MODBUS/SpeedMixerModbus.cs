@@ -9,11 +9,20 @@ using System.Threading.Tasks;
 using System.Windows;
 using Alarm_Management;
 using Database;
+using Driver.MODBUS.Properties;
 using EasyModbus;
 
 
-namespace Driver.MODBUS
+namespace Driver_MODBUS
 {
+
+    [SettingsSerializeAs(SettingsSerializeAs.Xml)]
+    public class ConnectionInfo
+    {
+        public string ipAddress { get; set; }
+        public int port { get; set; }
+    }
+
     public static class SpeedMixerModbus
     {
         private static ModbusClient speedMixer;
@@ -28,18 +37,10 @@ namespace Driver.MODBUS
 
         static SpeedMixerModbus()
         {
-            if (MySettings == null)
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Modbus Settings are not defined");
-            }
-
-            //taskAlarmScan = Task.Factory.StartNew(() => ScanAlarms());
-            //Task.Factory.StartNew(() => ScanAlarms());
-
             // Initialisation des timers
             scanAlarmTimer = new System.Timers.Timer
             {
-                Interval = 1000,
+                Interval = Settings.Default.ScanAlarmTimer_Interval,
                 AutoReset = false
             };
             scanAlarmTimer.Elapsed += ScanAlarmTimer_OnTimedEvent;
@@ -55,39 +56,18 @@ namespace Driver.MODBUS
         {
             if (isModbusActive && !IsConnected() && !areAlarmActive[0])
             {
-                AlarmManagement.NewAlarm(1, 0);
+                AlarmManagement.NewAlarm(Settings.Default.Alarm_Connection_id1, Settings.Default.Alarm_Connection_id2);
                 areAlarmActive[0] = true;
             }
             else if (IsConnected() && areAlarmActive[0])
             {
-                AlarmManagement.InactivateAlarm(1, 0);
+                AlarmManagement.InactivateAlarm(Settings.Default.Alarm_Connection_id1, Settings.Default.Alarm_Connection_id2);
                 areAlarmActive[0] = false;
             }
 
             if (isModbusActive && !IsConnected()) Connect();
 
-            //MessageBox.Show("Salut");
             scanAlarmTimer.Enabled = true;
-        }
-        private static async void ScanAlarms()
-        {
-            while (true)
-            {
-                if (isModbusActive && !IsConnected() && !areAlarmActive[0])
-                {
-                    AlarmManagement.NewAlarm(1, 0);
-                    areAlarmActive[0] = true;
-                }
-                else if (IsConnected() && areAlarmActive[0])
-                {
-                    AlarmManagement.InactivateAlarm(1, 0);
-                    areAlarmActive[0] = false;
-                }
-
-                if (isModbusActive && !IsConnected()) Connect();
-
-                await Task.Delay(1000);
-            }
         }
         public static void Initialize()
         {
@@ -96,10 +76,10 @@ namespace Driver.MODBUS
         }
         public static void Connect()
         {
-            speedMixer = new ModbusClient(MySettings["IP_address"].ToString(), int.Parse(MySettings["port"]));    //Ip-Address and Port of Modbus-TCP-Server
+            speedMixer = new ModbusClient(Settings.Default.ConnectionInfo.ipAddress, Settings.Default.ConnectionInfo.port);    //Ip-Address and Port of Modbus-TCP-Server
 
             try { speedMixer.Connect(); }
-            catch (Exception) { }
+            catch (Exception) { logger. }
         }
         public static void Disconnect()
         {
@@ -110,7 +90,6 @@ namespace Driver.MODBUS
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                throw;
             }
         }
         public static bool IsConnected()
@@ -200,6 +179,110 @@ namespace Driver.MODBUS
                         speedFromDB = array[12 + 3 * i];
                         timeFromDB = array[13 + 3 * i];
                         pressureFromDB = array[14 + 3 * i];
+
+                        //MessageBox.Show(timeFromDB);
+
+                        speedParameter = (speedFromDB == "" || speedFromDB == null) ? 0 : int.Parse(speedFromDB);
+                        timeParameter = (timeFromDB == "" || timeFromDB == null) ? 0 : int.Parse(timeFromDB);
+                        pressureParameter = (pressureFromDB == "" || pressureFromDB == null) ? 0 : int.Parse(pressureFromDB);
+
+                        speedMixer.WriteSingleRegister(3013 + i, speedParameter);       // Vitesse des 10 phases
+                        speedMixer.WriteSingleRegister(3023 + i, timeParameter);        // Temps des 10 phases
+                        speedMixer.WriteSingleRegister(3033 + i, 10 * pressureParameter);    // Pression de vide des 10 phases
+                    }
+
+                    speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
+                    speedMixer.WriteSingleRegister(3056, 0);    // Numéro du programme
+                    speedMixer.WriteSingleRegister(3053, 1);    // Commande pour mettre à jour tout les paramètres
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - SpeedMixerModbus.cs, SetProgram(string[] array)" + ex.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Problème de connection avec le SpeedMixer");
+            }
+        }
+        public static void SetProgram(RecipeSpeedMixerInfo recipe)
+        {
+            //if (!IsConnected()) Connect();
+
+            if (IsConnected())
+            {
+                int vaccumScale;
+                int speedParameter;
+                int timeParameter;
+                int pressureParameter;
+                string speedFromDB;
+                string timeFromDB;
+                string pressureFromDB;
+
+                try
+                {
+
+                    speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
+
+                    // Name of the program
+                    speedMixer.WriteSingleRegister(3000, 0);
+                    speedMixer.WriteSingleRegister(3001, 0);
+                    speedMixer.WriteSingleRegister(3002, 0);
+                    speedMixer.WriteSingleRegister(3003, 0);
+                    speedMixer.WriteSingleRegister(3004, 0);
+                    speedMixer.WriteSingleRegister(3005, 0);
+                    speedMixer.WriteSingleRegister(3006, 0);
+                    speedMixer.WriteSingleRegister(3007, 0);
+                    speedMixer.WriteSingleRegister(3008, 0);
+                    speedMixer.WriteSingleRegister(3009, 0);
+                    speedMixer.WriteSingleRegister(3010, 0);
+                    speedMixer.WriteSingleRegister(3011, 0);
+                    speedMixer.WriteSingleRegister(3012, 0);
+
+
+
+                    speedMixer.WriteSingleRegister(3043, int.Parse(recipe.columns[recipe.acceleration].value));  // Acceleration
+                    speedMixer.WriteSingleRegister(3044, int.Parse(recipe.columns[recipe.deceleration].value));  // Deceleration
+                    speedMixer.WriteSingleRegister(3046, recipe.columns[recipe.vaccum_control].value == "True" ? 1 : 0);    // Vacuum in Use (0=No ; 1=Yes)
+
+                    //                    speedMixer.WriteSingleRegister(3048, 0);    // ça ne fonctionne pas, ça devrait être le choix du vent gas
+                    //                    speedMixer.WriteSingleRegister(3049, 0);    // Monitor type Je pense que ça ne fonctionne pas
+
+                    switch (recipe.columns[recipe.pressureUnit].value)
+                    {
+                        case "Torr":
+                            vaccumScale = 1;
+                            break;
+                        case "mBar":
+                            vaccumScale = 2;
+                            break;
+                        case "inHg":
+                            vaccumScale = 3;
+                            break;
+                        case "PSIA":
+                            vaccumScale = 4;
+                            break;
+                        default:
+                            vaccumScale = -1;
+                            break;
+                    }
+
+                    if (vaccumScale != -1) speedMixer.WriteSingleRegister(3050, vaccumScale);    // Vacuum Scale (1=Torr ; 2=mBar ; 3=inHg ; 4=PSIA)
+                    else MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Qu'est-ce que t'as fait ?");
+                    //SpeedMixer.WriteSingleRegister(3052, 0);    // S Curve, pas touche
+
+                    speedMixer.WriteSingleRegister(3056, 0);    // Numéro du programme
+                    speedMixer.WriteSingleRegister(3053, 1);    // Commande pour mettre à jour tout les paramètres
+
+                    //MessageBox.Show("Alors...");
+
+                    //speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
+
+                    for (int i = 0; i < 10; i++)
+                    {
+                        speedFromDB = recipe.columns[recipe.speed00 + 3 * i].value;
+                        timeFromDB = recipe.columns[recipe.time00 + 3 * i].value;
+                        pressureFromDB = recipe.columns[recipe.pressure00 + 3 * i].value;
 
                         //MessageBox.Show(timeFromDB);
 

@@ -38,6 +38,7 @@ namespace Database
     public interface ICycleSeqInfo : ISeqInfo
     {
         void SetRecipeParameters(string[] array); // ou get
+        void SetRecipeParameters(ISeqInfo recipe); // ou get
     }
 
     public class AuditTrailInfo : ITableInfo
@@ -316,6 +317,19 @@ namespace Database
             columns[unit].value = array[recipeWeightInfo.unit];
             columns[decimalNumber].value = array[recipeWeightInfo.decimalNumber];
         }
+        public void SetRecipeParameters(ISeqInfo seqInfo)
+        {
+            // Vérifier que le type, idem pour speedmixer
+            RecipeWeightInfo recipeWInfo = seqInfo as RecipeWeightInfo;
+            NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
+            columns[product].value = recipeWInfo.columns[recipeWInfo.seqName].value;
+            columns[setpoint].value = recipeWInfo.columns[recipeWInfo.setpoint].value;
+            columns[min].value = recipeWInfo.columns[recipeWInfo.min].value;
+            columns[max].value = recipeWInfo.columns[recipeWInfo.max].value;
+            columns[unit].value = recipeWInfo.columns[recipeWInfo.unit].value;
+            columns[decimalNumber].value = recipeWInfo.columns[recipeWInfo.decimalNumber].value;
+        }
     }
 
     public class CycleSpeedMixerInfo : ICycleSeqInfo
@@ -396,6 +410,28 @@ namespace Database
             columns[speedMax].value = array[recipeSpeedMixerInfo.speedMax];
             columns[pressureMin].value = array[recipeSpeedMixerInfo.pressureMin];
             columns[pressureMax].value = array[recipeSpeedMixerInfo.pressureMax];
+        }
+        public void SetRecipeParameters(ISeqInfo seqInfo)
+        {
+            RecipeSpeedMixerInfo recipeSMInfo = seqInfo as RecipeSpeedMixerInfo;
+            NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
+            int i = 0;
+            int timeTh_seconds = 0;
+
+            while (i != 10 && recipeSMInfo.columns[recipeSMInfo.time00 + 3 * i].value != "")
+            {
+                // Ajoute un try et faire ça partout
+                timeTh_seconds += int.Parse(recipeSMInfo.columns[recipeSMInfo.time00 + 3 * i].value);
+                i++;
+            }
+
+            columns[timeMixTh].value = TimeSpan.FromSeconds(timeTh_seconds).ToString();
+            columns[pressureUnit].value = recipeSMInfo.columns[recipeSMInfo.pressureUnit].value;
+            columns[speedMin].value = recipeSMInfo.columns[recipeSMInfo.speedMin].value;
+            columns[speedMax].value = recipeSMInfo.columns[recipeSMInfo.speedMax].value;
+            columns[pressureMin].value = recipeSMInfo.columns[recipeSMInfo.pressureMin].value;
+            columns[pressureMax].value = recipeSMInfo.columns[recipeSMInfo.pressureMax].value;
         }
     }
 

@@ -6,8 +6,8 @@ using System.Configuration;
 using System.Collections.Specialized;
 using Database;
 using System.Globalization;
-using DRIVER.RS232.Weight;
-using Driver.RS232.Pump;
+using DRIVER_RS232_Weight;
+using Driver_RS232_Pump;
 using System.Security.Principal;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
@@ -19,7 +19,7 @@ using System.Collections;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Driver.MODBUS;
+using Driver_MODBUS;
 using System.Diagnostics;
 using Alarm_Management;
 using System.Linq;
@@ -53,7 +53,6 @@ namespace FPO_WPF_Test
         private readonly AlarmManagement alarmManagement;
         private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
         /*
             auditTrailInfo.columns[auditTrailInfo.username].value = General.loggedUsername;
             auditTrailInfo.columns[auditTrailInfo.eventType].value = "Evènement";
@@ -72,7 +71,6 @@ namespace FPO_WPF_Test
             LogManager.ReconfigExistingLoggers(); // Explicit refresh of Layouts and updates active Logger-objects
 
             /*
-
             Environment.Exit(1);
             //*/
 
@@ -82,6 +80,7 @@ namespace FPO_WPF_Test
                 role: UserManagement.UpdateAccessTable(UserPrincipal.Current.DisplayName));
             labelSoftwareName.Text = General.application_name + " version " + General.application_version;
 
+            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
             auditTrailInfo.columns[auditTrailInfo.username].value = General.loggedUsername;
             auditTrailInfo.columns[auditTrailInfo.eventType].value = "Evènement";
             auditTrailInfo.columns[auditTrailInfo.description].value = "Démarrage de l'application";
@@ -106,7 +105,7 @@ namespace FPO_WPF_Test
         {
             while (!isWindowLoaded) await Task.Delay(25);
 
-            AlarmManagement.Initialize(new IniInfo() { AuditTrail_SystemUsername = Settings.Default.SystemUsername });
+            AlarmManagement.Initialize(new Alarm_Management.IniInfo() { AuditTrail_SystemUsername = Settings.Default.SystemUsername });
 
             // 
             //
@@ -116,14 +115,14 @@ namespace FPO_WPF_Test
             //
             //
             //*
-            RS232Weight.Initialize();
-            RS232Pump.Initialize();
+            RS232Weight.rs232.Initialize();
+            RS232Pump.rs232.Initialize();
             //SpeedMixerModbus.Initialize();
-            if (RS232Pump.IsOpen())
+            if (RS232Pump.rs232.IsOpen())
             {
-                RS232Pump.BlockUse();
-                RS232Pump.SetCommand("!C802 0");
-                RS232Pump.FreeUse();
+                RS232Pump.rs232.BlockUse();
+                RS232Pump.rs232.SetCommand("!C802 0");
+                RS232Pump.rs232.FreeUse();
             }
             //*/
 
@@ -162,6 +161,7 @@ namespace FPO_WPF_Test
                 nBackupAttempt++;
                 if (!wasBackupSucceeded)
                 {
+                    AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
                     auditTrailInfo.columns[auditTrailInfo.username].value = Settings.Default.SystemUsername;
                     auditTrailInfo.columns[auditTrailInfo.eventType].value = "Evènement";
                     auditTrailInfo.columns[auditTrailInfo.description].value = "Backup complet de la base de donnée échoué, essai " + nBackupAttempt.ToString();

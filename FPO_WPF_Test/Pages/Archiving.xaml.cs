@@ -32,7 +32,6 @@ namespace FPO_WPF_Test.Pages
         private string lastArchiveFileName;
         private int nLines;
 
-        private AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
 
         public Archiving()
         {
@@ -125,6 +124,8 @@ namespace FPO_WPF_Test.Pages
             {
                 if (!MyDatabase.IsConnected()) MyDatabase.Connect();
                 MyDatabase.DeleteRows("audit_trail", lastRecordDate);
+
+                AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
                 auditTrailInfo.columns[auditTrailInfo.username].value = username;
                 auditTrailInfo.columns[auditTrailInfo.eventType].value = "Evènement";
                 auditTrailInfo.columns[auditTrailInfo.description].value = General.auditTrail_ArchiveDesc;
@@ -204,6 +205,8 @@ namespace FPO_WPF_Test.Pages
                 if (process.ExitCode == 0)
                 {
                     if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+
+                    AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
                     auditTrailInfo.columns[auditTrailInfo.username].value = username;
                     auditTrailInfo.columns[auditTrailInfo.eventType].value = "Evènement";
                     auditTrailInfo.columns[auditTrailInfo.description].value = General.auditTrail_RestArchDesc;

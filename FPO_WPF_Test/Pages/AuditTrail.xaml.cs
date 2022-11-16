@@ -30,6 +30,8 @@ namespace FPO_WPF_Test.Pages
 
         private readonly int numberOfDaysBefore = 2;
 
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         public AuditTrail()
         {
             InitializeComponent();
@@ -88,7 +90,6 @@ namespace FPO_WPF_Test.Pages
                 {
                     dt.Columns.Add(new DataColumn(columnName));
                 }
-
                 //Ajout des lignes
                 do
                 {
@@ -114,7 +115,6 @@ namespace FPO_WPF_Test.Pages
                 //Implémentation dans la DataGrid dataGridAuditTrail
                 dataGridAuditTrail.ItemsSource = dt.DefaultView;
                 dataGridAuditTrail.Columns[0].Visibility = Visibility.Collapsed;
-                //MyDatabase.Disconnect();
             }
 
             MyDatabase.Disconnect(mutexID);

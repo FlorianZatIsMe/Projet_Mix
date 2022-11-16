@@ -1,5 +1,6 @@
 ﻿using Alarm_Management;
 using Database;
+using Driver_RS232;
 using System;
 using System.Collections.Generic;
 using System.IO.Ports;
@@ -10,7 +11,80 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace DRIVER.RS232.Weight
+namespace DRIVER_RS232_Weight
+{
+    public static class RS232Weight
+    {
+        public static RS232 rs232;
+        private readonly static SerialPort scaleConnection;
+        private static string receivedData;
+        private static decimal weight;
+        private static bool isWeightStable;
+
+        static RS232Weight()
+        {
+            isWeightStable = false;
+
+            scaleConnection = new SerialPort
+            {
+                BaudRate = 9600,
+                DataBits = 8,
+                Parity = Parity.None,
+                StopBits = StopBits.One,
+                Handshake = Handshake.XOnXOff,
+                NewLine = "\n",
+                PortName = "COM6"
+            };
+
+            rs232 = new RS232(scaleConnection, 0, 0, new SerialDataReceivedEventHandler(ReceivedData));
+        }
+        public static string GetData() { return receivedData; }
+        public static decimal GetWeight() { return weight; }
+        public static bool IsWeightStable() { return isWeightStable; }
+        private static void ReceivedData(object sender, SerialDataReceivedEventArgs e)
+        {
+            SerialPort port = sender as SerialPort;
+            receivedData = port.ReadLine();
+
+            if (rs232.GetLastCommand() == "SIR" || rs232.GetLastCommand() == "S")
+            {
+                if (receivedData.StartsWith("S S"))
+                {
+                    weight = decimal.Parse(receivedData.Substring(3, 12));
+                    isWeightStable = true;
+                }
+                else if (receivedData.StartsWith("S D"))
+                {
+                    weight = decimal.Parse(receivedData.Substring(3, 12));
+                    isWeightStable = false;
+                }
+                else
+                {
+                    weight = -1;
+                }
+            }
+            else
+            {
+                weight = -1;
+            }
+        }
+    }
+}
+
+/*
+ using Alarm_Management;
+using Database;
+using System;
+using System.Collections.Generic;
+using System.IO.Ports;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
+
+namespace DRIVER_RS232_Weight
 {
     public static class RS232Weight
     {
@@ -205,3 +279,5 @@ namespace DRIVER.RS232.Weight
         }
     }
 }
+
+ */

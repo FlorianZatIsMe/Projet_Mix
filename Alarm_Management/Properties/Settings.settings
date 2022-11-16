@@ -2,10 +2,40 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Alarm_Management.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="Error01" Type="System.String" Scope="Application">
+    <Setting Name="AlarmType_Alarm" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Alarme</Value>
+    </Setting>
+    <Setting Name="AlarmType_Warning" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Alerte</Value>
+    </Setting>
+    <Setting Name="AlarmType_None" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Error01" Type="System.String" Scope="User">
       <Value Profile="(Default)">La classe n'est pas initialisée</Value>
     </Setting>
-    <Setting Name="Alarms" Type="Alarm_Management.ConfigAlarms" Scope="Application">
+    <Setting Name="Error02" Type="System.String" Scope="User">
+      <Value Profile="(Default)">L'alarme est déjà active</Value>
+    </Setting>
+    <Setting Name="Error03" Type="System.String" Scope="User">
+      <Value Profile="(Default)">L'alarme est inactive mais ne fait pas parti des alarmes actives</Value>
+    </Setting>
+    <Setting Name="Error04" Type="System.String" Scope="User">
+      <Value Profile="(Default)">L'alarme ne fait pas parti des alarmes actives</Value>
+    </Setting>
+    <Setting Name="Error05" Type="System.String" Scope="User">
+      <Value Profile="(Default)">L'alarme est déjà inactive</Value>
+    </Setting>
+    <Setting Name="Error06" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Statut de l'alarme avant inactivation ou aquittement incorrect</Value>
+    </Setting>
+    <Setting Name="Error07" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Type d'alarme incorrect</Value>
+    </Setting>
+    <Setting Name="Error08" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Je ne te crois pas, c'est impossible</Value>
+    </Setting>
+    <Setting Name="Alarms" Type="Alarm_Management.ConfigAlarms" Scope="User">
       <Value Profile="(Default)">
           &lt;ConfigAlarms xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
             &lt;configAlarms&gt;
@@ -54,36 +84,6 @@
             &lt;/configAlarms&gt;
           &lt;/ConfigAlarms&gt;
         </Value>
-    </Setting>
-    <Setting Name="Error02" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">L'alarme est déjà active</Value>
-    </Setting>
-    <Setting Name="Error03" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">L'alarme est inactive mais ne fait pas parti des alarmes actives</Value>
-    </Setting>
-    <Setting Name="Error04" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">L'alarme ne fait pas parti des alarmes actives</Value>
-    </Setting>
-    <Setting Name="Error05" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">L'alarme est déjà inactive</Value>
-    </Setting>
-    <Setting Name="Error06" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Statut de l'alarme avant inactivation ou aquittement incorrect</Value>
-    </Setting>
-    <Setting Name="Error07" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Type d'alarme incorrect</Value>
-    </Setting>
-    <Setting Name="Error08" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Je ne te crois pas, c'est impossible</Value>
-    </Setting>
-    <Setting Name="AlarmType_Alarm" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Alarme</Value>
-    </Setting>
-    <Setting Name="AlarmType_Warning" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Alerte</Value>
-    </Setting>
-    <Setting Name="AlarmType_None" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

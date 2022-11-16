@@ -1,7 +1,7 @@
 ﻿using Alarm_Management;
 using Database;
-using Driver.RS232.Pump;
-using DRIVER.RS232.Weight;
+using Driver_RS232_Pump;
+using DRIVER_RS232_Weight;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -61,12 +61,12 @@ namespace FPO_WPF_Test.Pages.SubCycle
             {
                 MessageBox.Show(RS232Weight.GetData());
 
-                if (RS232Weight.IsFree())
+                if (RS232Weight.rs232.IsFree())
                 {
-                    RS232Weight.BlockUse();
-                    if (RS232Weight.IsOpen()) RS232Weight.Open();
+                    RS232Weight.rs232.BlockUse();
+                    //if (RS232Weight.rs232.IsOpen()) RS232Weight.rs232.Open();
                     //RS232Weight.SetCommand("@");
-                    RS232Weight.SetCommand(textbox.Text);
+                    RS232Weight.rs232.SetCommand(textbox.Text);
                 }
             }
         }
@@ -77,7 +77,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             if (e.Key == Key.Enter)
             {
                 //MessageBox.Show(RS232Pump.GetData());
-                RS232Pump.SetCommand(textbox.Text);
+                RS232Pump.rs232.SetCommand(textbox.Text);
             }
         }
     }
