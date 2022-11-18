@@ -517,20 +517,39 @@
     <Setting Name="Error13" Type="System.String" Scope="User">
       <Value Profile="(Default)">Numéro de ligne manquant</Value>
     </Setting>
-    <Setting Name="ConnectionInfo" Type="Database.ConnectionInfo" Scope="User">
-      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;ConnectionInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
-  &lt;server&gt;localhost&lt;/server&gt;
-  &lt;userID&gt;root&lt;/userID&gt;
-  &lt;password&gt;Integra2022/&lt;/password&gt;
-  &lt;db&gt;db1&lt;/db&gt;
-&lt;/ConnectionInfo&gt;</Value>
-    </Setting>
     <Setting Name="Error14" Type="System.String" Scope="User">
       <Value Profile="(Default)">Nombre de colonnes incorrect</Value>
     </Setting>
     <Setting Name="Error15" Type="System.String" Scope="User">
       <Value Profile="(Default)">Le tableau contient au moins 2 lignes avec le même id</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_PressureUnit_Torr" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Torr</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_PressureUnit_mBar" Type="System.String" Scope="User">
+      <Value Profile="(Default)">mBar</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_PressureUnit_inHg" Type="System.String" Scope="User">
+      <Value Profile="(Default)">inHg</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_PressureUnit_PSIA" Type="System.String" Scope="User">
+      <Value Profile="(Default)">PSIA</Value>
+    </Setting>
+    <Setting Name="ConnectionInfo" Type="Database.ConnectionInfo" Scope="User">
+      <Value Profile="(Default)">
+          &lt;ConnectionInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+            &lt;server&gt;localhost&lt;/server&gt;
+            &lt;userID&gt;root&lt;/userID&gt;
+            &lt;password&gt;Integra2022/&lt;/password&gt;
+            &lt;db&gt;db1&lt;/db&gt;
+          &lt;/ConnectionInfo&gt;
+        </Value>
+    </Setting>
+    <Setting Name="General_TrueValue" Type="System.String" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="General_FalseValue" Type="System.String" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

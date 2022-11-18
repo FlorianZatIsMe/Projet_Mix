@@ -9,6 +9,18 @@ using System.Windows;
 
 namespace Database
 {
+    public static class General
+    { 
+        public static string trueValue { get; }
+        public static string falseValue { get; }
+
+        static General()
+        {
+            trueValue = Settings.Default.General_TrueValue;
+            falseValue = Settings.Default.General_FalseValue;
+        }
+    }
+
     public class Column
     {
         public string id { get; }
@@ -174,6 +186,12 @@ namespace Database
             speedMax = Settings.Default.RecipeSpeedMixer_ColN_speedMax;
             pressureMin = Settings.Default.RecipeSpeedMixer_ColN_pressureMin;
             pressureMax = Settings.Default.RecipeSpeedMixer_ColN_pressureMax;
+
+            pUnit_Torr = Settings.Default.RecipeSpeedMixer_PressureUnit_Torr;
+            pUnit_mBar = Settings.Default.RecipeSpeedMixer_PressureUnit_mBar;
+            pUnit_inHg = Settings.Default.RecipeSpeedMixer_PressureUnit_inHg;
+            pUnit_PSIA = Settings.Default.RecipeSpeedMixer_PressureUnit_PSIA;
+
         }
         public string name { get; }
         public List<Column> columns { get; set; }
@@ -198,7 +216,10 @@ namespace Database
         public int speedMax { get; }
         public int pressureMin { get; }
         public int pressureMax { get; }
-
+        public string pUnit_Torr { get; }
+        public string pUnit_mBar { get; }
+        public string pUnit_inHg { get; }
+        public string pUnit_PSIA { get; }
     }
 
     public class CycleTableInfo : ISeqInfo

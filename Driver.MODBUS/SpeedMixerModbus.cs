@@ -12,7 +12,6 @@ using Database;
 using Driver.MODBUS.Properties;
 using EasyModbus;
 
-
 namespace Driver_MODBUS
 {
 
@@ -35,8 +34,12 @@ namespace Driver_MODBUS
         private static readonly System.Timers.Timer scanAlarmTimer;
         private static readonly AlarmManagement alarmManagement = new AlarmManagement();
 
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         static SpeedMixerModbus()
         {
+            logger.Debug("Start");
+
             // Initialisation des timers
             scanAlarmTimer = new System.Timers.Timer
             {
@@ -79,7 +82,7 @@ namespace Driver_MODBUS
             speedMixer = new ModbusClient(Settings.Default.ConnectionInfo.ipAddress, Settings.Default.ConnectionInfo.port);    //Ip-Address and Port of Modbus-TCP-Server
 
             try { speedMixer.Connect(); }
-            catch (Exception) { logger. }
+            catch (Exception ex) { logger.Error(ex.Message); }
         }
         public static void Disconnect()
         {
@@ -89,6 +92,7 @@ namespace Driver_MODBUS
             }
             catch (Exception ex)
             {
+                logger.Error(ex.Message);
                 MessageBox.Show(ex.Message);
             }
         }
@@ -99,7 +103,7 @@ namespace Driver_MODBUS
                 return false;
             }
 
-            return speedMixer.Available(1000); // c'est nul ce truc
+            return speedMixer.Available(Settings.Default.ScanAlarmTimer_Interval); // c'est nul ce truc
         }
         public static void SetProgram(string[] array)
         {
@@ -118,28 +122,18 @@ namespace Driver_MODBUS
                 try
                 {
 
-                    speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
+                    speedMixer.WriteSingleRegister(Settings.Default.Register_Instruction, 0);    // Instruction to allow the modification of the parameters
 
                     // Name of the program
-                    speedMixer.WriteSingleRegister(3000, 0);
-                    speedMixer.WriteSingleRegister(3001, 0);
-                    speedMixer.WriteSingleRegister(3002, 0);
-                    speedMixer.WriteSingleRegister(3003, 0);
-                    speedMixer.WriteSingleRegister(3004, 0);
-                    speedMixer.WriteSingleRegister(3005, 0);
-                    speedMixer.WriteSingleRegister(3006, 0);
-                    speedMixer.WriteSingleRegister(3007, 0);
-                    speedMixer.WriteSingleRegister(3008, 0);
-                    speedMixer.WriteSingleRegister(3009, 0);
-                    speedMixer.WriteSingleRegister(3010, 0);
-                    speedMixer.WriteSingleRegister(3011, 0);
-                    speedMixer.WriteSingleRegister(3012, 0);
 
+                    for (int i = 0; i < 10; i++)
+                    {
+                        speedMixer.WriteSingleRegister(Settings.Default.Register_MixName + i, 0);
+                    }
 
-
-                    speedMixer.WriteSingleRegister(3043, int.Parse(array[4]));  // Acceleration
-                    speedMixer.WriteSingleRegister(3044, int.Parse(array[5]));  // Deceleration
-                    speedMixer.WriteSingleRegister(3046, array[6] == "True" ? 1 : 0);    // Vacuum in Use (0=No ; 1=Yes)
+                    speedMixer.WriteSingleRegister(Settings.Default.Register_Acceleration, int.Parse(array[4]));  // Acceleration
+                    speedMixer.WriteSingleRegister(Settings.Default.Register_Deceleration, int.Parse(array[5]));  // Deceleration
+                    speedMixer.WriteSingleRegister(Settings.Default.Register_VacuumInUse, array[6] == "True" ? 1 : 0);    // Vacuum in Use (0=No ; 1=Yes)
 
                     //                    speedMixer.WriteSingleRegister(3048, 0);    // ça ne fonctionne pas, ça devrait être le choix du vent gas
                     //                    speedMixer.WriteSingleRegister(3049, 0);    // Monitor type Je pense que ça ne fonctionne pas
@@ -163,12 +157,12 @@ namespace Driver_MODBUS
                             break;
                     }
 
-                    if (vaccumScale != -1) speedMixer.WriteSingleRegister(3050, vaccumScale);    // Vacuum Scale (1=Torr ; 2=mBar ; 3=inHg ; 4=PSIA)
+                    if (vaccumScale != -1) speedMixer.WriteSingleRegister(Settings.Default.Register_VacuumScale, vaccumScale);    // Vacuum Scale (1=Torr ; 2=mBar ; 3=inHg ; 4=PSIA)
                     else MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Qu'est-ce que t'as fait ?");
                     //SpeedMixer.WriteSingleRegister(3052, 0);    // S Curve, pas touche
 
-                    speedMixer.WriteSingleRegister(3056, 0);    // Numéro du programme
-                    speedMixer.WriteSingleRegister(3053, 1);    // Commande pour mettre à jour tout les paramètres
+                    speedMixer.WriteSingleRegister(Settings.Default.Register_ProgramId, 0);    // Numéro du programme
+                    speedMixer.WriteSingleRegister(Settings.Default.Register_Instruction, 1);    // Commande pour mettre à jour tout les paramètres
 
                     //MessageBox.Show("Alors...");
 
@@ -186,202 +180,178 @@ namespace Driver_MODBUS
                         timeParameter = (timeFromDB == "" || timeFromDB == null) ? 0 : int.Parse(timeFromDB);
                         pressureParameter = (pressureFromDB == "" || pressureFromDB == null) ? 0 : int.Parse(pressureFromDB);
 
-                        speedMixer.WriteSingleRegister(3013 + i, speedParameter);       // Vitesse des 10 phases
-                        speedMixer.WriteSingleRegister(3023 + i, timeParameter);        // Temps des 10 phases
-                        speedMixer.WriteSingleRegister(3033 + i, 10 * pressureParameter);    // Pression de vide des 10 phases
+                        speedMixer.WriteSingleRegister(Settings.Default.Register_Speed01 + i, speedParameter);       // Vitesse des 10 phases
+                        speedMixer.WriteSingleRegister(Settings.Default.Register_Time01 + i, timeParameter);        // Temps des 10 phases
+                        speedMixer.WriteSingleRegister(Settings.Default.Register_Pressure01 + i, 10 * pressureParameter);    // Pression de vide des 10 phases
                     }
 
-                    speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
-                    speedMixer.WriteSingleRegister(3056, 0);    // Numéro du programme
-                    speedMixer.WriteSingleRegister(3053, 1);    // Commande pour mettre à jour tout les paramètres
+                    speedMixer.WriteSingleRegister(Settings.Default.Register_Instruction, 0);    // Instruction to allow the modification of the parameters
+                    speedMixer.WriteSingleRegister(Settings.Default.Register_ProgramId, 0);    // Numéro du programme
+                    speedMixer.WriteSingleRegister(Settings.Default.Register_Instruction, 1);    // Commande pour mettre à jour tout les paramètres
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - SpeedMixerModbus.cs, SetProgram(string[] array)" + ex.Message);
+                    logger.Error(ex.Message);
+                    MessageBox.Show(ex.Message);
                 }
             }
             else
             {
-                MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Problème de connection avec le SpeedMixer");
+                MessageBox.Show("Problème de connection avec le SpeedMixer");
             }
         }
         public static void SetProgram(RecipeSpeedMixerInfo recipe)
         {
             //if (!IsConnected()) Connect();
 
-            if (IsConnected())
+            if (!IsConnected())
             {
-                int vaccumScale;
-                int speedParameter;
-                int timeParameter;
-                int pressureParameter;
-                string speedFromDB;
-                string timeFromDB;
-                string pressureFromDB;
-
-                try
-                {
-
-                    speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
-
-                    // Name of the program
-                    speedMixer.WriteSingleRegister(3000, 0);
-                    speedMixer.WriteSingleRegister(3001, 0);
-                    speedMixer.WriteSingleRegister(3002, 0);
-                    speedMixer.WriteSingleRegister(3003, 0);
-                    speedMixer.WriteSingleRegister(3004, 0);
-                    speedMixer.WriteSingleRegister(3005, 0);
-                    speedMixer.WriteSingleRegister(3006, 0);
-                    speedMixer.WriteSingleRegister(3007, 0);
-                    speedMixer.WriteSingleRegister(3008, 0);
-                    speedMixer.WriteSingleRegister(3009, 0);
-                    speedMixer.WriteSingleRegister(3010, 0);
-                    speedMixer.WriteSingleRegister(3011, 0);
-                    speedMixer.WriteSingleRegister(3012, 0);
-
-
-
-                    speedMixer.WriteSingleRegister(3043, int.Parse(recipe.columns[recipe.acceleration].value));  // Acceleration
-                    speedMixer.WriteSingleRegister(3044, int.Parse(recipe.columns[recipe.deceleration].value));  // Deceleration
-                    speedMixer.WriteSingleRegister(3046, recipe.columns[recipe.vaccum_control].value == "True" ? 1 : 0);    // Vacuum in Use (0=No ; 1=Yes)
-
-                    //                    speedMixer.WriteSingleRegister(3048, 0);    // ça ne fonctionne pas, ça devrait être le choix du vent gas
-                    //                    speedMixer.WriteSingleRegister(3049, 0);    // Monitor type Je pense que ça ne fonctionne pas
-
-                    switch (recipe.columns[recipe.pressureUnit].value)
-                    {
-                        case "Torr":
-                            vaccumScale = 1;
-                            break;
-                        case "mBar":
-                            vaccumScale = 2;
-                            break;
-                        case "inHg":
-                            vaccumScale = 3;
-                            break;
-                        case "PSIA":
-                            vaccumScale = 4;
-                            break;
-                        default:
-                            vaccumScale = -1;
-                            break;
-                    }
-
-                    if (vaccumScale != -1) speedMixer.WriteSingleRegister(3050, vaccumScale);    // Vacuum Scale (1=Torr ; 2=mBar ; 3=inHg ; 4=PSIA)
-                    else MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Qu'est-ce que t'as fait ?");
-                    //SpeedMixer.WriteSingleRegister(3052, 0);    // S Curve, pas touche
-
-                    speedMixer.WriteSingleRegister(3056, 0);    // Numéro du programme
-                    speedMixer.WriteSingleRegister(3053, 1);    // Commande pour mettre à jour tout les paramètres
-
-                    //MessageBox.Show("Alors...");
-
-                    //speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
-
-                    for (int i = 0; i < 10; i++)
-                    {
-                        speedFromDB = recipe.columns[recipe.speed00 + 3 * i].value;
-                        timeFromDB = recipe.columns[recipe.time00 + 3 * i].value;
-                        pressureFromDB = recipe.columns[recipe.pressure00 + 3 * i].value;
-
-                        //MessageBox.Show(timeFromDB);
-
-                        speedParameter = (speedFromDB == "" || speedFromDB == null) ? 0 : int.Parse(speedFromDB);
-                        timeParameter = (timeFromDB == "" || timeFromDB == null) ? 0 : int.Parse(timeFromDB);
-                        pressureParameter = (pressureFromDB == "" || pressureFromDB == null) ? 0 : int.Parse(pressureFromDB);
-
-                        speedMixer.WriteSingleRegister(3013 + i, speedParameter);       // Vitesse des 10 phases
-                        speedMixer.WriteSingleRegister(3023 + i, timeParameter);        // Temps des 10 phases
-                        speedMixer.WriteSingleRegister(3033 + i, 10 * pressureParameter);    // Pression de vide des 10 phases
-                    }
-
-                    speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
-                    speedMixer.WriteSingleRegister(3056, 0);    // Numéro du programme
-                    speedMixer.WriteSingleRegister(3053, 1);    // Commande pour mettre à jour tout les paramètres
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - SpeedMixerModbus.cs, SetProgram(string[] array)" + ex.Message);
-                }
+                logger.Error(Settings.Default.Error01);
+                //MessageBox.Show(Settings.Default.Error01);
+                return;
             }
-            else
+
+            int vaccumScale;
+            int speedParameter;
+            int timeParameter;
+            int pressureParameter;
+            string speedFromDB;
+            string timeFromDB;
+            string pressureFromDB;
+
+            speedMixer.WriteSingleRegister(Settings.Default.Register_Instruction, Settings.Default.Instruction_Reset);    // Instruction to allow the modification of the parameters
+
+            // Name of the program
+
+            for (int i = 0; i < 10; i++)
             {
-                MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Problème de connection avec le SpeedMixer");
+                speedMixer.WriteSingleRegister(Settings.Default.Register_MixName + i, 0);
             }
+
+            speedMixer.WriteSingleRegister(Settings.Default.Register_Acceleration, int.Parse(recipe.columns[recipe.acceleration].value));  // Acceleration
+            speedMixer.WriteSingleRegister(Settings.Default.Register_Deceleration, int.Parse(recipe.columns[recipe.deceleration].value));  // Deceleration
+            speedMixer.WriteSingleRegister(Settings.Default.Register_VacuumInUse, 
+                recipe.columns[recipe.vaccum_control].value == Database.General.trueValue ? 
+                Settings.Default.VacuumInUse_Yes : Settings.Default.VacuumInUse_No);    // Vacuum in Use (0=No ; 1=Yes)
+
+            //speedMixer.WriteSingleRegister(3048, 0);    // ça ne fonctionne pas, ça devrait être le choix du vent gas
+            //speedMixer.WriteSingleRegister(3049, 0);    // Monitor type Je pense que ça ne fonctionne pas
+            string pUnit = recipe.columns[recipe.pressureUnit].value;
+            vaccumScale = pUnit == recipe.pUnit_Torr ? Settings.Default.VacuumScale_Torr :
+                pUnit == recipe.pUnit_mBar ? Settings.Default.VacuumScale_mBar :
+                pUnit == recipe.pUnit_inHg ? Settings.Default.VacuumScale_inHg :
+                pUnit == recipe.pUnit_PSIA ? Settings.Default.VacuumScale_PSIA : Settings.Default.VacuumScale_Error;
+            /*
+            switch (recipe.columns[recipe.pressureUnit].value)
+            {
+                case "Torr":
+                    vaccumScale = 1;
+                    break;
+                case "mBar":
+                    vaccumScale = 2;
+                    break;
+                case "inHg":
+                    vaccumScale = 3;
+                    break;
+                case "PSIA":
+                    vaccumScale = 4;
+                    break;
+                default:
+                    vaccumScale = -1;
+                    break;
+            }
+            */
+
+            if (vaccumScale != Settings.Default.VacuumScale_Error) speedMixer.WriteSingleRegister(Settings.Default.Register_VacuumScale, vaccumScale);    // Vacuum Scale (1=Torr ; 2=mBar ; 3=inHg ; 4=PSIA)
+            else 
+            {
+                logger.Error(Settings.Default.Error02);
+                MessageBox.Show(Settings.Default.Error02);
+            }
+            //SpeedMixer.WriteSingleRegister(3052, 0);    // S Curve, pas touche
+
+            speedMixer.WriteSingleRegister(Settings.Default.Register_ProgramId, Settings.Default.ProgramId_ToUse);    // Numéro du programme
+            speedMixer.WriteSingleRegister(Settings.Default.Register_Instruction, Settings.Default.Instruction_SetDefinedMixProgram);    // Commande pour mettre à jour tout les paramètres
+
+            //speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
+
+            for (int i = 0; i < 10; i++)
+            {
+                speedFromDB = recipe.columns[recipe.speed00 + 3 * i].value;
+                timeFromDB = recipe.columns[recipe.time00 + 3 * i].value;
+                pressureFromDB = recipe.columns[recipe.pressure00 + 3 * i].value;
+
+                speedParameter = (speedFromDB == "" || speedFromDB == null) ? 0 : int.Parse(speedFromDB);
+                timeParameter = (timeFromDB == "" || timeFromDB == null) ? 0 : int.Parse(timeFromDB);
+                pressureParameter = (pressureFromDB == "" || pressureFromDB == null) ? 0 : int.Parse(pressureFromDB);
+
+                speedMixer.WriteSingleRegister(Settings.Default.Register_Speed01 + i, speedParameter);       // Vitesse des 10 phases
+                speedMixer.WriteSingleRegister(Settings.Default.Register_Time01 + i, timeParameter);        // Temps des 10 phases
+                speedMixer.WriteSingleRegister(Settings.Default.Register_Pressure01 + i, Settings.Default.Pressure_Multiplicator * pressureParameter);    // Pression de vide des 10 phases
+            }
+
+            speedMixer.WriteSingleRegister(Settings.Default.Register_Instruction, Settings.Default.Instruction_Reset);    // Instruction to allow the modification of the parameters
+            speedMixer.WriteSingleRegister(Settings.Default.Register_ProgramId, Settings.Default.ProgramId_ToUse);    // Numéro du programme
+            speedMixer.WriteSingleRegister(Settings.Default.Register_Instruction, Settings.Default.Instruction_SetDefinedMixProgram);    // Commande pour mettre à jour tout les paramètres
         }
         public static void RunProgram()
         {
-            //if (!IsConnected()) Connect();
+            //if (!IsConnected())
 
-            if (IsConnected())
+            if (!IsConnected())
             {
-                try
-                {
-                    speedMixer.WriteSingleRegister(3056, 0);    // Numéro du programme
-                    speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
-                    speedMixer.WriteSingleRegister(3053, 100);    // Commande pour lancer un programme
+                logger.Error(Settings.Default.Error01);
+                //MessageBox.Show(Settings.Default.Error01);
+                return;
+            }
 
-                    //MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - STOP");
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            }
-            else
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Problème de connection avec le SpeedMixer");
-            }
+            // A REVOIR
+
+            speedMixer.WriteSingleRegister(Settings.Default.Register_ProgramId, Settings.Default.ProgramId_ToUse);    // Numéro du programme
+            speedMixer.WriteSingleRegister(Settings.Default.Register_Instruction, Settings.Default.Instruction_Reset);    // Instruction to allow the modification of the parameters
+            speedMixer.WriteSingleRegister(Settings.Default.Register_Instruction, Settings.Default.Instruction_RunDefinedMixProgram);    // Commande pour lancer un programme
+
+            //speedMixer.WriteSingleRegister(3056, 0);    // Numéro du programme
+            //speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
+            //speedMixer.WriteSingleRegister(3053, 100);    // Commande pour lancer un programme
         }
         public static void StopProgram()
         {
             //if (!IsConnected()) Connect();
 
-            if (IsConnected())
+            if (!IsConnected())
             {
-                try
-                {
-                    speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
-                    speedMixer.WriteSingleRegister(3053, 200);  // Commande pour stopper un programme
-                    speedMixer.WriteSingleRegister(3056, 0);    // Numéro du programme
+                logger.Error(Settings.Default.Error01);
+                //MessageBox.Show(Settings.Default.Error01);
+                return;
+            }
 
-                    //MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - STOP");
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            }
-            else
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Problème de connection avec le SpeedMixer");
-            }
+            // A REVOIR
+
+            speedMixer.WriteSingleRegister(Settings.Default.Register_ProgramId, Settings.Default.ProgramId_ToUse);    // Numéro du programme
+            speedMixer.WriteSingleRegister(Settings.Default.Register_Instruction, Settings.Default.Instruction_Stop_Active_Mix);    // Commande pour lancer un programme
+            speedMixer.WriteSingleRegister(Settings.Default.Register_Instruction, Settings.Default.Instruction_Reset);    // Instruction to allow the modification of the parameters
+
+            //speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
+            //speedMixer.WriteSingleRegister(3053, 200);  // Commande pour stopper un programme
+            //speedMixer.WriteSingleRegister(3056, 0);    // Numéro du programme
         }
         public static void ResetErrorProgram()
         {
             //if (!IsConnected()) Connect();
 
-            if (IsConnected())
+            if (!IsConnected())
             {
-                try
-                {
-                    //speedMixer.WriteMultipleRegisters(3053, new int[] { 300 });
-
-                    //speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
-                    speedMixer.WriteSingleRegister(3053, 300);  // Commande pour lancer un programme
-                    //speedMixer.WriteSingleRegister(3056, 0);    // Numéro du programme
-
-                    //MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - STOP");
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+                logger.Error(Settings.Default.Error01);
+                //MessageBox.Show(Settings.Default.Error01);
+                return;
             }
-            else
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Problème de connection avec le SpeedMixer");
-            }
+
+            // A REVOIR
+
+            speedMixer.WriteSingleRegister(Settings.Default.Register_Instruction, Settings.Default.Instruction_ResetError);    // Instruction to allow the modification of the parameters
+
+            //speedMixer.WriteSingleRegister(3053, 300);  // Commande pour lancer un programme
         }
         public static bool[] GetStatus()
         {
@@ -391,79 +361,53 @@ namespace Driver_MODBUS
 
             //if (!IsConnected()) Connect();
 
-            if (IsConnected())
+            if (!IsConnected())
             {
-                try
-                {
-                    message = speedMixer.ReadHoldingRegisters(3100, 1);
-
-                    UInt16 uintMessage = Convert.ToUInt16(message[0] & 0xFF);
-
-                    for (int i = 0; i < 8; i++)
-                    {
-                        status[i] = (uintMessage & mask) == (0x01 << i);
-                        //MessageBox.Show(i.ToString() + " - " + (status[i]).ToString());
-                        mask <<= 1;
-                    }
-                }
-                catch (Exception)
-                {
-                    // Peut-être générer une alarme à la place
-                    //MessageBox.Show(ex.Message);
-                }
+                logger.Error(Settings.Default.Error01);
+                //MessageBox.Show(Settings.Default.Error01);
+                return status;
             }
-            else
+
+            message = speedMixer.ReadHoldingRegisters(Settings.Default.Register_MixerStatus, 1);
+
+            UInt16 uintMessage = Convert.ToUInt16(message[0] & 0xFF);
+
+            for (int i = 0; i < 8; i++)
             {
-                //MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Problème de connection avec le SpeedMixer");
+                status[i] = (uintMessage & mask) == (0x01 << i);
+                //MessageBox.Show(i.ToString() + " - " + (status[i]).ToString());
+                mask <<= 1;
             }
+
             return status;
         }
         public static int GetPressure()
         {
             //if (!IsConnected()) Connect();
 
-            if (IsConnected())
+            if (!IsConnected())
             {
-                try
-                {
-                    int[] message = speedMixer.ReadHoldingRegisters(382, 1);
-                    return message[0];
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                    return -1;
-                }
-            }
-            else
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Problème de connection avec le SpeedMixer");
+                logger.Error(Settings.Default.Error01);
+                //MessageBox.Show(Settings.Default.Error01);
                 return -1;
             }
+
+            int[] message = speedMixer.ReadHoldingRegisters(Settings.Default.Register_MixerPressure, 1);
+            return message[0];
         }
         public static int GetSpeed()
         {
             //if (!IsConnected()) Connect();
 
-            if (IsConnected())
+            if (!IsConnected())
             {
-                try
-                {
-                    int[] message = speedMixer.ReadHoldingRegisters(3101, 1);
-                    return message[0];
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                    return -1;
-                }
-
-            }
-            else
-            {
-                MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Problème de connection avec le SpeedMixer");
+                logger.Error(Settings.Default.Error01);
+                //MessageBox.Show(Settings.Default.Error01);
                 return -1;
             }
+
+            int[] message = speedMixer.ReadHoldingRegisters(Settings.Default.Register_MixerSpeed, 1);
+            return message[0];
         }
     }
 }

@@ -1663,24 +1663,6 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-  <server>localhost</server>
-  <userID>root</userID>
-  <password>Integra2022/</password>
-  <db>db1</db>
-</ConnectionInfo>")]
-        public global::Database.ConnectionInfo ConnectionInfo {
-            get {
-                return ((global::Database.ConnectionInfo)(this["ConnectionInfo"]));
-            }
-            set {
-                this["ConnectionInfo"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Nombre de colonnes incorrect")]
         public string Error14 {
             get {
@@ -1700,6 +1682,94 @@ namespace Database.Properties {
             }
             set {
                 this["Error15"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Torr")]
+        public string RecipeSpeedMixer_PressureUnit_Torr {
+            get {
+                return ((string)(this["RecipeSpeedMixer_PressureUnit_Torr"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("mBar")]
+        public string RecipeSpeedMixer_PressureUnit_mBar {
+            get {
+                return ((string)(this["RecipeSpeedMixer_PressureUnit_mBar"]));
+            }
+            set {
+                this["RecipeSpeedMixer_PressureUnit_mBar"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("inHg")]
+        public string RecipeSpeedMixer_PressureUnit_inHg {
+            get {
+                return ((string)(this["RecipeSpeedMixer_PressureUnit_inHg"]));
+            }
+            set {
+                this["RecipeSpeedMixer_PressureUnit_inHg"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("PSIA")]
+        public string RecipeSpeedMixer_PressureUnit_PSIA {
+            get {
+                return ((string)(this["RecipeSpeedMixer_PressureUnit_PSIA"]));
+            }
+            set {
+                this["RecipeSpeedMixer_PressureUnit_PSIA"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"
+          <ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+            <server>localhost</server>
+            <userID>root</userID>
+            <password>Integra2022/</password>
+            <db>db1</db>
+          </ConnectionInfo>
+        ")]
+        public global::Database.ConnectionInfo ConnectionInfo {
+            get {
+                return ((global::Database.ConnectionInfo)(this["ConnectionInfo"]));
+            }
+            set {
+                this["ConnectionInfo"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public string General_TrueValue {
+            get {
+                return ((string)(this["General_TrueValue"]));
+            }
+            set {
+                this["General_TrueValue"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public string General_FalseValue {
+            get {
+                return ((string)(this["General_FalseValue"]));
+            }
+            set {
+                this["General_FalseValue"] = value;
             }
         }
     }

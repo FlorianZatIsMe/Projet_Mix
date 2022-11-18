@@ -113,6 +113,8 @@ namespace Database
         }
         static MyDatabase()
         {
+            logger.Debug("Start");
+
             // Initialisation des timers
             scanConnectTimer = new System.Timers.Timer
             {
