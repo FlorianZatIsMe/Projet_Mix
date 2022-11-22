@@ -22,6 +22,28 @@ namespace Driver_MODBUS
         public int port { get; set; }
     }
 
+    public static class SpeedMixerSettings
+    {
+        public static int MixerStatusId_ReadyToRun { get; }
+        public static int MixerStatusId_MixerRunning { get; }
+        public static int MixerStatusId_MixerError { get; }
+        public static int MixerStatusId_LidOpen { get; }
+        public static int MixerStatusId_LidClosed { get; }
+        public static int MixerStatusId_SafetyOK { get; }
+        public static int MixerStatusId_RobotAtHome { get; }
+
+        static SpeedMixerSettings()
+        {
+            MixerStatusId_ReadyToRun = Settings.Default.MixerStatusId_ReadyToRun;
+            MixerStatusId_MixerRunning = Settings.Default.MixerStatusId_MixerRunning;
+            MixerStatusId_MixerError = Settings.Default.MixerStatusId_MixerError;
+            MixerStatusId_LidOpen = Settings.Default.MixerStatusId_LidOpen;
+            MixerStatusId_LidClosed = Settings.Default.MixerStatusId_LidClosed;
+            MixerStatusId_SafetyOK = Settings.Default.MixerStatusId_SafetyOK;
+            MixerStatusId_RobotAtHome = Settings.Default.MixerStatusId_RobotAtHome;
+        }
+    }
+
     public static class SpeedMixerModbus
     {
         private static ModbusClient speedMixer;
@@ -241,26 +263,6 @@ namespace Driver_MODBUS
                 pUnit == recipe.pUnit_mBar ? Settings.Default.VacuumScale_mBar :
                 pUnit == recipe.pUnit_inHg ? Settings.Default.VacuumScale_inHg :
                 pUnit == recipe.pUnit_PSIA ? Settings.Default.VacuumScale_PSIA : Settings.Default.VacuumScale_Error;
-            /*
-            switch (recipe.columns[recipe.pressureUnit].value)
-            {
-                case "Torr":
-                    vaccumScale = 1;
-                    break;
-                case "mBar":
-                    vaccumScale = 2;
-                    break;
-                case "inHg":
-                    vaccumScale = 3;
-                    break;
-                case "PSIA":
-                    vaccumScale = 4;
-                    break;
-                default:
-                    vaccumScale = -1;
-                    break;
-            }
-            */
 
             if (vaccumScale != Settings.Default.VacuumScale_Error) speedMixer.WriteSingleRegister(Settings.Default.Register_VacuumScale, vaccumScale);    // Vacuum Scale (1=Torr ; 2=mBar ; 3=inHg ; 4=PSIA)
             else 
@@ -381,7 +383,7 @@ namespace Driver_MODBUS
 
             return status;
         }
-        public static int GetPressure()
+        public static decimal GetPressure()
         {
             //if (!IsConnected()) Connect();
 
@@ -393,7 +395,7 @@ namespace Driver_MODBUS
             }
 
             int[] message = speedMixer.ReadHoldingRegisters(Settings.Default.Register_MixerPressure, 1);
-            return message[0];
+            return (message[0] / Settings.Default.Pressure_Multiplicator);
         }
         public static int GetSpeed()
         {

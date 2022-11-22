@@ -71,9 +71,10 @@ namespace FPO_WPF_Test.Pages
 
                     foreach (Tuple<int, int> id in AlarmManagement.ActiveAlarms)
                     {
-                        array = MyDatabase.GetOneRow(MySettings["Table_Name"].ToString(), whereColumns: new string[] { "id" }, whereValues: new string[] { AlarmManagement.alarms[id.Item1, id.Item2].id.ToString() });
+                        array = MyDatabase.GetOneRow_array(new AuditTrailInfo(), AlarmManagement.alarms[id.Item1, id.Item2].id.ToString());
+                        //array = MyDatabase.GetOneRow(MySettings["Table_Name"].ToString(), whereColumns: new string[] { "id" }, whereValues: new string[] { AlarmManagement.alarms[id.Item1, id.Item2].id.ToString() });
 
-                        if (array.Count() != 0)
+                        if (array != null)
                         {
                             row = dt.NewRow();
                             row.ItemArray = array;

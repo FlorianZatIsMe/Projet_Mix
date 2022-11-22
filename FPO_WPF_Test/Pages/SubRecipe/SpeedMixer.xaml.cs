@@ -21,7 +21,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
     /// <summary>
     /// Logique d'interaction pour SpeedMixer.xaml
     /// </summary>
-    public partial class SpeedMixer : Page, IRecipeSeq
+    public partial class SpeedMixer : Page, ISubRecipe
     {
         //public int seqType { get; }
 
@@ -74,7 +74,8 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         private readonly TextBox[] times = new TextBox[PhasesNumber];
         private readonly TextBox[] pressures = new TextBox[PhasesNumber];
         private readonly bool[] FormatControl = new bool[ControlNumber];
-        //private General g = new General();
+
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public SpeedMixer()
         {
@@ -332,7 +333,52 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         }
         public void SetPage(ISeqInfo seqInfo)
         {
+            RecipeSpeedMixerInfo recipeSpeedMixerInfo = seqInfo as RecipeSpeedMixerInfo;
+            int i;
 
+            tbProgramName.Text = recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.seqName].value;
+            tbAcceleration.Text = recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.acceleration].value;
+            tbDeceleration.Text = recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.deceleration].value;
+            cbVacuum.IsChecked = recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.vaccum_control].value == DatabaseSettings.General_TrueValue;
+            if (recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.isVentgasAir].value == DatabaseSettings.General_TrueValue) rbAir.IsChecked = true;
+            cbMonitorType.IsChecked = recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.monitorType].value == DatabaseSettings.General_TrueValue;
+            cbxPressureUnit.Text = recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.pressureUnit].value;
+            tbSCurve.Text = recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.scurve].value;
+            cbColdTrap.IsChecked = recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.coldtrap].value == DatabaseSettings.General_TrueValue;
+
+            TbProgramName_LostFocus(tbProgramName, new RoutedEventArgs());
+            TbAcceleration_LostFocus(tbAcceleration, new RoutedEventArgs());
+            TbDeceleration_LostFocus(tbDeceleration, new RoutedEventArgs());
+            TbSCurve_LostFocus(tbSCurve, new RoutedEventArgs());
+
+            i = 0;
+            while (i != 10 && recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.speed00 + 3 * i].value != "")
+            {
+                speeds[i].Text = recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.speed00 + 3 * i].value;
+                times[i].Text = recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.time00 + 3 * i].value;
+                pressures[i].Text = recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.pressure00 + 3 * i].value;
+
+                if (i > 0)
+                {
+                    checkBoxes[i].IsChecked = true;
+                }
+
+                TbSpeed_LostFocus(speeds[i], new RoutedEventArgs());
+                TbTime_LostFocus(times[i], new RoutedEventArgs());
+                TbPression_LostFocus(pressures[i], new RoutedEventArgs());
+
+                i++;
+            }
+
+            tbSpeedMin.Text = recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.speedMin].value;
+            tbSpeedMax.Text = recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.speedMax].value;
+            tbPressureMin.Text = recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.pressureMin].value;
+            tbPressureMax.Text = recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.pressureMax].value;
+
+            TbSpeedMin_LostFocus(tbSpeedMin, new RoutedEventArgs());
+            TbSpeedMax_LostFocus(tbSpeedMax, new RoutedEventArgs());
+            TbPressureMin_LostFocus(tbPressureMin, new RoutedEventArgs());
+            TbPressureMax_LostFocus(tbPressureMax, new RoutedEventArgs());
         }
         public string[] GetPage_2()
         {

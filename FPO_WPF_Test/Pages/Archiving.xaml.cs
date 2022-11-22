@@ -123,7 +123,8 @@ namespace FPO_WPF_Test.Pages
             if (process.ExitCode == 0)
             {
                 if (!MyDatabase.IsConnected()) MyDatabase.Connect();
-                MyDatabase.DeleteRows("audit_trail", lastRecordDate);
+                MyDatabase.DeleteRows(new AuditTrailInfo(), lastRecordDate);
+                //MyDatabase.DeleteRows_old("audit_trail", lastRecordDate);
 
                 AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
                 auditTrailInfo.columns[auditTrailInfo.username].value = username;

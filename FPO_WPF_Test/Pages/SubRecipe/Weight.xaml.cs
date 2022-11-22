@@ -20,7 +20,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
     /// <summary>
     /// Logique d'interaction pour Weight.xaml
     /// </summary>
-    public partial class Weight : Page, IRecipeSeq
+    public partial class Weight : Page, ISubRecipe
     {
         //public int seqType { get; }
 
@@ -35,7 +35,8 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         private readonly Frame parentFrame;
         private readonly bool[] FormatControl = new bool[ControlNumber];
         private bool CurrentFormatControl_tbBarcode;
-        //private General g = new General();
+
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         public Weight()
         {
             //seqType = 0;
@@ -93,7 +94,25 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         }
         public void SetPage(ISeqInfo seqInfo)
         {
+            RecipeWeightInfo recipeWeightInfo = seqInfo as RecipeWeightInfo;
 
+            tbProduct.Text = recipeWeightInfo.columns[recipeWeightInfo.seqName].value;
+            cbIsBarcode.IsChecked = recipeWeightInfo.columns[recipeWeightInfo.isBarcodeUsed].value == "True";
+            tbBarcode.Text = recipeWeightInfo.columns[recipeWeightInfo.barcode].value;
+            cbxUnit.Text = recipeWeightInfo.columns[recipeWeightInfo.unit].value;
+            tbDecimalNumber.Text = recipeWeightInfo.columns[recipeWeightInfo.decimalNumber].value;
+
+            tbSetpoint.Text = decimal.Parse(recipeWeightInfo.columns[recipeWeightInfo.setpoint].value).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
+            tbMin.Text = decimal.Parse(recipeWeightInfo.columns[recipeWeightInfo.min].value).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
+            tbMax.Text = decimal.Parse(recipeWeightInfo.columns[recipeWeightInfo.max].value).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
+
+            TbProduct_LostFocus(tbProduct, new RoutedEventArgs());
+            if ((bool)cbIsBarcode.IsChecked) TbBarcode_LostFocus(tbBarcode, new RoutedEventArgs());
+            else FormatControl[IdBarcode] = false;
+            TbDecimalNumber_LostFocus(tbDecimalNumber, new RoutedEventArgs());
+            TbSetpoint_LostFocus(tbSetpoint, new RoutedEventArgs());
+            TbMin_LostFocus(tbMin, new RoutedEventArgs());
+            TbMax_LostFocus(tbMax, new RoutedEventArgs());
         }
         public string[] GetPage_old()
         {

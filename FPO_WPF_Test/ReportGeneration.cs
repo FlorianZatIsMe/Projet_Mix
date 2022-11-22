@@ -667,11 +667,11 @@ namespace FPO_WPF_Test
             string[] array;
             if (firstAlarmId != lastAlarmId && lastAlarmId != -1)
             {
-                MyDatabase.SendCommand_ReadAlarms(firstAlarmId, lastAlarmId);
+                int mutexID = MyDatabase.SendCommand_ReadAlarms(firstAlarmId, lastAlarmId);
 
                 do
                 {
-                    array = MyDatabase.ReadNext();
+                    array = MyDatabase.ReadNext(mutexID);
 
                     if (array.Count() != 0)
                     {
@@ -704,6 +704,7 @@ namespace FPO_WPF_Test
                         }
                     }
                 } while (array.Count() != 0);
+                MyDatabase.Signal(mutexID);
             }
             else
             {

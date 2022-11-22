@@ -421,5 +421,89 @@ namespace Driver.MODBUS.Properties {
                 this["Register_MixerSpeed"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int MixerStatusId_ReadyToRun {
+            get {
+                return ((int)(this["MixerStatusId_ReadyToRun"]));
+            }
+            set {
+                this["MixerStatusId_ReadyToRun"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int MixerStatusId_MixerRunning {
+            get {
+                return ((int)(this["MixerStatusId_MixerRunning"]));
+            }
+            set {
+                this["MixerStatusId_MixerRunning"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int MixerStatusId_MixerError {
+            get {
+                return ((int)(this["MixerStatusId_MixerError"]));
+            }
+            set {
+                this["MixerStatusId_MixerError"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int MixerStatusId_LidOpen {
+            get {
+                return ((int)(this["MixerStatusId_LidOpen"]));
+            }
+            set {
+                this["MixerStatusId_LidOpen"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public int MixerStatusId_LidClosed {
+            get {
+                return ((int)(this["MixerStatusId_LidClosed"]));
+            }
+            set {
+                this["MixerStatusId_LidClosed"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int MixerStatusId_SafetyOK {
+            get {
+                return ((int)(this["MixerStatusId_SafetyOK"]));
+            }
+            set {
+                this["MixerStatusId_SafetyOK"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("7")]
+        public int MixerStatusId_RobotAtHome {
+            get {
+                return ((int)(this["MixerStatusId_RobotAtHome"]));
+            }
+            set {
+                this["MixerStatusId_RobotAtHome"] = value;
+            }
+        }
     }
 }

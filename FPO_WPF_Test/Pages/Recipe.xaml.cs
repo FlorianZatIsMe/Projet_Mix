@@ -28,12 +28,70 @@ namespace FPO_WPF_Test.Pages
     /// Logique d'interaction pour Recipe.xaml
     /// </summary>
 
-    public interface IRecipeSeq
+    public interface ISubRecipe
     {
         //int seqType { get; }
         void SetPage(ISeqInfo seqInfo);
         ISeqInfo GetPage();
         bool IsFormatOk();
+    }
+
+    public interface ISubCycle
+    {
+        ISubCycle NewInstance(SubCycleArg subCycleArg);
+    }
+
+    public class SubCycleArg
+    {
+        public Frame frameMain { get; }
+        public Frame frameInfoCycle { get; }
+        public string id { get; }
+        public int idCycle { get; }
+        public int idPrevious { get; }
+        public string tablePrevious { get; }
+        public ISeqInfo prevSeqInfo { get; }
+        public bool isTest { get; }
+
+        public SubCycleArg(Frame frameMain_arg, Frame frameInfoCycle_arg, string id_arg, int idCycle_arg, int idPrevious_arg, string tablePrevious_arg, ISeqInfo prevSeqInfo_arg, bool isTest_arg = true)
+        {
+            frameMain = frameMain_arg;
+            frameInfoCycle = frameInfoCycle_arg;
+            id = id_arg;
+            idCycle = idCycle_arg;
+            idPrevious = idPrevious_arg;
+            tablePrevious = tablePrevious_arg;
+            prevSeqInfo = prevSeqInfo_arg;
+            isTest = isTest_arg;
+        }
+    }
+
+    public class Seq
+    {
+        public Type subRcpPgType { get; set; }
+        public ISeqInfo subRecipeInfo { get; set; }
+        public Type subCycPgType { get; set; }
+        public ISeqInfo subCycleInfo { get; set; }
+    }
+    public class Sequence
+    {
+        public static readonly List<Seq> list = new List<Seq>()
+        {
+            new Seq()
+            {
+                subRcpPgType = typeof(Pages.SubRecipe.Weight),
+                subRecipeInfo = new RecipeWeightInfo(),
+                subCycPgType = typeof(Pages.SubCycle.CycleWeight),
+                subCycleInfo = new CycleWeightInfo()
+            },
+
+            new Seq()
+            {
+                subRcpPgType = typeof(Pages.SubRecipe.SpeedMixer),
+                subRecipeInfo = new RecipeSpeedMixerInfo(),
+                subCycPgType =  typeof(Pages.SubCycle.CycleSpeedMixer),
+                subCycleInfo = new CycleSpeedMixerInfo()
+            }
+        };
     }
 
     public partial class Recipe : Page
@@ -60,6 +118,18 @@ namespace FPO_WPF_Test.Pages
 
         private static readonly string exportFolder = @"C:\Temp\Exports\";
         private static readonly string fileExtension_table = ".tbl";
+
+        public readonly List<ISubRecipe> subRecipePages = new List<ISubRecipe>
+        {
+            new SubRecipe.Weight(),
+            new SubRecipe.SpeedMixer()
+        };
+
+        public readonly List<ISeqInfo> subRecipesSeqs = new List<ISeqInfo>
+        {
+            new RecipeWeightInfo(),
+            new RecipeSpeedMixerInfo()
+        };
 
         private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -150,7 +220,7 @@ namespace FPO_WPF_Test.Pages
             //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
             List<ISeqInfo> seqInfoList = new List<ISeqInfo>();
-            IRecipeSeq recipeSeq;
+            ISubRecipe recipeSeq;
 
             if (!MyDatabase.IsConnected()) {
                 MessageBox.Show("La base de données n'est pas connecté");
@@ -171,7 +241,7 @@ namespace FPO_WPF_Test.Pages
             // On contrôle si la recette n'existe pas déjà
             if (new_version == 1 && 
                 isRecipeCreated && 
-                MyDatabase.GetMax(MySettings["Table_Name"], MySettings["Column_Recipe_version"], new string[] { MySettings["Column_Recipe_name"] }, new string[] { recipeName }) != 0) {
+                MyDatabase.GetMax_old(MySettings["Table_Name"], MySettings["Column_Recipe_version"], new string[] { MySettings["Column_Recipe_name"] }, new string[] { recipeName }) != 0) {
                 MessageBox.Show("Le nom de la recette existe déjà");
                 return false;
             }
@@ -192,13 +262,13 @@ namespace FPO_WPF_Test.Pages
                 {
                     Frame frame = element as Frame;
 
-                    if (frame.Content.GetType().GetInterface(typeof(IRecipeSeq).Name) == null)
+                    if (frame.Content.GetType().GetInterface(typeof(ISubRecipe).Name) == null)
                     {
                         logger.Error(frame.Content.GetType().ToString());
                         continue; // je crois que c'est juste à tester
                     }
 
-                    recipeSeq = frame.Content as IRecipeSeq;
+                    recipeSeq = frame.Content as ISubRecipe;
 
                     isFormatOk = recipeSeq.IsFormatOk();
                     if (isFormatOk) seqInfoList.Add(recipeSeq.GetPage());
@@ -228,7 +298,7 @@ namespace FPO_WPF_Test.Pages
                     logger.Trace(row);
 
                     isRecordOk = MyDatabase.InsertRow(seqInfoList[i]);
-                    seqInfoList[i - 1].columns[seqInfoList[i - 1].nextSeqId].value = MyDatabase.GetMax(seqInfoList[i].name, "id").ToString();
+                    seqInfoList[i - 1].columns[seqInfoList[i - 1].nextSeqId].value = MyDatabase.GetMax_old(seqInfoList[i].name, "id").ToString();
                     seqInfoList[i - 1].columns[seqInfoList[i - 1].nextSeqType].value = seqInfoList[i].seqType.ToString();
                 }
                 else break;
@@ -250,9 +320,11 @@ namespace FPO_WPF_Test.Pages
                         seqInfoList[i].columns[seqInfoList[i].nextSeqId].id + " " +
                         seqInfoList[i].columns[seqInfoList[i].nextSeqId].value);
 
-                    MyDatabase.DeleteRow(seqInfoList[i + 1].name,
-                        new string[] { seqInfoList[i].columns[seqInfoList[i].id].id },
-                        new string[] { seqInfoList[i].columns[seqInfoList[i].nextSeqId].value });
+                    MyDatabase.DeleteRow(seqInfoList[i + 1], seqInfoList[i].columns[seqInfoList[i].nextSeqId].value);
+
+                    //MyDatabase.DeleteRow_old(seqInfoList[i + 1].name,
+                        //new string[] { seqInfoList[i].columns[seqInfoList[i].id].id },
+                        //new string[] { seqInfoList[i].columns[seqInfoList[i].nextSeqId].value });
                     i++;
                 } while (seqInfoList[i].columns[seqInfoList[i].nextSeqId].value != null);
             }
@@ -262,30 +334,34 @@ namespace FPO_WPF_Test.Pages
         }
         private async void Display_Recipe(string id)
         {
-            string[] array;
             string nextSeqType;
             string nextSeqID;
             Frame currentFrame;
             List<Frame> framesToDelete = new List<Frame>();
-            var currentPage = new List<Page>
-                    {
-                        new SubRecipe.Weight(),
-                        new SubRecipe.SpeedMixer()
-                    };
+            RecipeInfo recipeInfo = new RecipeInfo();
+            ISubRecipe currentPage;
+            ISeqInfo currentRecipeSeq;
+            /*
+            List<ISeqInfo> recipes = new List<ISeqInfo>
+            {
+                        new RecipeWeightInfo(),
+                        new RecipeSpeedMixerInfo()
+            };*/
+
 
             //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
             if (MyDatabase.IsConnected()) // while loop is better
             {
-                array = MyDatabase.GetOneRow(MySettings["Table_Name"].ToString(), whereColumns: new string[] { MySettings["Column_id"] }, whereValues: new string[] { id });
+                recipeInfo = (RecipeInfo)MyDatabase.GetOneRow(recipeInfo.GetType(), id);
+                //array = MyDatabase.GetOneRow(MySettings["Table_Name"].ToString(), whereColumns: new string[] { MySettings["Column_id"] }, whereValues: new string[] { id });
 
-                if (array.Count() != 0) // Si la requête envoyer ne contient qu'une seule ligne
+                if (recipeInfo.columns != null) // Si la requête envoyer ne contient qu'une seule ligne
                 {
-                    nextSeqType = array[1];
-                    nextSeqID = array[2];
-                    //currentRecipeName = array[3];
-                    currentRecipeVersion = array[4];
-                    currentRecipeStatus = status[int.Parse(array[5])];
+                    nextSeqType = recipeInfo.columns[recipeInfo.nextSeqType].value;
+                    nextSeqID = recipeInfo.columns[recipeInfo.nextSeqId].value;
+                    currentRecipeVersion = recipeInfo.columns[recipeInfo.version].value;
+                    currentRecipeStatus = status[int.Parse(recipeInfo.columns[recipeInfo.status].value)];
 
                     string[] dbSubRecipeName = MySettings["SubRecipes_Table_Name"].Split(',');
                     int[] dbSubRecipeNColumns = Array.ConvertAll(MySettings["SubRecipes_N_Columns"].Split(','), int.Parse);
@@ -318,66 +394,35 @@ namespace FPO_WPF_Test.Pages
                         {
                             MyDatabase.Close_reader(); // On ferme le reader de la db pour pouvoir lancer une autre requête
 
-                            //MyDatabase.SendCommand_readAllRecipe(dbSubRecipeName[int.Parse(nextSeqType)], MySettings["Column_id"].Split(','), new string[] { nextSeqID });
-                            int mutexID = MyDatabase.SendCommand_Read(tableName: dbSubRecipeName[int.Parse(nextSeqType)], whereColumns: MySettings["Column_id"].Split(','), whereValues: new string[] { nextSeqID }, isMutexReleased: false);
+                            currentRecipeSeq = (ISeqInfo)MyDatabase.GetOneRow(subRecipesSeqs[int.Parse(nextSeqType)].GetType(), nextSeqID);
+                            //int mutexID = MyDatabase.SendCommand_Read(tableName: dbSubRecipeName[int.Parse(nextSeqType)], whereColumns: MySettings["Column_id"].Split(','), whereValues: new string[] { nextSeqID }, isMutexReleased: false);
                             currentFrame = gridMain.Children[gridMain.Children.Count - 1] as Frame;
 
-                            if (nextSeqType == MySettings["SubRecipeWeight_SeqType"])
-                            {
-                                currentPage[int.Parse(nextSeqType)] = currentFrame.Content as SubRecipe.Weight;
-                            }
-                            else if (nextSeqType == MySettings["SubRecipeSpeedMixer_SeqType"])
-                            {
-                                currentPage[int.Parse(nextSeqType)] = currentFrame.Content as SubRecipe.SpeedMixer;
-                            }
+                            currentPage = currentFrame.Content as ISubRecipe;
 
-                            array = MyDatabase.ReadNext(mutexID);
-
-                            if (array.Count() == dbSubRecipeNColumns[int.Parse(nextSeqType)] && MyDatabase.ReadNext(mutexID).Count() == 0)
+                            if (currentRecipeSeq != null)
                             {
-                                if (nextSeqType == MySettings["SubRecipeWeight_SeqType"])
-                                {
-                                    var tempPage = currentPage[int.Parse(nextSeqType)] as SubRecipe.Weight;
-                                    tempPage.SetPage_old(array);
-                                }
-                                else if (nextSeqType == MySettings["SubRecipeSpeedMixer_SeqType"])
-                                {
-                                    var tempPage = currentPage[int.Parse(nextSeqType)] as SubRecipe.SpeedMixer;
-                                    tempPage.SetPage_2(array);
-                                }
-
-                                nextSeqType = array[1];
-                                nextSeqID = array[2];
+                                currentPage.SetPage(currentRecipeSeq);
+                                nextSeqType = currentRecipeSeq.columns[currentRecipeSeq.nextSeqType].value;
+                                nextSeqID = currentRecipeSeq.columns[currentRecipeSeq.nextSeqId].value;
                             }
                             else
                             {
                                 MessageBox.Show("Elle est cassée ta recette, tu me demandes une séquence qui n'existe pas è_é");
                                 nextSeqID = "";
                             }
-                            MyDatabase.Signal(mutexID);
+                            //MyDatabase.Signal(mutexID);
                         }
                         else
                         {
                             MessageBox.Show("Je ne comprends pas... Pourquoi je ne vois pas de frame...");
                         }
                     } while (nextSeqID != "");
-
-
-                    //MessageBox.Show("Ouf c'est fini");
                 }
                 else
                 {
-                    if (array.Count() == 0)
-                    {
-                        MessageBox.Show("La recette demandée n'existe pas");
-                    }
-                    else
-                    {
-                        MessageBox.Show("C'est quoi ça ? La version demandée existe en plusieurs exemplaires !");
-                    }
+                    MessageBox.Show("C'est quoi ça ? La version demandée existe en plusieurs exemplaires !");
                 }
-
-                //MyDatabase.Disconnect();
             }
             else
             {
@@ -412,9 +457,9 @@ namespace FPO_WPF_Test.Pages
         {
             Frame frame = sender as Frame;
 
-            if (frame.Content.GetType().GetInterface(typeof(IRecipeSeq).Name) != null)
+            if (frame.Content.GetType().GetInterface(typeof(ISubRecipe).Name) != null)
             {
-                IRecipeSeq recipeSeq = frame.Content as IRecipeSeq;
+                ISubRecipe recipeSeq = frame.Content as ISubRecipe;
                 ISeqInfo seqInfo = recipeSeq.GetPage();
 
                 string row = "";
@@ -458,66 +503,45 @@ namespace FPO_WPF_Test.Pages
         }
         private void Delete_Recipe(string id)
         {
-            string[] array;
+            ISeqInfo subRecipeSeq;
             string nextSetType;
             string nextSetId;
             string[] tableNameSubRecipes = MySettings["SubRecipes_Table_Name"].Split(',');
 
-            if (MyDatabase.IsConnected()) // while loop is better
+            if (!MyDatabase.IsConnected()) // while loop is better
             {
-                array = MyDatabase.GetOneRow("recipe", selectColumns: "first_seq_type, first_seq_id", whereColumns: new string[] { "id" }, whereValues: new string[] { id });
+                MessageBox.Show("La base de données n'est pas connecté");
+                return;
+            }
 
-                if (array.Count() != 0)
+            RecipeInfo recipeInfo = (RecipeInfo)MyDatabase.GetOneRow(new RecipeInfo().GetType(), id);
+
+            if (recipeInfo == null)
+            {
+                MessageBox.Show("Delete_Recipe - La recette demandée n'existe pas");
+                return;
+            }
+
+            nextSetType = recipeInfo.columns[recipeInfo.nextSeqType].value;
+            nextSetId = recipeInfo.columns[recipeInfo.nextSeqId].value;
+
+            MyDatabase.DeleteRow(new RecipeInfo(), id);
+
+            while (nextSetType != "" && nextSetType != null)
+            {
+                subRecipeSeq = (ISeqInfo)MyDatabase.GetOneRow(subRecipesSeqs[int.Parse(nextSetType)].GetType(), nextSetId);
+
+                if (subRecipeSeq != null)
                 {
-                    try
-                    {
-                        MyDatabase.Close_reader(); // On ferme le reader de la db pour pouvoir lancer une autre requête
-                        nextSetType = array[0];
-                        nextSetId = array[1];
-                        MyDatabase.DeleteRow("recipe", new string[] { MySettings["Column_id"] }, new string[] { id });
-
-                        while (nextSetType != "" && nextSetType != null)
-                        {
-                            array = MyDatabase.GetOneRow(tableNameSubRecipes[int.Parse(nextSetType)], "next_seq_type, next_seq_id", new string[] { "id" }, new string[] { nextSetId });
-
-                            if (array.Count() != 0)
-                            {
-                                MyDatabase.Close_reader(); // On ferme le reader de la db pour pouvoir lancer une autre requête
-                                MyDatabase.DeleteRow(tableNameSubRecipes[int.Parse(nextSetType)], new string[] { MySettings["Column_id"] }, new string[] { nextSetId });
-                                nextSetType = array[0];
-                                nextSetId = array[1];
-                            }
-                            else
-                            {
-                                nextSetType = "";
-                                MessageBox.Show("Delete_Recipe - Bizarre");
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
-
+                    MyDatabase.DeleteRow(subRecipeSeq, nextSetId);
+                    nextSetType = subRecipeSeq.columns[subRecipeSeq.nextSeqType].value;
+                    nextSetId = subRecipeSeq.columns[subRecipeSeq.nextSeqId].value;
                 }
                 else
                 {
-                    if (array.Count() == 0)
-                    {
-                        MessageBox.Show("Delete_Recipe - La recette demandée n'existe pas");
-                    }
-                    else
-                    {
-                        MessageBox.Show("Delete_Recipe - C'est quoi ça ? La version demandée existe en plusieurs exemplaires !");
-                    }
+                    nextSetType = "";
+                    MessageBox.Show("Delete_Recipe - Bizarre");
                 }
-
-                //MyDatabase.Disconnect();
-            }
-            else
-            {
-                MessageBox.Show("La base de données n'est pas connecté");
-                MyDatabase.ConnectAsync();
             }
         }
 
@@ -595,7 +619,7 @@ namespace FPO_WPF_Test.Pages
                             MyDatabase.Update_Row(recipeInfo, ProgramIDs[currentIndex]);
 
                             //MyDatabase.Update_Row("recipe", new string[] { "status" }, new string[] { MySettings["Recipe_Status_Obsolete"] }, ProgramIDs[currentIndex]);
-                            ProgramIDs[currentIndex] = MyDatabase.GetMax("recipe", "id").ToString();
+                            ProgramIDs[currentIndex] = MyDatabase.GetMax_old("recipe", "id").ToString();
                             labelStatus.Text = status[int.Parse(MySettings["Recipe_Status_Draft"])];
                             labelVersion.Text = (int.Parse(labelVersion.Text) + 1).ToString();
                         }
@@ -609,7 +633,7 @@ namespace FPO_WPF_Test.Pages
                         if(Create_NewRecipe(ProgramNames[currentIndex], int.Parse(labelVersion.Text), MySettings["Recipe_Status_Production"], false))
                         {
                             Delete_Recipe(ProgramIDs[currentIndex]);
-                            ProgramIDs[currentIndex] = MyDatabase.GetMax("recipe", "id").ToString();
+                            ProgramIDs[currentIndex] = MyDatabase.GetMax_old("recipe", "id").ToString();
                             labelStatus.Text = status[int.Parse(MySettings["Recipe_Status_Production"])];
                         }
                     }
@@ -619,7 +643,7 @@ namespace FPO_WPF_Test.Pages
                         if(Create_NewRecipe(ProgramNames[cbxPgmToModify.SelectedIndex], int.Parse(labelVersion.Text), MySettings["Recipe_Status_Draft"], false))
                         {
                             Delete_Recipe(ProgramIDs[currentIndex]);
-                            ProgramIDs[currentIndex] = MyDatabase.GetMax("recipe", "id").ToString();
+                            ProgramIDs[currentIndex] = MyDatabase.GetMax_old("recipe", "id").ToString();
                         }
                     }
                 }
@@ -639,13 +663,17 @@ namespace FPO_WPF_Test.Pages
         private void ButtonActDel_Click(object sender, RoutedEventArgs e)
         {
             int currentIndex = cbxPgmToActDelete.SelectedIndex;
+            RecipeInfo recipeInfo;
+            RecipeInfo recipeToUpdate;
             //int index0;
-            string[] array;
+            //string[] array;
 
             if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
             if (MyDatabase.IsConnected()) // while loop is better
             {
+                recipeInfo = (RecipeInfo)MyDatabase.GetOneRow(new RecipeInfo().GetType(), ProgramIDs[currentIndex]);
+                /*
                 try
                 {
                     array = MyDatabase.GetOneRow("recipe", whereColumns: new string[] { "id" }, whereValues: new string[] { ProgramIDs[currentIndex] });
@@ -653,9 +681,9 @@ namespace FPO_WPF_Test.Pages
                 catch (Exception)
                 {
                     array = new string[0];
-                }
+                }*/
 
-                if (array.Length == 0)
+                if (recipeInfo == null)
                 {
                     MessageBox.Show("La recette sélectionné n'existe pas");
                 }
@@ -663,14 +691,13 @@ namespace FPO_WPF_Test.Pages
                 {
                     if ((bool)rbDelete.IsChecked)
                     {
-
-                        if (array[5] == MySettings["Recipe_Status_Production"])
+                        if (recipeInfo.columns[recipeInfo.status].value == MySettings["Recipe_Status_Production"])
                         {
-                            if (MessageBox.Show("Vous vous apprêtez à rendre obsolète la recette " + array[3] + " version " + array[4] + " actuellement en production. Voulez-vous continuer?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                            if (MessageBox.Show("Vous vous apprêtez à rendre obsolète la recette " + recipeInfo.columns[recipeInfo.recipeName].value + " version " + recipeInfo.columns[recipeInfo.version].value + " actuellement en production. Voulez-vous continuer?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                             {
-                                RecipeInfo recipeInfo = new RecipeInfo();
-                                recipeInfo.columns[recipeInfo.status].value = MySettings["Recipe_Status_Obsolete"];
-                                MyDatabase.Update_Row(recipeInfo, ProgramIDs[currentIndex]);
+                                recipeToUpdate = new RecipeInfo();
+                                recipeToUpdate.columns[recipeToUpdate.status].value = MySettings["Recipe_Status_Obsolete"];
+                                MyDatabase.Update_Row(recipeToUpdate, ProgramIDs[currentIndex]);
 
                                 //MyDatabase.Update_Row("recipe", new string[] { "status" }, new string[] { MySettings["Recipe_Status_Obsolete"] }, ProgramIDs[currentIndex]);
 
@@ -681,30 +708,30 @@ namespace FPO_WPF_Test.Pages
                                 MessageBox.Show("D'accord, faisons comme ça");
                             }
                         }
-                        else if (array[5] == MySettings["Recipe_Status_Draft"])
+                        else if (recipeInfo.columns[5].value == MySettings["Recipe_Status_Draft"])
                         {
-                            if (MessageBox.Show("Vous vous apprêtez à supprimer la recette " + array[3] + " version " + array[4] + " actuellement en draft. Voulez-vous continuer?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                            if (MessageBox.Show("Vous vous apprêtez à supprimer la recette " + recipeInfo.columns[recipeInfo.recipeName].value + " version " + recipeInfo.columns[recipeInfo.version].value + " actuellement en draft. Voulez-vous continuer?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                             {
                                 Delete_Recipe(ProgramIDs[currentIndex]);
 
-                                if (int.Parse(array[4]) > 1)
+                                if (int.Parse(recipeInfo.columns[4].value) > 1)
                                 {
-                                    ProgramIDs[currentIndex] = MyDatabase.GetMax("recipe", "id", whereColumns: new string[] { "name" }, whereValues: new string[] { array[3] }).ToString();
+                                    ProgramIDs[currentIndex] = MyDatabase.GetMax_old("recipe", "id", whereColumns: new string[] { "name" }, whereValues: new string[] { recipeInfo.columns[recipeInfo.recipeName].value }).ToString();
 
-                                    RecipeInfo recipeInfo = new RecipeInfo();
-                                    recipeInfo.columns[recipeInfo.status].value = MySettings["Recipe_Status_Production"];
-                                    MyDatabase.Update_Row(recipeInfo, ProgramIDs[currentIndex]);
+                                    recipeToUpdate = new RecipeInfo();
+                                    recipeToUpdate.columns[recipeToUpdate.status].value = MySettings["Recipe_Status_Production"];
+                                    MyDatabase.Update_Row(recipeToUpdate, ProgramIDs[currentIndex]);
 
                                     //MyDatabase.Update_Row("recipe", new string[] { "status" }, new string[] { MySettings["Recipe_Status_Production"] }, ProgramIDs[currentIndex]);
                                 }
-                                else if (int.Parse(array[4]) == 1)
+                                else if (int.Parse(recipeInfo.columns[recipeInfo.version].value) == 1)
                                 {
                                     ProgramIDs.RemoveAt(currentIndex);
                                     ProgramNames.RemoveAt(currentIndex);
                                 }
                                 else
                                 {
-                                    MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - ButtonDelete_Click - version: " + array[4]);
+                                    MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - ButtonDelete_Click - version: " + recipeInfo.columns[recipeInfo.version].value);
                                 }
 
                                 // mettre ça dans une fonction et on recommence tout
@@ -714,16 +741,17 @@ namespace FPO_WPF_Test.Pages
                         }
                         else
                         {
-                            MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - ButtonDelete_Click - Status: " + status[int.Parse(array[5])]);
+                            MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - ButtonDelete_Click - Status: " + status[int.Parse(recipeInfo.columns[recipeInfo.status].value)]);
                         }
                     }
                     else if ((bool)rbActivate.IsChecked)
                     {
-                        if (MessageBox.Show("Vous vous apprêtez à faire revenir la recette " + array[3] + " version " + array[4] + " en production. Voulez-vous continuer?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                        if (MessageBox.Show("Vous vous apprêtez à faire revenir la recette " + recipeInfo.columns[recipeInfo.recipeName].value + " version " + recipeInfo.columns[recipeInfo.version].value + " en production. Voulez-vous continuer?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                         {
-                            RecipeInfo recipeInfo = new RecipeInfo();
-                            recipeInfo.columns[recipeInfo.status].value = MySettings["Recipe_Status_Production"];
-                            MyDatabase.Update_Row(recipeInfo, ProgramIDs[currentIndex]);
+                            // using partout
+                            recipeToUpdate = new RecipeInfo();
+                            recipeToUpdate.columns[recipeToUpdate.status].value = MySettings["Recipe_Status_Production"];
+                            MyDatabase.Update_Row(recipeToUpdate, ProgramIDs[currentIndex]);
 
                             //MyDatabase.Update_Row("recipe", new string[] { "status" }, new string[] { MySettings["Recipe_Status_Production"] }, ProgramIDs[currentIndex]);
                             ProgramIDs.RemoveAt(currentIndex);
@@ -841,7 +869,7 @@ namespace FPO_WPF_Test.Pages
 
                 if (MyDatabase.IsConnected())
                 {
-                    int mutexID = MyDatabase.SendCommand_Read(tableName: "recipe", selectColumns: "version",
+                    int mutexID = MyDatabase.SendCommand_Read_old(tableName: "recipe", selectColumns: "version",
                         whereColumns: new string[] { "name" },
                         whereValues: new string[] { ProgramNames[comboBox.SelectedIndex] }, orderBy: "version", isOrderAsc: false, 
                         isMutexReleased: false);
@@ -894,12 +922,12 @@ namespace FPO_WPF_Test.Pages
             {
                 ComboBox comboBox = sender as ComboBox;
 
-                string[] array = MyDatabase.GetOneRow(tableName: "recipe", selectColumns: "id", 
-                    whereColumns: new string[] { "name", "version" }, 
-                    whereValues: new string[] { cbxPgmToCopy.Text, ProgramVersions[comboBox.SelectedIndex] });
+                RecipeInfo recipeInfo = new RecipeInfo();
+                recipeInfo.columns[recipeInfo.recipeName].value = cbxPgmToCopy.Text;
+                recipeInfo.columns[recipeInfo.version].value = ProgramVersions[comboBox.SelectedIndex];
 
-                //Task task = Task.Factory.StartNew(() => Display_Recipe(array[0]));
-                Display_Recipe(array[0]);
+                recipeInfo = (RecipeInfo)MyDatabase.GetOneRow(table: recipeInfo);
+                Display_Recipe(recipeInfo.columns[recipeInfo.id].value);
             }
         }
         private void ButtonCopy_Click(object sender, RoutedEventArgs e)

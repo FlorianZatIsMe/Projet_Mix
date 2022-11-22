@@ -5,5 +5,77 @@
     <Setting Name="SystemUsername" Type="System.String" Scope="Application">
       <Value Profile="(Default)">système</Value>
     </Setting>
+    <Setting Name="CycleInfo_Error01" Type="System.String" Scope="User">
+      <Value Profile="(Default)">La variable info n'est pas correcte</Value>
+    </Setting>
+    <Setting Name="CycleInfo_Error02" Type="System.String" Scope="User">
+      <Value Profile="(Default)">La commande envoyé n'a rien renvoyé</Value>
+    </Setting>
+    <Setting Name="CycleInfo_checkAlarmsTimer_Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="CycleInfo_Error03" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Classe utilisée incorrecte</Value>
+    </Setting>
+    <Setting Name="CycleInfo_Mix_StatusField" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Statut</Value>
+    </Setting>
+    <Setting Name="CycleInfo_Mix_StatusWaiting" Type="System.String" Scope="User">
+      <Value Profile="(Default)">En attente</Value>
+    </Setting>
+    <Setting Name="CycleInfo_Mix_StatusOnGoing" Type="System.String" Scope="User">
+      <Value Profile="(Default)">En cours</Value>
+    </Setting>
+    <Setting Name="CycleInfo_Mix_StatusEnded" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Terminé</Value>
+    </Setting>
+    <Setting Name="CycleMix_timeSeqController" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
+    <Setting Name="CycleMix_timeCheckAlarms_Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="CycleMix_timeoutPumpNotFree" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="CycleMix_timeoutTempTooHotDuringCycle" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">20</Value>
+    </Setting>
+    <Setting Name="CycleMix_timeoutTempTooHotBeforeCycle" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="CycleMix_timeoutSequenceTooLong" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="CycleMix_timeoutSequenceBlocked" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">90</Value>
+    </Setting>
+    <Setting Name="CycleMix_sequenceTimer_Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="CycleMix_pumpNotFreeTimer_Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="CycleMix_tempControlTimer_Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="CycleMix_Erro01" Type="System.String" Scope="User">
+      <Value Profile="(Default)">recipeSpeedMixerInfo est null</Value>
+    </Setting>
+    <Setting Name="CycleMix_Request_CloseLid" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Veuillez fermer le capot avant de démarrer le cycle</Value>
+    </Setting>
+    <Setting Name="CycleMix_Request_StartMix" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Cliquez sur OK pour démarrer le speedmixer</Value>
+    </Setting>
+    <Setting Name="CycleMix_Error_TempTooHot" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Température du piège froid trop chaude</Value>
+    </Setting>
+    <Setting Name="CycleMix_Error_MixTooLong" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Problème avec le speedmixer, fin de cycle</Value>
+    </Setting>
+    <Setting Name="CycleMix_Error_MixerBlocked" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Le speedmixer ne répond plus, cycle avorté</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

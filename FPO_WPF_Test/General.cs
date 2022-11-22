@@ -1,5 +1,6 @@
 ﻿using Alarm_Management;
 using Database;
+using FPO_WPF_Test.Pages;
 using FPO_WPF_Test.Pages.SubCycle;
 using System;
 using System.Collections.Generic;
@@ -162,33 +163,40 @@ namespace FPO_WPF_Test
         {
             logger.Debug("StartCycle");
 
-            string[] array;
+            //string[] array;
             string[] dbSubRecipeName = MySettings["SubRecipes_Table_Name"].Split(',');
             string firstSeqType;
             string firstSeqID;
             string nextSeqType;
             string nextSeqID;
             CycleTableInfo cycleTableInfo;
+            RecipeInfo recipeInfo;
+            ISeqInfo recipeSeqInfo;
+            List<ISeqInfo> recipeSeqTypes = new List<ISeqInfo>()
+            {
+                new RecipeWeightInfo(),
+                new RecipeSpeedMixerInfo()
+            };
 
             if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
             if (MyDatabase.IsConnected()) // while loop is better
             {
-                array = MyDatabase.GetOneRow("recipe", whereColumns: new string[] { "id" }, whereValues: new string[] { recipeID });
+                recipeInfo = new RecipeInfo();
+                recipeInfo = (RecipeInfo)MyDatabase.GetOneRow(recipeInfo.GetType(), recipeID);
+                //array = MyDatabase.GetOneRow("recipe", whereColumns: new string[] { "id" }, whereValues: new string[] { recipeID });
 
-                if (array.Count() != 0 && array[0] == recipeID)
+                if (recipeInfo.columns.Count() != 0 && recipeInfo.columns[recipeInfo.id].value == recipeID)
                 {
-                    General.CurrentCycleInfo = new CycleInfo(new string[] { OFnumber, array[3], array[4], finalWeight }, frameInfoCycle);
-
                     //MyDatabase.Close_reader(); // On ferme le reader de la db pour pouvoir lancer une autre requête
 
-                    firstSeqType = array[1];
-                    firstSeqID = array[2];
-                    nextSeqType = array[1];
-                    nextSeqID = array[2];
+                    firstSeqType = recipeInfo.columns[recipeInfo.nextSeqType].value; //1
+                    firstSeqID = recipeInfo.columns[recipeInfo.nextSeqId].value; //2
+                    nextSeqType = recipeInfo.columns[recipeInfo.nextSeqType].value; //1
+                    nextSeqID = recipeInfo.columns[recipeInfo.nextSeqId].value; //2
 
-                    string recipe_name = array[3];
-                    string recipe_version = array[4];
+                    string recipe_name = recipeInfo.columns[recipeInfo.recipeName].value; // 3
+                    string recipe_version = recipeInfo.columns[recipeInfo.version].value; // 4
                     //string recipe_status = MySettings["Status"].Split(',')[int.Parse(array[5])];
 
                     cycleTableInfo = new CycleTableInfo();
@@ -212,29 +220,30 @@ namespace FPO_WPF_Test
                     cycleTableInfo.columns[cycleTableInfo.isItATest].value = isTest ? "1" : "0";
                     MyDatabase.InsertRow(cycleTableInfo);
 
+                    General.CurrentCycleInfo = new CycleInfo(cycleTableInfo, frameInfoCycle);
+                    //General.CurrentCycleInfo = new CycleInfo(new string[] { OFnumber, array[3], array[4], finalWeight }, frameInfoCycle);
+
+
                     //string columns = "job_number, batch_number, quantity_value, quantity_unit, item_number, recipe_name, recipe_version, equipment_name, username, is_it_a_test";
                     //string[] values = new string[] { OFnumber, OFnumber, finalWeight, "g", recipe_name, recipe_name, recipe_version, General.equipement_name, General.loggedUsername, isTest ? "1" : "0" };
                     //MyDatabase.InsertRow_done_old("cycle", columns, values);
-                    int idCycle = MyDatabase.GetMax("cycle", "id");
+                    int idCycle = MyDatabase.GetMax_old("cycle", "id");
 
                     while (nextSeqID != "" && nextSeqID != null)
                     {
-                        array = MyDatabase.GetOneRow(dbSubRecipeName[int.Parse(nextSeqType)], whereColumns: MySettings["Column_id"].Split(','), whereValues: new string[] { nextSeqID });
-
-                        if (array.Count() != 0 && array[0] == nextSeqID)
+                        logger.Debug("GetOneRow " + recipeSeqTypes[int.Parse(nextSeqType)].GetType().ToString() + " " + nextSeqID);
+                        //cycleSeqTypes[int.Parse(nextSeqType)].Reset(); // je n'aime pas ça
+                        recipeSeqInfo = (ISeqInfo)MyDatabase.GetOneRow(recipeSeqTypes[int.Parse(nextSeqType)].GetType(), nextSeqID);
+                        //array = MyDatabase.GetOneRow(dbSubRecipeName[int.Parse(nextSeqType)], whereColumns: MySettings["Column_id"].Split(','), whereValues: new string[] { nextSeqID });
+                        
+                        if (recipeSeqInfo.columns.Count() != 0 && recipeSeqInfo.columns[recipeSeqInfo.id].value == nextSeqID)
                         {
-                            if (nextSeqType == MySettings["SubRecipeWeight_SeqType"])
-                            {
-                                // Refaire ces calculs plus sérieusement une fois que tout est clarifié, il faut arrondir aussi
-                                General.CurrentCycleInfo.NewInfoWeight(new string[] { array[3], Math.Round(decimal.Parse(array[9]), int.Parse(array[7])).ToString("N" + array[7]).ToString(), Math.Round(decimal.Parse(array[10]), int.Parse(array[7])).ToString("N" + array[7]).ToString() });
-                            }
-                            else if (nextSeqType == MySettings["SubRecipeSpeedMixer_SeqType"])
-                            {
-                                General.CurrentCycleInfo.NewInfoSpeedMixer(new string[] { array[3] });
-                            }
+                            General.CurrentCycleInfo.NewInfo(recipeSeqInfo);
 
-                            nextSeqType = array[1];
-                            nextSeqID = array[2];
+                            nextSeqType = recipeSeqInfo.columns[recipeSeqInfo.nextSeqType].value;
+                            nextSeqID = recipeSeqInfo.columns[recipeSeqInfo.nextSeqId].value;
+
+                            logger.Trace(nextSeqType + " " + nextSeqID);
                         }
                         else
                         {
@@ -256,7 +265,7 @@ namespace FPO_WPF_Test
 
                     string firstAlarmId;
                     if (AlarmManagement.ActiveAlarms.Count > 0) firstAlarmId = AlarmManagement.alarms[AlarmManagement.ActiveAlarms[0].Item1, AlarmManagement.ActiveAlarms[0].Item2].id.ToString();
-                    else firstAlarmId = MyDatabase.GetMax("audit_trail", "id").ToString();
+                    else firstAlarmId = MyDatabase.GetMax_old("audit_trail", "id").ToString();
 
                     cycleTableInfo = new CycleTableInfo();
                     cycleTableInfo.columns[cycleTableInfo.dateTimeStartCycle].value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -266,11 +275,15 @@ namespace FPO_WPF_Test
 
                     if (firstSeqType == "0") // Si la première séquence est une séquence de poids
                     {
-                        frameMain.Content = new Pages.SubCycle.CycleWeight(frameMain, frameInfoCycle, firstSeqID, idCycle, idCycle, "cycle", new CycleTableInfo(), isTest);
+                        SubCycleArg subCycleArg = new SubCycleArg(frameMain, frameInfoCycle, firstSeqID, idCycle, idCycle, "cycle", new CycleTableInfo(), isTest);
+                        frameMain.Content = new Pages.SubCycle.CycleWeight(subCycleArg);
+                        //frameMain.Content = new Pages.SubCycle.CycleWeight(frameMain, frameInfoCycle, firstSeqID, idCycle, idCycle, "cycle", new CycleTableInfo(), isTest);
                     }
                     else if (firstSeqType == "1") // Si la première séquence est une séquence speedmixer
                     {
-                        frameMain.Content = new Pages.SubCycle.CycleSpeedMixer(frameMain, frameInfoCycle, firstSeqID, idCycle, idCycle, "cycle", new CycleTableInfo(), isTest);
+                        SubCycleArg subCycleArg = new SubCycleArg(frameMain, frameInfoCycle, firstSeqID, idCycle, idCycle, "cycle", new CycleTableInfo(), isTest);
+                        frameMain.Content = new Pages.SubCycle.CycleSpeedMixer(subCycleArg);
+                        //frameMain.Content = new Pages.SubCycle.CycleSpeedMixer(frameMain, frameInfoCycle, firstSeqID, idCycle, idCycle, "cycle", new CycleTableInfo(), isTest);
                     }
                     else
                     {
@@ -294,28 +307,15 @@ namespace FPO_WPF_Test
         //public static void NextSequence(string[] currentPhaseParameters, Frame frameMain, Frame frameInfoCycle, int idCycle, int idSubCycle, string tablePrevious, int previousSeqType, bool isTest, string comment = "")
         public static void NextSequence(string[] currentPhaseParameters, ISeqInfo recipeParam, Frame frameMain, Frame frameInfoCycle, int idCycle, int idSubCycle, int previousSeqType, ISeqInfo prevSeqInfo_arg, bool isTest, string comment = "")
         {
-            if (recipeParam.columns[recipeParam.nextSeqType].value == "0") // Si la prochaine séquence est une séquence de poids
-            //if (currentPhaseParameters[1] == "0") // Si la prochaine séquence est une séquence de poids
-            {
-                frameMain.Content = new Pages.SubCycle.CycleWeight(frameMain, frameInfoCycle, recipeParam.columns[recipeParam.nextSeqId].value, idCycle, idSubCycle, tableNameSubCycles[previousSeqType], prevSeqInfo_arg, isTest);
-                //frameMain.Content = new Pages.SubCycle.CycleWeight(frameMain, frameInfoCycle, currentPhaseParameters[2], idCycle, idSubCycle, tableNameSubCycles[previousSeqType], prevSeqInfo_arg, isTest);
-                //frameMain.Content = new Pages.SubCycle.CycleWeight(frameMain, frameInfoCycle, currentPhaseParameters[2], idCycle, idSubCycle, tablePrevious, isTest);
-            }
-            else if (recipeParam.columns[recipeParam.nextSeqType].value == "1") // Si la prochaine séquence est une séquence speedmixer
-            //else if (currentPhaseParameters[1] == "1") // Si la prochaine séquence est une séquence speedmixer
-            {
-                frameMain.Content = new Pages.SubCycle.CycleSpeedMixer(frameMain, frameInfoCycle, recipeParam.columns[recipeParam.nextSeqId].value, idCycle, idSubCycle, tableNameSubCycles[previousSeqType], prevSeqInfo_arg, isTest);
-                //frameMain.Content = new Pages.SubCycle.CycleSpeedMixer(frameMain, frameInfoCycle, currentPhaseParameters[2], idCycle, idSubCycle, tableNameSubCycles[previousSeqType], prevSeqInfo_arg, isTest);
-                //frameMain.Content = new Pages.SubCycle.CycleSpeedMixer(frameMain, frameInfoCycle, currentPhaseParameters[2], idCycle, idSubCycle, tablePrevious, isTest);
-            }
-            else if (recipeParam.columns[recipeParam.nextSeqType].value == null || recipeParam.columns[recipeParam.nextSeqType].value == "") // S'il n'y a pas de prochaine séquence 
-            //else if (currentPhaseParameters[1] == null || currentPhaseParameters[1] == "") // S'il n'y a pas de prochaine séquence 
+            logger.Debug("NextSequence");
+            if (recipeParam.columns[recipeParam.nextSeqType].value == null || recipeParam.columns[recipeParam.nextSeqType].value == "") // S'il n'y a pas de prochaine séquence 
             {
                 EndSequence(recipeParameters: currentPhaseParameters, recipeParam: recipeParam, frameMain: frameMain, frameInfoCycle: frameInfoCycle, idCycle: idCycle, previousSeqType: previousSeqType, previousSeqId: idSubCycle.ToString(), isTest: isTest, comment: comment);
             }
             else
             {
-                MessageBox.Show("Je ne sais pas, je ne sais plus, je suis perdu");
+                SubCycleArg subCycleArg = new SubCycleArg(frameMain, frameInfoCycle, recipeParam.columns[recipeParam.nextSeqId].value, idCycle, idSubCycle, tableNameSubCycles[previousSeqType], prevSeqInfo_arg, isTest);
+                frameMain.Content = Activator.CreateInstance(Pages.Sequence.list[int.Parse(recipeParam.columns[recipeParam.nextSeqType].value)].subCycPgType, new object[] { subCycleArg });
             }
         }
         public static void EndSequence(string[] recipeParameters, ISeqInfo recipeParam, Frame frameMain, Frame frameInfoCycle, int idCycle, int previousSeqType, string previousSeqId, bool isTest, string comment = "")
@@ -369,7 +369,7 @@ namespace FPO_WPF_Test
             {
                 // Note pour plus tard: ce serait bien de retirer les "1" et de les remplacer par un truc comme recipeWeightInfo.nextSeqType
                 nextRecipeSeqType = int.Parse(recipeParam.columns[recipeParam.nextSeqType].value);
-                recipeParam = (ISeqInfo)MyDatabase.GetOneRow(recipeParam, recipeParam.columns[recipeParam.id].value);
+                recipeParam = (ISeqInfo)MyDatabase.GetOneRow(recipeParam.GetType(), recipeParam.columns[recipeParam.id].value);
                 //recipeParameters = MyDatabase.GetOneRow(tableNameSubRecipes[int.Parse(recipeParameters[1])], whereColumns: new string[] { "id" }, whereValues: new string[] { recipeParameters[2] });
 
                 row = "recipeParameters ";
@@ -400,7 +400,7 @@ namespace FPO_WPF_Test
                 MyDatabase.InsertRow(cycleSeqInfo);
 
                 // On met à jour les infos "type" et "id" de la séquence qu'on vient de renseigner dans la précédente séquence
-                nextSeqId = MyDatabase.GetMax(cycleSeqInfo.name, "id").ToString();
+                nextSeqId = MyDatabase.GetMax_old(cycleSeqInfo.name, "id").ToString();
                 //nextSeqId = MyDatabase.GetMax(tableNameSubCycles[nextRecipeSeqType], "id").ToString();
 
                 prevCycleSeqInfo = cycleSeqTypes[previousSeqType];
@@ -466,7 +466,7 @@ namespace FPO_WPF_Test
             }
 
             cycleTableInfo = new CycleTableInfo();
-            string lastAlarmId = MyDatabase.GetMax("audit_trail", "id").ToString();
+            string lastAlarmId = MyDatabase.GetMax_old("audit_trail", "id").ToString();
             cycleTableInfo.columns[cycleTableInfo.dateTimeEndCycle].value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             cycleTableInfo.columns[cycleTableInfo.lastAlarmId].value = lastAlarmId;
             MyDatabase.Update_Row(cycleTableInfo, idCycle.ToString());
@@ -484,8 +484,9 @@ namespace FPO_WPF_Test
 
             if (isTest)
             {
-                string[] recipeName = MyDatabase.GetOneRow("cycle", "recipe_name", new string[] { "id" }, new string[] { idCycle.ToString() });
-                frameMain.Content = new Pages.Recipe(Action.Modify, frameMain, frameInfoCycle, recipeName.Length == 0 ? "" : recipeName[0]);
+                cycleTableInfo = new CycleTableInfo();
+                cycleTableInfo = (CycleTableInfo)MyDatabase.GetOneRow(cycleTableInfo.GetType(), idCycle.ToString());
+                frameMain.Content = new Pages.Recipe(Action.Modify, frameMain, frameInfoCycle, cycleTableInfo.columns.Count == 0 ? "" : cycleTableInfo.columns[cycleTableInfo.recipeName].value);
             }
             else 
             {

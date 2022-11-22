@@ -20,7 +20,6 @@ namespace Database
             falseValue = Settings.Default.General_FalseValue;
         }
     }
-
     public class Column
     {
         public string id { get; }
@@ -32,36 +31,34 @@ namespace Database
             displayName = displayName_arg;
         }
     }
-
     public interface ITableInfo
     {
         string name { get; }
         List<Column> columns { get; set; }
         int id { get; }
-    }
 
+        void Reset();
+    }
     public interface ISeqInfo : ITableInfo
     {
         int seqType { get; }
         int nextSeqType { get; }
         int nextSeqId { get; }
     }
-
     public interface ICycleSeqInfo : ISeqInfo
     {
         void SetRecipeParameters(string[] array); // ou get
         void SetRecipeParameters(ISeqInfo recipe); // ou get
     }
-
     public class AuditTrailInfo : ITableInfo
     {
         public AuditTrailInfo()
         {
-            StringCollection colNames = Settings.Default.AuditTrail_ColIds;
+            StringCollection colId = Settings.Default.AuditTrail_ColIds;
             name = Settings.Default.AuditTrail_TableName;
 
             columns = new List<Column>();
-            for (int i = 0; i < colNames.Count; i++) columns.Add(new Column(colNames[i]));
+            for (int i = 0; i < colId.Count; i++) columns.Add(new Column(colId[i]));
 
             id = Settings.Default.AuditTrail_ColN_id;
             dateTime = Settings.Default.AuditTrail_ColN_dateTime;
@@ -83,17 +80,65 @@ namespace Database
         public int valueBefore { get; }
         public int valueAfter { get; }
         public int comment { get; }
+        public void Reset()
+        {
+            for (int i = 0; i < columns.Count; i++)
+            {
+                columns[i].value = null;
+            }
+        }
     }
+    public class AccessTableInfo : ITableInfo
+    {
+        public AccessTableInfo()
+        {
+            StringCollection colId = Settings.Default.AccessTable_ColIds;
+            name = Settings.Default.AccessTable_TableName;
 
+            columns = new List<Column>();
+            for (int i = 0; i < colId.Count; i++) columns.Add(new Column(colId[i]));
+
+            id = Settings.Default.AccessTable_ColN_id;
+            role = Settings.Default.AccessTable_ColN_role;
+            cycleStart = Settings.Default.AccessTable_ColN_cycleStart;
+            recipeCreate = Settings.Default.AccessTable_ColN_recipeCreate;
+            applicationStop = Settings.Default.AccessTable_ColN_applicationStop;
+
+            operatorRole = Settings.Default.AccessTable_Role_operator;
+            supervisorRole = Settings.Default.AccessTable_Role_supervisor;
+            administratorRole = Settings.Default.AccessTable_Role_administrator;
+            noneRole = Settings.Default.AccessTable_Role_none;
+        }
+        public string name { get; }
+        public List<Column> columns { get; set; }
+        public int id { get; }
+
+        public int role { get; }
+        public int cycleStart { get; }
+        public int recipeCreate { get; }
+        public int applicationStop { get; }
+
+        public string operatorRole { get; }
+        public string supervisorRole { get; }
+        public string administratorRole { get; }
+        public string noneRole { get; }
+        public void Reset()
+        {
+            for (int i = 0; i < columns.Count; i++)
+            {
+                columns[i].value = null;
+            }
+        }
+    }
     public class RecipeInfo : ISeqInfo
     {
         public RecipeInfo()
         {
-            StringCollection colNames = Settings.Default.Recipe_ColIds;
+            StringCollection colId = Settings.Default.Recipe_ColIds;
             name = Settings.Default.Recipe_TableName;
 
             columns = new List<Column>();
-            for (int i = 0; i < colNames.Count; i++) columns.Add(new Column(colNames[i]));
+            for (int i = 0; i < colId.Count; i++) columns.Add(new Column(colId[i]));
 
             id = Settings.Default.Recipe_ColN_id;
             nextSeqType = Settings.Default.Recipe_ColN_nextSeqType;
@@ -112,17 +157,23 @@ namespace Database
         public int recipeName { get; }
         public int version { get; }
         public int status { get; }
+        public void Reset()
+        {
+            for (int i = 0; i < columns.Count; i++)
+            {
+                columns[i].value = null;
+            }
+        }
     }
-
     public class RecipeWeightInfo : ISeqInfo
     {
         public RecipeWeightInfo()
         {
-            StringCollection colNames = Settings.Default.RecipeWeight_ColIds;
+            StringCollection colId = Settings.Default.RecipeWeight_ColIds;
             name = Settings.Default.RecipeWeight_TableName;
 
             columns = new List<Column>();
-            for (int i = 0; i < colNames.Count; i++) columns.Add(new Column(colNames[i]));
+            for (int i = 0; i < colId.Count; i++) columns.Add(new Column(colId[i]));
 
             seqType = Settings.Default.RecipeWeight_seqType;
 
@@ -153,17 +204,23 @@ namespace Database
         public int setpoint { get; }
         public int min { get; }
         public int max { get; }
+        public void Reset()
+        {
+            for (int i = 0; i < columns.Count; i++)
+            {
+                columns[i].value = null;
+            }
+        }
     }
-
     public class RecipeSpeedMixerInfo : ISeqInfo
     {
         public RecipeSpeedMixerInfo()
         {
-            StringCollection colNames = Settings.Default.RecipeSpeedMixer_ColIds;
+            StringCollection colId = Settings.Default.RecipeSpeedMixer_ColIds;
             name = Settings.Default.RecipeSpeedMixer_TableName;
 
             columns = new List<Column>();
-            for (int i = 0; i < colNames.Count; i++) columns.Add(new Column(colNames[i]));
+            for (int i = 0; i < colId.Count; i++) columns.Add(new Column(colId[i]));
 
             seqType = Settings.Default.RecipeSpeedMixer_seqType;
 
@@ -220,17 +277,23 @@ namespace Database
         public string pUnit_mBar { get; }
         public string pUnit_inHg { get; }
         public string pUnit_PSIA { get; }
+        public void Reset()
+        {
+            for (int i = 0; i < columns.Count; i++)
+            {
+                columns[i].value = null;
+            }
+        }
     }
-
     public class CycleTableInfo : ISeqInfo
     {
         public CycleTableInfo()
         {
-            StringCollection colNames = Settings.Default.Cycle_ColIds;
+            StringCollection colId = Settings.Default.Cycle_ColIds;
             name = Settings.Default.Cycle_TableName;
 
             columns = new List<Column>();
-            for (int i = 0; i < colNames.Count; i++) columns.Add(new Column(colNames[i]));
+            for (int i = 0; i < colId.Count; i++) columns.Add(new Column(colId[i]));
 
             id = Settings.Default.Cycle_ColN_id;
             nextSeqType = Settings.Default.Cycle_ColN_nextSeqType;
@@ -250,7 +313,6 @@ namespace Database
             lastAlarmId = Settings.Default.Cycle_ColN_lastAlarmId;
             comment = Settings.Default.Cycle_ColN_comment;
             isItATest = Settings.Default.Cycle_ColN_isItATest;
-
         }
         public string name { get; }
         public List<Column> columns { get; set; }
@@ -274,17 +336,24 @@ namespace Database
         public int lastAlarmId { get; }
         public int comment { get; }
         public int isItATest { get; }
+        public void Reset()
+        {
+            for (int i = 0; i < columns.Count; i++)
+            {
+                columns[i].value = null;
+            }
+        }
     }
-
     public class CycleWeightInfo : ICycleSeqInfo
     {
         public CycleWeightInfo()
         {
-            StringCollection colNames = Settings.Default.CycleWeight_ColIds;
+            StringCollection colId = Settings.Default.CycleWeight_ColIds;
+            StringCollection colDesc = Settings.Default.CycleWeight_ColDesc;
             name = Settings.Default.CycleWeight_TableName;
 
             columns = new List<Column>();
-            for (int i = 0; i < colNames.Count; i++) columns.Add(new Column(colNames[i]));
+            for (int i = 0; i < colId.Count; i++) columns.Add(new Column(colId[i], colDesc[i]));
 
             seqType = Settings.Default.CycleWeight_seqType;
 
@@ -351,23 +420,31 @@ namespace Database
             columns[unit].value = recipeWInfo.columns[recipeWInfo.unit].value;
             columns[decimalNumber].value = recipeWInfo.columns[recipeWInfo.decimalNumber].value;
         }
+        public void Reset()
+        {
+            for (int i = 0; i < columns.Count; i++)
+            {
+                columns[i].value = null;
+            }
+        }
     }
-
     public class CycleSpeedMixerInfo : ICycleSeqInfo
     {
         public CycleSpeedMixerInfo()
         {
-            StringCollection colNames = Settings.Default.CycleSpeedMixer_ColIds;
+            StringCollection colId = Settings.Default.CycleSpeedMixer_ColIds;
+            StringCollection colDesc = Settings.Default.CycleSpeedMixer_ColDesc;
             name = Settings.Default.CycleSpeedMixer_TableName;
 
             columns = new List<Column>();
-            for (int i = 0; i < colNames.Count; i++) columns.Add(new Column(colNames[i]));
+            for (int i = 0; i < colId.Count; i++) columns.Add(new Column(colId[i], colDesc[i]));
 
             seqType = Settings.Default.CycleSpeedMixer_seqType;
 
             id = Settings.Default.CycleSpeedMixer_ColN_id;
             nextSeqType = Settings.Default.CycleSpeedMixer_ColN_nextSeqType;
             nextSeqId = Settings.Default.CycleSpeedMixer_ColN_nextSeqId;
+            mixName = Settings.Default.CycleSpeedMixer_ColN_mixName;
             dateTimeStart = Settings.Default.CycleSpeedMixer_ColN_dateTimeStart;
             dateTimeEnd = Settings.Default.CycleSpeedMixer_ColN_dateTimeEnd;
             timeMixTh = Settings.Default.CycleSpeedMixer_ColN_timeMixTh;
@@ -390,6 +467,7 @@ namespace Database
         public int nextSeqType { get; }
         public int nextSeqId { get; }
 
+        public int mixName { get; }
         public int dateTimeStart { get; }
         public int dateTimeEnd { get; }
         public int timeMixTh { get; }
@@ -425,6 +503,7 @@ namespace Database
                 i++;
             }
 
+            columns[mixName].value = array[recipeSpeedMixerInfo.seqName];
             columns[timeMixTh].value = TimeSpan.FromSeconds(timeTh_seconds).ToString();
             columns[pressureUnit].value = array[recipeSpeedMixerInfo.pressureUnit];
             columns[speedMin].value = array[recipeSpeedMixerInfo.speedMin];
@@ -447,6 +526,7 @@ namespace Database
                 i++;
             }
 
+            columns[mixName].value = recipeSMInfo.columns[recipeSpeedMixerInfo.seqName].value;
             columns[timeMixTh].value = TimeSpan.FromSeconds(timeTh_seconds).ToString();
             columns[pressureUnit].value = recipeSMInfo.columns[recipeSMInfo.pressureUnit].value;
             columns[speedMin].value = recipeSMInfo.columns[recipeSMInfo.speedMin].value;
@@ -454,7 +534,12 @@ namespace Database
             columns[pressureMin].value = recipeSMInfo.columns[recipeSMInfo.pressureMin].value;
             columns[pressureMax].value = recipeSMInfo.columns[recipeSMInfo.pressureMax].value;
         }
+        public void Reset()
+        {
+            for (int i = 0; i < columns.Count; i++)
+            {
+                columns[i].value = null;
+            }
+        }
     }
-
-
 }

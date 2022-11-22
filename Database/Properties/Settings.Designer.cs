@@ -1218,6 +1218,7 @@ namespace Database.Properties {
   <string>id</string>
   <string>next_seq_type</string>
   <string>next_seq_id</string>
+  <string>name</string>
   <string>date_time_start</string>
   <string>date_time_end</string>
   <string>time_mix_th</string>
@@ -1279,7 +1280,7 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
         public int CycleSpeedMixer_ColN_dateTimeStart {
             get {
                 return ((int)(this["CycleSpeedMixer_ColN_dateTimeStart"]));
@@ -1291,7 +1292,7 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
         public int CycleSpeedMixer_ColN_dateTimeEnd {
             get {
                 return ((int)(this["CycleSpeedMixer_ColN_dateTimeEnd"]));
@@ -1303,7 +1304,7 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        [global::System.Configuration.DefaultSettingValueAttribute("6")]
         public int CycleSpeedMixer_ColN_timeMixTh {
             get {
                 return ((int)(this["CycleSpeedMixer_ColN_timeMixTh"]));
@@ -1315,7 +1316,7 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("6")]
+        [global::System.Configuration.DefaultSettingValueAttribute("7")]
         public int CycleSpeedMixer_ColN_timeMixEff {
             get {
                 return ((int)(this["CycleSpeedMixer_ColN_timeMixEff"]));
@@ -1327,7 +1328,7 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("7")]
+        [global::System.Configuration.DefaultSettingValueAttribute("8")]
         public int CycleSpeedMixer_ColN_pressureUnit {
             get {
                 return ((int)(this["CycleSpeedMixer_ColN_pressureUnit"]));
@@ -1339,7 +1340,7 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("8")]
+        [global::System.Configuration.DefaultSettingValueAttribute("9")]
         public int CycleSpeedMixer_ColN_speedMin {
             get {
                 return ((int)(this["CycleSpeedMixer_ColN_speedMin"]));
@@ -1351,7 +1352,7 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("9")]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
         public int CycleSpeedMixer_ColN_speedMax {
             get {
                 return ((int)(this["CycleSpeedMixer_ColN_speedMax"]));
@@ -1363,7 +1364,7 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        [global::System.Configuration.DefaultSettingValueAttribute("11")]
         public int CycleSpeedMixer_ColN_pressureMin {
             get {
                 return ((int)(this["CycleSpeedMixer_ColN_pressureMin"]));
@@ -1375,7 +1376,7 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("11")]
+        [global::System.Configuration.DefaultSettingValueAttribute("12")]
         public int CycleSpeedMixer_ColN_pressureMax {
             get {
                 return ((int)(this["CycleSpeedMixer_ColN_pressureMax"]));
@@ -1387,7 +1388,7 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("12")]
+        [global::System.Configuration.DefaultSettingValueAttribute("13")]
         public int CycleSpeedMixer_ColN_speedMean {
             get {
                 return ((int)(this["CycleSpeedMixer_ColN_speedMean"]));
@@ -1399,7 +1400,7 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("13")]
+        [global::System.Configuration.DefaultSettingValueAttribute("14")]
         public int CycleSpeedMixer_ColN_pressureMean {
             get {
                 return ((int)(this["CycleSpeedMixer_ColN_pressureMean"]));
@@ -1411,7 +1412,7 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("14")]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
         public int CycleSpeedMixer_ColN_speedStd {
             get {
                 return ((int)(this["CycleSpeedMixer_ColN_speedStd"]));
@@ -1423,7 +1424,7 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        [global::System.Configuration.DefaultSettingValueAttribute("16")]
         public int CycleSpeedMixer_ColN_pressureStd {
             get {
                 return ((int)(this["CycleSpeedMixer_ColN_pressureStd"]));
@@ -1732,25 +1733,6 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"
-          <ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-            <server>localhost</server>
-            <userID>root</userID>
-            <password>Integra2022/</password>
-            <db>db1</db>
-          </ConnectionInfo>
-        ")]
-        public global::Database.ConnectionInfo ConnectionInfo {
-            get {
-                return ((global::Database.ConnectionInfo)(this["ConnectionInfo"]));
-            }
-            set {
-                this["ConnectionInfo"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public string General_TrueValue {
             get {
@@ -1770,6 +1752,244 @@ namespace Database.Properties {
             }
             set {
                 this["General_FalseValue"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <string>id</string>
+  <string>role</string>
+  <string>cycle_start</string>
+  <string>recipe_create</string>
+  <string>application_stop</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection AccessTable_ColIds {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["AccessTable_ColIds"]));
+            }
+            set {
+                this["AccessTable_ColIds"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("access_table")]
+        public string AccessTable_TableName {
+            get {
+                return ((string)(this["AccessTable_TableName"]));
+            }
+            set {
+                this["AccessTable_TableName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int AccessTable_ColN_id {
+            get {
+                return ((int)(this["AccessTable_ColN_id"]));
+            }
+            set {
+                this["AccessTable_ColN_id"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int AccessTable_ColN_role {
+            get {
+                return ((int)(this["AccessTable_ColN_role"]));
+            }
+            set {
+                this["AccessTable_ColN_role"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int AccessTable_ColN_cycleStart {
+            get {
+                return ((int)(this["AccessTable_ColN_cycleStart"]));
+            }
+            set {
+                this["AccessTable_ColN_cycleStart"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int AccessTable_ColN_recipeCreate {
+            get {
+                return ((int)(this["AccessTable_ColN_recipeCreate"]));
+            }
+            set {
+                this["AccessTable_ColN_recipeCreate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public int AccessTable_ColN_applicationStop {
+            get {
+                return ((int)(this["AccessTable_ColN_applicationStop"]));
+            }
+            set {
+                this["AccessTable_ColN_applicationStop"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("operator")]
+        public string AccessTable_Role_operator {
+            get {
+                return ((string)(this["AccessTable_Role_operator"]));
+            }
+            set {
+                this["AccessTable_Role_operator"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("supervisor")]
+        public string AccessTable_Role_supervisor {
+            get {
+                return ((string)(this["AccessTable_Role_supervisor"]));
+            }
+            set {
+                this["AccessTable_Role_supervisor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("administrator")]
+        public string AccessTable_Role_administrator {
+            get {
+                return ((string)(this["AccessTable_Role_administrator"]));
+            }
+            set {
+                this["AccessTable_Role_administrator"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("none")]
+        public string AccessTable_Role_none {
+            get {
+                return ((string)(this["AccessTable_Role_none"]));
+            }
+            set {
+                this["AccessTable_Role_none"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <string>0</string>
+  <string>0</string>
+  <string>0</string>
+  <string>Produit</string>
+  <string>0</string>
+  <string>Date et heure de pesée</string>
+  <string>Valeur pesée</string>
+  <string>Valeur nominal</string>
+  <string>Minimum</string>
+  <string>Maximum</string>
+  <string>0</string>
+  <string>0</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection CycleWeight_ColDesc {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["CycleWeight_ColDesc"]));
+            }
+            set {
+                this["CycleWeight_ColDesc"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int CycleSpeedMixer_ColN_mixName {
+            get {
+                return ((int)(this["CycleSpeedMixer_ColN_mixName"]));
+            }
+            set {
+                this["CycleSpeedMixer_ColN_mixName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <string>0</string>
+  <string>0</string>
+  <string>0</string>
+  <string>Nom du mélange</string>
+  <string>Début séquence</string>
+  <string>Fin séquence</string>
+  <string>Durée Mix théorique</string>
+  <string>Durée Mix effective</string>
+  <string>0</string>
+  <string>0</string>
+  <string>0</string>
+  <string>0</string>
+  <string>0</string>
+  <string>0</string>
+  <string>0</string>
+  <string>0</string>
+  <string>0</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection CycleSpeedMixer_ColDesc {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["CycleSpeedMixer_ColDesc"]));
+            }
+            set {
+                this["CycleSpeedMixer_ColDesc"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <server>localhost</server>
+  <userID>root</userID>
+  <password>Integra2022/</password>
+  <db>db1</db>
+</ConnectionInfo>")]
+        public global::Database.ConnectionInfo ConnectionInfo {
+            get {
+                return ((global::Database.ConnectionInfo)(this["ConnectionInfo"]));
+            }
+            set {
+                this["ConnectionInfo"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Arguments manquants")]
+        public string Error16 {
+            get {
+                return ((string)(this["Error16"]));
+            }
+            set {
+                this["Error16"] = value;
             }
         }
     }

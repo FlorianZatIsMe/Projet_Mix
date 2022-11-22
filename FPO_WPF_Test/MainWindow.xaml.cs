@@ -71,6 +71,15 @@ namespace FPO_WPF_Test
             LogManager.ReconfigExistingLoggers(); // Explicit refresh of Layouts and updates active Logger-objects
 
             /*
+
+            RecipeInfo r = new RecipeInfo();
+            List<string> l = new List<string>();
+
+            for (int i = 0; i < r.columns.Count; i++)
+            {
+                l.Add(r.columns[i].value);
+            }
+
             Environment.Exit(1);
             //*/
 
@@ -126,7 +135,7 @@ namespace FPO_WPF_Test
             }
             //*/
 
-            int mutexID = MyDatabase.SendCommand_Read("audit_trail", "date_time", new string[] { "description" }, new string[] { General.auditTrail_BackupDesc }, "id", false, isMutexReleased: false);
+            int mutexID = MyDatabase.SendCommand_Read_old("audit_trail", "date_time", new string[] { "description" }, new string[] { General.auditTrail_BackupDesc }, "id", false, isMutexReleased: false);
             string[] array = MyDatabase.ReadNext(mutexID);
             MyDatabase.Signal(mutexID);
 

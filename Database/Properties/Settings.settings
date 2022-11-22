@@ -397,6 +397,7 @@
   &lt;string&gt;id&lt;/string&gt;
   &lt;string&gt;next_seq_type&lt;/string&gt;
   &lt;string&gt;next_seq_id&lt;/string&gt;
+  &lt;string&gt;name&lt;/string&gt;
   &lt;string&gt;date_time_start&lt;/string&gt;
   &lt;string&gt;date_time_end&lt;/string&gt;
   &lt;string&gt;time_mix_th&lt;/string&gt;
@@ -422,43 +423,43 @@
       <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="CycleSpeedMixer_ColN_dateTimeStart" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">3</Value>
-    </Setting>
-    <Setting Name="CycleSpeedMixer_ColN_dateTimeEnd" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">4</Value>
     </Setting>
-    <Setting Name="CycleSpeedMixer_ColN_timeMixTh" Type="System.Int32" Scope="User">
+    <Setting Name="CycleSpeedMixer_ColN_dateTimeEnd" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">5</Value>
     </Setting>
-    <Setting Name="CycleSpeedMixer_ColN_timeMixEff" Type="System.Int32" Scope="User">
+    <Setting Name="CycleSpeedMixer_ColN_timeMixTh" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">6</Value>
     </Setting>
-    <Setting Name="CycleSpeedMixer_ColN_pressureUnit" Type="System.Int32" Scope="User">
+    <Setting Name="CycleSpeedMixer_ColN_timeMixEff" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">7</Value>
     </Setting>
-    <Setting Name="CycleSpeedMixer_ColN_speedMin" Type="System.Int32" Scope="User">
+    <Setting Name="CycleSpeedMixer_ColN_pressureUnit" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">8</Value>
     </Setting>
-    <Setting Name="CycleSpeedMixer_ColN_speedMax" Type="System.Int32" Scope="User">
+    <Setting Name="CycleSpeedMixer_ColN_speedMin" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">9</Value>
     </Setting>
-    <Setting Name="CycleSpeedMixer_ColN_pressureMin" Type="System.Int32" Scope="User">
+    <Setting Name="CycleSpeedMixer_ColN_speedMax" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
-    <Setting Name="CycleSpeedMixer_ColN_pressureMax" Type="System.Int32" Scope="User">
+    <Setting Name="CycleSpeedMixer_ColN_pressureMin" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">11</Value>
     </Setting>
-    <Setting Name="CycleSpeedMixer_ColN_speedMean" Type="System.Int32" Scope="User">
+    <Setting Name="CycleSpeedMixer_ColN_pressureMax" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">12</Value>
     </Setting>
-    <Setting Name="CycleSpeedMixer_ColN_pressureMean" Type="System.Int32" Scope="User">
+    <Setting Name="CycleSpeedMixer_ColN_speedMean" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">13</Value>
     </Setting>
-    <Setting Name="CycleSpeedMixer_ColN_speedStd" Type="System.Int32" Scope="User">
+    <Setting Name="CycleSpeedMixer_ColN_pressureMean" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">14</Value>
     </Setting>
-    <Setting Name="CycleSpeedMixer_ColN_pressureStd" Type="System.Int32" Scope="User">
+    <Setting Name="CycleSpeedMixer_ColN_speedStd" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_ColN_pressureStd" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">16</Value>
     </Setting>
     <Setting Name="Info01" Type="System.String" Scope="User">
       <Value Profile="(Default)">Tentative de reconnexion. Statut: </Value>
@@ -535,21 +536,105 @@
     <Setting Name="RecipeSpeedMixer_PressureUnit_PSIA" Type="System.String" Scope="User">
       <Value Profile="(Default)">PSIA</Value>
     </Setting>
-    <Setting Name="ConnectionInfo" Type="Database.ConnectionInfo" Scope="User">
-      <Value Profile="(Default)">
-          &lt;ConnectionInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
-            &lt;server&gt;localhost&lt;/server&gt;
-            &lt;userID&gt;root&lt;/userID&gt;
-            &lt;password&gt;Integra2022/&lt;/password&gt;
-            &lt;db&gt;db1&lt;/db&gt;
-          &lt;/ConnectionInfo&gt;
-        </Value>
-    </Setting>
     <Setting Name="General_TrueValue" Type="System.String" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="General_FalseValue" Type="System.String" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="AccessTable_ColIds" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;id&lt;/string&gt;
+  &lt;string&gt;role&lt;/string&gt;
+  &lt;string&gt;cycle_start&lt;/string&gt;
+  &lt;string&gt;recipe_create&lt;/string&gt;
+  &lt;string&gt;application_stop&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="AccessTable_TableName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">access_table</Value>
+    </Setting>
+    <Setting Name="AccessTable_ColN_id" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="AccessTable_ColN_role" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="AccessTable_ColN_cycleStart" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="AccessTable_ColN_recipeCreate" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="AccessTable_ColN_applicationStop" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="AccessTable_Role_operator" Type="System.String" Scope="User">
+      <Value Profile="(Default)">operator</Value>
+    </Setting>
+    <Setting Name="AccessTable_Role_supervisor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">supervisor</Value>
+    </Setting>
+    <Setting Name="AccessTable_Role_administrator" Type="System.String" Scope="User">
+      <Value Profile="(Default)">administrator</Value>
+    </Setting>
+    <Setting Name="AccessTable_Role_none" Type="System.String" Scope="User">
+      <Value Profile="(Default)">none</Value>
+    </Setting>
+    <Setting Name="CycleWeight_ColDesc" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;Produit&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;Date et heure de pesée&lt;/string&gt;
+  &lt;string&gt;Valeur pesée&lt;/string&gt;
+  &lt;string&gt;Valeur nominal&lt;/string&gt;
+  &lt;string&gt;Minimum&lt;/string&gt;
+  &lt;string&gt;Maximum&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_ColN_mixName" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_ColDesc" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;Nom du mélange&lt;/string&gt;
+  &lt;string&gt;Début séquence&lt;/string&gt;
+  &lt;string&gt;Fin séquence&lt;/string&gt;
+  &lt;string&gt;Durée Mix théorique&lt;/string&gt;
+  &lt;string&gt;Durée Mix effective&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="ConnectionInfo" Type="Database.ConnectionInfo" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ConnectionInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;server&gt;localhost&lt;/server&gt;
+  &lt;userID&gt;root&lt;/userID&gt;
+  &lt;password&gt;Integra2022/&lt;/password&gt;
+  &lt;db&gt;db1&lt;/db&gt;
+&lt;/ConnectionInfo&gt;</Value>
+    </Setting>
+    <Setting Name="Error16" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Arguments manquants</Value>
     </Setting>
   </Settings>
 </SettingsFile>

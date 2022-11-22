@@ -134,6 +134,8 @@ namespace Alarm_Management
 
             mutexID = MyDatabase.Connect(false);
 
+            // Add test if database not connected, and do that everywhere
+
             AlarmStatus statusBefore = alarms[id1, id2].Status;
             AlarmStatus statusAfter = AlarmStatus.ACTIVE;
 
@@ -146,7 +148,7 @@ namespace Alarm_Management
             auditTrailInfo.columns[auditTrailInfo.valueAfter].value = statusAfter.ToString();
             MyDatabase.InsertRow(auditTrailInfo, mutexID);
 
-            alarms[id1, id2].id = MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id, mutex: mutexID);
+            alarms[id1, id2].id = MyDatabase.GetMax_old(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id, mutex: mutexID);
             alarms[id1, id2].Status = statusAfter;
             ActiveAlarms.Add(new Tuple<int, int>(id1, id2));
 
@@ -259,7 +261,7 @@ namespace Alarm_Management
                 auditTrailInfo.columns[auditTrailInfo.valueAfter].value = statusAfter.ToString();
                 MyDatabase.InsertRow(auditTrailInfo, mutexID);
 
-                alarms[id1, id2].id = MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id, mutex: mutexID);
+                alarms[id1, id2].id = MyDatabase.GetMax_old(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id, mutex: mutexID);
                 alarms[id1, id2].Status = statusAfter;
 
                 if (statusAfter == AlarmStatus.INACTIVE)
@@ -335,7 +337,7 @@ namespace Alarm_Management
             //string[] values = new string[] { "Système", GetAlarmType(alarms[id1, id2].Type), GetAlarmDescription(id1, id2), statusBefore.ToString(), statusAfter.ToString() };
             //MyDatabase.InsertRow_done_old(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values, mutex: mutexID);
 
-            alarms[id1, id2].id = MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id, mutex: mutexID);
+            alarms[id1, id2].id = MyDatabase.GetMax_old(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id, mutex: mutexID);
             alarms[id1, id2].Status = statusAfter;
 
             if (statusAfter == AlarmStatus.ACK)

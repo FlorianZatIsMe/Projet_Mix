@@ -106,5 +106,26 @@
     <Setting Name="Register_MixerSpeed" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">3101</Value>
     </Setting>
+    <Setting Name="MixerStatusId_ReadyToRun" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="MixerStatusId_MixerRunning" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="MixerStatusId_MixerError" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="MixerStatusId_LidOpen" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="MixerStatusId_LidClosed" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="MixerStatusId_SafetyOK" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="MixerStatusId_RobotAtHome" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -21,7 +21,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
     /// <summary>
     /// Logique d'interaction pour CycleWeight.xaml
     /// </summary>
-    public partial class CycleWeight : Page, IDisposable
+    public partial class CycleWeight : Page, IDisposable, ISubCycle
     {
         private readonly Frame frameMain;
         private readonly Frame frameInfoCycle;
@@ -49,17 +49,29 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
         private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public CycleWeight(Frame frameMain_arg, Frame frameInfoCycle_arg, string id, int idCycle_arg, int idPrevious_arg, string tablePrevious_arg, ISeqInfo prevSeqInfo_arg, bool isTest_arg = true)
+        //public CycleWeight(Frame frameMain_arg, Frame frameInfoCycle_arg, string id_arg, int idCycle_arg, int idPrevious_arg, string tablePrevious_arg, ISeqInfo prevSeqInfo_arg, bool isTest_arg = true)
+        public CycleWeight(SubCycleArg subCycleArg)
         {
             logger.Debug("Start");
 
+            frameMain = subCycleArg.frameMain;
+            frameInfoCycle = subCycleArg.frameInfoCycle;
+            string id = subCycleArg.id;
+            idCycle = subCycleArg.idCycle;
+            idPrevious = subCycleArg.idPrevious;
+            tablePrevious = subCycleArg.tablePrevious;
+            prevSeqInfo = subCycleArg.prevSeqInfo;
+            isTest = subCycleArg.isTest;
+            /*
             frameMain = frameMain_arg;
             frameInfoCycle = frameInfoCycle_arg;
+            string id = id_arg;
             idCycle = idCycle_arg;
             idPrevious = idPrevious_arg;
             tablePrevious = tablePrevious_arg;
             prevSeqInfo = prevSeqInfo_arg;
             isTest = isTest_arg;
+            */
             frameMain.ContentRendered += new EventHandler(FrameMain_ContentRendered);
             //thisCycleInfo = cycleInfo;
             isSequenceOver = false;
@@ -73,22 +85,22 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
             if (MyDatabase.IsConnected()) // while loop is better
             {
-                recipeWeightInfo = (RecipeWeightInfo)MyDatabase.GetOneRow(recipeWeightInfo, id);
+                recipeWeightInfo = (RecipeWeightInfo)MyDatabase.GetOneRow(recipeWeightInfo.GetType(), id);
                 //currentPhaseParameters = MyDatabase.GetOneRow("recipe_weight", whereColumns: new string[] { "id" }, whereValues: new string[] { id });
 
                 if (recipeWeightInfo.columns.Count() != 0) // Si la commande a renvoyée une ligne
                 //if (currentPhaseParameters.Count() != 0) // Si la commande a renvoyée une ligne
                 {
                     // Refaire ces calculs plus sérieusement une fois que tout est clarifié, il faut arrondir aussi
-                    string[] infoPreCycle = MyDatabase.GetOneRow("cycle", selectColumns: "quantity_value, quantity_unit", whereColumns: new string[] { "id" }, whereValues: new string[] { idCycle.ToString() });
+                    CycleTableInfo cycleTableInfo = (CycleTableInfo)MyDatabase.GetOneRow(new CycleTableInfo().GetType(), idCycle.ToString());
+                    setpoint = decimal.Parse(recipeWeightInfo.columns[8].value) * decimal.Parse(cycleTableInfo.columns[cycleTableInfo.quantityValue].value);
+                    min = decimal.Parse(recipeWeightInfo.columns[9].value) * decimal.Parse(cycleTableInfo.columns[cycleTableInfo.quantityValue].value);
+                    max = decimal.Parse(recipeWeightInfo.columns[10].value) * decimal.Parse(cycleTableInfo.columns[cycleTableInfo.quantityValue].value);
 
-                    setpoint = decimal.Parse(recipeWeightInfo.columns[8].value) * decimal.Parse(infoPreCycle[0]);
-                    min = decimal.Parse(recipeWeightInfo.columns[9].value) * decimal.Parse(infoPreCycle[0]);
-                    max = decimal.Parse(recipeWeightInfo.columns[10].value) * decimal.Parse(infoPreCycle[0]);
-
-                    //setpoint = decimal.Parse(currentPhaseParameters[8]) * decimal.Parse(infoPreCycle[0]);
-                    //min = decimal.Parse(currentPhaseParameters[9]) * decimal.Parse(infoPreCycle[0]);
-                    //max = decimal.Parse(currentPhaseParameters[10]) * decimal.Parse(infoPreCycle[0]);
+                    //string[] infoPreCycle = MyDatabase.GetOneRow("cycle", selectColumns: "quantity_value, quantity_unit", whereColumns: new string[] { "id" }, whereValues: new string[] { idCycle.ToString() });
+                    //setpoint = decimal.Parse(recipeWeightInfo.columns[8].value) * decimal.Parse(infoPreCycle[0]);
+                    //min = decimal.Parse(recipeWeightInfo.columns[9].value) * decimal.Parse(infoPreCycle[0]);
+                    //max = decimal.Parse(recipeWeightInfo.columns[10].value) * decimal.Parse(infoPreCycle[0]);
 
                     tbPhaseName.Text = recipeWeightInfo.columns[3].value;
                     labelWeight.Text = "Masse (cible: " + setpoint.ToString("N" + recipeWeightInfo.columns[7].value) + recipeWeightInfo.columns[6].value + ")";
@@ -107,7 +119,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                     string[] values = new string[] { currentPhaseParameters[3], setpoint.ToString(), min.ToString(), max.ToString(), currentPhaseParameters[6], currentPhaseParameters[7] };
                     MyDatabase.InsertRow_done_old("cycle_weight", columns, values);
                     */
-                    idSubCycle = MyDatabase.GetMax(cycleWeightInfo.name, cycleWeightInfo.columns[cycleWeightInfo.id].id);
+                    idSubCycle = MyDatabase.GetMax_old(cycleWeightInfo.name, cycleWeightInfo.columns[cycleWeightInfo.id].id);
 
                     prevSeqInfo.columns[prevSeqInfo.nextSeqType].value = cycleWeightInfo.seqType.ToString();
                     prevSeqInfo.columns[prevSeqInfo.nextSeqId].value = idSubCycle.ToString();
@@ -327,6 +339,11 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 }
             }
 
+        }
+
+        public ISubCycle NewInstance(SubCycleArg subCycleArg)
+        {
+            return new CycleWeight(subCycleArg);
         }
     }
 }

@@ -10,6 +10,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using User_Management.Properties;
 
 namespace User_Management
 {
@@ -19,14 +20,15 @@ namespace User_Management
     {
         //private readonly static MyDatabase db = new MyDatabase();
         private static bool[] CurrentAccessTable;
+        private static AccessTableInfo accessTableInfo = new AccessTableInfo();
 
         public static string UpdateAccessTable(string username)
         {
             string role = null;
             string[,] appGroups = new string[,] {
-                { "MixingApplication_Operator", "operator" },
-                { "MixingApplication_Supervisor", "supervisor" },
-                { "MixingApplication_Administrator", "administrator" }};
+                { Settings.Default.Group_operator, accessTableInfo.operatorRole },
+                { Settings.Default.Group_supervisor, accessTableInfo.supervisorRole },
+                { Settings.Default.Group_administrator, accessTableInfo.administratorRole }};
             object members;
             DirectoryEntry currentGroup;
             DirectoryEntry localMachine = new DirectoryEntry("WinNT://" + Environment.MachineName + ",Computer");
@@ -42,16 +44,17 @@ namespace User_Management
                     if (member.Name.ToLower() == username.ToLower())
                     {
                         if (role == null) role = appGroups[i, 1];
-                        else role = "none";
+                        else role = accessTableInfo.noneRole;
                     }
                 }
             }
 
-            if (role == null) role = "none";
+            if (role == null) role = accessTableInfo.noneRole;
 
-            MyDatabase.SendCommand_Read("access_table", whereColumns: new string[] { "role" }, whereValues: new string[] { role });
+            accessTableInfo = new AccessTableInfo();
+            accessTableInfo.columns[accessTableInfo.role].value = role;
+            MyDatabase.SendCommand_Read(accessTableInfo);
             CurrentAccessTable = MyDatabase.ReadNextBool();
-            //MessageBox.Show(CurrentAccessTable[0].ToString() + CurrentAccessTable[1].ToString() + CurrentAccessTable[2].ToString() + CurrentAccessTable.Length.ToString());
             return role;
 
 

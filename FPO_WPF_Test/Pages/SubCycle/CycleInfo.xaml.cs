@@ -1,5 +1,6 @@
 ﻿using Alarm_Management;
 using Database;
+using FPO_WPF_Test.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,38 +28,45 @@ namespace FPO_WPF_Test.Pages.SubCycle
         private readonly List<WrapPanel> wrapPanels = new List<WrapPanel>();
         private static int seqNumber;
         private readonly static List<Tuple<int, int>> activeAlarms = new List<Tuple<int, int>>();
-        //private System.Timers.Timer checkAlarmsTimer;
-        private Task taskCheckAlarm;
+        private System.Timers.Timer checkAlarmsTimer;
+        //private Task taskCheckAlarm;
         //private MyDatabase db = new MyDatabase();
         private readonly Frame frameCycleInfo;
         private bool isCheckAlarms_onGoing = true;
 
-        public CycleInfo(string[] info, Frame frame)
+        private AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
+        public CycleInfo(CycleTableInfo cycleTableInfo, Frame frame)
         {
             seqNumber = -1;
-            /*
-            checkAlarmsTimer = new System.Timers.Timer();
-            checkAlarmsTimer.Interval = 1000;
-            checkAlarmsTimer.Elapsed += checkAlarmsTimer_OnTimedEvent;
-            checkAlarmsTimer.AutoReset = true;*/
+
+            // Initialisation des timers
+            checkAlarmsTimer = new System.Timers.Timer
+            {
+                Interval = Settings.Default.CycleInfo_checkAlarmsTimer_Interval,
+                AutoReset = false
+            };
+            checkAlarmsTimer.Elapsed += ScanConnectTimer_OnTimedEvent;
 
             frameCycleInfo = frame;
 
             InitializeComponent();
-
-            if (info.Length == 4)
+            /*
+            if (info.Length != 4)
             {
-                labelOFNumber.Text = info[0];
-                labelRecipeName.Text = info[1];
-                labelRecipeVersion.Text = info[2];
-                labelFinalWeight.Text = info[3];
+                logger.Error(Settings.Default.CycleInfo_Error01);
+                MessageBox.Show(Settings.Default.CycleInfo_Error01);
+                return;
+            }*/
 
-                SetVisibility(true);
-            }
-            else
-            {
-                MessageBox.Show("Il y a un problème là");
-            }
+            labelOFNumber.Text = cycleTableInfo.columns[cycleTableInfo.batchNumber].value;
+            labelRecipeName.Text = cycleTableInfo.columns[cycleTableInfo.recipeName].value;
+            labelRecipeVersion.Text = cycleTableInfo.columns[cycleTableInfo.recipeVersion].value;
+            labelFinalWeight.Text = cycleTableInfo.columns[cycleTableInfo.quantityValue].value;
+
+            SetVisibility(true);
         }
         public void SetVisibility(bool visibility) 
         {
@@ -80,77 +88,94 @@ namespace FPO_WPF_Test.Pages.SubCycle
          * 
          * Version: 1.0
          */
-        private async void CheckAlarms_Task()
+        private void ScanConnectTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-            while(isCheckAlarms_onGoing)
+            // S'il y a un évènement d'alarme qui n'a pas été affiché...
+            if (!activeAlarms.SequenceEqual(AlarmManagement.ActiveAlarms))
             {
-                string[] array;
-                // S'il y a un évènement d'alarme qui n'a pas été affiché...
-                if (!activeAlarms.SequenceEqual(AlarmManagement.ActiveAlarms))
+                // On parcours toutes les alarmes actives
+                for (int i = 0; i < AlarmManagement.ActiveAlarms.Count; i++)
                 {
-                    // On parcours toutes les alarmes actives
-                    for (int i = 0; i < AlarmManagement.ActiveAlarms.Count; i++)
+                    // Si l'alarme active qu'on regarde n'a pas été affichée...
+                    if (!activeAlarms.Contains(AlarmManagement.ActiveAlarms[i]))
                     {
-                        // Si l'alarme active qu'on regarde n'a pas été affichée...
-                        if (!activeAlarms.Contains(AlarmManagement.ActiveAlarms[i]))
-                        {
-                            // On met dans la variable array, l'enregistrement d'audit trail de l'alarme en question
-                            array = MyDatabase.GetOneRow(tableName: "audit_trail",
-                                whereColumns: new string[] { "id" },
-                                whereValues: new string[] { AlarmManagement.alarms[AlarmManagement.ActiveAlarms[i].Item1, AlarmManagement.ActiveAlarms[i].Item2].id.ToString() });
-
-                            // S'il n'y a pas eu d'erreur, on affiche les infos de l'alarme
-                            if (array.Count() != 0)
-                            {
-                                this.Dispatcher.Invoke(() =>
-                                {
-                                    AddRow(array[1] + " - " + array[4] + " - " + array[6]);
-                                });
-                            }
-                            else
-                            {
-                                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - checkAlarmsTimer_OnTimedEvent : Je n'aime pas ça " + AlarmManagement.alarms[AlarmManagement.ActiveAlarms[i].Item1, AlarmManagement.ActiveAlarms[i].Item2].id.ToString());
-                            }
-                        }
-                    }
-
-                    // activeAlarms = AlarmManagement.activeAlarms mais en plus chiant
-                    activeAlarms.Clear();
-                    for (int i = 0; i < AlarmManagement.ActiveAlarms.Count; i++) activeAlarms.Add(AlarmManagement.ActiveAlarms[i]);
-                }
-
-                // S'il y a une Remise A Zéro d'une alarme qui n'a pas été affichée...
-                if (AlarmManagement.RAZalarms.Count > 0)
-                {
-                    // On parcours toutes les alarmes RAZ
-                    for (int i = 0; i < AlarmManagement.RAZalarms.Count; i++)
-                    {
-                        // On met dans la variable array l'enregistrement d'audit trail de l'alarme
-                        array = MyDatabase.GetOneRow(tableName: "audit_trail", whereColumns: new string[] { "id" }, whereValues: new string[] { AlarmManagement.RAZalarms[i].ToString() });
+                        // On met dans la variable array, l'enregistrement d'audit trail de l'alarme en question
+                        auditTrailInfo = new AuditTrailInfo();
+                        auditTrailInfo = (AuditTrailInfo)MyDatabase.GetOneRow(auditTrailInfo.GetType(), AlarmManagement.alarms[AlarmManagement.ActiveAlarms[i].Item1, AlarmManagement.ActiveAlarms[i].Item2].id.ToString());
 
                         // S'il n'y a pas eu d'erreur, on affiche les infos de l'alarme
-                        if (array.Count() != 0)
+                        if (auditTrailInfo.columns.Count() != 0)
                         {
                             this.Dispatcher.Invoke(() =>
                             {
-                                AddRow(array[1] + " - " + array[4] + " - " + array[6]);
+                                AddRow(auditTrailInfo.columns[auditTrailInfo.dateTime].value + " - " +
+                                    auditTrailInfo.columns[auditTrailInfo.description].value + " - " +
+                                    auditTrailInfo.columns[auditTrailInfo.valueAfter].value);
                             });
                         }
                         else
                         {
-                            MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - checkAlarmsTimer_OnTimedEvent : Je n'aime pas ça");
+                            logger.Error(Settings.Default.CycleInfo_Error02);
+                            MessageBox.Show(Settings.Default.CycleInfo_Error02);
                         }
                     }
-
-                    AlarmManagement.RAZalarms.Clear();
-                    MessageBox.Show("checkAlarmsTimer_OnTimedEvent - RAZ done je suis trop content !!!");
                 }
-                //MessageBox.Show("salut");
-                await Task.Delay(1000);
+
+                // activeAlarms = AlarmManagement.activeAlarms mais en plus chiant
+                activeAlarms.Clear();
+                for (int i = 0; i < AlarmManagement.ActiveAlarms.Count; i++) activeAlarms.Add(AlarmManagement.ActiveAlarms[i]);
+            }
+
+            // S'il y a une Remise A Zéro d'une alarme qui n'a pas été affichée...
+            if (AlarmManagement.RAZalarms.Count > 0)
+            {
+                // On parcours toutes les alarmes RAZ
+                for (int i = 0; i < AlarmManagement.RAZalarms.Count; i++)
+                {
+                    // On met dans la variable array l'enregistrement d'audit trail de l'alarme
+                    auditTrailInfo = new AuditTrailInfo();
+                    auditTrailInfo = (AuditTrailInfo)MyDatabase.GetOneRow(auditTrailInfo.GetType(), AlarmManagement.RAZalarms[i].ToString());
+
+                    // S'il n'y a pas eu d'erreur, on affiche les infos de l'alarme
+                    if (auditTrailInfo.columns.Count() != 0)
+                    {
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            AddRow(auditTrailInfo.columns[auditTrailInfo.dateTime].value + " - " +
+                                auditTrailInfo.columns[auditTrailInfo.description].value + " - " +
+                                auditTrailInfo.columns[auditTrailInfo.valueAfter].value);
+                        });
+                    }
+                    else
+                    {
+                        logger.Error(Settings.Default.CycleInfo_Error02);
+                        MessageBox.Show(Settings.Default.CycleInfo_Error02);
+                    }
+                }
+                AlarmManagement.RAZalarms.Clear();
+            }
+            checkAlarmsTimer.Enabled = true;
+        }
+        public void NewInfo(ISeqInfo cycleSeqInfo)
+        {
+            if (cycleSeqInfo.GetType().Equals(typeof(RecipeWeightInfo)))
+            {
+                NewInfo(cycleSeqInfo as RecipeWeightInfo);
+            }
+            else if (cycleSeqInfo.GetType().Equals(typeof(RecipeSpeedMixerInfo)))
+            {
+                NewInfo(cycleSeqInfo as RecipeSpeedMixerInfo);
+            }
+            else
+            {
+                logger.Error(Settings.Default.CycleInfo_Error03);
+                MessageBox.Show(Settings.Default.CycleInfo_Error03);
             }
         }
-        public void NewInfoWeight(string[] info)
+        public void NewInfo(RecipeWeightInfo recipeWeightInfo)
         {
+            CycleWeightInfo cycleWeightInfo = new CycleWeightInfo();
+
             WrapPanel wrapPanel = new WrapPanel
             {
                 Margin = new Thickness(0, 10, 0, 0)
@@ -159,28 +184,35 @@ namespace FPO_WPF_Test.Pages.SubCycle
             TextBlock productName = new TextBlock
             {
                 Foreground = Brushes.Wheat,
-                Text = "Produit pesé: " + info[0]
+                Text = cycleWeightInfo.columns[cycleWeightInfo.product].displayName + ": " + 
+                recipeWeightInfo.columns[recipeWeightInfo.seqName].value
             };
 
             TextBlock min = new TextBlock
             {
                 Foreground = Brushes.Wheat,
                 Margin = new Thickness(20, 0, 0, 0),
-                Text = "Minimum: " + info[1]
+                Text = cycleWeightInfo.columns[cycleWeightInfo.min].displayName + ": " + 
+                Math.Round(decimal.Parse(recipeWeightInfo.columns[recipeWeightInfo.min].value), 
+                int.Parse(recipeWeightInfo.columns[recipeWeightInfo.decimalNumber].value))
+                .ToString("N" + recipeWeightInfo.columns[recipeWeightInfo.decimalNumber].value).ToString()
             };
 
             TextBlock max = new TextBlock
             {
                 Foreground = Brushes.Wheat,
                 Margin = new Thickness(20, 0, 0, 0),
-                Text = "Maximum: " + info[2]
+                Text = cycleWeightInfo.columns[cycleWeightInfo.max].displayName + ": " +
+                Math.Round(decimal.Parse(recipeWeightInfo.columns[recipeWeightInfo.max].value),
+                int.Parse(recipeWeightInfo.columns[recipeWeightInfo.decimalNumber].value))
+                .ToString("N" + recipeWeightInfo.columns[recipeWeightInfo.decimalNumber].value).ToString()
             };
 
             TextBlock actualWeight = new TextBlock
             {
                 Foreground = Brushes.Wheat,
                 Margin = new Thickness(20, 0, 0, 0),
-                Text = "Masse pesée: -"
+                Text = cycleWeightInfo.columns[cycleWeightInfo.actualValue].displayName + ": -"
             };
 
             wrapPanel.Children.Add(productName);
@@ -191,8 +223,11 @@ namespace FPO_WPF_Test.Pages.SubCycle
             StackMain.Children.Add(wrapPanel);
             wrapPanels.Add(wrapPanel);
         }
-        public void NewInfoSpeedMixer(string[] info)
+        public void NewInfo(RecipeSpeedMixerInfo recipeSpeedMixerInfo)
         {
+            CycleSpeedMixerInfo cycleSpeedMixerInfo = new CycleSpeedMixerInfo();
+            // General.CurrentCycleInfo.NewInfoSpeedMixer(new string[] { array[3] });
+
             WrapPanel wrapPanel = new WrapPanel
             {
                 Margin = new Thickness(0, 10, 0, 0)
@@ -201,14 +236,14 @@ namespace FPO_WPF_Test.Pages.SubCycle
             TextBlock programName = new TextBlock
             {
                 Foreground = Brushes.Wheat,
-                Text = "Nom du mélange: " + info[0]
+                Text = cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.mixName].displayName + ": " + recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.seqName].value
             };
 
             TextBlock status = new TextBlock
             {
                 Foreground = Brushes.Wheat,
                 Margin = new Thickness(20, 0, 0, 0),
-                Text = "Status: En attente"
+                Text = Settings.Default.CycleInfo_Mix_StatusField + ": " + Settings.Default.CycleInfo_Mix_StatusWaiting
             };
 
             wrapPanel.Children.Add(programName);
@@ -219,11 +254,14 @@ namespace FPO_WPF_Test.Pages.SubCycle
         }
         public void UpdateCurrentWeightInfo(string[] info)
         {
-            (wrapPanels[seqNumber].Children[3] as TextBlock).Text = "Masse pesée: " + info[0];
+            CycleWeightInfo cycleWeightInfo = new CycleWeightInfo();
+            (wrapPanels[seqNumber].Children[3] as TextBlock).Text = 
+                cycleWeightInfo.columns[cycleWeightInfo.actualValue].displayName + ": " + 
+                info[0];
         }
         public void UpdateCurrentSpeedMixerInfo(string[] info)
         {
-            (wrapPanels[seqNumber].Children[1] as TextBlock).Text = "Status: " + info[0];
+            (wrapPanels[seqNumber].Children[1] as TextBlock).Text = Settings.Default.CycleInfo_Mix_StatusField + ": " + info[0];
         }
         public void AddRow(string rowText)
         {
@@ -244,33 +282,22 @@ namespace FPO_WPF_Test.Pages.SubCycle
         }
         public void UpdateSequenceNumber()
         {
-            if (wrapPanels == null) // Il sert à quelque chose ce code ?
-            {
-                wrapPanels.Clear();
-            }
+            // Il sert à quelque chose ce code ?
+            if (wrapPanels == null) wrapPanels.Clear();
 
             seqNumber++;
-            if (seqNumber == 0)
-            {
-                //MessageBox.Show("UpdateSequenceNumber " + activeAlarms.Count.ToString() + AlarmManagement.activeAlarms.Count.ToString());
-                //checkAlarmsTimer.Start();
-                taskCheckAlarm = Task.Factory.StartNew(() => CheckAlarms_Task());
-            }
+            if (seqNumber == 0) checkAlarmsTimer.Start();
         }
         public void InitializeSequenceNumber()
         {
-            //MessageBox.Show("InitializeSequenceNumber");
             seqNumber = -1;
-
             activeAlarms.Clear();
             AlarmManagement.RAZalarms.Clear();
         }
         public void StopSequence()
         {
             isCheckAlarms_onGoing = false;
-            taskCheckAlarm.Wait();
-            //while (!taskCheckAlarm.IsCompleted) await Task.Delay(25);
-
+            checkAlarmsTimer.Stop();
             InitializeSequenceNumber();
         }
     }
