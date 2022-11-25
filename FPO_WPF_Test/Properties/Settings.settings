@@ -2,7 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="FPO_WPF_Test.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="SystemUsername" Type="System.String" Scope="Application">
+    <Setting Name="General_SystemUsername" Type="System.String" Scope="Application">
       <Value Profile="(Default)">système</Value>
     </Setting>
     <Setting Name="CycleInfo_Error01" Type="System.String" Scope="User">
@@ -76,6 +76,458 @@
     </Setting>
     <Setting Name="CycleMix_Error_MixerBlocked" Type="System.String" Scope="User">
       <Value Profile="(Default)">Le speedmixer ne répond plus, cycle avorté</Value>
+    </Setting>
+    <Setting Name="CycleMix_Error_PumpOutBefCyle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">La pompe ne répond plus (ALERTE)</Value>
+    </Setting>
+    <Setting Name="CycleMix_Error_PumpOutDurCyle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">La pompe ne répond plus (ALARME)</Value>
+    </Setting>
+    <Setting Name="CycleWeight_WeightField" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Masse</Value>
+    </Setting>
+    <Setting Name="CycleWeight_SetpointField" Type="System.String" Scope="User">
+      <Value Profile="(Default)">cible</Value>
+    </Setting>
+    <Setting Name="CycleWeight_Request_ScanProduct" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Veuillez scanner le produit</Value>
+    </Setting>
+    <Setting Name="CycleWeight_Error_IncorrectValue" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Valeur incorrecte de </Value>
+    </Setting>
+    <Setting Name="CycleWeight_Error_NoRecipe" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Recette inexistante ou en doublon</Value>
+    </Setting>
+    <Setting Name="CycleWeight_getWeightTimer_Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
+    <Setting Name="CycleWeight_isManualAllowed" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="CycleMix_Request_PutProduct" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Mettez le produit dans le speedmixer et fermer le capot</Value>
+    </Setting>
+    <Setting Name="CycleWeight_IncorrectWeight" Type="System.String" Scope="User">
+      <Value Profile="(Default)">La masse du produit n'est pas correcte</Value>
+    </Setting>
+    <Setting Name="CycleWeigh_IncorrectBarcode" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Code barre incorrect, code barre attendu:</Value>
+    </Setting>
+    <Setting Name="Report_Comment_CycleAborted" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Cycle interrompu</Value>
+    </Setting>
+    <Setting Name="PreCycle_Request_StartCycle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Voulez-vous démarrer le cycle ?</Value>
+    </Setting>
+    <Setting Name="PreCycle_Request_StartCycle_Title" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Confirmation</Value>
+    </Setting>
+    <Setting Name="RecipeMix_MaxPhaseNumber" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="RecipeMix_ProgramName_nCharMax" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="RecipeMix_Acceleration_Min" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">400</Value>
+    </Setting>
+    <Setting Name="RecipeMix_Acceleration_Max" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
+    <Setting Name="RecipeMix_Deceleration_Min" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">400</Value>
+    </Setting>
+    <Setting Name="RecipeMix_Deceleration_Max" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
+    <Setting Name="RecipeMix_SCurve_nCharMax" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="RecipeMix_Speed_Min" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">800</Value>
+    </Setting>
+    <Setting Name="RecipeMix_Speed_Max" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1200</Value>
+    </Setting>
+    <Setting Name="RecipeMix_Time_Min" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="RecipeMix_Time_Max" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3599</Value>
+    </Setting>
+    <Setting Name="RecipeMix_Pressure_Min" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="RecipeMix_Pressure_Max" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_Product_nCharMax" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_Barcode_nCharMax" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_DecimalNumber_Min" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_DecimalNumber_Max" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_Setpoint_Min" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_Setpoint_Max" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_Min_Min" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_Min_Max" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_Max_Min" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_Max_Max" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="ActiveAlarms_updateAlarmTimer_Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="AuditTrail_ErrorTitle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Erreur</Value>
+    </Setting>
+    <Setting Name="Archiving_archivingPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Temp\Archives\</Value>
+    </Setting>
+    <Setting Name="ArchBack_ExtFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.sql</Value>
+    </Setting>
+    <Setting Name="Archiving_maxArchiveCount" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">22</Value>
+    </Setting>
+    <Setting Name="ArchBack_progressBar_RefreshDelay" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">20</Value>
+    </Setting>
+    <Setting Name="Archiving_Request_SelectDate" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Veuillez sélectionner une date</Value>
+    </Setting>
+    <Setting Name="Archiving_fileName_archive" Type="System.String" Scope="User">
+      <Value Profile="(Default)">_archive_</Value>
+    </Setting>
+    <Setting Name="ArchBack_fileName_auto" Type="System.String" Scope="User">
+      <Value Profile="(Default)">_auto</Value>
+    </Setting>
+    <Setting Name="ArchBack_fileName_man" Type="System.String" Scope="User">
+      <Value Profile="(Default)">_man</Value>
+    </Setting>
+    <Setting Name="Archiving_Archive_batchFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.\Resources\DB_backup_part_table</Value>
+    </Setting>
+    <Setting Name="General_AuditTrailEvent_Event" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Evènement</Value>
+    </Setting>
+    <Setting Name="Archiving_archivingSuccessfull" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Archivage réussi</Value>
+    </Setting>
+    <Setting Name="Archiving_archivingFailed" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Archivage échoué</Value>
+    </Setting>
+    <Setting Name="Archiving_nLines_offset" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">900</Value>
+    </Setting>
+    <Setting Name="Archiving_Restore_batchFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.\Resources\DB_restore</Value>
+    </Setting>
+    <Setting Name="ArchBack_restoreSuccessfull" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Restore réussi</Value>
+    </Setting>
+    <Setting Name="ArchBack_restoreFailed" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Restore échoué</Value>
+    </Setting>
+    <Setting Name="ArchBack_FileNotFound_1" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Le fichier </Value>
+    </Setting>
+    <Setting Name="ArchBack_FileNotFound_2" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ArchBack_progressBar_LeftMargin" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">20</Value>
+    </Setting>
+    <Setting Name="Backup_backupPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Temp\Backups\</Value>
+    </Setting>
+    <Setting Name="Backup_nDaysBefDelBackup" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="Backup_maxBackupCount" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">40</Value>
+    </Setting>
+    <Setting Name="Backup_BackupSuccessfull" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Backup réussi</Value>
+    </Setting>
+    <Setting Name="RecipeMix_IdDBControls" Type="FPO_WPF_Test.Pages.IdDBControls" Scope="User">
+      <Value Profile="(Default)">
+     &lt;IdDBControls xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+      &lt;list&gt;
+       &lt;int&gt;3&lt;/int&gt;
+       &lt;int&gt;4&lt;/int&gt;
+       &lt;int&gt;5&lt;/int&gt;
+       &lt;int&gt;10&lt;/int&gt;
+       &lt;int&gt;12&lt;/int&gt;
+       &lt;int&gt;13&lt;/int&gt;
+       &lt;int&gt;14&lt;/int&gt;
+       &lt;int&gt;15&lt;/int&gt;
+       &lt;int&gt;16&lt;/int&gt;
+       &lt;int&gt;17&lt;/int&gt;
+       &lt;int&gt;18&lt;/int&gt;
+       &lt;int&gt;19&lt;/int&gt;
+       &lt;int&gt;20&lt;/int&gt;
+       &lt;int&gt;21&lt;/int&gt;
+       &lt;int&gt;22&lt;/int&gt;
+       &lt;int&gt;23&lt;/int&gt;
+       &lt;int&gt;24&lt;/int&gt;
+       &lt;int&gt;25&lt;/int&gt;
+       &lt;int&gt;26&lt;/int&gt;
+       &lt;int&gt;27&lt;/int&gt;
+       &lt;int&gt;28&lt;/int&gt;
+       &lt;int&gt;29&lt;/int&gt;
+       &lt;int&gt;30&lt;/int&gt;
+       &lt;int&gt;31&lt;/int&gt;
+       &lt;int&gt;32&lt;/int&gt;
+       &lt;int&gt;33&lt;/int&gt;
+       &lt;int&gt;34&lt;/int&gt;
+       &lt;int&gt;35&lt;/int&gt;
+       &lt;int&gt;36&lt;/int&gt;
+       &lt;int&gt;37&lt;/int&gt;
+       &lt;int&gt;38&lt;/int&gt;
+       &lt;int&gt;39&lt;/int&gt;
+       &lt;int&gt;40&lt;/int&gt;
+       &lt;int&gt;41&lt;/int&gt;
+       &lt;int&gt;42&lt;/int&gt;
+       &lt;int&gt;43&lt;/int&gt;
+       &lt;int&gt;44&lt;/int&gt;
+       &lt;int&gt;45&lt;/int&gt;
+      &lt;/list&gt;
+     &lt;/IdDBControls&gt;
+    </Value>
+    </Setting>
+    <Setting Name="RecipeWeight_IdDBControls" Type="FPO_WPF_Test.Pages.IdDBControls" Scope="User">
+      <Value Profile="(Default)">
+     &lt;IdDBControls xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+      &lt;list&gt;
+       &lt;int&gt;3&lt;/int&gt;
+       &lt;int&gt;5&lt;/int&gt;
+       &lt;int&gt;7&lt;/int&gt;
+       &lt;int&gt;8&lt;/int&gt;
+       &lt;int&gt;9&lt;/int&gt;
+       &lt;int&gt;10&lt;/int&gt;
+      &lt;/list&gt;
+     &lt;/IdDBControls&gt;
+    </Value>
+    </Setting>
+    <Setting Name="Backup_BackupFailed" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Backup échoué</Value>
+    </Setting>
+    <Setting Name="Backup_fileName_backup" Type="System.String" Scope="User">
+      <Value Profile="(Default)">_backup_</Value>
+    </Setting>
+    <Setting Name="Backup_Backup_batchFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.\Resources\DB_backup</Value>
+    </Setting>
+    <Setting Name="Backup_nLines_offset" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">900</Value>
+    </Setting>
+    <Setting Name="ArchBack_Request_SelectFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Veuillez sélectionner un fichier à restorer</Value>
+    </Setting>
+    <Setting Name="Backup_Restore_batchFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.\Resources\DB_restore</Value>
+    </Setting>
+    <Setting Name="Recipe_Status_DescList" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;Draft&lt;/string&gt;
+  &lt;string&gt;Production&lt;/string&gt;
+  &lt;string&gt;Obsolète&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="Recipe_Request_FillRecipeName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Veuillez renseigner le nom de la recette</Value>
+    </Setting>
+    <Setting Name="Recipe_Error_IncorrectVersion" Type="System.String" Scope="User">
+      <Value Profile="(Default)">La version demandé est incorrecte</Value>
+    </Setting>
+    <Setting Name="Recipe_Info_ExistingRecipe" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Le nom de la recette existe déjà</Value>
+    </Setting>
+    <Setting Name="Recipe_Info_IncorrectFormat" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Format des paramètres incorrect</Value>
+    </Setting>
+    <Setting Name="Recipe_Info_RecipeCreated" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Recette correctement créée</Value>
+    </Setting>
+    <Setting Name="Recipe_Info_RecipeModified" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Recette correctement modifiée</Value>
+    </Setting>
+    <Setting Name="Recipe_Info_RecipeNotCreated" Type="System.String" Scope="User">
+      <Value Profile="(Default)">La recette n'a pas pu être créé</Value>
+    </Setting>
+    <Setting Name="Recipe_Error_RecipeNotFound" Type="System.String" Scope="User">
+      <Value Profile="(Default)">La recette demandé n'existe pas</Value>
+    </Setting>
+    <Setting Name="Recipe_WaitFrameLoaded_Delay" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">25</Value>
+    </Setting>
+    <Setting Name="Recipe_Error_IncorrectRecipe" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Recette incorrecte</Value>
+    </Setting>
+    <Setting Name="Recipe_Error_FrameNotSeen" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Je ne comprends pas... Pourquoi je ne vois pas de frame?</Value>
+    </Setting>
+    <Setting Name="Recipe_WaitRecipeDisplayedDelay" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">25</Value>
+    </Setting>
+    <Setting Name="Recipe_Error_IncorrectStatus" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Statut de la recette incorrect</Value>
+    </Setting>
+    <Setting Name="Recipe_Request_UpdateProdRecipe" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Vous vous apprêtez à modifier une recette en production, une nouvelle version sera créée. Voulez-vous continuer?</Value>
+    </Setting>
+    <Setting Name="General_Request_ConfirmationTitle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Confirmation</Value>
+    </Setting>
+    <Setting Name="Recipe_Request_UpdateDraftRecipe" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Voulez vous libérer cette recette en production?</Value>
+    </Setting>
+    <Setting Name="Recipe_Request_DelProdRecipe1" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Vous vous apprêtez à rendre obsolète la </Value>
+    </Setting>
+    <Setting Name="Recipe_Request_DelProdRecipe2" Type="System.String" Scope="User">
+      <Value Profile="(Default)"> actuellement en production. Voulez-vous continuer?</Value>
+    </Setting>
+    <Setting Name="Recipe_Info_DelProdDone" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Recette obsolète</Value>
+    </Setting>
+    <Setting Name="Recipe_Request_DelDraftRecipe1" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Vous vous apprêtez à supprimer la </Value>
+    </Setting>
+    <Setting Name="Recipe_Request_DelDraftRecipe2" Type="System.String" Scope="User">
+      <Value Profile="(Default)"> actuellement en draft. Voulez-vous continuer?</Value>
+    </Setting>
+    <Setting Name="Recipe_Info_DelDraftDone" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Recette supprimée</Value>
+    </Setting>
+    <Setting Name="Recipe_Request_ActRecipe1" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Vous vous apprêtez à faire revenir la recette </Value>
+    </Setting>
+    <Setting Name="Recipe_Request_ActRecipe2" Type="System.String" Scope="User">
+      <Value Profile="(Default)"> en production. Voulez-vous continuer?</Value>
+    </Setting>
+    <Setting Name="Recipe_Info_ActDone" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Recette en production</Value>
+    </Setting>
+    <Setting Name="Recipe_DelAct_Error_NoRadiobt" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Ce n'est pas possible, tu mens</Value>
+    </Setting>
+    <Setting Name="Recipe_Request_SelectRecipe" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Veuillez sélectionner une recette</Value>
+    </Setting>
+    <Setting Name="Recipe_btDelAct_Activate" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Activer recette</Value>
+    </Setting>
+    <Setting Name="Recipe_btDelAct_Delete" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Supprimer recette</Value>
+    </Setting>
+    <Setting Name="Recipe_Request_TestRecipe" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Voulez-vous démarrer le cycle? Assurez-vous d'avoir sauvegarder la recette avant de la tester</Value>
+    </Setting>
+    <Setting Name="General_na" Type="System.String" Scope="User">
+      <Value Profile="(Default)">NA</Value>
+    </Setting>
+    <Setting Name="Cycle_Info_FinalWeightIncorrect" Type="System.String" Scope="User">
+      <Value Profile="(Default)">La masse final n'est pas correcte</Value>
+    </Setting>
+    <Setting Name="Recipe_cbx_DefaultValue" Type="System.String" Scope="User">
+      <Value Profile="(Default)">###</Value>
+    </Setting>
+    <Setting Name="General_equipement_name" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Mxxxxx</Value>
+    </Setting>
+    <Setting Name="General_auditTrail_BackupDesc" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Backup complet de la base de donnée réussi</Value>
+    </Setting>
+    <Setting Name="General_auditTrail_RestoreDesc" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Restauration complète de la base de donnée réussi</Value>
+    </Setting>
+    <Setting Name="General_auditTrail_ArchiveDesc" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Archivage de la base de donnée réussi</Value>
+    </Setting>
+    <Setting Name="General_auditTrail_RestArchDesc" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Restauration de l'archivage de la base de donnée réussi</Value>
+    </Setting>
+    <Setting Name="General_AutoBackupTime" Type="System.String" Scope="User">
+      <Value Profile="(Default)">12:00</Value>
+    </Setting>
+    <Setting Name="General_Info_EmptyField" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Format incorrect, le champ ne peut pas être vide</Value>
+    </Setting>
+    <Setting Name="General_Info_FieldOutOfRange" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Format incorrect, valeur en dehors de la gamme</Value>
+    </Setting>
+    <Setting Name="General_Info_FieldBelowMin" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Format incorrect, valeur inférieure au minimum: </Value>
+    </Setting>
+    <Setting Name="General_Info_FieldAboveMax" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Format incorrect, valeur valeur supérieur au maximum: </Value>
+    </Setting>
+    <Setting Name="General_Info_FieldNotANumber" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Format incorrect, ceci n'est pas un nombre</Value>
+    </Setting>
+    <Setting Name="General_Info_FieldTooLong1" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Format incorrect, le champ doit contenir justqu'à </Value>
+    </Setting>
+    <Setting Name="General_Info_FieldTooLong2" Type="System.String" Scope="User">
+      <Value Profile="(Default)"> caractères</Value>
+    </Setting>
+    <Setting Name="General_AuditTrail_StartCycle1" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Départ cycle. Lot: </Value>
+    </Setting>
+    <Setting Name="General_AuditTrail_StartCycle2" Type="System.String" Scope="User">
+      <Value Profile="(Default)">, Recette: </Value>
+    </Setting>
+    <Setting Name="Cycle_previousSeqTypeIncorrect" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Type incorrect</Value>
+    </Setting>
+    <Setting Name="Cycle_Info_CycleOver" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Cycle terminé</Value>
+    </Setting>
+    <Setting Name="Cycle_Info_ReportGenerated" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Rapport généré</Value>
+    </Setting>
+    <Setting Name="LogIn_Info_PswIncorrect" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Nom d'utilisateur ou mot de passe incorrect</Value>
+    </Setting>
+    <Setting Name="General_auditTrail_StartApp" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Démarrage de l'application</Value>
+    </Setting>
+    <Setting Name="Main_currentTimeTimer_Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="Main_WaitPageLoadedDelay" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">25</Value>
+    </Setting>
+    <Setting Name="General_auditTrail_BackupFailedDesc" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Backup complet de la base de donnée échoué, essai </Value>
+    </Setting>
+    <Setting Name="Main_StartIconDis" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Resources/img_start_dis.png</Value>
+    </Setting>
+    <Setting Name="Report_Path" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Temp\Reports\</Value>
+    </Setting>
+    <Setting Name="Report_Info_CycleInfoNotFound" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Informations du cycle manquantes</Value>
     </Setting>
   </Settings>
 </SettingsFile>

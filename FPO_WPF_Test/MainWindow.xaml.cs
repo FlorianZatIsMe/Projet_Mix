@@ -30,11 +30,6 @@ using FPO_WPF_Test.Properties;
 
 namespace FPO_WPF_Test
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    /// 
-
     public enum Action
     {
         New,
@@ -42,23 +37,24 @@ namespace FPO_WPF_Test
         Copy,
         Delete
     }
+    /*
+    public static class GeneralSettings
+    {
+        public static string General_SystemUsername { get; }
+
+        static GeneralSettings()
+        {
+            General_SystemUsername = Settings.Default.General_SystemUsername;
+        }
+    }*/
 
     public partial class MainWindow : Window
     {
-        //private readonly MyDatabase db;
-        private readonly NameValueCollection AuditTrailSettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
+        //private readonly NameValueCollection AuditTrailSettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
         private readonly System.Timers.Timer currentTimeTimer;
         private bool isWindowLoaded = false;
         private bool wasAutoBackupStarted = false;
-        private readonly AlarmManagement alarmManagement;
         private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-
-        /*
-            auditTrailInfo.columns[auditTrailInfo.username].value = General.loggedUsername;
-            auditTrailInfo.columns[auditTrailInfo.eventType].value = "Evènement";
-            auditTrailInfo.columns[auditTrailInfo.description].value = "Démarrage de l'application";
-            MyDatabase.InsertRow(auditTrailInfo);
-         */
 
         public MainWindow()
         {
@@ -71,15 +67,6 @@ namespace FPO_WPF_Test
             LogManager.ReconfigExistingLoggers(); // Explicit refresh of Layouts and updates active Logger-objects
 
             /*
-
-            RecipeInfo r = new RecipeInfo();
-            List<string> l = new List<string>();
-
-            for (int i = 0; i < r.columns.Count; i++)
-            {
-                l.Add(r.columns[i].value);
-            }
-
             Environment.Exit(1);
             //*/
 
@@ -91,11 +78,9 @@ namespace FPO_WPF_Test
 
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
             auditTrailInfo.columns[auditTrailInfo.username].value = General.loggedUsername;
-            auditTrailInfo.columns[auditTrailInfo.eventType].value = "Evènement";
-            auditTrailInfo.columns[auditTrailInfo.description].value = "Démarrage de l'application";
+            auditTrailInfo.columns[auditTrailInfo.eventType].value = Settings.Default.General_AuditTrailEvent_Event;
+            auditTrailInfo.columns[auditTrailInfo.description].value = Settings.Default.General_auditTrail_StartApp;
             MyDatabase.InsertRow(auditTrailInfo);
-            //string[] values = new string[] { General.loggedUsername, "Evènement", "Démarrage de l'application" };
-            //MyDatabase.InsertRow_done_old(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"], values);
 
             frameMain.Content = new Pages.Status();
             frameInfoCycle.Content = null;
@@ -103,7 +88,7 @@ namespace FPO_WPF_Test
             // Initialisation des timers
             currentTimeTimer = new System.Timers.Timer
             {
-                Interval = 1000,
+                Interval = Settings.Default.Main_currentTimeTimer_Interval,
                 AutoReset = true
             };
             currentTimeTimer.Elapsed += CurrentTimer_OnTimedEvent;
@@ -112,10 +97,10 @@ namespace FPO_WPF_Test
         }
         private async void Initialize()
         {
-            while (!isWindowLoaded) await Task.Delay(25);
+            while (!isWindowLoaded) await Task.Delay(Settings.Default.Main_WaitPageLoadedDelay);
 
-            AlarmManagement.Initialize(new Alarm_Management.IniInfo() { AuditTrail_SystemUsername = Settings.Default.SystemUsername });
-
+            AlarmManagement.Initialize(new Alarm_Management.IniInfo() { AuditTrail_SystemUsername = Settings.Default.General_SystemUsername });
+            
             // 
             //
             //
@@ -135,13 +120,19 @@ namespace FPO_WPF_Test
             }
             //*/
 
-            int mutexID = MyDatabase.SendCommand_Read_old("audit_trail", "date_time", new string[] { "description" }, new string[] { General.auditTrail_BackupDesc }, "id", false, isMutexReleased: false);
-            string[] array = MyDatabase.ReadNext(mutexID);
+            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+            auditTrailInfo.columns[auditTrailInfo.description].value = General.auditTrail_BackupDesc;
+            int mutexID = MyDatabase.Wait();
+            MyDatabase.SendCommand_Read(auditTrailInfo, 
+                orderBy: auditTrailInfo.columns[auditTrailInfo.id].id, isOrderAsc: false, 
+                isMutexReleased: false, mutex: mutexID);
+            auditTrailInfo = (AuditTrailInfo)MyDatabase.ReadNext(typeof(AuditTrailInfo), mutex: mutexID);
             MyDatabase.Signal(mutexID);
 
-            DateTime dtLastBackup = Convert.ToDateTime(array[0]);
+            DateTime dtLastBackup = Convert.ToDateTime(auditTrailInfo.columns[auditTrailInfo.dateTime].value);
             if (dtLastBackup.CompareTo(General.NextBackupTime.AddDays(-1)) < 0)
             {
+                logger.Debug("ExecuteBackupAuto at start");
                 ExecuteBackupAuto();
             }
             else
@@ -159,24 +150,16 @@ namespace FPO_WPF_Test
 
             while (!wasBackupSucceeded && nBackupAttempt < 3)
             {
-                //if (!MyDatabase.IsConnected()) mutexID = MyDatabase.Connect(false);
-                //mutexID = MyDatabase.Connect(false);
-
-                //Task<bool> task = Task<bool>.Factory.StartNew(() => Pages.Backup.ExecuteBackup("système"));
-                //wasBackupSucceeded = task.Result;
-
-                wasBackupSucceeded = Pages.Backup.ExecuteBackup("système", mutexID);
+                wasBackupSucceeded = Pages.Backup.ExecuteBackup(Settings.Default.General_SystemUsername, mutexID);
 
                 nBackupAttempt++;
                 if (!wasBackupSucceeded)
                 {
                     AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-                    auditTrailInfo.columns[auditTrailInfo.username].value = Settings.Default.SystemUsername;
-                    auditTrailInfo.columns[auditTrailInfo.eventType].value = "Evènement";
-                    auditTrailInfo.columns[auditTrailInfo.description].value = "Backup complet de la base de donnée échoué, essai " + nBackupAttempt.ToString();
+                    auditTrailInfo.columns[auditTrailInfo.username].value = Settings.Default.General_SystemUsername;
+                    auditTrailInfo.columns[auditTrailInfo.eventType].value = Settings.Default.General_AuditTrailEvent_Event;
+                    auditTrailInfo.columns[auditTrailInfo.description].value = Settings.Default.General_auditTrail_BackupFailedDesc + nBackupAttempt.ToString();
                     MyDatabase.InsertRow(auditTrailInfo, mutexID);
-
-                    //MyDatabase.InsertRow_done_old("audit_trail", "event_type, username, description", new string[] { "Evènement", "système", "Backup complet de la base de donnée échoué, essai " + nBackupAttempt.ToString() });
                 }
             }
 
@@ -200,6 +183,7 @@ namespace FPO_WPF_Test
             if (!wasAutoBackupStarted && General.NextBackupTime.CompareTo(DateTime.Now) < 0)
             {
                 wasAutoBackupStarted = true;
+                logger.Debug("ExecuteBackupAuto on time");
                 if (ExecuteBackupAuto()) General.NextBackupTime = General.NextBackupTime.AddDays(1);
             }
         }
@@ -215,7 +199,7 @@ namespace FPO_WPF_Test
 
             menuItemStart.Icon = new Image
             {
-                Source = new BitmapImage(new Uri("Resources/img_start_dis.png", UriKind.Relative))
+                Source = new BitmapImage(new Uri(Settings.Default.Main_StartIconDis, UriKind.Relative))
             };
 
             frameMain.Content = new Pages.SubCycle.PreCycle(frameMain, frameInfoCycle);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FPO_WPF_Test.Properties;
+using System;
 using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.Linq;
@@ -22,13 +23,18 @@ namespace FPO_WPF_Test
     public partial class LogIn : Window
     {
         readonly MainWindow mainWindow;
+        private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         public LogIn(MainWindow window)
         {
+            logger.Debug("Start");
+
             mainWindow = window;
             InitializeComponent();
         }
         private void Click()
         {
+            logger.Debug("Click");
+
             PrincipalContext pc = new PrincipalContext(ContextType.Domain);
             bool isCredentialValid = pc.ValidateCredentials(username.Text, password.Password);
 
@@ -42,19 +48,25 @@ namespace FPO_WPF_Test
             }
             else
             {
-                MessageBox.Show("Nom d'utilisateur ou mot de passe incorrecte");
+                MessageBox.Show(Settings.Default.LogIn_Info_PswIncorrect);
             }
         }
         private void ButtonOk_Click(object sender, RoutedEventArgs e)
         {
+            logger.Debug("ButtonOk_Click");
+
             Click();
         }
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)
         {
+            logger.Debug("ButtonCancel_Click");
+
             this.Close();
         }
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
+            logger.Debug("Window_PreviewKeyDown");
+
             if (e.Key == Key.Enter)
             {
                 Click();

@@ -6,12 +6,11 @@
       <Value Profile="(Default)">1000</Value>
     </Setting>
     <Setting Name="ConnectionInfo" Type="Driver_MODBUS.ConnectionInfo" Scope="User">
-      <Value Profile="(Default)">
-          &lt;ConnectionInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
-            &lt;ipAddress&gt;localhost&lt;/ipAddress&gt;
-            &lt;port&gt;root&lt;/port&gt;
-          &lt;/ConnectionInfo&gt;
-        </Value>
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ConnectionInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;ipAddress&gt;10.10.1.2&lt;/ipAddress&gt;
+  &lt;port&gt;503&lt;/port&gt;
+&lt;/ConnectionInfo&gt;</Value>
     </Setting>
     <Setting Name="Alarm_Connection_id1" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>

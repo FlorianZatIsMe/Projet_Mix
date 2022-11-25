@@ -14,16 +14,17 @@ using User_Management.Properties;
 
 namespace User_Management
 {
-
-
     public static class UserManagement
     {
-        //private readonly static MyDatabase db = new MyDatabase();
         private static bool[] CurrentAccessTable;
         private static AccessTableInfo accessTableInfo = new AccessTableInfo();
 
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         public static string UpdateAccessTable(string username)
         {
+            logger.Debug("UpdateAccessTable");
+
             string role = null;
             string[,] appGroups = new string[,] {
                 { Settings.Default.Group_operator, accessTableInfo.operatorRole },
@@ -77,6 +78,8 @@ namespace User_Management
         }
         public static bool[] GetCurrentAccessTable()
         {
+            logger.Debug("GetCurrentAccessTable");
+
             return CurrentAccessTable;
         }
     }

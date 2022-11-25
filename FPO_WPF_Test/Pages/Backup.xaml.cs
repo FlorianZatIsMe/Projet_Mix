@@ -26,18 +26,21 @@ namespace FPO_WPF_Test.Pages
     /// </summary>
     public partial class Backup : Page
     {
-        private static readonly string dbName = "db1";
-        public static readonly string backupPath = @"C:\Temp\Backups\";
-        private static readonly string backupExtFile = ".sql";
-        private static readonly int nDaysBefDelBackup = 10;
+        private readonly AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+        private static readonly string dbName = DatabaseSettings.ConnectionInfo.db;
+        public static readonly string backupPath = Settings.Default.Backup_backupPath;// @"C:\Temp\Backups\";
+        private static readonly string backupExtFile = Settings.Default.ArchBack_ExtFile;
+        private readonly int maxBackupCount = Settings.Default.Backup_maxBackupCount;// 22;
+        private static readonly int nDaysBefDelBackup = Settings.Default.Backup_nDaysBefDelBackup;// 10;
         private static string lastBackupFileName;
         private static int nLines;
         private static readonly AlarmManagement alarmManagement;
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-
         public Backup()
         {
+            logger.Debug("Start");
+
             if (!Directory.Exists(backupPath))
             {
                 Directory.CreateDirectory(backupPath);
@@ -61,6 +64,8 @@ namespace FPO_WPF_Test.Pages
         }
         private async void Backup_Click(object sender, RoutedEventArgs e)
         {
+            logger.Debug("Backup_Click");
+
             if (!MyDatabase.IsConnected()) MyDatabase.Connect();
             Task<bool> task = Task<bool>.Factory.StartNew(() => ExecuteBackup(General.loggedUsername));
 
@@ -68,35 +73,40 @@ namespace FPO_WPF_Test.Pages
 
             while (!task.IsCompleted)
             {
-                progressBar.Value = (double)(100 * General.count / 40);
+                progressBar.Value = (double)(100 * General.count / maxBackupCount);
                 await Task.Delay(10);
             }
             MyDatabase.Disconnect();
 
             if (task.Result)
             {
-                MessageBox.Show("Backup réussi");
+                logger.Debug(Settings.Default.Backup_BackupSuccessfull);
+                MessageBox.Show(Settings.Default.Backup_BackupSuccessfull);
                 lbBackups.Items.Insert(0, new ListBoxItem() { Content = lastBackupFileName });
             }
             else
             {
-                MessageBox.Show("Backup échoué");
+                logger.Error(Settings.Default.Backup_BackupFailed);
+                MessageBox.Show(Settings.Default.Backup_BackupFailed);
             }
             lastBackupFileName = "";
         }
         public static bool ExecuteBackup(string username, int mutex = -1)
         {
+            logger.Debug("ExecuteBackup");
+
             bool isBackupSucceeded = false;
 
-            lastBackupFileName = DateTime.Now.ToString("yyyy.MM.dd_HH.mm.ss") + "_backup_" + dbName + (username == "système" ? "_auto" : "_man") + backupExtFile;
+            lastBackupFileName = DateTime.Now.ToString("yyyy.MM.dd_HH.mm.ss") + Settings.Default.Backup_fileName_backup + 
+                DatabaseSettings.ConnectionInfo.db + 
+                (username == Settings.Default.General_SystemUsername ? Settings.Default.ArchBack_fileName_auto : Settings.Default.ArchBack_fileName_man) + 
+                backupExtFile;
 
-            //string batchFile = @".\Resources\DB_restore";
-            string batchFile = @".\Resources\DB_backup";
-            string arg1 = "\"" + @"C:\Program Files\MariaDB 10.9\bin" + "\"";
-            string arg2 = "root";
-            string arg3 = "Integra2022/";
-            string arg4 = dbName;
-            //string arg5 = @"C:\Temp\Backups\" + "2022.10.17_08.54.30_backup_db1";
+            string batchFile = Settings.Default.Backup_Backup_batchFile;// @".\Resources\DB_backup";
+            string arg1 = "\"" + DatabaseSettings.DBAppFolder + "\"";// @"C:\Program Files\MariaDB 10.9\bin" + "\"";
+            string arg2 = DatabaseSettings.ConnectionInfo.userID;// "root";
+            string arg3 = DatabaseSettings.ConnectionInfo.password;// "Integra2022/";
+            string arg4 = DatabaseSettings.ConnectionInfo.db;// dbName;
             string arg5 = backupPath + lastBackupFileName;
             string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5;
             //MessageBox.Show(command);    
@@ -125,32 +135,27 @@ namespace FPO_WPF_Test.Pages
             {
                 //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
                 // Si l'alarme est active, on la désactive
-                if (AlarmManagement.alarms[4, 0].Status == AlarmStatus.ACTIVE || AlarmManagement.alarms[4, 0].Status == AlarmStatus.ACK) AlarmManagement.InactivateAlarm(4, 0);
+                if (AlarmManagement.Alarms[4, 0].Status == AlarmStatus.ACTIVE || AlarmManagement.Alarms[4, 0].Status == AlarmStatus.ACK) AlarmManagement.InactivateAlarm(4, 0);
 
                 // c'est peut-être nul ça (je veux dire la gestion du mutex), il faut ajouter un wait non ?
                 logger.Warn("c'est peut-être nul ça (je veux dire la gestion du mutex), il faut ajouter un wait non ?");
 
-                AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-                auditTrailInfo.columns[auditTrailInfo.username].value = Settings.Default.SystemUsername;
-                auditTrailInfo.columns[auditTrailInfo.eventType].value = "Evènement";
-                auditTrailInfo.columns[auditTrailInfo.description].value = General.auditTrail_BackupDesc;
-                MyDatabase.InsertRow(auditTrailInfo, mutex);
-                //MyDatabase.InsertRow_done_old("audit_trail", "event_type, username, description", new string[] { "Evènement", username, General.auditTrail_BackupDesc }, mutex: mutex);
+                AuditTrailInfo auditTInfo = new AuditTrailInfo();
+                auditTInfo.columns[auditTInfo.username].value = Settings.Default.General_SystemUsername;
+                auditTInfo.columns[auditTInfo.eventType].value = Settings.Default.General_AuditTrailEvent_Event;
+                auditTInfo.columns[auditTInfo.description].value = General.auditTrail_BackupDesc;
+                MyDatabase.InsertRow(auditTInfo, mutex);
 
                 //MyDatabase.Disconnect();
 
-                General.count = 40;
-                logger.Info("Backup réussi");
-                //MessageBox.Show("Backup réussi");
+                General.count = Settings.Default.Backup_maxBackupCount;
                 isBackupSucceeded = true;
 
                 DirectoryInfo backupDirInfo = new DirectoryInfo(backupPath);
                 logger.Trace(backupDirInfo.FullName);
-                //FileInfo[] files = backupDirInfo.GetFiles("*" + backupExtFile);
                 FileSystemInfo[] files = backupDirInfo.GetFileSystemInfos("*", SearchOption.TopDirectoryOnly);
                 logger.Trace(files.Length);
                 List<FileSystemInfo> orderedFiles = files.OrderBy(f => f.CreationTime).ToList();
-                // files.Where(f => f.Extension.Equals(".sql"))
                 DateTime dtNow = DateTime.Now.AddDays(-nDaysBefDelBackup);
                 int i;
                 for (i = 0; i < orderedFiles.Count; i++)
@@ -163,7 +168,6 @@ namespace FPO_WPF_Test.Pages
                         {
                             orderedFiles[i].Delete();
                             logger.Info(orderedFiles[i].CreationTime.ToString() + " deleted");
-                            //MessageBox.Show(orderedFiles[i].CreationTime.ToString() + " deleted");
                         }
                         else
                         {
@@ -175,8 +179,6 @@ namespace FPO_WPF_Test.Pages
             else
             {
                 if (File.Exists(backupPath + lastBackupFileName)) File.Delete(backupPath + lastBackupFileName);
-                logger.Error("Backup échoué");
-                //MessageBox.Show("Backup échoué");
             }
             General.count = 0;
             General.text = "";
@@ -186,10 +188,12 @@ namespace FPO_WPF_Test.Pages
         }
         private async void Restore_Click(object sender, RoutedEventArgs e)
         {
+            logger.Debug("Restore_Click");
+
             if (lbBackups.SelectedItem != null)
             {
                 string restoreFileName = (lbBackups.SelectedItem as ListBoxItem).Content.ToString();
-                nLines = File.ReadAllLines(backupPath + restoreFileName).Length + 900;
+                nLines = File.ReadAllLines(backupPath + restoreFileName).Length + Settings.Default.Backup_nLines_offset;
 
                 wpStatus.Visibility = Visibility.Visible;
 
@@ -198,23 +202,25 @@ namespace FPO_WPF_Test.Pages
                 while (!task.IsCompleted)
                 {
                     progressBar.Value = (double)(100 * General.count / nLines);
-                    await Task.Delay(500);
+                    await Task.Delay(Settings.Default.ArchBack_progressBar_RefreshDelay);
                 }
             }
             else
             {
-                MessageBox.Show("Veuillez sélectionner un fichier à restorer");
+                MessageBox.Show(Settings.Default.ArchBack_Request_SelectFile);
             }
         }
         private void ExecuteRestore(string username, string restoreFileName)
         {
+            logger.Debug("ExecuteRestore");
+
             if (File.Exists(backupPath + restoreFileName))
             {
-                string batchFile = @".\Resources\DB_restore";
-                string arg1 = "\"" + @"C:\Program Files\MariaDB 10.9\bin" + "\"";
-                string arg2 = "root";
-                string arg3 = "Integra2022/";
-                string arg4 = dbName;
+                string batchFile = Settings.Default.Backup_Restore_batchFile;// @".\Resources\DB_restore";
+                string arg1 = "\"" + DatabaseSettings.DBAppFolder + "\"";// @"C:\Program Files\MariaDB 10.9\bin" + "\"";
+                string arg2 = DatabaseSettings.ConnectionInfo.userID;// "root";
+                string arg3 = DatabaseSettings.ConnectionInfo.password;// "Integra2022/";
+                string arg4 = DatabaseSettings.ConnectionInfo.db;// dbName;
                 string arg5 = backupPath + restoreFileName;
                 string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5;
                 //MessageBox.Show(command);    
@@ -241,20 +247,19 @@ namespace FPO_WPF_Test.Pages
                 {
                     if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
-                    AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-                    auditTrailInfo.columns[auditTrailInfo.username].value = username;
-                    auditTrailInfo.columns[auditTrailInfo.eventType].value = "Evènement";
-                    auditTrailInfo.columns[auditTrailInfo.description].value = General.auditTrail_RestoreDesc;
-                    MyDatabase.InsertRow(auditTrailInfo);
-                    //MyDatabase.InsertRow_done_old("audit_trail", "event_type, username, description", new string[] { "Evènement", username, General.auditTrail_RestoreDesc });
+                    AuditTrailInfo auditTInfo = new AuditTrailInfo();
+                    auditTInfo.columns[auditTInfo.username].value = username;
+                    auditTInfo.columns[auditTInfo.eventType].value = Settings.Default.General_AuditTrailEvent_Event;// "Evènement";
+                    auditTInfo.columns[auditTInfo.description].value = General.auditTrail_RestoreDesc;
+                    MyDatabase.InsertRow(auditTInfo);
                     MyDatabase.Disconnect();
 
                     General.count = nLines;
-                    MessageBox.Show("Restore réussi");
+                    MessageBox.Show(Settings.Default.ArchBack_restoreSuccessfull);
                 }
                 else
                 {
-                    MessageBox.Show("Restore échoué");
+                    MessageBox.Show(Settings.Default.ArchBack_restoreFailed);
                 }
                 General.count = 0;
                 General.text = "";
@@ -263,15 +268,14 @@ namespace FPO_WPF_Test.Pages
             }
             else
             {
-                MessageBox.Show("Le fichier " + backupPath + restoreFileName + " est introuvable");
+                MessageBox.Show(Settings.Default.ArchBack_FileNotFound_1 + backupPath + restoreFileName + Settings.Default.ArchBack_FileNotFound_2);
             }
-/*
-
-            //*/
         }
         private void progressBar_Loaded(object sender, RoutedEventArgs e)
         {
-            progressBar.Width = this.ActualWidth - labelStatus.ActualWidth - 20;
+            logger.Debug("progressBar_Loaded");
+
+            progressBar.Width = this.ActualWidth - labelStatus.ActualWidth - Settings.Default.ArchBack_progressBar_LeftMargin;
         }
     }
 }

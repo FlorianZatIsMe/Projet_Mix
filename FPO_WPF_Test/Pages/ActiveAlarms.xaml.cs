@@ -1,5 +1,6 @@
 ﻿using Alarm_Management;
 using Database;
+using FPO_WPF_Test.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -25,16 +26,16 @@ namespace FPO_WPF_Test.Pages
     /// </summary>
     public partial class ActiveAlarms : Page
     {
-        //private MyDatabase db;
+        private readonly AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+
         private readonly Frame frameMain;
-        //private Task updateAlarmTask;
-        private bool stopUpdating = false;
-        private readonly NameValueCollection MySettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
         private readonly System.Timers.Timer updateAlarmTimer;
         private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public ActiveAlarms(Frame frameMain_arg)
         {
+            logger.Debug("Start");
+
             // if alarm active and not connected... (to add)
             if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
@@ -44,7 +45,7 @@ namespace FPO_WPF_Test.Pages
             // Initialisation des timers
             updateAlarmTimer = new System.Timers.Timer
             {
-                Interval = 1000,
+                Interval = Settings.Default.ActiveAlarms_updateAlarmTimer_Interval,
                 AutoReset = false
             };
 
@@ -54,28 +55,38 @@ namespace FPO_WPF_Test.Pages
         }
         private void LoadAlarms()
         {
+            logger.Debug("LoadAlarms");
+
             DataTable dt = new DataTable();
             DataRow row;
             string[] array;
-            string[] columnNames = MySettings["Columns"].Split(',');
+            //string[] columnNames = MySettings["Columns"].Split(',');
 
             if (MyDatabase.IsConnected()) // while loop is better
             {
                 try
                 {
                     //Création des colonnes
-                    foreach (string columnName in columnNames)
+                    foreach (Column column in auditTrailInfo.columns)
                     {
-                        dt.Columns.Add(new DataColumn(columnName));
+                        dt.Columns.Add(new DataColumn(column.displayName));
                     }
 
                     foreach (Tuple<int, int> id in AlarmManagement.ActiveAlarms)
                     {
-                        array = MyDatabase.GetOneRow_array(new AuditTrailInfo(), AlarmManagement.alarms[id.Item1, id.Item2].id.ToString());
-                        //array = MyDatabase.GetOneRow(MySettings["Table_Name"].ToString(), whereColumns: new string[] { "id" }, whereValues: new string[] { AlarmManagement.alarms[id.Item1, id.Item2].id.ToString() });
+                        array = MyDatabase.GetOneRow_array(new AuditTrailInfo(), AlarmManagement.Alarms[id.Item1, id.Item2].id.ToString());
 
                         if (array != null)
                         {
+                            try
+                            {
+                                array[auditTrailInfo.dateTime] = Convert.ToDateTime(array[auditTrailInfo.dateTime]).ToString("dd.MMMyyyy HH:mm:ss");
+                            }
+                            catch (Exception ex)
+                            {
+                                logger.Error(ex.Message);
+                            }
+
                             row = dt.NewRow();
                             row.ItemArray = array;
                             dt.Rows.Add(row);
@@ -86,16 +97,16 @@ namespace FPO_WPF_Test.Pages
                     {
                         //Implémentation dans la DataGrid 
                         dataGridAlarms.ItemsSource = dt.DefaultView;
-                        dataGridAlarms.Columns[0].Visibility = Visibility.Collapsed;
+                        dataGridAlarms.Columns[auditTrailInfo.id].Visibility = Visibility.Collapsed;
                     });
                 }
                 catch (Exception) { }
             }
             else
             {
-                dt.Columns.Add(new DataColumn("Erreur"));
+                dt.Columns.Add(new DataColumn(Settings.Default.AuditTrail_ErrorTitle));
                 row = dt.NewRow();
-                row.ItemArray = new string[] { "Base de données déconnectée" };
+                row.ItemArray = new string[] { DatabaseSettings.Error01 };
                 dt.Rows.Add(row);
 
                 this.Dispatcher.Invoke(() =>
@@ -107,6 +118,8 @@ namespace FPO_WPF_Test.Pages
         }
         private void ButtonAckAll_Click(object sender, RoutedEventArgs e)
         {
+            logger.Debug("ButtonAckAll_Click");
+
             List<Tuple<int, int>> listId = new List<Tuple<int, int>>();
 
             foreach (Tuple<int, int> id in AlarmManagement.ActiveAlarms)
@@ -123,18 +136,21 @@ namespace FPO_WPF_Test.Pages
         }
         private void dataGridAlarms_Loaded(object sender, RoutedEventArgs e)
         {
-            //updateAlarmTask = Task.Factory.StartNew(() => UpdateAlarms());
+            logger.Debug("dataGridAlarms_Loaded");
+
             updateAlarmTimer.Start();
         }
         private void FrameMain_ContentRendered(object sender, EventArgs e)
         {
+            logger.Debug("FrameMain_ContentRendered");
+
             if (frameMain.Content != this)
             {
                 // if no alarm and not deconected... (to add)
                 MyDatabase.Disconnect();
 
                 frameMain.ContentRendered -= FrameMain_ContentRendered;
-                stopUpdating = true;
+                //stopUpdating = true;
                 updateAlarmTimer.Dispose();
                 //Dispose(disposing: true); // Il va peut-être falloir sortir ça du "if"
             }
@@ -142,7 +158,8 @@ namespace FPO_WPF_Test.Pages
         }
         private void UpdateAlarmTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-            logger.Debug("UpdateAlarmTimer");
+            logger.Debug("UpdateAlarmTimer_OnTimedEvent");
+
             LoadAlarms();
             updateAlarmTimer.Enabled = true;
         }

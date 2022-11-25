@@ -7,7 +7,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="250" d:DesignWidth="800"
       Title="Weight"
-      Background="Transparent" Loaded="Page_Loaded">
+      Background="Transparent">
 
     <Border Background="#524E4F" BorderThickness="5" BorderBrush="Green" CornerRadius="15" Margin="5">
 

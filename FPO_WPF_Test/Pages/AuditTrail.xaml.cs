@@ -1,4 +1,6 @@
-﻿using Database;
+﻿using Alarm_Management;
+using Database;
+using FPO_WPF_Test.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,8 +20,7 @@ namespace FPO_WPF_Test.Pages
     /// </summary>
     public partial class AuditTrail : Page
     {
-        //private MyDatabase db = new MyDatabase();
-        //private ReadOnlyCollection<DbColumn> columns;
+        private readonly AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
         private readonly NameValueCollection MySettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
         private bool tbBefSelToUpdate = false;
         private bool tbBefFull = false;
@@ -34,6 +35,8 @@ namespace FPO_WPF_Test.Pages
 
         public AuditTrail()
         {
+            logger.Debug("Start");
+
             InitializeComponent();
 
             dpDateAfter.SelectedDate = DateTime.Now;
@@ -54,81 +57,92 @@ namespace FPO_WPF_Test.Pages
         }
         private void LoadAuditTrail(object sender, RoutedEventArgs e)
         {
-            UpdateAuditTrail();// DateTime.Now.AddDays(-numberOfDaysBefore), DateTime.Now);
+            logger.Debug("LoadAuditTrail");
+
+            UpdateAuditTrail();
         }
         private void UpdateAuditTrail()
         {
+            logger.Debug("UpdateAuditTrail");
+
             DataTable dt = new DataTable();
             DataRow row;
             string[] array;
-            string[] columnNames = MySettings["Columns"].Split(',');
+            //string[] columnNames = MySettings["Columns"].Split(',');
             DateTime dtBefore = Convert.ToDateTime(((DateTime)dpDateBefore.SelectedDate).ToString("dd.MM.yyyy") + " " + tbTimeBefore.Text);
             DateTime dtAfter = Convert.ToDateTime(((DateTime)dpDateAfter.SelectedDate).ToString("dd.MM.yyyy") + " " + tbTimeAfter.Text);
             List<string> eventTypes = new List<string>();
             int mutexID = -1;
 
-            if ((bool)cbEvent.IsChecked) eventTypes.Add("Evènement");
-            if ((bool)cbAlarm.IsChecked) eventTypes.Add("Alarme");
-            if ((bool)cbWarning.IsChecked) eventTypes.Add("Alerte");
+            if ((bool)cbEvent.IsChecked) eventTypes.Add(Settings.Default.General_AuditTrailEvent_Event);
+            if ((bool)cbAlarm.IsChecked) eventTypes.Add(AlarmSettings.AlarmType_Alarm);
+            if ((bool)cbWarning.IsChecked) eventTypes.Add(AlarmSettings.AlarmType_Warning);
 
             if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
             if (!MyDatabase.IsConnected()) // while loop is better
             {
-                dt.Columns.Add(new DataColumn("Erreur"));
+                dt.Columns.Add(new DataColumn(Settings.Default.AuditTrail_ErrorTitle));
                 row = dt.NewRow();
-                row.ItemArray = new string[] { "Base de données déconnectée" };
+                row.ItemArray = new string[] { DatabaseSettings.Error01 };
                 dt.Rows.Add(row);
                 dataGridAuditTrail.ItemsSource = dt.DefaultView;
             }
             else
             {
-                mutexID = MyDatabase.SendCommand_ReadAuditTrail(dtBefore: dtBefore, dtAfter: dtAfter, eventTypes: eventTypes.ToArray(), orderBy: "id", isOrderAsc: false, isMutexReleased: false);
+                mutexID = MyDatabase.SendCommand_ReadAuditTrail(dtBefore: dtBefore, dtAfter: dtAfter, eventTypes: eventTypes.ToArray(), orderBy: auditTrailInfo.columns[auditTrailInfo.id].id, isOrderAsc: false, isMutexReleased: false);
 
                 //Création des colonnes
-                foreach (string columnName in columnNames)
+                foreach (Column column in auditTrailInfo.columns)
                 {
-                    dt.Columns.Add(new DataColumn(columnName));
+                    dt.Columns.Add(new DataColumn(column.displayName));
                 }
+
                 //Ajout des lignes
                 do
                 {
                     array = MyDatabase.ReadNext(mutexID);
 
-                    if (array.Count() != 0)
+                    if (array != null)
                     {
                         try
                         {
-                            array[1] = Convert.ToDateTime(array[1]).ToString("dd.MMMyyyy HH:mm:ss");
+                            array[auditTrailInfo.dateTime] = Convert.ToDateTime(array[auditTrailInfo.dateTime]).ToString("dd.MMMyyyy HH:mm:ss");
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
-
+                            logger.Error(ex.Message);
                         }
 
                         row = dt.NewRow();
                         row.ItemArray = array;
                         dt.Rows.Add(row);
                     }
-                } while (array.Count() != 0);
+                } while (array != null);
 
                 //Implémentation dans la DataGrid dataGridAuditTrail
                 dataGridAuditTrail.ItemsSource = dt.DefaultView;
-                dataGridAuditTrail.Columns[0].Visibility = Visibility.Collapsed;
+                dataGridAuditTrail.Columns[auditTrailInfo.id].Visibility = Visibility.Collapsed;
             }
 
             MyDatabase.Disconnect(mutexID);
         }
         private void ButtonFilter_Click(object sender, RoutedEventArgs e)
         {
+            logger.Debug("ButtonFilter_Click");
+
             UpdateAuditTrail();
         }
         private void TbTimeBefore_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            logger.Debug("TbTimeBefore_PreviewMouseLeftButtonDown");
+
             tbBefSelToUpdate = true;
         }
         private void TbTimeBefore_LayoutUpdated(object sender, EventArgs e)
         {
+            logger.Debug("TbTimeBefore_LayoutUpdated");
+
             if (tbBefSelToUpdate)
             {
                 int n = (int)(tbTimeBefore.CaretIndex / 3);
@@ -143,6 +157,8 @@ namespace FPO_WPF_Test.Pages
         }
         private void TbTimeBefore_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
+            logger.Debug("TbTimeBefore_PreviewKeyDown");
+
             TextBox textbox = sender as TextBox;
 
             if (e.Key == System.Windows.Input.Key.Right)
@@ -162,10 +178,14 @@ namespace FPO_WPF_Test.Pages
         }
         private void TbTimeAfter_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            logger.Debug("TbTimeAfter_PreviewMouseLeftButtonDown");
+
             tbAftSelToUpdate = true;
         }
         private void TbTimeAfter_LayoutUpdated(object sender, EventArgs e)
         {
+            logger.Debug("TbTimeAfter_LayoutUpdated");
+
             if (tbAftSelToUpdate)
             {
                 int n = (int)(tbTimeAfter.CaretIndex / 3);
@@ -180,6 +200,8 @@ namespace FPO_WPF_Test.Pages
         }
         private void TbTimeAfter_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
+            logger.Debug("TbTimeAfter_PreviewKeyDown");
+
             TextBox textbox = sender as TextBox;
 
             if (e.Key == System.Windows.Input.Key.Right)
@@ -199,6 +221,8 @@ namespace FPO_WPF_Test.Pages
         }
         private void CheckTime(TextBox textbox, int n)
         {
+            logger.Debug("CheckTime");
+
             int max = n == 0 ? 23 : (n == 1 ? 59 : 59);
             string nextText;
 
@@ -247,6 +271,8 @@ namespace FPO_WPF_Test.Pages
         }
         private void MoveTimeCursor(TextBox textbox, bool left)
         {
+            logger.Debug("MoveTimeCursor");
+
             int n = (int)(textbox.CaretIndex / 3);
 
             CheckTime(textbox, n);
@@ -263,6 +289,8 @@ namespace FPO_WPF_Test.Pages
         }
         private void DpDateBefore_LayoutUpdated(object sender, EventArgs e)
         {
+            logger.Debug("DpDateBefore_LayoutUpdated");
+
             if (dpBefSelToUpdate)
             {
                 dpDateAfter.DisplayDateStart = dpDateBefore.SelectedDate;
@@ -271,14 +299,20 @@ namespace FPO_WPF_Test.Pages
         }
         private void DpDateBefore_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            logger.Debug("DpDateBefore_PreviewMouseDown");
+
             dpBefSelToUpdate = true;
         }
         private void DpDateAfter_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            logger.Debug("DpDateAfter_PreviewMouseDown");
+
             dpAftSelToUpdate = true;
         }
         private void DpDateAfter_LayoutUpdated(object sender, EventArgs e)
         {
+            logger.Debug("DpDateAfter_LayoutUpdated");
+
             if (dpAftSelToUpdate)
             {
                 dpDateBefore.DisplayDateEnd = dpDateAfter.SelectedDate;

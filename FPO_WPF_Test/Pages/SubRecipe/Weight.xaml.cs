@@ -1,4 +1,5 @@
 ﻿using Database;
+using FPO_WPF_Test.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,29 +23,38 @@ namespace FPO_WPF_Test.Pages.SubRecipe
     /// </summary>
     public partial class Weight : Page, ISubRecipe
     {
-        //public int seqType { get; }
+        RecipeWeightInfo recipeWeightInfo = new RecipeWeightInfo();
 
-        private const int ControlNumber = 6;
-        private const int IdProduct = 0;
-        private const int IdBarcode = 1;
-        private const int IdDecimalNumber = 2;
-        private const int IdSetpoint = 3;
-        private const int IdMin = 4;
-        private const int IdMax = 5;
+        private readonly int[] ControlsIDs;
 
         private readonly Frame parentFrame;
-        private readonly bool[] FormatControl = new bool[ControlNumber];
+        private readonly bool[] FormatControl = new bool[Settings.Default.RecipeWeight_IdDBControls.list.Count];
         private bool CurrentFormatControl_tbBarcode;
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        public Weight()
-        {
-            //seqType = 0;
 
-            InitializeComponent();
-        }
         public Weight(Frame frame, string seqNumber)
         {
+            logger.Debug("Start");
+            
+            ControlsIDs = new int[recipeWeightInfo.columns.Count];
+            List<int> list = Settings.Default.RecipeWeight_IdDBControls.list;
+            int n = 0;
+
+            for (int i = 0; i < ControlsIDs.Length; i++)
+            {
+                if (i == list[n])
+                {
+                    ControlsIDs[i] = n;
+                    n++;
+                }
+                else
+                {
+                    ControlsIDs[i] = -1;
+                }
+                //logger.Trace(i.ToString() + ": " + ControlsIDs[i].ToString());
+            }
+            
             parentFrame = frame;
             CurrentFormatControl_tbBarcode = false;
             InitializeComponent();
@@ -53,123 +63,90 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         }
         private void RadioButton_Click_1(object sender, RoutedEventArgs e)
         {
+            logger.Debug("RadioButton_Click_1");
+
             parentFrame.Content = new SpeedMixer(parentFrame, tbSeqNumber.Text);
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            logger.Debug("Button_Click");
+
             parentFrame.Content = null;
         }
-        public void SetSeqNumber(string n)
+        public void SetSeqNumber(int n)
         {
-            tbSeqNumber.Text = n;
-        }
-        public int GetSeqNumber()
-        {
-            MessageBox.Show("get");
-            return 42;
-        }
-        public void SetSeqToSpeedMixer()
-        {
-            rbSpeedMixer.IsChecked = true;
-        }
-        public void SetPage_old(string[] array)
-        {
-            tbProduct.Text = array[3];
-            cbIsBarcode.IsChecked = array[4] == "True";
-            tbBarcode.Text = array[5];
-            cbxUnit.Text = array[6];
-            tbDecimalNumber.Text = array[7];
+            logger.Debug("SetSeqNumber");
 
-            tbSetpoint.Text = decimal.Parse(array[8]).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
-            tbMin.Text = decimal.Parse(array[9]).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
-            tbMax.Text = decimal.Parse(array[10]).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
-
-            TbProduct_LostFocus(tbProduct, new RoutedEventArgs());
-            if ((bool)cbIsBarcode.IsChecked) TbBarcode_LostFocus(tbBarcode, new RoutedEventArgs());
-            else FormatControl[IdBarcode] = false;
-            TbDecimalNumber_LostFocus(tbDecimalNumber, new RoutedEventArgs());
-            TbSetpoint_LostFocus(tbSetpoint, new RoutedEventArgs());
-            TbMin_LostFocus(tbMin, new RoutedEventArgs());
-            TbMax_LostFocus(tbMax, new RoutedEventArgs());
+            tbSeqNumber.Text = n.ToString();
         }
         public void SetPage(ISeqInfo seqInfo)
         {
-            RecipeWeightInfo recipeWeightInfo = seqInfo as RecipeWeightInfo;
+            logger.Debug("SetPage");
 
-            tbProduct.Text = recipeWeightInfo.columns[recipeWeightInfo.seqName].value;
-            cbIsBarcode.IsChecked = recipeWeightInfo.columns[recipeWeightInfo.isBarcodeUsed].value == "True";
-            tbBarcode.Text = recipeWeightInfo.columns[recipeWeightInfo.barcode].value;
-            cbxUnit.Text = recipeWeightInfo.columns[recipeWeightInfo.unit].value;
-            tbDecimalNumber.Text = recipeWeightInfo.columns[recipeWeightInfo.decimalNumber].value;
+            RecipeWeightInfo recipeInfo = seqInfo as RecipeWeightInfo;
 
-            tbSetpoint.Text = decimal.Parse(recipeWeightInfo.columns[recipeWeightInfo.setpoint].value).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
-            tbMin.Text = decimal.Parse(recipeWeightInfo.columns[recipeWeightInfo.min].value).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
-            tbMax.Text = decimal.Parse(recipeWeightInfo.columns[recipeWeightInfo.max].value).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
+            tbProduct.Text = recipeInfo.columns[recipeInfo.seqName].value;
+            cbIsBarcode.IsChecked = recipeInfo.columns[recipeInfo.isBarcodeUsed].value == DatabaseSettings.General_TrueValue_Read;
+            tbBarcode.Text = recipeInfo.columns[recipeInfo.barcode].value;
+            cbxUnit.Text = recipeInfo.columns[recipeInfo.unit].value;
+            tbDecimalNumber.Text = recipeInfo.columns[recipeInfo.decimalNumber].value;
+
+            tbSetpoint.Text = decimal.Parse(recipeInfo.columns[recipeInfo.setpoint].value).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
+            tbMin.Text = decimal.Parse(recipeInfo.columns[recipeInfo.min].value).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
+            tbMax.Text = decimal.Parse(recipeInfo.columns[recipeInfo.max].value).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
 
             TbProduct_LostFocus(tbProduct, new RoutedEventArgs());
             if ((bool)cbIsBarcode.IsChecked) TbBarcode_LostFocus(tbBarcode, new RoutedEventArgs());
-            else FormatControl[IdBarcode] = false;
+            else FormatControl[ControlsIDs[recipeWeightInfo.barcode]] = false;
             TbDecimalNumber_LostFocus(tbDecimalNumber, new RoutedEventArgs());
             TbSetpoint_LostFocus(tbSetpoint, new RoutedEventArgs());
             TbMin_LostFocus(tbMin, new RoutedEventArgs());
             TbMax_LostFocus(tbMax, new RoutedEventArgs());
         }
-        public string[] GetPage_old()
-        {
-            int n = 1;
-            string[] array = new string[11 - n];
-
-            array[3 - n] = tbProduct.Text;
-            array[4 - n] = (bool)cbIsBarcode.IsChecked ? "1" : "0";
-            array[5 - n] = tbBarcode.Text;
-            array[6 - n] = cbxUnit.Text;
-            array[7 - n] = tbDecimalNumber.Text;
-            array[8 - n] = tbSetpoint.Text;
-            array[9 - n] = tbMin.Text;
-            array[10 - n] = tbMax.Text;
-
-            return array;
-        }
         public ISeqInfo GetPage()
         {
-            RecipeWeightInfo recipeWeightInfo = new RecipeWeightInfo();
+            logger.Debug("GetPage");
+
+            RecipeWeightInfo recipeInfo = new RecipeWeightInfo();
 
             // ICI, il faut faire du Parse et des try
 
-            recipeWeightInfo.columns[recipeWeightInfo.seqName].value = tbProduct.Text;
-            recipeWeightInfo.columns[recipeWeightInfo.isBarcodeUsed].value = (bool)cbIsBarcode.IsChecked ? "1" : "0";
-            recipeWeightInfo.columns[recipeWeightInfo.barcode].value = tbBarcode.Text;
-            recipeWeightInfo.columns[recipeWeightInfo.unit].value = cbxUnit.Text;
-            recipeWeightInfo.columns[recipeWeightInfo.decimalNumber].value = tbDecimalNumber.Text;
-            recipeWeightInfo.columns[recipeWeightInfo.setpoint].value = tbSetpoint.Text;
-            recipeWeightInfo.columns[recipeWeightInfo.min].value = tbMin.Text;
-            recipeWeightInfo.columns[recipeWeightInfo.max].value = tbMax.Text;
+            recipeInfo.columns[recipeInfo.seqName].value = tbProduct.Text;
+            recipeInfo.columns[recipeInfo.isBarcodeUsed].value = (bool)cbIsBarcode.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+            recipeInfo.columns[recipeInfo.barcode].value = tbBarcode.Text;
+            recipeInfo.columns[recipeInfo.unit].value = cbxUnit.Text;
+            recipeInfo.columns[recipeInfo.decimalNumber].value = tbDecimalNumber.Text;
+            recipeInfo.columns[recipeInfo.setpoint].value = tbSetpoint.Text;
+            recipeInfo.columns[recipeInfo.min].value = tbMin.Text;
+            recipeInfo.columns[recipeInfo.max].value = tbMax.Text;
 
-            return recipeWeightInfo;
+            return recipeInfo;
         }
         private void CbIsBarcode_Checked(object sender, RoutedEventArgs e)
         {
+            logger.Debug("CbIsBarcode_Checked");
+
             tbBarcode.Visibility = Visibility.Visible;
             labelBarcode.Visibility = Visibility.Visible;
             if(tbBarcode.Text != "") TbBarcode_LostFocus(tbBarcode, new RoutedEventArgs());
-            FormatControl[IdBarcode] = CurrentFormatControl_tbBarcode;
+            FormatControl[ControlsIDs[recipeWeightInfo.barcode]] = CurrentFormatControl_tbBarcode;
         }
         private void CbIsBarcode_Unchecked(object sender, RoutedEventArgs e)
         {
+            logger.Debug("CbIsBarcode_Unchecked");
+
             tbBarcode.Visibility = Visibility.Hidden;
             labelBarcode.Visibility = Visibility.Hidden;
-            FormatControl[IdBarcode] = false;
-        }
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            //cbIsBarcode.IsChecked = true;
+            FormatControl[ControlsIDs[recipeWeightInfo.barcode]] = false;
         }
         private void TbProduct_LostFocus(object sender, RoutedEventArgs e)
         {
-            TextBox textBox = sender as TextBox;
-            int i = IdProduct;
+            logger.Debug("TbProduct_LostFocus");
 
-            if (General.Verify_Format(textBox, isNotNull: true, isNumber: false, 30))
+            TextBox textBox = sender as TextBox;
+            int i = ControlsIDs[recipeWeightInfo.seqName];
+
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: false, Settings.Default.RecipeWeight_Product_nCharMax))
             {
                 FormatControl[i] = true;
             }
@@ -181,10 +158,12 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         }
         private void TbBarcode_LostFocus(object sender, RoutedEventArgs e)
         {
-            TextBox textBox = sender as TextBox;
-            int i = IdBarcode;
+            logger.Debug("TbBarcode_LostFocus");
 
-            if (General.Verify_Format(textBox, isNotNull:true, isNumber: false, 30))
+            TextBox textBox = sender as TextBox;
+            int i = ControlsIDs[recipeWeightInfo.barcode];
+
+            if (General.Verify_Format(textBox, isNotNull:true, isNumber: false, Settings.Default.RecipeWeight_Barcode_nCharMax))
             {
                 FormatControl[i] = true;
             }
@@ -199,21 +178,24 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         }
         private void TbDecimalNumber_LostFocus(object sender, RoutedEventArgs e)
         {
-            TextBox textBox = sender as TextBox;
-            int i = IdDecimalNumber;
+            logger.Debug("TbDecimalNumber_LostFocus");
 
-            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, 0, min: 0, max: 6))
+            TextBox textBox = sender as TextBox;
+            int i = ControlsIDs[recipeWeightInfo.decimalNumber];
+
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
+                min: Settings.Default.RecipeWeight_DecimalNumber_Min, max: Settings.Default.RecipeWeight_DecimalNumber_Max))
             {
                 FormatControl[i] = true;
-                if (FormatControl[IdSetpoint])
+                if (FormatControl[ControlsIDs[recipeWeightInfo.setpoint]])
                 {
                     tbSetpoint.Text = decimal.Parse(tbSetpoint.Text).ToString("N" + int.Parse(textBox.Text).ToString());
                 }
-                if (FormatControl[IdMin])
+                if (FormatControl[ControlsIDs[recipeWeightInfo.min]])
                 {
                     tbMin.Text = decimal.Parse(tbMin.Text).ToString("N" + int.Parse(textBox.Text).ToString());
                 }
-                if (FormatControl[IdMax])
+                if (FormatControl[ControlsIDs[recipeWeightInfo.max]])
                 {
                     tbMax.Text = decimal.Parse(tbMax.Text).ToString("N" + int.Parse(textBox.Text).ToString());
                 }
@@ -226,8 +208,10 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         }
         private void TbSetpoint_LostFocus(object sender, RoutedEventArgs e)
         {
+            logger.Debug("TbSetpoint_LostFocus");
+
             TextBox textBox = sender as TextBox;
-            int i = IdSetpoint;
+            int i = ControlsIDs[recipeWeightInfo.setpoint];
             int n;
 
             try
@@ -240,7 +224,9 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
 
 
-            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: n, min: tbMin.Text == "" ? 0 : decimal.Parse(tbMin.Text), max: tbMax.Text == "" ? -1 : decimal.Parse(tbMax.Text)))
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: n, 
+                min: tbMin.Text == "" ? Settings.Default.RecipeWeight_Setpoint_Min : decimal.Parse(tbMin.Text), 
+                max: tbMax.Text == "" ? Settings.Default.RecipeWeight_Setpoint_Max : decimal.Parse(tbMax.Text)))
             {
                 FormatControl[i] = true;
             }
@@ -252,8 +238,10 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         }
         private void TbMin_LostFocus(object sender, RoutedEventArgs e)
         {
+            logger.Debug("TbMin_LostFocus");
+
             TextBox textBox = sender as TextBox;
-            int i = IdMin;
+            int i = ControlsIDs[recipeWeightInfo.min];
             int n;
 
             try
@@ -266,7 +254,8 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
 
 
-            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: n, min: 0, max: tbMax.Text == "" ? -1 : decimal.Parse(tbMax.Text)))
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: n, 
+                min: Settings.Default.RecipeWeight_Min_Min, max: tbMax.Text == "" ? Settings.Default.RecipeWeight_Min_Max : decimal.Parse(tbMax.Text)))
             {
                 FormatControl[i] = true;
             }
@@ -278,8 +267,10 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         }
         private void TbMax_LostFocus(object sender, RoutedEventArgs e)
         {
+            logger.Debug("TbMax_LostFocus");
+
             TextBox textBox = sender as TextBox;
-            int i = IdMax;
+            int i = ControlsIDs[recipeWeightInfo.max];
             int n;
 
             try
@@ -291,7 +282,8 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 n = 0;
             }
 
-            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: n, min: tbMin.Text == "" ? 0 : decimal.Parse(tbMin.Text)))
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: n, 
+                min: tbMin.Text == "" ? Settings.Default.RecipeWeight_Min_Max : decimal.Parse(tbMin.Text), max: Settings.Default.RecipeWeight_Max_Max))
             {
                 FormatControl[i] = true;
             }
@@ -303,17 +295,19 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         }
         public bool IsFormatOk()
         {
+            logger.Debug("IsFormatOk");
+
             int n = 0;
             int x;
 
-            for (int i = 0; i < ControlNumber; i++)
+            for (int i = 0; i < FormatControl.Length; i++)
             {
                 n += FormatControl[i] ? 1 : 0;
             }
 
             x = (bool)cbIsBarcode.IsChecked ? 0 : 1;
 
-            return (n+x) == ControlNumber;
+            return (n+x) == FormatControl.Length;
         }
     }
 }

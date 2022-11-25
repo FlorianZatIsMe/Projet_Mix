@@ -1,4 +1,6 @@
 ﻿using Database.Properties;
+using PdfSharp.Drawing;
+using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -16,8 +18,8 @@ namespace Database
 
         static General()
         {
-            trueValue = Settings.Default.General_TrueValue;
-            falseValue = Settings.Default.General_FalseValue;
+            trueValue = Settings.Default.General_TrueValue_Read;
+            falseValue = Settings.Default.General_FalseValue_Read;
         }
     }
     public class Column
@@ -31,13 +33,14 @@ namespace Database
             displayName = displayName_arg;
         }
     }
-    public interface ITableInfo
+    public interface ITempTableInfo
     {
         string name { get; }
         List<Column> columns { get; set; }
+    }
+    public interface ITableInfo : ITempTableInfo
+    {
         int id { get; }
-
-        void Reset();
     }
     public interface ISeqInfo : ITableInfo
     {
@@ -55,10 +58,12 @@ namespace Database
         public AuditTrailInfo()
         {
             StringCollection colId = Settings.Default.AuditTrail_ColIds;
+            StringCollection colDesc = Settings.Default.AuditTrail_ColDesc;
             name = Settings.Default.AuditTrail_TableName;
 
             columns = new List<Column>();
-            for (int i = 0; i < colId.Count; i++) columns.Add(new Column(colId[i]));
+            for (int i = 0; i < colId.Count; i++) columns.Add(new Column(colId[i], colDesc[i]));
+            //for (int i = 0; i < colId.Count; i++) columns.Add(new Column(colId[i]));
 
             id = Settings.Default.AuditTrail_ColN_id;
             dateTime = Settings.Default.AuditTrail_ColN_dateTime;
@@ -80,13 +85,6 @@ namespace Database
         public int valueBefore { get; }
         public int valueAfter { get; }
         public int comment { get; }
-        public void Reset()
-        {
-            for (int i = 0; i < columns.Count; i++)
-            {
-                columns[i].value = null;
-            }
-        }
     }
     public class AccessTableInfo : ITableInfo
     {
@@ -122,23 +120,18 @@ namespace Database
         public string supervisorRole { get; }
         public string administratorRole { get; }
         public string noneRole { get; }
-        public void Reset()
-        {
-            for (int i = 0; i < columns.Count; i++)
-            {
-                columns[i].value = null;
-            }
-        }
     }
     public class RecipeInfo : ISeqInfo
     {
         public RecipeInfo()
         {
             StringCollection colId = Settings.Default.Recipe_ColIds;
+            StringCollection colDesc = Settings.Default.Recipe_ColDesc;
+
             name = Settings.Default.Recipe_TableName;
 
             columns = new List<Column>();
-            for (int i = 0; i < colId.Count; i++) columns.Add(new Column(colId[i]));
+            for (int i = 0; i < colId.Count; i++) columns.Add(new Column(colId[i], colDesc[i]));
 
             id = Settings.Default.Recipe_ColN_id;
             nextSeqType = Settings.Default.Recipe_ColN_nextSeqType;
@@ -157,13 +150,6 @@ namespace Database
         public int recipeName { get; }
         public int version { get; }
         public int status { get; }
-        public void Reset()
-        {
-            for (int i = 0; i < columns.Count; i++)
-            {
-                columns[i].value = null;
-            }
-        }
     }
     public class RecipeWeightInfo : ISeqInfo
     {
@@ -204,13 +190,6 @@ namespace Database
         public int setpoint { get; }
         public int min { get; }
         public int max { get; }
-        public void Reset()
-        {
-            for (int i = 0; i < columns.Count; i++)
-            {
-                columns[i].value = null;
-            }
-        }
     }
     public class RecipeSpeedMixerInfo : ISeqInfo
     {
@@ -277,13 +256,6 @@ namespace Database
         public string pUnit_mBar { get; }
         public string pUnit_inHg { get; }
         public string pUnit_PSIA { get; }
-        public void Reset()
-        {
-            for (int i = 0; i < columns.Count; i++)
-            {
-                columns[i].value = null;
-            }
-        }
     }
     public class CycleTableInfo : ISeqInfo
     {
@@ -336,16 +308,10 @@ namespace Database
         public int lastAlarmId { get; }
         public int comment { get; }
         public int isItATest { get; }
-        public void Reset()
-        {
-            for (int i = 0; i < columns.Count; i++)
-            {
-                columns[i].value = null;
-            }
-        }
     }
     public class CycleWeightInfo : ICycleSeqInfo
     {
+        private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         public CycleWeightInfo()
         {
             StringCollection colId = Settings.Default.CycleWeight_ColIds;
@@ -419,13 +385,6 @@ namespace Database
             columns[max].value = recipeWInfo.columns[recipeWInfo.max].value;
             columns[unit].value = recipeWInfo.columns[recipeWInfo.unit].value;
             columns[decimalNumber].value = recipeWInfo.columns[recipeWInfo.decimalNumber].value;
-        }
-        public void Reset()
-        {
-            for (int i = 0; i < columns.Count; i++)
-            {
-                columns[i].value = null;
-            }
         }
     }
     public class CycleSpeedMixerInfo : ICycleSeqInfo
@@ -534,12 +493,45 @@ namespace Database
             columns[pressureMin].value = recipeSMInfo.columns[recipeSMInfo.pressureMin].value;
             columns[pressureMax].value = recipeSMInfo.columns[recipeSMInfo.pressureMax].value;
         }
-        public void Reset()
+    }
+    public class TempInfo : ITempTableInfo
+    {
+        public TempInfo()
         {
-            for (int i = 0; i < columns.Count; i++)
-            {
-                columns[i].value = null;
-            }
+            StringCollection colId = Settings.Default.Temp_ColIds;
+            name = Settings.Default.Temp_TableName;
+
+            columns = new List<Column>();
+            for (int i = 0; i < colId.Count; i++) columns.Add(new Column(colId[i]));
+
+            speed = Settings.Default.Temp_ColN_speed;
+            pressure = Settings.Default.Temp_ColN_pressure;
         }
+        public string name { get; }
+        public List<Column> columns { get; set; }
+
+        public int speed { get; }
+        public int pressure { get; }
+    }
+    public class TempResultInfo : ITempTableInfo
+    {
+        public TempResultInfo()
+        {
+            name = "";
+
+            columns = new List<Column>(Settings.Default.TempResult_ColN);
+
+            speedMean = Settings.Default.TempResult_ColN_speedMean;
+            pressureMean = Settings.Default.TempResult_ColN_pressureMean;
+            speedStd = Settings.Default.TempResult_ColN_speedStd;
+            pressureStd = Settings.Default.TempResult_ColN_pressureStd;
+        }
+        public string name { get; }
+        public List<Column> columns { get; set; }
+
+        public int speedMean { get; }
+        public int pressureMean { get; }
+        public int speedStd { get; }
+        public int pressureStd { get; }
     }
 }

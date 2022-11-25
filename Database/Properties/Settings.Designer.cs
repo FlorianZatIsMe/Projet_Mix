@@ -1592,61 +1592,13 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public string Recipe_Status_DRAFT {
-            get {
-                return ((string)(this["Recipe_Status_DRAFT"]));
-            }
-            set {
-                this["Recipe_Status_DRAFT"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public string Recipe_Status_PROD {
-            get {
-                return ((string)(this["Recipe_Status_PROD"]));
-            }
-            set {
-                this["Recipe_Status_PROD"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2")]
-        public string Recipe_Status_OBSOL {
-            get {
-                return ((string)(this["Recipe_Status_OBSOL"]));
-            }
-            set {
-                this["Recipe_Status_OBSOL"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Recipe_Status_None {
-            get {
-                return ((string)(this["Recipe_Status_None"]));
-            }
-            set {
-                this["Recipe_Status_None"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("temp")]
-        public string TempTableName {
+        public string Temp_TableName {
             get {
-                return ((string)(this["TempTableName"]));
+                return ((string)(this["Temp_TableName"]));
             }
             set {
-                this["TempTableName"] = value;
+                this["Temp_TableName"] = value;
             }
         }
         
@@ -1734,24 +1686,24 @@ namespace Database.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public string General_TrueValue {
+        public string General_TrueValue_Read {
             get {
-                return ((string)(this["General_TrueValue"]));
+                return ((string)(this["General_TrueValue_Read"]));
             }
             set {
-                this["General_TrueValue"] = value;
+                this["General_TrueValue_Read"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public string General_FalseValue {
+        public string General_FalseValue_Read {
             get {
-                return ((string)(this["General_FalseValue"]));
+                return ((string)(this["General_FalseValue_Read"]));
             }
             set {
-                this["General_FalseValue"] = value;
+                this["General_FalseValue_Read"] = value;
             }
         }
         
@@ -1965,13 +1917,194 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Arguments manquants")]
+        public string Error16 {
+            get {
+                return ((string)(this["Error16"]));
+            }
+            set {
+                this["Error16"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("La commande ne renvoie rien")]
+        public string Error17 {
+            get {
+                return ((string)(this["Error17"]));
+            }
+            set {
+                this["Error17"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsd=\"http://www.w3." +
+            "org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n  <s" +
+            "tring>speed</string>\r\n  <string>pressure</string>\r\n</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection Temp_ColIds {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["Temp_ColIds"]));
+            }
+            set {
+                this["Temp_ColIds"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Temp_ColN_speed {
+            get {
+                return ((int)(this["Temp_ColN_speed"]));
+            }
+            set {
+                this["Temp_ColN_speed"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int Temp_ColN_pressure {
+            get {
+                return ((int)(this["Temp_ColN_pressure"]));
+            }
+            set {
+                this["Temp_ColN_pressure"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public int TempResult_ColN {
+            get {
+                return ((int)(this["TempResult_ColN"]));
+            }
+            set {
+                this["TempResult_ColN"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int TempResult_ColN_speedMean {
+            get {
+                return ((int)(this["TempResult_ColN_speedMean"]));
+            }
+            set {
+                this["TempResult_ColN_speedMean"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int TempResult_ColN_pressureMean {
+            get {
+                return ((int)(this["TempResult_ColN_pressureMean"]));
+            }
+            set {
+                this["TempResult_ColN_pressureMean"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int TempResult_ColN_speedStd {
+            get {
+                return ((int)(this["TempResult_ColN_speedStd"]));
+            }
+            set {
+                this["TempResult_ColN_speedStd"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int TempResult_ColN_pressureStd {
+            get {
+                return ((int)(this["TempResult_ColN_pressureStd"]));
+            }
+            set {
+                this["TempResult_ColN_pressureStd"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public string General_TrueValue_Write {
+            get {
+                return ((string)(this["General_TrueValue_Write"]));
+            }
+            set {
+                this["General_TrueValue_Write"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public string General_FalseValue_Write {
+            get {
+                return ((string)(this["General_FalseValue_Write"]));
+            }
+            set {
+                this["General_FalseValue_Write"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-  <server>localhost</server>
-  <userID>root</userID>
-  <password>Integra2022/</password>
-  <db>db1</db>
-</ConnectionInfo>")]
+<ArrayOfString xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <string>ID</string>
+  <string>Date et heure</string>
+  <string>Utilisateur</string>
+  <string>Type d'évènement</string>
+  <string>Description</string>
+  <string>Valeur avant</string>
+  <string>Valeur après</string>
+  <string>Commentaire</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection AuditTrail_ColDesc {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["AuditTrail_ColDesc"]));
+            }
+            set {
+                this["AuditTrail_ColDesc"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Program Files\\MariaDB 10.9\\bin")]
+        public string DBAppFolder {
+            get {
+                return ((string)(this["DBAppFolder"]));
+            }
+            set {
+                this["DBAppFolder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"
+          <ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+            <server>localhost</server>
+            <userID>root</userID>
+            <password>Integra2022/</password>
+            <db>db1</db>
+          </ConnectionInfo>
+        ")]
         public global::Database.ConnectionInfo ConnectionInfo {
             get {
                 return ((global::Database.ConnectionInfo)(this["ConnectionInfo"]));
@@ -1983,13 +2116,33 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Arguments manquants")]
-        public string Error16 {
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <string>0</string>
+  <string>0</string>
+  <string>0</string>
+  <string>recette</string>
+  <string>version</string>
+  <string>0</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection Recipe_ColDesc {
             get {
-                return ((string)(this["Error16"]));
+                return ((global::System.Collections.Specialized.StringCollection)(this["Recipe_ColDesc"]));
             }
             set {
-                this["Error16"] = value;
+                this["Recipe_ColDesc"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Le reader n\'est pas disponible")]
+        public string ReaderUnavailable {
+            get {
+                return ((string)(this["ReaderUnavailable"]));
+            }
+            set {
+                this["ReaderUnavailable"] = value;
             }
         }
     }

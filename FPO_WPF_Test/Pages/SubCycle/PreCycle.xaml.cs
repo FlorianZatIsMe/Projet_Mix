@@ -2,6 +2,7 @@
 using Database;
 using Driver_RS232_Pump;
 using DRIVER_RS232_Weight;
+using FPO_WPF_Test.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -27,34 +28,41 @@ namespace FPO_WPF_Test.Pages.SubCycle
         private readonly Frame frameInfoCycle = new Frame();
         private readonly List<string> ProgramNames = new List<string>();
         private readonly List<string> ProgramIDs = new List<string>();
-        //private MyDatabase db = new MyDatabase();
-        //private readonly List<string[]> thisCycleInfo = new List<string[]>();
-        //private readonly NameValueCollection MySettings = ConfigurationManager.GetSection("Database/Recipe") as NameValueCollection;
+
+        private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public PreCycle(Frame frameMain_arg, Frame inputInfoCycleFrame)
         {
+            logger.Debug("Start");
+
             frameMain = frameMain_arg;
             frameInfoCycle = inputInfoCycleFrame;
             if (!MyDatabase.IsConnected()) MyDatabase.Connect();
             InitializeComponent();
             
-            General.Update_RecipeNames(cbxProgramName, ProgramNames, ProgramIDs, MyDatabase.RecipeStatus.PROD);
+            General.Update_RecipeNames(cbxProgramName, ProgramNames, ProgramIDs, RecipeStatus.PROD);
             MyDatabase.Disconnect();
         }
         private void FxOK(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("Voulez-vous démarrer le cycle?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            logger.Debug("FxOK");
+
+            if (MessageBox.Show(Settings.Default.PreCycle_Request_StartCycle, Settings.Default.PreCycle_Request_StartCycle_Title, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 General.StartCycle(ProgramIDs[cbxProgramName.SelectedIndex], tbOFnumber.Text, tbFinalWeight.Text, frameMain, frameInfoCycle, false);
             }
         }
         private void FxAnnuler(object sender, RoutedEventArgs e)
         {
+            logger.Debug("FxAnnuler");
+
             MyDatabase.Disconnect();
             frameMain.Content = new Status();
         }
         private void TbOFnumber_KeyDown(object sender, KeyEventArgs e)
         {
+            logger.Debug("TbOFnumber_KeyDown");
+
             TextBox textbox = sender as TextBox;   
 
             if (e.Key == Key.Enter)
@@ -64,19 +72,18 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 if (RS232Weight.rs232.IsFree())
                 {
                     RS232Weight.rs232.BlockUse();
-                    //if (RS232Weight.rs232.IsOpen()) RS232Weight.rs232.Open();
-                    //RS232Weight.SetCommand("@");
                     RS232Weight.rs232.SetCommand(textbox.Text);
                 }
             }
         }
         private void TbFinalWeight_KeyDown(object sender, KeyEventArgs e)
         {
+            logger.Debug("TbFinalWeight_KeyDown");
+
             TextBox textbox = sender as TextBox;
 
             if (e.Key == Key.Enter)
             {
-                //MessageBox.Show(RS232Pump.GetData());
                 RS232Pump.rs232.SetCommand(textbox.Text);
             }
         }

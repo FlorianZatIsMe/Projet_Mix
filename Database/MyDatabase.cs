@@ -15,6 +15,12 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Database.Properties;
 
+
+
+// CONFIURE "yyyy-MM-dd HH:mm:ss" SOME DAY, PLEASE
+
+
+
 namespace Database
 {
     [SettingsSerializeAs(SettingsSerializeAs.Xml)]
@@ -24,7 +30,6 @@ namespace Database
         public string userID { get; set; }
         public string password { get; set; }
         public string db { get; set; }
-
     }
     public interface IColumn
     {
@@ -32,30 +37,45 @@ namespace Database
         string displayName { get; }
         string value { get; set; }
     }
-
     public struct IniInfo
     {
         public string AlarmType_Alarm;
         public string AlarmType_Warning;
     }
-
+    public enum RecipeStatus
+    {
+        PROD,
+        DRAFT,
+        OBSOLETE,
+        PRODnDRAFT,
+        None
+    }
     public static class DatabaseSettings
     {
         public static string Error01 { get; }
-        public static string General_TrueValue { get; }
-        public static string General_FalseValue { get; }
+        public static string General_TrueValue_Read { get; }
+        public static string General_FalseValue_Read { get; }
+        public static string General_TrueValue_Write { get; }
+        public static string General_FalseValue_Write { get; }
+        public static ConnectionInfo ConnectionInfo { get; }
+        public static string DBAppFolder { get; }
+        public static string ReaderUnavailable { get; }
 
         static DatabaseSettings()
         {
             Error01 = Settings.Default.Error01;
-            General_TrueValue = Settings.Default.General_TrueValue;
-            General_FalseValue = Settings.Default.General_FalseValue;
+            General_TrueValue_Read = Settings.Default.General_TrueValue_Read;
+            General_FalseValue_Read = Settings.Default.General_FalseValue_Read;
+            General_TrueValue_Write = Settings.Default.General_TrueValue_Write;
+            General_FalseValue_Write = Settings.Default.General_FalseValue_Write;
+            ConnectionInfo = Settings.Default.ConnectionInfo;
+            DBAppFolder = Settings.Default.DBAppFolder;
+            ReaderUnavailable = Settings.Default.ReaderUnavailable;
         }
     }
 
     public static class MyDatabase
     {
-        //private static readonly Configuration_old.Connection_Info MySettings = System.Configuration.ConfigurationManager.GetSection("Database/Connection_Info") as Configuration_old.Connection_Info;
         private static MySqlConnection connection;
         private static MySqlDataReader reader;
         public static List<int> AlarmListID = new List<int>();
@@ -70,22 +90,10 @@ namespace Database
         private static ManualResetEvent signal = new ManualResetEvent(true);
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        private static AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-        private static RecipeInfo recipeInfo = new RecipeInfo();
-
-        //private static bool isInitialized = false;
 
         // Future interface
         private static IniInfo info;
 
-        public enum RecipeStatus
-        {
-            PROD,
-            DRAFT,
-            OBSOLETE,
-            PRODnDRAFT,
-            None
-        }
         static MyDatabase()
         {
             logger.Debug("Start");
@@ -162,6 +170,8 @@ namespace Database
         }
         public static int Wait(int mutex = -1)
         {
+            logger.Debug("Wait " + GetMutexIDs());
+
             int mutexID;
 
             if (mutex == -1)
@@ -176,7 +186,7 @@ namespace Database
                 mutexID = mutex;
             }
 
-            logger.Debug("Wait " + GetMutexIDs());
+            logger.Trace("Wait " + GetMutexIDs());
 
             return mutexID;
         }
@@ -309,7 +319,7 @@ namespace Database
             return result;
         }
 
-        public static void SendCommand_Read(ITableInfo tableInfo, bool isMutexReleased = true, int mutex = -1)
+        public static void SendCommand_Read(ITableInfo tableInfo, string orderBy = null, bool isOrderAsc = true, bool isMutexReleased = true, int mutex = -1)
         {
             logger.Debug("SendCommand_Read " + GetMutexIDs());
 
@@ -320,17 +330,23 @@ namespace Database
                 return;
             }
 
-            //Close_reader();
-
             string whereArg = " WHERE " + GetArg(tableInfo.columns, " AND ");
 
-            SendCommand(@"SELECT * FROM " + tableInfo.name + whereArg, tableInfo.columns, isMutexReleased, mutex);
+            string orderArg = "";
+            if (orderBy != null)
+            {
+                orderArg = " ORDER BY " + orderBy + (isOrderAsc ? " ASC" : " DESC");
+            }
+
+            SendCommand(@"SELECT * FROM " + tableInfo.name + whereArg + orderArg, tableInfo.columns, isMutexReleased, mutex);
         }
         public static int SendCommand_ReadAuditTrail(DateTime dtBefore, DateTime dtAfter, string[] eventTypes = null, string orderBy = null, bool isOrderAsc = true, bool isMutexReleased = true)
         {
             int mutexID = Wait();
 
             logger.Debug("SendCommand_ReadAuditTrail " + GetMutexIDs());
+
+            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
 
             if (!IsConnected())
             {
@@ -396,6 +412,8 @@ namespace Database
 
             logger.Debug("SendCommand_ReadAlarms " + GetMutexIDs());
 
+            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+
             if (info.AlarmType_Alarm == null || info.AlarmType_Warning == null)
             {
                 logger.Error(Settings.Default.Error12);
@@ -445,6 +463,8 @@ namespace Database
 
             logger.Debug("SendCommand_GetLastRecipes" + GetMutexIDs());
 
+            RecipeInfo recipeInfo = new RecipeInfo();
+
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error01);
@@ -466,6 +486,16 @@ namespace Database
                 return;
             }
 
+            SendCommand("SELECT * FROM " + recipeInfo.name +
+                " WHERE ((" + recipeInfo.columns[recipeInfo.recipeName].id + ", " +
+                recipeInfo.columns[recipeInfo.version].id + ") IN " +
+                "(SELECT " + recipeInfo.columns[recipeInfo.recipeName].id +
+                ", MAX(" + recipeInfo.columns[recipeInfo.version].id + ") " +
+                "FROM " + recipeInfo.name +
+                " GROUP BY " + recipeInfo.columns[recipeInfo.recipeName].id + ")) AND " +
+                statusFilter + " ORDER BY " + recipeInfo.columns[recipeInfo.recipeName].id + ";");
+
+            /*
             SendCommand("SELECT " +
                 recipeInfo.columns[recipeInfo.recipeName].id + ", " +
                 recipeInfo.columns[recipeInfo.id].id +
@@ -477,13 +507,14 @@ namespace Database
                 "FROM " + recipeInfo.name +
                 " GROUP BY " + recipeInfo.columns[recipeInfo.recipeName].id + ")) AND " +
                 statusFilter + " ORDER BY " + recipeInfo.columns[recipeInfo.recipeName].id + ";");
+             */
         }
 
-        public static ITableInfo ReadNext(Type tableType, int mutex = -1)
+        public static ITempTableInfo ReadNext(Type tableType, int mutex = -1)
         {
             int mutexID = Wait(mutex);
 
-            ITableInfo tableInfo = Activator.CreateInstance(tableType) as ITableInfo;
+            ITempTableInfo tableInfo = Activator.CreateInstance(tableType) as ITempTableInfo;
 
             logger.Debug("ReadNext ITableInfo" + GetMutexIDs());
 
@@ -491,14 +522,18 @@ namespace Database
             {
                 logger.Error(Settings.Default.Error01);
                 MessageBox.Show(Settings.Default.Error01);
-                return null;
+                //return null;
+                tableInfo = null;
+                goto End;
             }
 
             if (IsReaderNotAvailable())
             {
                 logger.Error(Settings.Default.Error04);
                 MessageBox.Show(Settings.Default.Error04);
-                return null;
+                //return null;
+                tableInfo = null;
+                goto End;
             }
 
             try
@@ -518,7 +553,9 @@ namespace Database
                         logger.Error(Settings.Default.Error14);
                         MessageBox.Show(Settings.Default.Error14);
                     }
-                    return null;
+                    //return null;
+                    tableInfo = null;
+                    goto End;
                 }
             }
             catch (Exception ex)
@@ -526,7 +563,7 @@ namespace Database
                 logger.Error(ex.Message);
                 MessageBox.Show(ex.Message);
             }
-
+        End:
             if (mutex == -1) Signal(mutexID);
             return tableInfo;
         }
@@ -536,7 +573,7 @@ namespace Database
 
             logger.Debug("ReadNext" + GetMutexIDs());
 
-            string[] array = new string[0];
+            string[] array = null;
 
             if (!IsConnected())
             {
@@ -610,7 +647,7 @@ namespace Database
             return array;
         }
 
-        public static bool InsertRow(ITableInfo tableInfo, int mutex = -1)
+        public static bool InsertRow(ITempTableInfo tableInfo, int mutex = -1)
         {
             int mutexID = Wait(mutex);
             bool result = false;
@@ -672,65 +709,6 @@ namespace Database
                 MessageBox.Show(ex.Message);
             }
 
-        End:
-            if (mutex == -1) Signal(mutexID);
-            return result;
-        }
-        public static bool InsertRow(string tableName, string columnFields, string[] values, int mutex = -1)
-        {
-            int mutexID = Wait(mutex);
-            bool result = false;
-
-            logger.Debug("InsertRow Standard " + GetMutexIDs());
-
-            if (!IsConnected())
-            {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
-                goto End;
-            }
-
-            Close_reader();
-
-            int valuesNumber = values.Count();
-            string[] valueTags = new string[valuesNumber];
-            string valueFields = "";
-
-            if (columnFields.Split().Count() != valuesNumber)
-            {
-                logger.Error(Settings.Default.Error06);
-                MessageBox.Show(Settings.Default.Error06);
-                goto End;
-            }
-
-            for (int i = 0; i < valuesNumber - 1; i++)
-            {
-                valueTags[i] = "@" + i.ToString();
-                valueFields = valueFields + "@" + i.ToString() + ", ";
-            }
-
-            valueTags[valuesNumber - 1] = "@" + (valuesNumber - 1).ToString();
-            valueFields = valueFields + "@" + (valuesNumber - 1).ToString();
-
-            MySqlCommand command = connection.CreateCommand();
-            command.CommandText = @"INSERT INTO " + tableName + " (" + columnFields + ") VALUES (" + valueFields + ");";
-
-            for (int i = 0; i < valuesNumber; i++)
-            {
-                command.Parameters.AddWithValue(valueTags[i], values[i]);
-            }
-
-            try
-            {
-                reader = command.ExecuteReader();
-                Close_reader();
-                result = true;
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex.Message);
-                MessageBox.Show(ex.Message);
-            }
         End:
             if (mutex == -1) Signal(mutexID);
             return result;
@@ -835,154 +813,7 @@ namespace Database
             Close_reader();
             return result;
         }
-        public static bool DeleteRows_old(string tableName, DateTime lastRecordDate)
-        {
-            int mutexID = Wait();
-            bool result = false;
 
-            logger.Debug("DeleteRows " + tableName + GetMutexIDs());
-
-            if (!IsConnected())
-            {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
-                goto End;
-            }
-
-            Close_reader();
-
-            string whereArg;
-            MySqlCommand command;
-            bool isCommandOk = true;
-
-            command = connection.CreateCommand();
-            command.CommandText = @"DELETE FROM " + tableName + " WHERE date_time < \"" + lastRecordDate.ToString("yyyy-MM-dd HH:mm:ss") + "\"";
-
-            try
-            {
-                reader = command.ExecuteReader();
-                result = true;
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex.Message);
-                MessageBox.Show(ex.Message);
-            }
-        End:
-            Close_reader();
-            Signal(mutexID);
-            return result;
-        }
-
-        public static void CreateTempTable(string fields)
-        {
-            int mutexID = Wait();
-
-            logger.Debug("CreateTempTable " + fields + GetMutexIDs());
-
-            if (!IsConnected())
-            {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
-                goto End;
-            }
-
-            Close_reader();
-
-            // On supprimer la table temp si jamais elle existe
-            MySqlCommand command = connection.CreateCommand();
-
-            try
-            {
-                command.CommandText = @"DROP TABLE IF EXISTS " + Settings.Default.TempTableName;
-                reader = command.ExecuteReader();
-                Close_reader();
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex.Message);
-                MessageBox.Show(ex.Message);
-            }
-
-            try
-            {
-                command.CommandText = @"CREATE TABLE " + Settings.Default.TempTableName + " (" +
-                    "id  INT NOT NULL auto_increment PRIMARY KEY," +
-                    fields + ")";
-                reader = command.ExecuteReader();
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex.Message);
-                MessageBox.Show(ex.Message);
-            }
-        End:
-            Close_reader();
-            Signal(mutexID);
-            //dbReady = true;
-        }
-        public static void SelectFromTemp(string select)
-        {
-            int mutexID = Wait();
-
-            logger.Debug("SelectFromTemp " + select + GetMutexIDs());
-
-            if (!IsConnected())
-            {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
-                goto End;
-            }
-
-            Close_reader();
-
-            try
-            {
-                MySqlCommand command = connection.CreateCommand();
-                command.CommandText = @"SELECT " + select + " FROM " + Settings.Default.TempTableName + ";";
-                reader = command.ExecuteReader();
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex.Message);
-                MessageBox.Show(ex.Message);
-            }
-        End:
-            Signal(mutexID);
-        }
-
-        public static List<string> GetTablesName()
-        {
-            int mutexID = Wait();
-
-            //MySqlDataReader reader;
-            List<string> list = new List<string>();
-            string[] array;
-
-            logger.Debug("SendCommand_GetTablesName " + GetMutexIDs());
-
-            if (!IsConnected())
-            {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
-                goto End;
-            }
-
-            SendCommand("SELECT table_name FROM information_schema.tables WHERE table_schema = \"" + Settings.Default.ConnectionInfo.db + "\" AND table_type = \"BASE TABLE\";", isMutexReleased: false, mutex: mutexID);
-
-            array = ReadNext(mutexID);
-
-            while (array.Length != 0)
-            {
-                list.Add(array[0]);
-                array = ReadNext(mutexID);
-            }
-
-            Close_reader();
-        End:
-            Signal(mutexID);
-            return list;
-        }
         public static ITableInfo GetOneRow(Type tableType = null, string id = null, ITableInfo table = null)
         {
             int mutexID = Wait();
@@ -1021,7 +852,15 @@ namespace Database
 
             if(table == null) tableInfo.columns[tableInfo.id].value = id;
             SendCommand_Read(tableInfo, isMutexReleased: false, mutex: mutexID);
-            tableInfo = ReadNext(tableInfo.GetType(), mutexID);
+            tableInfo = (ITableInfo)ReadNext(tableInfo.GetType(), mutexID);
+
+            if (tableInfo == null)
+            {
+                logger.Error(Settings.Default.Error17);
+                MessageBox.Show(Settings.Default.Error17);
+                //return null;
+                goto End;
+            }
 
             if (ReadNext(tableInfo.GetType(), mutexID) != null)
             {
@@ -1066,35 +905,6 @@ namespace Database
             }
         End:
             //Close_reader();
-            Signal(mutexID);
-            return array;
-        }
-        public static string[] GetOneRow(string tableName, string selectColumns = "*", string[] whereColumns = null, string[] whereValues = null)
-        {
-            int mutexID = Wait();
-            string[] array = new string[0];
-
-            logger.Debug("GetOneRow" + GetMutexIDs());
-
-            if (!IsConnected())
-            {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
-                goto End;
-            }
-
-            SendCommand_Read_old(tableName, selectColumns, whereColumns, whereValues, mutex: mutexID);
-
-            array = ReadNext(mutexID);
-
-            if (ReadNext(mutexID).Count() != 0)
-            {
-                array = new string[0];
-                logger.Error(Settings.Default.Error05);
-                MessageBox.Show(Settings.Default.Error05);
-            }
-            Close_reader();
-        End:
             Signal(mutexID);
             return array;
         }
@@ -1146,7 +956,7 @@ namespace Database
             if (mutex == -1) Signal(mutexID);
             return result;
         }
-        public static int GetMax_old(string tableName, string column, string[] whereColumns = null, string[] whereValues = null, int mutex = -1)
+        public static int GetMax(string tableName, string column, int mutex = -1)
         {
             int mutexID = Wait(mutex);
             int result = -1;
@@ -1160,89 +970,129 @@ namespace Database
                 goto End;
             }
 
+            int n;
+            SendCommand(@"SELECT MAX(" + column + ") FROM " + tableName, mutex: mutexID);
+
+            reader.Read();
+
+            if (!reader.IsDBNull(0))
+            {
+                n = reader.GetInt32(0);
+                reader.Read();
+
+                if (reader.FieldCount == 0) // je crois que cette vérification ne sert à rien, il faut vérifier que la requête le renvoie plus de résultat
+                {
+                    n = -1;
+                }
+            }
+            else
+            {
+                n = 0;
+            }
+            Close_reader();
+            result = n;
+
+        End:
+            if (mutex == -1) Signal(mutexID);
+            return result;
+        }
+
+        public static void CreateTempTable()
+        {
+            int mutexID = Wait();
+
+            TempInfo tempInfo = new TempInfo();
+            string fields = tempInfo.columns[1].id + " DECIMAL(5,1) NOT NULL, " + tempInfo.columns[2].id + " DECIMAL(5,1) NOT NULL";
+
+            logger.Debug("CreateTempTable " + fields + GetMutexIDs());
+
+            if (!IsConnected())
+            {
+                logger.Error(Settings.Default.Error01);
+                MessageBox.Show(Settings.Default.Error01);
+                goto End;
+            }
+
+            SendCommand(@"DROP TABLE IF EXISTS " + Settings.Default.Temp_TableName);
+            SendCommand(@"CREATE TABLE " + Settings.Default.Temp_TableName + " (" +
+                    "id  INT NOT NULL auto_increment PRIMARY KEY," +
+                    fields + ")");
+            /*
             Close_reader();
 
-            int n;
-            string whereArg = "";
-            MySqlCommand command;
-
-            if (whereColumns != null && whereValues != null)
-            {
-                whereArg = " WHERE " + whereColumns[0] + "=@" + whereColumns[0];
-
-                for (int i = 1; i < whereColumns.Count(); i++)
-                {
-                    whereArg = whereArg + " AND " + whereColumns[i] + "=@" + whereColumns[i];
-                }
-            }
-
-            command = connection.CreateCommand();
-            command.CommandText = @"SELECT MAX(" + column + ") FROM " + tableName + whereArg;
-
-            if (whereColumns != null && whereValues != null)
-            {
-                for (int i = 0; i < whereColumns.Count(); i++)
-                {
-                    command.Parameters.AddWithValue("@" + whereColumns[i], whereValues[i]);
-                }
-            }
+            // On supprimer la table temp si jamais elle existe
+            MySqlCommand command = connection.CreateCommand();
 
             try
             {
+                command.CommandText = @"DROP TABLE IF EXISTS " + Settings.Default.Temp_TableName;
                 reader = command.ExecuteReader();
-                reader.Read();
-
-                if (!reader.IsDBNull(0))
-                {
-                    n = reader.GetInt32(0);
-                    reader.Read();
-
-                    if (reader.FieldCount == 0) // je crois que cette vérification ne sert à rien, il faut vérifier que la requête le renvoie plus de résultat
-                    {
-                        n = -1;
-                    }
-                }
-                else
-                {
-                    n = 0;
-                }
                 Close_reader();
-                result = n;
             }
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
                 MessageBox.Show(ex.Message);
             }
+
+            try
+            {
+                command.CommandText = @"CREATE TABLE " + Settings.Default.Temp_TableName + " (" +
+                    "id  INT NOT NULL auto_increment PRIMARY KEY," +
+                    fields + ")";
+                reader = command.ExecuteReader();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+                MessageBox.Show(ex.Message);
+            }*/
         End:
-            if (mutex == -1) Signal(mutexID);
-            return result;
+            Close_reader();
+            Signal(mutexID);
+            //dbReady = true;
+        }
+        public static void SelectFromTemp()
+        {
+            int mutexID = Wait();
+
+            TempInfo tempInfo = new TempInfo();
+            string select = "AVG(" + tempInfo.columns[tempInfo.speed].id + "), AVG(" + tempInfo.columns[tempInfo.pressure].id +
+                "), STD(" + tempInfo.columns[tempInfo.speed].id + "), STD(" + tempInfo.columns[tempInfo.pressure].id + ")";
+
+            logger.Debug("SelectFromTemp " + select + GetMutexIDs());
+
+            if (!IsConnected())
+            {
+                logger.Error(Settings.Default.Error01);
+                MessageBox.Show(Settings.Default.Error01);
+                goto End;
+            }
+
+            SendCommand(@"SELECT " + select + " FROM " + tempInfo.name + ";");
+            /*
+            Close_reader();
+
+            try
+            {
+                MySqlCommand command = connection.CreateCommand();
+                command.CommandText = @"SELECT " + select + " FROM " + Settings.Default.TempTableName + ";";
+                reader = command.ExecuteReader();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+                MessageBox.Show(ex.Message);
+            }
+            */
+        End:
+            Signal(mutexID);
         }
 
         public static void Close_reader() { if (!IsReaderNotAvailable()) reader.Close(); }
         public static bool IsReaderNotAvailable() { return reader == null || reader.IsClosed; }
 
         // Méthode outils
-        private static string GetArg(string[] columns, string[] values, string separator, string prefix = "")
-        {
-            string arg;
-
-            if (columns != null && values != null && columns.Count() == values.Count())
-            {
-                arg = prefix + columns[0] + "=@0";
-
-                for (int i = 1; i < columns.Count(); i++)
-                {
-                    arg += separator + columns[i] + "=@" + i.ToString();
-                }
-            }
-            else
-            {
-                arg = "";
-            }
-
-            return arg;
-        }
         private static string GetArg(List<Column> columns, string separator, string prefix = "")
         {
             string arg = "";
@@ -1301,22 +1151,6 @@ namespace Database
              */
             return result;
         }
-        private static bool SetCommand(MySqlCommand command, string[] columns, string[] values)
-        {
-            if (columns.Count() != values.Count())
-            {
-                logger.Error(Settings.Default.Error06);
-                MessageBox.Show(Settings.Default.Error06);
-                return false;
-            }
-
-            for (int i = 0; i < columns.Count(); i++)
-            {
-                logger.Trace("Value " + i.ToString() + ": " + values[i].ToString());
-                command.Parameters.AddWithValue("@" + i.ToString(), values[i]);
-            }
-            return true;
-        }
 
         private static int GetNextMutex()
         { // Assure toi que cette fonction ne peut être appelé plusieurs fois en même temps
@@ -1345,147 +1179,21 @@ namespace Database
 
             return text.TrimEnd('_');
         }
-        public static int GetMutexIDsCount()
-        {
-            return mutexIDs.Count;
-        }
 
         // Interface à implémenter
-        public static string GetRecipeStatus(RecipeStatus status)
+        public static int GetRecipeStatus(RecipeStatus status)
         {
             switch (status)
             {
                 case RecipeStatus.DRAFT:
-                    return Settings.Default.Recipe_Status_DRAFT;
+                    return 0;
                 case RecipeStatus.PROD:
-                    return Settings.Default.Recipe_Status_PROD;
+                    return 1;
                 case RecipeStatus.OBSOLETE:
-                    return Settings.Default.Recipe_Status_OBSOL;
+                    return 2;
                 default:
-                    return Settings.Default.Recipe_Status_None;
+                    return -1;
             }
         }
-
-        //
-        // TO DELETE
-        //
-
-        public static int SendCommand_Read_old(string tableName, string selectColumns = "*", string[] whereColumns = null, string[] whereValues = null, string orderBy = null, bool isOrderAsc = true, string groupBy = null, bool isMutexReleased = true, int mutex = -1)
-        {
-            int mutexID = Wait(mutex);
-
-            string whereColumns_s = "";
-            if (whereColumns != null)
-            {
-                for (int j = 0; j < whereColumns.Length; j++)
-                {
-                    whereColumns_s = whereColumns_s + whereColumns[j] + " ";
-                }
-            }
-
-            string whereValues_s = "";
-            if (whereValues != null)
-            {
-                for (int j = 0; j < whereValues.Length; j++)
-                {
-                    whereValues_s = whereValues_s + whereValues[j] + " ";
-                }
-            }
-
-            logger.Debug("SendCommand_Read " + tableName + " " + selectColumns + " " + whereColumns_s + " " + whereValues_s + GetMutexIDs());
-            
-            if (!IsConnected()) {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
-                goto End;
-            }
-
-            Close_reader();
-
-            string whereArg = GetArg(whereColumns, whereValues, " AND ", " WHERE ");
-            string orderArg = "";
-            string groupByArg = "";
-            bool isCommandOk = true;
-
-            if (orderBy != null)
-            {
-                orderArg = " ORDER BY " + orderBy + (isOrderAsc ? " ASC" : " DESC");
-            }
-
-            if (groupBy != null)
-            {
-                groupByArg = " GROUP BY " + groupBy;
-            }
-
-            MySqlCommand command = connection.CreateCommand();
-            command.CommandText = @"SELECT " + selectColumns + " FROM " + tableName + whereArg + groupByArg + orderArg;
-            if (whereColumns != null && whereValues != null)
-            {
-                isCommandOk = SetCommand(command, whereColumns, whereValues);
-            }
-
-            if (!isCommandOk)
-            {
-                logger.Error(Settings.Default.Error02);
-                MessageBox.Show(Settings.Default.Error02);
-                goto End;
-            }
-
-            try
-            {
-                reader = command.ExecuteReader();
-            }
-            catch (Exception ex)
-            {
-                reader = null;
-                logger.Error(ex.Message);
-                MessageBox.Show(ex.Message);
-            }
-
-        End:
-            if (mutex == -1 && isMutexReleased) Signal(mutexID);
-            return mutexID;
-        }
-        public static int SendCommand_ReadPart(string tableName, int start, int end, string selectColumns = "*", bool isMutexReleased = true, int mutex = -1)
-        {
-
-            //
-            // Repenser complètement ces méthodes
-            //
-
-            int mutexID = Wait(mutex);
-
-            logger.Debug("SendCommand_ReadPart " + tableName + " " + selectColumns + " " + start.ToString() + " " + end.ToString() + GetMutexIDs());
-
-            if (!IsConnected()) {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
-                goto End;
-            }
-
-            Close_reader();
-
-            MySqlCommand command = connection.CreateCommand();
-            command.CommandText = @"SELECT " + selectColumns + " FROM " + tableName + " WHERE id > " + start.ToString() + " AND id < " + end.ToString();
-
-            try
-            {
-                reader = command.ExecuteReader();
-            }
-            catch (Exception ex)
-            {
-                reader = null;
-                logger.Error(ex.Message);
-                MessageBox.Show(ex.Message);
-            }
-        End:
-            if (mutex == -1 && isMutexReleased) Signal(mutexID);
-            return mutexID;
-        }
-        public static ReadOnlyCollection<DbColumn> GetColumnCollection()
-        {
-            return reader.GetColumnSchema();
-        }
-
     }
 }

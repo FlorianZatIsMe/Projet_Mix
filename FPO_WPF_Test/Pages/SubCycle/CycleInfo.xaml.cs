@@ -40,6 +40,8 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
         public CycleInfo(CycleTableInfo cycleTableInfo, Frame frame)
         {
+            logger.Debug("Start");
+
             seqNumber = -1;
 
             // Initialisation des timers
@@ -68,8 +70,10 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
             SetVisibility(true);
         }
-        public void SetVisibility(bool visibility) 
+        public void SetVisibility(bool visibility)
         {
+            logger.Debug("SetVisibility");
+
             if (visibility)
             {
                 frameCycleInfo.Content = this;
@@ -90,6 +94,8 @@ namespace FPO_WPF_Test.Pages.SubCycle
          */
         private void ScanConnectTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
+            //logger.Debug("ScanConnectTimer_OnTimedEvent");
+
             // S'il y a un évènement d'alarme qui n'a pas été affiché...
             if (!activeAlarms.SequenceEqual(AlarmManagement.ActiveAlarms))
             {
@@ -101,7 +107,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                     {
                         // On met dans la variable array, l'enregistrement d'audit trail de l'alarme en question
                         auditTrailInfo = new AuditTrailInfo();
-                        auditTrailInfo = (AuditTrailInfo)MyDatabase.GetOneRow(auditTrailInfo.GetType(), AlarmManagement.alarms[AlarmManagement.ActiveAlarms[i].Item1, AlarmManagement.ActiveAlarms[i].Item2].id.ToString());
+                        auditTrailInfo = (AuditTrailInfo)MyDatabase.GetOneRow(typeof(AuditTrailInfo), AlarmManagement.Alarms[AlarmManagement.ActiveAlarms[i].Item1, AlarmManagement.ActiveAlarms[i].Item2].id.ToString());
 
                         // S'il n'y a pas eu d'erreur, on affiche les infos de l'alarme
                         if (auditTrailInfo.columns.Count() != 0)
@@ -134,7 +140,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 {
                     // On met dans la variable array l'enregistrement d'audit trail de l'alarme
                     auditTrailInfo = new AuditTrailInfo();
-                    auditTrailInfo = (AuditTrailInfo)MyDatabase.GetOneRow(auditTrailInfo.GetType(), AlarmManagement.RAZalarms[i].ToString());
+                    auditTrailInfo = (AuditTrailInfo)MyDatabase.GetOneRow(typeof(AuditTrailInfo), AlarmManagement.RAZalarms[i].ToString());
 
                     // S'il n'y a pas eu d'erreur, on affiche les infos de l'alarme
                     if (auditTrailInfo.columns.Count() != 0)
@@ -158,6 +164,8 @@ namespace FPO_WPF_Test.Pages.SubCycle
         }
         public void NewInfo(ISeqInfo cycleSeqInfo)
         {
+            logger.Debug("NewInfo(ISeqInfo cycleSeqInfo)");
+
             if (cycleSeqInfo.GetType().Equals(typeof(RecipeWeightInfo)))
             {
                 NewInfo(cycleSeqInfo as RecipeWeightInfo);
@@ -174,6 +182,8 @@ namespace FPO_WPF_Test.Pages.SubCycle
         }
         public void NewInfo(RecipeWeightInfo recipeWeightInfo)
         {
+            logger.Debug("NewInfo(RecipeWeightInfo recipeWeightInfo)");
+
             CycleWeightInfo cycleWeightInfo = new CycleWeightInfo();
 
             WrapPanel wrapPanel = new WrapPanel
@@ -225,6 +235,8 @@ namespace FPO_WPF_Test.Pages.SubCycle
         }
         public void NewInfo(RecipeSpeedMixerInfo recipeSpeedMixerInfo)
         {
+            logger.Debug("NewInfo(RecipeSpeedMixerInfo recipeSpeedMixerInfo)");
+
             CycleSpeedMixerInfo cycleSpeedMixerInfo = new CycleSpeedMixerInfo();
             // General.CurrentCycleInfo.NewInfoSpeedMixer(new string[] { array[3] });
 
@@ -254,6 +266,8 @@ namespace FPO_WPF_Test.Pages.SubCycle
         }
         public void UpdateCurrentWeightInfo(string[] info)
         {
+            logger.Debug("UpdateCurrentWeightInfo");
+
             CycleWeightInfo cycleWeightInfo = new CycleWeightInfo();
             (wrapPanels[seqNumber].Children[3] as TextBlock).Text = 
                 cycleWeightInfo.columns[cycleWeightInfo.actualValue].displayName + ": " + 
@@ -261,10 +275,14 @@ namespace FPO_WPF_Test.Pages.SubCycle
         }
         public void UpdateCurrentSpeedMixerInfo(string[] info)
         {
+            logger.Debug("UpdateCurrentSpeedMixerInfo");
+
             (wrapPanels[seqNumber].Children[1] as TextBlock).Text = Settings.Default.CycleInfo_Mix_StatusField + ": " + info[0];
         }
         public void AddRow(string rowText)
         {
+            logger.Debug("AddRow");
+
             WrapPanel wrapPanel = new WrapPanel
             {
                 Margin = new Thickness(0, 10, 0, 0)
@@ -282,6 +300,8 @@ namespace FPO_WPF_Test.Pages.SubCycle
         }
         public void UpdateSequenceNumber()
         {
+            logger.Debug("UpdateSequenceNumber");
+
             // Il sert à quelque chose ce code ?
             if (wrapPanels == null) wrapPanels.Clear();
 
@@ -290,12 +310,16 @@ namespace FPO_WPF_Test.Pages.SubCycle
         }
         public void InitializeSequenceNumber()
         {
+            logger.Debug("InitializeSequenceNumber");
+
             seqNumber = -1;
             activeAlarms.Clear();
             AlarmManagement.RAZalarms.Clear();
         }
         public void StopSequence()
         {
+            logger.Debug("StopSequence");
+
             isCheckAlarms_onGoing = false;
             checkAlarmsTimer.Stop();
             InitializeSequenceNumber();

@@ -1,5 +1,6 @@
 ﻿using Alarm_Management;
 using Database;
+using FPO_WPF_Test.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,16 +26,20 @@ namespace FPO_WPF_Test.Pages
     /// </summary>
     public partial class Archiving : Page
     {
-        private readonly string dbName = "db1";
-        private readonly string archivingPath = @"C:\Temp\Archives\";
-        private readonly string archiveExtFile = ".sql";
-        private readonly int maxArchiveCount = 22;
+        private readonly AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+        //private readonly string dbName = DatabaseSettings.ConnectionInfo.db;
+        private readonly string archivingPath = Settings.Default.Archiving_archivingPath;// @"C:\Temp\Archives\"; 
+        private readonly string archiveExtFile = Settings.Default.ArchBack_ExtFile;// ".sql";
+        private readonly int maxArchiveCount = Settings.Default.Archiving_maxArchiveCount;// 22;
         private string lastArchiveFileName;
         private int nLines;
 
+        private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public Archiving()
         {
+            logger.Debug("Start");
+
             if (!Directory.Exists(archivingPath))
             {
                 Directory.CreateDirectory(archivingPath);
@@ -59,12 +64,12 @@ namespace FPO_WPF_Test.Pages
             }
             lbArchives.Items.Refresh();
         }
-
         private async void Archive_Click(object sender, RoutedEventArgs e)
         {
-            if(dpLastRecord.SelectedDate != null)
+            logger.Debug("Archive_Click");
+
+            if (dpLastRecord.SelectedDate != null)
             {
-                //string lastRecordDate = ((DateTime)dpLastRecord.SelectedDate).AddDays(1).ToString("yyyy-MM-dd HH:mm:ss");
                 DateTime lastRecordDate = ((DateTime)dpLastRecord.SelectedDate).AddDays(1);
 
                 Task<bool> task = Task<bool>.Factory.StartNew(() => ExecuteArchive(General.loggedUsername, lastRecordDate));
@@ -74,7 +79,7 @@ namespace FPO_WPF_Test.Pages
                 while (!task.IsCompleted)
                 {
                     progressBar.Value = (double)(100 * General.count / maxArchiveCount);
-                    await Task.Delay(10);
+                    await Task.Delay(Settings.Default.ArchBack_progressBar_RefreshDelay);
                 }
 
                 if (task.Result) lbArchives.Items.Insert(0, new ListBoxItem() { Content = lastArchiveFileName });
@@ -82,22 +87,24 @@ namespace FPO_WPF_Test.Pages
             }
             else
             {
-                MessageBox.Show("Veuillez sélectionner une date");
+                MessageBox.Show(Settings.Default.Archiving_Request_SelectDate);
             }
         }
         public bool ExecuteArchive(string username, DateTime lastRecordDate)
         {
+            logger.Debug("ExecuteArchive");
+
             bool isArchiveSucceeded = false;
             string lastRecordDate_s = lastRecordDate.ToString("yyyy-MM-dd HH:mm:ss");
 
-            lastArchiveFileName = DateTime.Now.ToString("yyyy.MM.dd_HH.mm.ss") + "_archive_" + dbName + (username == "système" ? "_auto" : "_man") + archiveExtFile;
+            lastArchiveFileName = DateTime.Now.ToString("yyyy.MM.dd_HH.mm.ss") + Settings.Default.Archiving_fileName_archive + DatabaseSettings.ConnectionInfo.db + (username == Settings.Default.General_SystemUsername ? Settings.Default.ArchBack_fileName_auto : Settings.Default.ArchBack_fileName_man) + archiveExtFile;
 
-            string batchFile = @".\Resources\DB_backup_part_table";
-            string arg1 = "\"" + @"C:\Program Files\MariaDB 10.9\bin" + "\"";
-            string arg2 = "root";
-            string arg3 = "Integra2022/";
-            string arg4 = dbName;
-            string arg5 = "\"" + "date_time<'" + lastRecordDate_s + "'" + "\"";
+            string batchFile = Settings.Default.Archiving_Archive_batchFile;// @".\Resources\DB_backup_part_table";
+            string arg1 = "\"" + DatabaseSettings.DBAppFolder + "\"";// @"C:\Program Files\MariaDB 10.9\bin" + "\"";
+            string arg2 = DatabaseSettings.ConnectionInfo.userID;// "root";
+            string arg3 = DatabaseSettings.ConnectionInfo.password;// "Integra2022/";
+            string arg4 = DatabaseSettings.ConnectionInfo.db;// dbName;
+            string arg5 = "\"" + auditTrailInfo.columns[auditTrailInfo.dateTime].id + "<'" + lastRecordDate_s + "'" + "\"";
             string arg6 = archivingPath + lastArchiveFileName;
             string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5 + " " + arg6;
             //MessageBox.Show(command);
@@ -124,25 +131,23 @@ namespace FPO_WPF_Test.Pages
             {
                 if (!MyDatabase.IsConnected()) MyDatabase.Connect();
                 MyDatabase.DeleteRows(new AuditTrailInfo(), lastRecordDate);
-                //MyDatabase.DeleteRows_old("audit_trail", lastRecordDate);
 
-                AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-                auditTrailInfo.columns[auditTrailInfo.username].value = username;
-                auditTrailInfo.columns[auditTrailInfo.eventType].value = "Evènement";
-                auditTrailInfo.columns[auditTrailInfo.description].value = General.auditTrail_ArchiveDesc;
-                MyDatabase.InsertRow(auditTrailInfo);
-                //MyDatabase.InsertRow_done_old("audit_trail", "event_type, username, description", new string[] { "Evènement", username, General.auditTrail_ArchiveDesc });
+                AuditTrailInfo auditTInfo = new AuditTrailInfo();
+                auditTInfo.columns[auditTInfo.username].value = username;
+                auditTInfo.columns[auditTInfo.eventType].value = Settings.Default.General_AuditTrailEvent_Event;
+                auditTInfo.columns[auditTInfo.description].value = General.auditTrail_ArchiveDesc;
+                MyDatabase.InsertRow(auditTInfo);
                 MyDatabase.Disconnect();
 
                 General.count = maxArchiveCount;
 
-                MessageBox.Show("Archive réussi");
+                MessageBox.Show(Settings.Default.Archiving_archivingSuccessfull);
                 isArchiveSucceeded = true;
             }
             else
             {
                 if (File.Exists(archivingPath + lastArchiveFileName)) File.Delete(archivingPath + lastArchiveFileName);
-                MessageBox.Show("Archive échoué");
+                MessageBox.Show(Settings.Default.Archiving_archivingFailed);
             }
             General.count = 0;
 
@@ -152,10 +157,12 @@ namespace FPO_WPF_Test.Pages
         }
         private async void Restore_Click(object sender, RoutedEventArgs e)
         {
+            logger.Debug("Restore_Click");
+
             if (lbArchives.SelectedItem != null)
             {
                 string restoreFileName = (lbArchives.SelectedItem as ListBoxItem).Content.ToString();
-                nLines = File.ReadAllLines(archivingPath + restoreFileName).Length + 900;
+                nLines = File.ReadAllLines(archivingPath + restoreFileName).Length + Settings.Default.Archiving_nLines_offset;
 
                 wpStatus.Visibility = Visibility.Visible;
 
@@ -164,23 +171,25 @@ namespace FPO_WPF_Test.Pages
                 while (!task.IsCompleted)
                 {
                     progressBar.Value = (double)(100 * General.count / nLines);
-                    await Task.Delay(500);
+                    await Task.Delay(Settings.Default.ArchBack_progressBar_RefreshDelay);
                 }
             }
             else
             {
-                MessageBox.Show("Veuillez sélectionner un fichier à restorer");
+                MessageBox.Show(Settings.Default.ArchBack_Request_SelectFile);
             }
         }
         public void ExecuteRestore(string username, string restoreFileName)
         {
+            logger.Debug("ExecuteRestore");
+
             if (File.Exists(archivingPath + restoreFileName))
             {
-                string batchFile = @".\Resources\DB_restore";
-                string arg1 = "\"" + @"C:\Program Files\MariaDB 10.9\bin" + "\"";
-                string arg2 = "root";
-                string arg3 = "Integra2022/";
-                string arg4 = dbName;
+                string batchFile = Settings.Default.Archiving_Restore_batchFile;// @".\Resources\DB_restore";
+                string arg1 = "\"" + DatabaseSettings.DBAppFolder + "\"";// @"C:\Program Files\MariaDB 10.9\bin" + "\"";
+                string arg2 = DatabaseSettings.ConnectionInfo.userID;// "root";
+                string arg3 = DatabaseSettings.ConnectionInfo.password;// "Integra2022/";
+                string arg4 = DatabaseSettings.ConnectionInfo.db;// dbName;
                 string arg5 = archivingPath + restoreFileName;
                 string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5;
                 //MessageBox.Show(command);    
@@ -207,20 +216,19 @@ namespace FPO_WPF_Test.Pages
                 {
                     if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
-                    AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-                    auditTrailInfo.columns[auditTrailInfo.username].value = username;
-                    auditTrailInfo.columns[auditTrailInfo.eventType].value = "Evènement";
-                    auditTrailInfo.columns[auditTrailInfo.description].value = General.auditTrail_RestArchDesc;
-                    MyDatabase.InsertRow(auditTrailInfo);
-                    //MyDatabase.InsertRow_done_old("audit_trail", "event_type, username, description", new string[] { "Evènement", username, General.auditTrail_RestArchDesc });
+                    AuditTrailInfo auditTInfo = new AuditTrailInfo();
+                    auditTInfo.columns[auditTInfo.username].value = username;
+                    auditTInfo.columns[auditTInfo.eventType].value = Settings.Default.General_AuditTrailEvent_Event;
+                    auditTInfo.columns[auditTInfo.description].value = General.auditTrail_RestArchDesc;
+                    MyDatabase.InsertRow(auditTInfo);
                     MyDatabase.Disconnect();
 
                     General.count = nLines;
-                    MessageBox.Show("Restore réussi");
+                    MessageBox.Show(Settings.Default.ArchBack_restoreSuccessfull);
                 }
                 else
                 {
-                    MessageBox.Show("Restore échoué");
+                    MessageBox.Show(Settings.Default.ArchBack_restoreFailed);
                 }
                 General.count = 0;
                 General.text = "";
@@ -229,20 +237,14 @@ namespace FPO_WPF_Test.Pages
             }
             else
             {
-                MessageBox.Show("Le fichier " + archivingPath + restoreFileName + " est introuvable");
+                MessageBox.Show(Settings.Default.ArchBack_FileNotFound_1 + archivingPath + restoreFileName + Settings.Default.ArchBack_FileNotFound_2);
             }
-            /*
-
-                        //*/
         }
-        private void DpLastRecord_LayoutUpdated(object sender, EventArgs e)
-        {
-
-        }
-
         private void progressBar_Loaded(object sender, RoutedEventArgs e)
         {
-            progressBar.Width = this.ActualWidth - labelStatus.ActualWidth - 20;
+            logger.Debug("progressBar_Loaded");
+
+            progressBar.Width = this.ActualWidth - labelStatus.ActualWidth - Settings.Default.ArchBack_progressBar_LeftMargin;
         }
     }
 }

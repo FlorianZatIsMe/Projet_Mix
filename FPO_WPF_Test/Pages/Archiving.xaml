@@ -24,7 +24,7 @@
 
             <WrapPanel>
                 <TextBlock Text="Date du dernier enregistrement à archiver: " Foreground="Wheat" VerticalAlignment="Bottom" Margin="0,0,0,3"/>
-                <DatePicker x:Name="dpLastRecord" Margin="0,10,0,0" LayoutUpdated="DpLastRecord_LayoutUpdated" Height="Auto" VerticalAlignment="Bottom"/>
+                <DatePicker x:Name="dpLastRecord" Margin="0,10,0,0" Height="Auto" VerticalAlignment="Bottom"/>
             </WrapPanel>
         </StackPanel>
 

@@ -500,19 +500,7 @@
     <Setting Name="Error12" Type="System.String" Scope="User">
       <Value Profile="(Default)">La classe n'est pas initialisée</Value>
     </Setting>
-    <Setting Name="Recipe_Status_DRAFT" Type="System.String" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="Recipe_Status_PROD" Type="System.String" Scope="User">
-      <Value Profile="(Default)">1</Value>
-    </Setting>
-    <Setting Name="Recipe_Status_OBSOL" Type="System.String" Scope="User">
-      <Value Profile="(Default)">2</Value>
-    </Setting>
-    <Setting Name="Recipe_Status_None" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="TempTableName" Type="System.String" Scope="User">
+    <Setting Name="Temp_TableName" Type="System.String" Scope="User">
       <Value Profile="(Default)">temp</Value>
     </Setting>
     <Setting Name="Error13" Type="System.String" Scope="User">
@@ -536,10 +524,10 @@
     <Setting Name="RecipeSpeedMixer_PressureUnit_PSIA" Type="System.String" Scope="User">
       <Value Profile="(Default)">PSIA</Value>
     </Setting>
-    <Setting Name="General_TrueValue" Type="System.String" Scope="User">
+    <Setting Name="General_TrueValue_Read" Type="System.String" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="General_FalseValue" Type="System.String" Scope="User">
+    <Setting Name="General_FalseValue_Read" Type="System.String" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="AccessTable_ColIds" Type="System.Collections.Specialized.StringCollection" Scope="User">
@@ -624,17 +612,85 @@
   &lt;string&gt;0&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
-    <Setting Name="ConnectionInfo" Type="Database.ConnectionInfo" Scope="User">
-      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;ConnectionInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
-  &lt;server&gt;localhost&lt;/server&gt;
-  &lt;userID&gt;root&lt;/userID&gt;
-  &lt;password&gt;Integra2022/&lt;/password&gt;
-  &lt;db&gt;db1&lt;/db&gt;
-&lt;/ConnectionInfo&gt;</Value>
-    </Setting>
     <Setting Name="Error16" Type="System.String" Scope="User">
       <Value Profile="(Default)">Arguments manquants</Value>
+    </Setting>
+    <Setting Name="Error17" Type="System.String" Scope="User">
+      <Value Profile="(Default)">La commande ne renvoie rien</Value>
+    </Setting>
+    <Setting Name="Temp_ColIds" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;speed&lt;/string&gt;
+  &lt;string&gt;pressure&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="Temp_ColN_speed" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Temp_ColN_pressure" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="TempResult_ColN" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="TempResult_ColN_speedMean" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="TempResult_ColN_pressureMean" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="TempResult_ColN_speedStd" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="TempResult_ColN_pressureStd" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="General_TrueValue_Write" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="General_FalseValue_Write" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="AuditTrail_ColDesc" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;ID&lt;/string&gt;
+  &lt;string&gt;Date et heure&lt;/string&gt;
+  &lt;string&gt;Utilisateur&lt;/string&gt;
+  &lt;string&gt;Type d'évènement&lt;/string&gt;
+  &lt;string&gt;Description&lt;/string&gt;
+  &lt;string&gt;Valeur avant&lt;/string&gt;
+  &lt;string&gt;Valeur après&lt;/string&gt;
+  &lt;string&gt;Commentaire&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="DBAppFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Program Files\MariaDB 10.9\bin</Value>
+    </Setting>
+    <Setting Name="ConnectionInfo" Type="Database.ConnectionInfo" Scope="User">
+      <Value Profile="(Default)">
+          &lt;ConnectionInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+            &lt;server&gt;localhost&lt;/server&gt;
+            &lt;userID&gt;root&lt;/userID&gt;
+            &lt;password&gt;Integra2022/&lt;/password&gt;
+            &lt;db&gt;db1&lt;/db&gt;
+          &lt;/ConnectionInfo&gt;
+        </Value>
+    </Setting>
+    <Setting Name="Recipe_ColDesc" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;recette&lt;/string&gt;
+  &lt;string&gt;version&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="ReaderUnavailable" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Le reader n'est pas disponible</Value>
     </Setting>
   </Settings>
 </SettingsFile>
