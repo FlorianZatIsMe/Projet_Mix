@@ -91,15 +91,6 @@ namespace FPO_WPF_Test
         private readonly string sequenceField = "Séquence";
 
         //
-        // generateAlarmHistory
-        //
-        private readonly double Alarm_marginB_Title = 15;
-        private readonly double Alarm_marginB_Alarms = 5;
-        private readonly string Alarm_Title = "Historique des alarmes";
-        private readonly string Alarm_Continued = "(suite)";
-        private readonly string Alarm_NoAlarm = "Il n'y a pas eu d'alarme pendant le cycle";
-
-        //
         // Info cycle (arguments du rapport)
         //
         private readonly string na = "N/A";
@@ -648,6 +639,16 @@ namespace FPO_WPF_Test
 
             return returnValue;
         }
+
+        //
+        // generateAlarmHistory
+        //
+        private readonly double Alarm_marginB_Title = 15;
+        private readonly double Alarm_marginB_Alarms = 5;
+        private readonly string Alarm_Title = "Historique des alarmes";
+        private readonly string Alarm_Continued = "(suite)";
+        private readonly string Alarm_NoAlarm = "Il n'y a pas eu d'alarme pendant le cycle";
+
         private double GenerateAlarmHistory(PdfPage page, double y)
         {
             logger.Debug("GenerateAlarmHistory");
@@ -670,13 +671,6 @@ namespace FPO_WPF_Test
             if (y > minAlarmHeight && (page.Height - y - margin - heightFooter) < totalHeight)
             {
                 currentY = NewPage(page);
-                /*
-                pagesNumber++;
-                page = document.AddPage();
-                gfxs.Add(XGraphics.FromPdfPage(page));
-                //gfxs[pagesNumber - 1] = gfxs[pagesNumber - 1];
-                currentY = GenerateSecondHeader(page);
-                */
             }
             else
             {
@@ -716,13 +710,6 @@ namespace FPO_WPF_Test
                         if (IsIndextoLow(page, currentY + Alarm_marginB_Alarms + heightAlarmText))
                         {
                             currentY = NewPage(page);
-                            /*
-                            pagesNumber++;
-                            page = document.AddPage();
-                            gfxs.Add(XGraphics.FromPdfPage(page));
-                            //gfxs[pagesNumber - 1] = gfxs[pagesNumber - 1];
-                            currentY = GenerateSecondHeader(page);
-                            */
 
                             gfxs[pagesNumber - 1].DrawString(Alarm_Title + " " + Alarm_Continued,
                                 new XFont(fontDoc, fontTitleSize),
@@ -775,13 +762,6 @@ namespace FPO_WPF_Test
             {
                 // New page
                 currentY = NewPage(page);
-                /*
-                pagesNumber++;
-                page = document.AddPage();
-                gfxs.Add(XGraphics.FromPdfPage(page));
-                //gfxs[pagesNumber - 1] = gfxs[pagesNumber - 1];
-                currentY = GenerateSecondHeader(page);
-                */
             }
 
             commentHeight = CalculateCommentHeight(page, currentY);
@@ -932,7 +912,6 @@ namespace FPO_WPF_Test
             pagesNumber++;
             page = document.AddPage();
             gfxs.Add(XGraphics.FromPdfPage(page));
-            //gfxs[pagesNumber - 1] = gfxs[pagesNumber - 1];
             return GenerateSecondHeader(page);
         }
         private double CalculateCommentHeight(PdfPage page, double y)
