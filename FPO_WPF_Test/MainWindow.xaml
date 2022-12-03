@@ -336,33 +336,26 @@
                     </MenuItem>
                 </MenuItem>
 
-                <!--// Services //-->
-                <MenuItem Header="JOURNAUX"
-                          Style="{StaticResource Main_MenuItem_With_Dropdown}">
+
+                <!--// AUDIT TRAIL //-->
+                <MenuItem Header="AUDIT TRAIL"
+                          Style="{StaticResource Main_MenuItem}" 
+                          Click="FxAuditTrail">
                     <MenuItem.Icon>
-                        <Image Source="Resources/img_journaux_en.png"
+                        <Image Source="Resources/img_audit_trail_en.png"
                                Stretch="Uniform" />
                     </MenuItem.Icon>
+                </MenuItem>
 
-                    <MenuItem Header="Audit trail"
-                              Height="35"
-                              Style="{StaticResource Sub_MenuItem}"
-                              Click = "FxAuditTrail">
-                        <MenuItem.Icon>
-                            <Image Source="Resources/img_audit_trail_en.png"
-                                   Stretch="Uniform" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-
-                    <MenuItem Header="Alarmes"
-                              Height="35"
-                              Style="{StaticResource Sub_MenuItem}"
-                              Click = "FxAlarms">
-                        <MenuItem.Icon>
-                            <Image Source="Resources/img_alarm_en.png"
-                                   Stretch="Uniform" />
-                        </MenuItem.Icon>
-                    </MenuItem>
+                <!--// ALARME //-->
+                <MenuItem x:Name="menuItemAlarm" 
+                          Header="ALARME"
+                          Style="{StaticResource Main_MenuItem}" 
+                          Click="FxAlarms">
+                    <MenuItem.Icon>
+                        <Image Source="Resources/img_alarm_en.png"
+                               Stretch="Uniform" />
+                    </MenuItem.Icon>
                 </MenuItem>
 
                 <!--// Services //-->

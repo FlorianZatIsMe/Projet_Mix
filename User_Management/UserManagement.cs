@@ -56,6 +56,7 @@ namespace User_Management
             accessTableInfo.columns[accessTableInfo.role].value = role;
             MyDatabase.SendCommand_Read(accessTableInfo);
             CurrentAccessTable = MyDatabase.ReadNextBool();
+            // si CurrentAccessTable = null alors faire qqch
             return role;
 
 

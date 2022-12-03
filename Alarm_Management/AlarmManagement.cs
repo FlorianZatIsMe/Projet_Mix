@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Windows;
-using System.Collections.ObjectModel;
-using System.Data.Common;
-using System.Reflection;
-using System.Collections.Specialized;
 using System.Collections.Generic;
 using Database;
 using System.Configuration;
-using System.ComponentModel;
-using System.Collections;
 using Alarm_Management.Properties;
-using System.Threading.Tasks;
 
 namespace Alarm_Management
 {
@@ -89,6 +81,9 @@ namespace Alarm_Management
         // Future interface
         private static string AuditTrail_SystemUsername;
 
+        public static event Action ActiveAlarmEvent = null;
+        public static event Action InactiveAlarmEvent = null;
+
         static AlarmManagement()
         {
             logger.Debug("Start");
@@ -101,7 +96,6 @@ namespace Alarm_Management
             for (int i = 0; i < configAlarms.Length; i++)
             {
                 Alarms[configAlarms[i].id1, configAlarms[i].id2] = new Alarm(configAlarms[i].description, configAlarms[i].type);
-                //MessageBox.Show(Settings.Default.Alarms.configAlarms[i].description.ToString());
             }
             /*
             alarms[0, 0] = new Alarm("Connexion à la balance échouée", AlarmType.Alarm);
@@ -127,6 +121,7 @@ namespace Alarm_Management
         }
         public static void NewAlarm(int id1, int id2)
         {
+            if(ActiveAlarms.Count == 0) ActiveAlarmEvent();
             logger.Debug("NewAlarm");
 
             if (!isInitialized) {
@@ -220,19 +215,6 @@ namespace Alarm_Management
             }
 
             mutexID = MyDatabase.Connect(false);
-            /*
-            if (!MyDatabase.IsConnected())
-            {
-                mutexID = MyDatabase.Connect(false);
-                wasDbConnected = false;
-            }
-            else
-            {
-                mutexID = MyDatabase.Wait();
-                wasDbConnected = true;
-            }*/
-
-            //if (n != -1 && alarms[id1, id2].Status != AlarmStatus.INACTIVE)
 
             AlarmStatus statusBefore = Alarms[id1, id2].Status;
             AlarmStatus statusAfter = AlarmStatus.None;
@@ -288,9 +270,9 @@ namespace Alarm_Management
                 }
 
                 ActiveAlarms.RemoveAt(n);
+                if (ActiveAlarms.Count == 0) InactiveAlarmEvent();
             }
-            //if (!wasDbConnected) MyDatabase.Disconnect(mutex: mutexID);
-            //else MyDatabase.Signal(mutexID);
+
             MyDatabase.Disconnect(mutex: mutexID);
         }
         public static void AcknowledgeAlarm(int id1, int id2)
@@ -330,18 +312,6 @@ namespace Alarm_Management
             }
 
             mutexID = MyDatabase.Connect(false);
-            /*
-            bool wasDbConnected;
-            if (!MyDatabase.IsConnected())
-            {
-                mutexID = MyDatabase.Connect(false);
-                wasDbConnected = false;
-            }
-            else
-            {
-                mutexID = MyDatabase.Wait();
-                wasDbConnected = true;
-            }*/
 
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
             auditTrailInfo.columns[auditTrailInfo.username].value = AuditTrail_SystemUsername;
@@ -350,8 +320,6 @@ namespace Alarm_Management
             auditTrailInfo.columns[auditTrailInfo.valueBefore].value = statusBefore.ToString();
             auditTrailInfo.columns[auditTrailInfo.valueAfter].value = statusAfter.ToString();
             MyDatabase.InsertRow(auditTrailInfo, mutexID);
-            //string[] values = new string[] { "Système", GetAlarmType(alarms[id1, id2].Type), GetAlarmDescription(id1, id2), statusBefore.ToString(), statusAfter.ToString() };
-            //MyDatabase.InsertRow_done_old(AuditTrailSettings["Table_Name"], AuditTrailSettings["Insert_UserDesc"] + AuditTrailSettings["Insert_ValModif"], values, mutex: mutexID);
 
             Alarms[id1, id2].id = MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id, mutex: mutexID);
             Alarms[id1, id2].Status = statusAfter;
@@ -371,9 +339,8 @@ namespace Alarm_Management
             }
 
             ActiveAlarms.RemoveAt(n);
+            if (ActiveAlarms.Count == 0) InactiveAlarmEvent();
 
-            //if (!wasDbConnected) MyDatabase.Disconnect(mutex: mutexID);
-            //else MyDatabase.Signal(mutexID);
             MyDatabase.Disconnect(mutex: mutexID);
         }
         public static string GetAlarmType(AlarmType type)

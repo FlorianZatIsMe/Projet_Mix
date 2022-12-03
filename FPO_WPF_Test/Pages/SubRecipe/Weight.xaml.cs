@@ -60,6 +60,16 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             InitializeComponent();
             tbSeqNumber.Text = seqNumber;
 
+            List<string> decimalNumbers = new List<string>();
+            cbxDecimalNumbers.ItemsSource = decimalNumbers;
+
+            for (int i = Settings.Default.RecipeWeight_DecimalNumber_Min; i <= Settings.Default.RecipeWeight_DecimalNumber_Max; i++)
+            {
+                decimalNumbers.Add(i.ToString());
+            }
+
+            cbxDecimalNumbers.SelectedIndex = 0;
+            cbxDecimalNumbers.Items.Refresh();
         }
         private void RadioButton_Click_1(object sender, RoutedEventArgs e)
         {
@@ -89,16 +99,21 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             cbIsBarcode.IsChecked = recipeInfo.columns[recipeInfo.isBarcodeUsed].value == DatabaseSettings.General_TrueValue_Read;
             tbBarcode.Text = recipeInfo.columns[recipeInfo.barcode].value;
             cbxUnit.Text = recipeInfo.columns[recipeInfo.unit].value;
-            tbDecimalNumber.Text = recipeInfo.columns[recipeInfo.decimalNumber].value;
+            cbxDecimalNumbers.Text = recipeInfo.columns[recipeInfo.decimalNumber].value;
+            //tbDecimalNumber.Text = recipeInfo.columns[recipeInfo.decimalNumber].value;
 
-            tbSetpoint.Text = decimal.Parse(recipeInfo.columns[recipeInfo.setpoint].value).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
-            tbMin.Text = decimal.Parse(recipeInfo.columns[recipeInfo.min].value).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
-            tbMax.Text = decimal.Parse(recipeInfo.columns[recipeInfo.max].value).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
+            tbSetpoint.Text = decimal.Parse(recipeInfo.columns[recipeInfo.setpoint].value).ToString("N" + int.Parse(cbxDecimalNumbers.Text).ToString());
+            tbMin.Text = decimal.Parse(recipeInfo.columns[recipeInfo.min].value).ToString("N" + int.Parse(cbxDecimalNumbers.Text).ToString());
+            tbMax.Text = decimal.Parse(recipeInfo.columns[recipeInfo.max].value).ToString("N" + int.Parse(cbxDecimalNumbers.Text).ToString());
+
+            //tbSetpoint.Text = decimal.Parse(recipeInfo.columns[recipeInfo.setpoint].value).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
+            //tbMin.Text = decimal.Parse(recipeInfo.columns[recipeInfo.min].value).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
+            //tbMax.Text = decimal.Parse(recipeInfo.columns[recipeInfo.max].value).ToString("N" + int.Parse(tbDecimalNumber.Text).ToString());
 
             TbProduct_LostFocus(tbProduct, new RoutedEventArgs());
             if ((bool)cbIsBarcode.IsChecked) TbBarcode_LostFocus(tbBarcode, new RoutedEventArgs());
             else FormatControl[ControlsIDs[recipeWeightInfo.barcode]] = false;
-            TbDecimalNumber_LostFocus(tbDecimalNumber, new RoutedEventArgs());
+            //TbDecimalNumber_LostFocus(tbDecimalNumber, new RoutedEventArgs());
             TbSetpoint_LostFocus(tbSetpoint, new RoutedEventArgs());
             TbMin_LostFocus(tbMin, new RoutedEventArgs());
             TbMax_LostFocus(tbMax, new RoutedEventArgs());
@@ -115,7 +130,8 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             recipeInfo.columns[recipeInfo.isBarcodeUsed].value = (bool)cbIsBarcode.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
             recipeInfo.columns[recipeInfo.barcode].value = tbBarcode.Text;
             recipeInfo.columns[recipeInfo.unit].value = cbxUnit.Text;
-            recipeInfo.columns[recipeInfo.decimalNumber].value = tbDecimalNumber.Text;
+            //recipeInfo.columns[recipeInfo.decimalNumber].value = tbDecimalNumber.Text;
+            recipeInfo.columns[recipeInfo.decimalNumber].value = cbxDecimalNumbers.Text;
             recipeInfo.columns[recipeInfo.setpoint].value = tbSetpoint.Text;
             recipeInfo.columns[recipeInfo.min].value = tbMin.Text;
             recipeInfo.columns[recipeInfo.max].value = tbMax.Text;
@@ -125,18 +141,18 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         private void CbIsBarcode_Checked(object sender, RoutedEventArgs e)
         {
             logger.Debug("CbIsBarcode_Checked");
-
+            cbIsBarcode.Content = "Code barre";
             tbBarcode.Visibility = Visibility.Visible;
-            labelBarcode.Visibility = Visibility.Visible;
+            //labelBarcode.Visibility = Visibility.Visible;
             if(tbBarcode.Text != "") TbBarcode_LostFocus(tbBarcode, new RoutedEventArgs());
             FormatControl[ControlsIDs[recipeWeightInfo.barcode]] = CurrentFormatControl_tbBarcode;
         }
         private void CbIsBarcode_Unchecked(object sender, RoutedEventArgs e)
         {
             logger.Debug("CbIsBarcode_Unchecked");
-
+            cbIsBarcode.Content = "Contrôle du code barre";
             tbBarcode.Visibility = Visibility.Hidden;
-            labelBarcode.Visibility = Visibility.Hidden;
+            //labelBarcode.Visibility = Visibility.Hidden;
             FormatControl[ControlsIDs[recipeWeightInfo.barcode]] = false;
         }
         private void TbProduct_LostFocus(object sender, RoutedEventArgs e)
@@ -176,36 +192,6 @@ namespace FPO_WPF_Test.Pages.SubRecipe
 
             //MessageBox.Show(FormatControl[i].ToString());
         }
-        private void TbDecimalNumber_LostFocus(object sender, RoutedEventArgs e)
-        {
-            logger.Debug("TbDecimalNumber_LostFocus");
-
-            TextBox textBox = sender as TextBox;
-            int i = ControlsIDs[recipeWeightInfo.decimalNumber];
-
-            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
-                min: Settings.Default.RecipeWeight_DecimalNumber_Min, max: Settings.Default.RecipeWeight_DecimalNumber_Max))
-            {
-                FormatControl[i] = true;
-                if (FormatControl[ControlsIDs[recipeWeightInfo.setpoint]])
-                {
-                    tbSetpoint.Text = decimal.Parse(tbSetpoint.Text).ToString("N" + int.Parse(textBox.Text).ToString());
-                }
-                if (FormatControl[ControlsIDs[recipeWeightInfo.min]])
-                {
-                    tbMin.Text = decimal.Parse(tbMin.Text).ToString("N" + int.Parse(textBox.Text).ToString());
-                }
-                if (FormatControl[ControlsIDs[recipeWeightInfo.max]])
-                {
-                    tbMax.Text = decimal.Parse(tbMax.Text).ToString("N" + int.Parse(textBox.Text).ToString());
-                }
-            }
-            else
-            {
-                FormatControl[i] = false;
-            }
-            //MessageBox.Show(FormatControl[i].ToString());
-        }
         private void TbSetpoint_LostFocus(object sender, RoutedEventArgs e)
         {
             logger.Debug("TbSetpoint_LostFocus");
@@ -216,7 +202,8 @@ namespace FPO_WPF_Test.Pages.SubRecipe
 
             try
             {
-                n = int.Parse(tbDecimalNumber.Text);
+                //n = int.Parse(tbDecimalNumber.Text);
+                n = int.Parse(cbxDecimalNumbers.Text);
             }
             catch (Exception)
             {
@@ -246,7 +233,8 @@ namespace FPO_WPF_Test.Pages.SubRecipe
 
             try
             {
-                n = int.Parse(tbDecimalNumber.Text);
+                //n = int.Parse(tbDecimalNumber.Text);
+                n = int.Parse(cbxDecimalNumbers.Text);
             }
             catch (Exception)
             {
@@ -275,7 +263,8 @@ namespace FPO_WPF_Test.Pages.SubRecipe
 
             try
             {
-                n = int.Parse(tbDecimalNumber.Text);
+                //n = int.Parse(tbDecimalNumber.Text);
+                n = int.Parse(cbxDecimalNumbers.Text);
             }
             catch (Exception)
             {
@@ -306,7 +295,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
 
             x = (bool)cbIsBarcode.IsChecked ? 0 : 1;
-
+            //MessageBox.Show(((n + x) == FormatControl.Length).ToString() + " - " + (n + x).ToString() + " = " + n.ToString() + " + " + x.ToString() + " / " + FormatControl.Length.ToString()); //((n + x) == FormatControl.Length).ToString() + n.ToString + x.ToString() + FormatControl.Length.ToString()
             return (n+x) == FormatControl.Length;
         }
     }

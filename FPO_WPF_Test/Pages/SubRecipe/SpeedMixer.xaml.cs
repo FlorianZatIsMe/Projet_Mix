@@ -17,6 +17,7 @@ using static FPO_WPF_Test.Pages.Recipe;
 using Database;
 using FPO_WPF_Test.Properties;
 using System.Configuration;
+using System.Windows.Controls.Primitives;
 
 namespace FPO_WPF_Test.Pages.SubRecipe
 {
@@ -28,7 +29,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         private readonly int[] ControlsIDs;
         private readonly Frame parentFrame;
         private readonly WrapPanel[] wrapPanels = new WrapPanel[Settings.Default.RecipeMix_MaxPhaseNumber];
-        private readonly CheckBox[] checkBoxes = new CheckBox[Settings.Default.RecipeMix_MaxPhaseNumber];
+        private readonly ToggleButton[] toggleButtons = new ToggleButton[Settings.Default.RecipeMix_MaxPhaseNumber];
         private readonly TextBox[] speeds = new TextBox[Settings.Default.RecipeMix_MaxPhaseNumber];
         private readonly TextBox[] times = new TextBox[Settings.Default.RecipeMix_MaxPhaseNumber];
         private readonly TextBox[] pressures = new TextBox[Settings.Default.RecipeMix_MaxPhaseNumber];
@@ -62,26 +63,15 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             InitializeComponent();
             tbSeqNumber.Text = seqNumber;
 
-            wrapPanels[0] = Phase00;
-            wrapPanels[1] = Phase01;
-            wrapPanels[2] = Phase02;
-            wrapPanels[3] = Phase03;
-            wrapPanels[4] = Phase04;
-            wrapPanels[5] = Phase05;
-            wrapPanels[6] = Phase06;
-            wrapPanels[7] = Phase07;
-            wrapPanels[8] = Phase08;
-            wrapPanels[9] = Phase09;
-
-            checkBoxes[1] = cbPhase01;
-            checkBoxes[2] = cbPhase02;
-            checkBoxes[3] = cbPhase03;
-            checkBoxes[4] = cbPhase04;
-            checkBoxes[5] = cbPhase05;
-            checkBoxes[6] = cbPhase06;
-            checkBoxes[7] = cbPhase07;
-            checkBoxes[8] = cbPhase08;
-            checkBoxes[9] = cbPhase09;
+            toggleButtons[1] = tgPhase01;
+            toggleButtons[2] = tgPhase02;
+            toggleButtons[3] = tgPhase03;
+            toggleButtons[4] = tgPhase04;
+            toggleButtons[5] = tgPhase05;
+            toggleButtons[6] = tgPhase06;
+            toggleButtons[7] = tgPhase07;
+            toggleButtons[8] = tgPhase08;
+            toggleButtons[9] = tgPhase09;
 
             speeds[0] = tbSpeed00;
             speeds[1] = tbSpeed01;
@@ -105,16 +95,16 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             times[8] = tbTime08;
             times[9] = tbTime09;
 
-            pressures[0] = tbPression00;
-            pressures[1] = tbPression01;
-            pressures[2] = tbPression02;
-            pressures[3] = tbPression03;
-            pressures[4] = tbPression04;
-            pressures[5] = tbPression05;
-            pressures[6] = tbPression06;
-            pressures[7] = tbPression07;
-            pressures[8] = tbPression08;
-            pressures[9] = tbPression09;
+            pressures[0] = tbPressure00;
+            pressures[1] = tbPressure01;
+            pressures[2] = tbPressure02;
+            pressures[3] = tbPressure03;
+            pressures[4] = tbPressure04;
+            pressures[5] = tbPressure05;
+            pressures[6] = tbPressure06;
+            pressures[7] = tbPressure07;
+            pressures[8] = tbPressure08;
+            pressures[9] = tbPressure09;
 
             FormatControl[ControlsIDs[recipeSpeedMixerInfo.scurve]] = true;
         }
@@ -136,16 +126,16 @@ namespace FPO_WPF_Test.Pages.SubRecipe
 
             parentFrame.Content = null;
         }
-        private void CbPhase_Unchecked(object sender, RoutedEventArgs e)
+        private void tgPhase_Unchecked(object sender, RoutedEventArgs e)
         {
-            logger.Debug("CbPhase_Unchecked");
+            logger.Debug("tgPhase_Unchecked");
 
-            CheckBox checkbox = sender as CheckBox;
+            ToggleButton toggleButton = sender as ToggleButton;
             int id = -1;
 
             for (int i = 1; i < PhasesNumber; i++)
             {
-                if (checkbox == checkBoxes[i])
+                if (toggleButton == toggleButtons[i])
                 {
                     id = i + 1;
                 }
@@ -167,8 +157,12 @@ namespace FPO_WPF_Test.Pages.SubRecipe
 
                 if (id != 10)
                 {
-                    wrapPanels[id].Visibility = Visibility.Collapsed;
-                    checkBoxes[id].IsChecked = false;
+                    speeds[id].Visibility = Visibility.Collapsed;
+                    times[id].Visibility = Visibility.Collapsed;
+                    pressures[id].Visibility = Visibility.Collapsed;
+                    //wrapPanels[id].Visibility = Visibility.Collapsed;
+                    toggleButtons[id].Visibility = Visibility.Collapsed;
+                    toggleButtons[id].IsChecked = false;
                 }
             }
             catch (Exception ex)
@@ -176,16 +170,16 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 MessageBox.Show(ex.Message);
             }
         }
-        private void CbPhase_Checked(object sender, RoutedEventArgs e)
+        private void tgPhase_Checked(object sender, RoutedEventArgs e)
         {
-            logger.Debug("CbPhase_Checked");
+            logger.Debug("tgPhase_Checked");
 
-            CheckBox checkbox = sender as CheckBox;
+            ToggleButton toggleButton = sender as ToggleButton;
             int id = -1;
 
             for (int i = 1; i < PhasesNumber; i++)
             {
-                if (checkbox == checkBoxes[i])
+                if (toggleButton == toggleButtons[i])
                 {
                     id = i + 1;
                 }
@@ -202,7 +196,11 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                     speeds[id].IsEnabled = false;
                     times[id].IsEnabled = false;
                     pressures[id].IsEnabled = false;
-                    wrapPanels[id].Visibility = Visibility.Visible;
+                    speeds[id].Visibility = Visibility.Visible;
+                    times[id].Visibility = Visibility.Visible;
+                    pressures[id].Visibility = Visibility.Visible;
+                    toggleButtons[id].Visibility = Visibility.Visible;
+                    //wrapPanels[id].Visibility = Visibility.Visible;
                 }
             }
             catch (Exception ex)
@@ -221,16 +219,17 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             tbAcceleration.Text = recipeInfo.columns[recipeInfo.acceleration].value;
             tbDeceleration.Text = recipeInfo.columns[recipeInfo.deceleration].value;
             cbVacuum.IsChecked = recipeInfo.columns[recipeInfo.vaccum_control].value == DatabaseSettings.General_TrueValue_Read;
-            if (recipeInfo.columns[recipeInfo.isVentgasAir].value == DatabaseSettings.General_TrueValue_Read) rbAir.IsChecked = true;
-            cbMonitorType.IsChecked = recipeInfo.columns[recipeInfo.monitorType].value == DatabaseSettings.General_TrueValue_Read;
+            //if (recipeInfo.columns[recipeInfo.isVentgasAir].value == DatabaseSettings.General_TrueValue_Read) rbAir.IsChecked = true;
+            //cbMonitorType.IsChecked = recipeInfo.columns[recipeInfo.monitorType].value == DatabaseSettings.General_TrueValue_Read;
             cbxPressureUnit.Text = recipeInfo.columns[recipeInfo.pressureUnit].value;
-            tbSCurve.Text = recipeInfo.columns[recipeInfo.scurve].value;
+            //tbSCurve.Text = recipeInfo.columns[recipeInfo.scurve].value;
             cbColdTrap.IsChecked = recipeInfo.columns[recipeInfo.coldtrap].value == DatabaseSettings.General_TrueValue_Read;
 
             TbProgramName_LostFocus(tbProgramName, new RoutedEventArgs());
             TbAcceleration_LostFocus(tbAcceleration, new RoutedEventArgs());
             TbDeceleration_LostFocus(tbDeceleration, new RoutedEventArgs());
-            TbSCurve_LostFocus(tbSCurve, new RoutedEventArgs());
+            TbSCurve_LostFocus(null, new RoutedEventArgs());
+            //TbSCurve_LostFocus(tbSCurve, new RoutedEventArgs());
 
             i = 0;
             while (i != 10 && recipeInfo.columns[recipeInfo.speed00 + 3 * i].value != "")
@@ -241,12 +240,12 @@ namespace FPO_WPF_Test.Pages.SubRecipe
 
                 if (i > 0)
                 {
-                    checkBoxes[i].IsChecked = true;
+                    toggleButtons[i].IsChecked = true;
                 }
 
                 TbSpeed_LostFocus(speeds[i], new RoutedEventArgs());
                 TbTime_LostFocus(times[i], new RoutedEventArgs());
-                TbPression_LostFocus(pressures[i], new RoutedEventArgs());
+                tbPressure_LostFocus(pressures[i], new RoutedEventArgs());
 
                 i++;
             }
@@ -273,10 +272,12 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 recipeInfo.columns[recipeInfo.acceleration].value = int.Parse(tbAcceleration.Text, NumberStyles.AllowThousands).ToString();
                 recipeInfo.columns[recipeInfo.deceleration].value = int.Parse(tbDeceleration.Text, NumberStyles.AllowThousands).ToString();
                 recipeInfo.columns[recipeInfo.vaccum_control].value = (bool)cbVacuum.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
-                recipeInfo.columns[recipeInfo.isVentgasAir].value = (bool)rbAir.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
-                recipeInfo.columns[recipeInfo.monitorType].value = (bool)cbMonitorType.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+                recipeInfo.columns[recipeInfo.isVentgasAir].value = DatabaseSettings.General_TrueValue_Write;
+                //UrecipeInfo.columns[recipeInfo.isVentgasAir].value = (bool)rbAir.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+                recipeInfo.columns[recipeInfo.monitorType].value = DatabaseSettings.General_TrueValue_Write;
+                //recipeInfo.columns[recipeInfo.monitorType].value = (bool)cbMonitorType.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
                 recipeInfo.columns[recipeInfo.pressureUnit].value = cbxPressureUnit.Text;
-                recipeInfo.columns[recipeInfo.scurve].value = tbSCurve.Text;
+                recipeInfo.columns[recipeInfo.scurve].value = "";// tbSCurve.Text;
                 recipeInfo.columns[recipeInfo.coldtrap].value = (bool)cbColdTrap.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
 
                 int i = 0;
@@ -286,7 +287,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                     recipeInfo.columns[recipeInfo.time00 + 3 * i].value = int.Parse(times[i].Text, NumberStyles.AllowThousands).ToString();
                     recipeInfo.columns[recipeInfo.pressure00 + 3 * i].value = int.Parse(pressures[i].Text, NumberStyles.AllowThousands).ToString();
                     i++;
-                } while (i != 10 && (bool)checkBoxes[i].IsChecked);
+                } while (i != 10 && (bool)toggleButtons[i].IsChecked);
 
                 recipeInfo.columns[recipeInfo.speedMin].value = int.Parse(tbSpeedMin.Text, NumberStyles.AllowThousands).ToString();
                 recipeInfo.columns[recipeInfo.speedMax].value = int.Parse(tbSpeedMax.Text, NumberStyles.AllowThousands).ToString();
@@ -358,7 +359,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         private void TbSCurve_LostFocus(object sender, RoutedEventArgs e)
         {
             logger.Debug("TbSCurve_LostFocus");
-
+            /*
             TextBox textBox = sender as TextBox;
             int i = ControlsIDs[recipeSpeedMixerInfo.scurve];
 
@@ -369,8 +370,11 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             else
             {
                 FormatControl[i] = false;
-            }
+            }*/
             //MessageBox.Show(FormatControl[i].ToString());
+
+            int i = ControlsIDs[recipeSpeedMixerInfo.scurve];
+            FormatControl[i] = true;
         }
         private void TbSpeed_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -383,7 +387,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             {
                 if (textBox == speeds[j])
                 {
-                    if (j == 0 || (bool)checkBoxes[j].IsChecked)
+                    if (j == 0 || (bool)toggleButtons[j].IsChecked)
                     {
                         if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
                             min: Settings.Default.RecipeMix_Speed_Min, max: Settings.Default.RecipeMix_Speed_Max))
@@ -409,7 +413,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             {
                 if (textBox == times[j])
                 {
-                    if (j == 0 || (bool)checkBoxes[j].IsChecked)
+                    if (j == 0 || (bool)toggleButtons[j].IsChecked)
                     {
                         if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
                             min: Settings.Default.RecipeMix_Time_Min, max: Settings.Default.RecipeMix_Time_Max))
@@ -424,11 +428,11 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 }
             }
         }
-        private void TbPression_LostFocus(object sender, RoutedEventArgs e)
+        private void tbPressure_LostFocus(object sender, RoutedEventArgs e)
         {
-            logger.Debug("TbPression_LostFocus");
+            logger.Debug("tbPressure_LostFocus");
 
-            //pressures[0] = tbPression00;
+            //pressures[0] = tbPressure00;
             TextBox textBox = sender as TextBox;
             int i = ControlsIDs[recipeSpeedMixerInfo.pressure00];
 
@@ -436,7 +440,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             {
                 if (textBox == pressures[j])
                 {
-                    if (j == 0 || (bool)checkBoxes[j].IsChecked)
+                    if (j == 0 || (bool)toggleButtons[j].IsChecked)
                     {
                         if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
                             min: Settings.Default.RecipeMix_Pressure_Min, max: Settings.Default.RecipeMix_Pressure_Max))
@@ -537,7 +541,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
 
             for (int i = 1; i < PhasesNumber; i++)
             {
-                x += (bool)checkBoxes[i].IsChecked ? 0 : 3; // Pour chaque checkbox décoché, on ajoutera 3 au score final
+                x += (bool)toggleButtons[i].IsChecked ? 0 : 3; // Pour chaque checkbox décoché, on ajoutera 3 au score final
             }
             //MessageBox.Show(n.ToString() + " + " + x.ToString() + " = " + (n+x).ToString() + " / " + FormatControl.Length.ToString());
             return (n + x) == FormatControl.Length;

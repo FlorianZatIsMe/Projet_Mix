@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace FPO_WPF_Test
 {
@@ -59,8 +60,9 @@ namespace FPO_WPF_Test
 
             if (isNotNull && textBox.Text == "")
             {
-                MessageBox.Show(Settings.Default.General_Info_EmptyField);
-                return false;
+                //MessageBox.Show(Settings.Default.General_Info_EmptyField);
+                result = false;
+                goto End;
             }
 
             if (isNumber)
@@ -71,7 +73,7 @@ namespace FPO_WPF_Test
 
                     if (min != -1 && max != -1 && (decimal.Parse(textBox.Text) < min || decimal.Parse(textBox.Text) > max))
                     {
-                        MessageBox.Show(Settings.Default.General_Info_FieldOutOfRange + " [" + min.ToString() + " ; " + max.ToString() + "]");
+                        //MessageBox.Show(Settings.Default.General_Info_FieldOutOfRange + " [" + min.ToString() + " ; " + max.ToString() + "]");
 
                         if (decimal.Parse(textBox.Text) < min)
                         {
@@ -83,18 +85,20 @@ namespace FPO_WPF_Test
                         }
                         else
                         {
+                            logger.Error("ça n'est pas possible OK");
                             MessageBox.Show("ça n'est pas possible OK");
-                            return false;
+                            result = false;
+                            goto End;
                         }
                     }
                     else if (min != -1 && decimal.Parse(textBox.Text) < min)
                     {
-                        MessageBox.Show(Settings.Default.General_Info_FieldBelowMin + min.ToString());
+                        //MessageBox.Show(Settings.Default.General_Info_FieldBelowMin + min.ToString());
                         textBox.Text = min.ToString();
                     }
                     else if (max != -1 && decimal.Parse(textBox.Text) > max)
                     {
-                        MessageBox.Show(Settings.Default.General_Info_FieldAboveMax + max.ToString());
+                        //MessageBox.Show(Settings.Default.General_Info_FieldAboveMax + max.ToString());
                         textBox.Text = max.ToString();
                     }
                 }
@@ -102,25 +106,42 @@ namespace FPO_WPF_Test
                 {
                     MessageBox.Show(Settings.Default.General_Info_FieldNotANumber);
                     textBox.Text = "";
-                    return false;
+                    result = false;
+                    goto End;
                 }
             }
             else if (textBox.Text.Length > parameter)
             {
-                MessageBox.Show(Settings.Default.General_Info_FieldTooLong1 + parameter.ToString() + Settings.Default.General_Info_FieldTooLong2);
-                return false;
+                //MessageBox.Show(Settings.Default.General_Info_FieldTooLong1 + parameter.ToString() + Settings.Default.General_Info_FieldTooLong2);
+                result = false;
+                goto End;
             }
+        End:
+
+            if (result)
+            {
+                textBox.Foreground = (SolidColorBrush)App.Current.Resources["TextBox.Correct.Foreground"];
+                textBox.Background = (SolidColorBrush)App.Current.Resources["TextBox.Correct.Background"];
+            }
+            else
+            {
+                textBox.Foreground = (SolidColorBrush)App.Current.Resources["TextBox.Incorrect.Foreground"];
+                textBox.Background = (SolidColorBrush)App.Current.Resources["TextBox.Incorrect.Background"];
+            }
+
             return result;
         }
         public static void Update_RecipeNames(ComboBox comboBox, List<string> ProgramNames, List<string> ProgramIDs, RecipeStatus recipeStatus = RecipeStatus.PRODnDRAFT)
         {
             logger.Debug("Update_RecipeNames");
 
-            comboBox.ItemsSource = null;
             ProgramNames.Clear();
             ProgramIDs.Clear();
+            comboBox.ItemsSource = null;
+            comboBox.Items.Refresh();
 
-            ProgramNames.Add(Settings.Default.Recipe_Request_SelectRecipe);
+
+            //ProgramNames.Add(Settings.Default.Recipe_Request_SelectRecipe);
 
             //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
@@ -159,9 +180,10 @@ namespace FPO_WPF_Test
             }
 
             comboBox.ItemsSource = ProgramNames;
-            comboBox.SelectedIndex = 0;
-            ProgramNames.RemoveAt(0);
+            comboBox.Text = Settings.Default.Recipe_Request_SelectRecipe;
             comboBox.Items.Refresh();
+            //comboBox.SelectedIndex = 0;
+            //ProgramNames.RemoveAt(0);
         }
         public static void StartCycle(string recipeID, string OFnumber, string finalWeight, Frame frameMain, Frame frameInfoCycle, bool isTest = true)
         {

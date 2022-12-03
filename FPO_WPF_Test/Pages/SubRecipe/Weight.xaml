@@ -5,78 +5,243 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:FPO_WPF_Test.Pages.SubRecipe"
       mc:Ignorable="d" 
-      d:DesignHeight="250" d:DesignWidth="800"
+      d:DesignHeight="350" d:DesignWidth="1400"
       Title="Weight"
-      Background="Transparent">
+      Background="Transparent"
+      Foreground="{StaticResource MyFont1_Foreground}">
+
 
     <Border Background="#524E4F" BorderThickness="5" BorderBrush="Green" CornerRadius="15" Margin="5">
-
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock x:Name="tbSeqNumber"
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="55"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <StackPanel Grid.Column="0" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock x:Name="tbSeqNumber"
                        Grid.Column="0"
+                       Grid.RowSpan="2"
                        Text="#" 
-                       Foreground="Wheat"
-                       FontSize="20"
-                       VerticalAlignment="Center" 
+                       Foreground="{StaticResource MyFont1_Foreground}"
+                       FontFamily="{StaticResource MyFont1}"
+                       FontSize="{StaticResource FontSize0}"
                        HorizontalAlignment="Center"/>
-            <Button Grid.Column="0"
+                <Button Grid.Column="0"
+                    Grid.RowSpan="2"
                     Content="Supprimer"
-                    Margin="0,80,0,20"
+                    Margin="0,10,0,0"
                     Height="20"
                     Width="70" Click="Button_Click"/>
-            <StackPanel Grid.Column="1" Margin="10,10,0,13">
-                <WrapPanel>
-                    <RadioButton Content="Pesée"
-                                 Foreground="Wheat"
-                                 HorizontalAlignment="Left" 
-                                 VerticalAlignment="Top" 
-                                 IsChecked="True"/>
-                    <RadioButton x:Name="rbSpeedMixer"
-                                 Content="SpeedMixer"
-                                 Foreground="Wheat"
-                                 HorizontalAlignment="Left"
-                                 Margin="10,0,0,0"
-                                 VerticalAlignment="Top" 
-                                 Click="RadioButton_Click_1"/>
-                </WrapPanel>
-                <WrapPanel>
-                    <TextBlock Margin="0,10,0,0" Foreground="Wheat" Text="Produit"/>
-                    <TextBox x:Name="tbProduct" Margin="10,10,0,0" Width="200" LostFocus="TbProduct_LostFocus"/>
-                </WrapPanel>
-                <WrapPanel>
-                    <CheckBox x:Name="cbIsBarcode" Margin="0,10,0,0" Foreground="Wheat" Content="Contrôle du code barres" Checked="CbIsBarcode_Checked" Unchecked="CbIsBarcode_Unchecked"/>
-                    <TextBlock x:Name="labelBarcode" Margin="30,10,0,0" Foreground="Wheat" Text="Code barres" Visibility="Collapsed"/>
-                    <TextBox x:Name="tbBarcode" Margin="10,10,0,0" Width="200" LostFocus="TbBarcode_LostFocus" Visibility="Collapsed"/>
-                </WrapPanel>
-                <WrapPanel>
-                    <TextBlock Margin="0,10,0,0" Foreground="Wheat" Text="Format"/>
-                    <TextBlock Margin="30,10,0,0" Foreground="Wheat" Text="Unité"/>
-                    <ComboBox x:Name="cbxUnit" Margin="10,10,0,0" SelectedIndex="0" Width="70">
-                        <ComboBoxItem Content="mg/kg"/>
-                        <ComboBoxItem Content="g/kg"/>
-                        <ComboBoxItem Content="kg/kg"/>
-                    </ComboBox>
-                    <TextBlock Margin="30,10,0,0" Foreground="Wheat" Text="Nombre de chiffre après la virgule"/>
-
-                    <TextBox x:Name="tbDecimalNumber" Margin="20,10,0,0" Width="200" LostFocus="TbDecimalNumber_LostFocus"/>
-                </WrapPanel>
-                <WrapPanel>
-                    <TextBlock Margin="0,10,0,0" Foreground="Wheat" Text="Cible"/>
-                    <TextBox x:Name="tbSetpoint" Margin="10,10,0,0" Width="200" LostFocus="TbSetpoint_LostFocus"/>
-                </WrapPanel>
-                <WrapPanel>
-                    <TextBlock Margin="0,10,0,0" Foreground="Wheat" Text="Minimum"/>
-                    <TextBox x:Name="tbMin" Margin="10,10,0,0" Width="200" LostFocus="TbMin_LostFocus"/>
-                </WrapPanel>
-                <WrapPanel>
-                    <TextBlock Margin="0,10,0,0" Foreground="Wheat" Text="Maximum"/>
-                    <TextBox x:Name="tbMax" Margin="10,10,0,0" Width="200" LostFocus="TbMax_LostFocus"/>
-                </WrapPanel>
             </StackPanel>
+            
+            <WrapPanel Grid.Column="1" Grid.Row="0" Margin="0,10,0,0" VerticalAlignment="Top">
+                <RadioButton Content="Pesée"
+                                 IsChecked="True"
+                                 Style="{DynamicResource SubSeqRadioButton}"/>
+                <RadioButton  x:Name="rbSpeedMixer"
+                                 Content="SpeedMixer"
+                                 Margin="10,0,0,0"
+                                 IsChecked="False"
+                                 Click="RadioButton_Click_1"
+                                  Style="{DynamicResource SubSeqRadioButton}"/>
+            </WrapPanel>
+
+            <StackPanel Grid.Column="1" Grid.Row="1">
+                <WrapPanel>
+                    <Grid Width="400" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Margin="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Produit"
+                                   Grid.Column="0"
+                                   Margin="0,0,20,0"
+                                   FontFamily="{StaticResource MyFont1}" 
+                                   FontSize="{StaticResource FontSize1}"
+                                   VerticalAlignment="Center"/>
+                        <TextBox x:Name="tbProduct" 
+                             Grid.Column="1"
+                             Height="30" 
+                             VerticalContentAlignment="Center"
+                             LostFocus="TbProduct_LostFocus"
+                             Style="{DynamicResource TextBoxStyle1}"/>
+                    </Grid>
+
+                    <Grid Margin="25,0,0,0" HorizontalAlignment="Left" >
+                        <TextBox x:Name="tbBarcode" 
+                             HorizontalContentAlignment="Left" 
+                             Style="{DynamicResource TextBoxStyle2}" 
+                             Height="30" 
+                             BorderThickness="1"
+                             BorderBrush="{StaticResource Color_SubS_rbOn}"
+                             Margin="125,0,0,0" 
+                             Width="200" 
+                             Visibility="Hidden"
+                             LostFocus="TbBarcode_LostFocus"/>
+                        <ToggleButton x:Name="cbIsBarcode" 
+                                  Content="Contrôle du code barres" 
+                                  IsChecked="False" 
+                                  Width="150"
+                                  HorizontalAlignment="Left" 
+                                  Style="{DynamicResource ToggleButtonStyle1}" 
+                                  Checked="CbIsBarcode_Checked" 
+                                  Unchecked="CbIsBarcode_Unchecked"/>
+                    </Grid>
+                </WrapPanel>
+
+                <WrapPanel Margin="0,15,0,10">
+                    <Border Width="300" 
+                        Height="150" 
+                        BorderBrush="Green" 
+                        BorderThickness="2"
+                        CornerRadius="10"
+                        HorizontalAlignment="Left">
+                        <StackPanel>
+                            <TextBlock Text="Format" 
+                                       Margin="5,5,0,0" 
+                                       Foreground="{StaticResource MyFont1_Foreground}"
+                                       FontFamily="{StaticResource MyFont1}"
+                                       FontSize="{StaticResource FontSize1}"
+                                       HorizontalAlignment="Center"/>
+
+                            <Grid Margin="10,0,10,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="100"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="50"/>
+                                    <RowDefinition Height="50"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Text="Unité"
+                                           Grid.Column="0"
+                                           Grid.Row="0"
+                                           Margin="0,0,0,0" 
+                                           Foreground="{StaticResource MyFont1_Foreground}"
+                                           FontFamily="{StaticResource MyFont1}"
+                                           FontSize="{StaticResource FontSize2}"
+                                           VerticalAlignment="Center"/>
+
+                                <ComboBox Style="{DynamicResource ComboBoxStyle1}" x:Name="cbxUnit"
+                                           Grid.Column="1"
+                                           Grid.Row="0"
+                                          SelectedIndex="0"
+                                          Height="30"
+                                          VerticalContentAlignment="Center">
+                                    <ComboBoxItem Content="mg/kg"/>
+                                    <ComboBoxItem Content="g/kg"/>
+                                    <ComboBoxItem Content="kg/kg"/>
+                                </ComboBox>
+
+                                <TextBlock Grid.Column="0"
+                                           VerticalAlignment="Center"
+                                           Grid.Row="1"
+                                           TextWrapping="Wrap"
+                                           Foreground="{StaticResource MyFont1_Foreground}"
+                                           FontFamily="{StaticResource MyFont1}"
+                                           FontSize="{StaticResource FontSize2}"
+                                           Text="Nombre de chiffre après la virgule"/>
+                                <ComboBox x:Name="cbxDecimalNumbers"
+                                          Style="{DynamicResource ComboBoxStyle1}"
+                                           Grid.Column="1"
+                                           Grid.Row="1"
+                                          Height="30"
+                                          VerticalContentAlignment="Center">
+                                </ComboBox>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Width="400" 
+                        Height="150" 
+                        BorderBrush="Green" 
+                        BorderThickness="2"
+                        CornerRadius="10"
+                        HorizontalAlignment="Left"
+                            Margin="10">
+                        <Grid Margin="10,0,10,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Valeur" 
+                                       Margin="5,5,0,0" 
+                                       Grid.ColumnSpan="2"
+                                       Grid.Row="0"
+                                       Foreground="{StaticResource MyFont1_Foreground}"
+                                       FontFamily="{StaticResource MyFont1}"
+                                       FontSize="{StaticResource FontSize1}"
+                                       HorizontalAlignment="Center"/>
+
+                            <WrapPanel Grid.Column="0" Grid.Row="1" VerticalAlignment="Center">
+                                <TextBlock Margin="0,0,0,0" 
+                                           Foreground="{StaticResource MyFont1_Foreground}"
+                                           FontFamily="{StaticResource MyFont1}"
+                                           FontSize="{StaticResource FontSize2}"
+                                           Text="Cible"
+                                           VerticalAlignment="Center"/>
+                                <TextBox x:Name="tbSetpoint" 
+                                         Margin="10,0,0,0" 
+                                         Width="100" 
+                                         LostFocus="TbSetpoint_LostFocus" 
+                                         Style="{DynamicResource TextBoxStyle1}"/>
+                            </WrapPanel>
+
+                            <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Center">
+                                <WrapPanel>
+                                    <TextBlock Margin="0,0,0,0" 
+                                               Foreground="{StaticResource MyFont1_Foreground}"
+                                               FontFamily="{StaticResource MyFont1}"
+                                               FontSize="{StaticResource FontSize2}"
+                                               Text="Minimum"
+                                               VerticalAlignment="Center"/>
+                                    <TextBox x:Name="tbMin" 
+                                             Margin="10,0,0,0" 
+                                             Width="100" 
+                                             LostFocus="TbMin_LostFocus"
+                                             Style="{DynamicResource TextBoxStyle1}"/>
+                                </WrapPanel>
+                                <WrapPanel Margin="0,10,0,0">
+                                    <TextBlock Margin="0,0,0,0" 
+                                               Foreground="{StaticResource MyFont1_Foreground}"
+                                               FontFamily="{StaticResource MyFont1}"
+                                               FontSize="{StaticResource FontSize2}"
+                                               Text="Maximum"
+                                               VerticalAlignment="Center"/>
+                                    <TextBox x:Name="tbMax" 
+                                             Margin="10,0,0,0" 
+                                             Width="100" 
+                                             LostFocus="TbMax_LostFocus"
+                                             Style="{DynamicResource TextBoxStyle1}"/>
+                                </WrapPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </WrapPanel>
+
+
+
+
+                <WrapPanel Visibility="Collapsed">
+                    <CheckBox x:Name="cbIsBarcode_old" Margin="0,10,0,0" Foreground="Wheat" Content="Contrôle du code barres" Checked="CbIsBarcode_Checked" Unchecked="CbIsBarcode_Unchecked"/>
+                    <TextBox x:Name="tbBarcode_old" Margin="10,10,0,0" Width="200" LostFocus="TbBarcode_LostFocus" Visibility="Collapsed"/>
+                </WrapPanel>
+                
+            </StackPanel>
+            
         </Grid>
     </Border>
 </Page>

@@ -875,6 +875,44 @@ namespace Database
             Signal(mutexID);
             return tableInfo;
         }
+        public static List<ITableInfo> GetRows(ITableInfo tableInfo, int nRows = 0, string orderBy = null, bool isOrderAsc = true, bool isMutexReleased = true, int mutex = -1)
+        {
+            logger.Debug("GetRows " + GetMutexIDs());
+
+            if (nRows > Settings.Default.MaxNumbRows || nRows < 0)
+            {
+                logger.Error(Settings.Default.Error_NumbRowsIncorrect);
+                MessageBox.Show(Settings.Default.Error_NumbRowsIncorrect);
+                return null;
+            }
+
+            int mutexID = Wait(mutex);
+            SendCommand_Read(tableInfo: tableInfo, orderBy: orderBy, isOrderAsc: isOrderAsc, isMutexReleased: false, mutex: mutexID);
+
+            List<ITableInfo> tables = new List<ITableInfo>();
+            ITableInfo table;
+            int i = 0;
+            int n = nRows == 0 ? Settings.Default.MaxNumbRows : nRows;
+
+            table = (ITableInfo)ReadNext(tableInfo.GetType(), mutexID);
+
+            while (table != null && i < n)
+            {
+                tables.Add(table);
+                table = (ITableInfo)ReadNext(tableInfo.GetType(), mutexID);
+                i++;
+            }
+
+            if (nRows == 0 && i == n)
+            {
+                logger.Error(Settings.Default.Error_IDidntReadItAll);
+                MessageBox.Show(Settings.Default.Error_IDidntReadItAll);
+            }
+
+            if(isMutexReleased) Signal(mutexID);
+            return tables;
+        }
+
         public static string[] GetOneRow_array(ITableInfo tableInfo, string id)
         {
             int mutexID = Wait();
@@ -924,7 +962,7 @@ namespace Database
 
             int n;
             string whereArg = " WHERE " + GetArg(tableInfo.columns, " AND ");
-            SendCommand(@"SELECT MAX(" + column + ") FROM " + tableInfo.name + whereArg, tableInfo.columns);
+            SendCommand(@"SELECT MAX(" + column + ") FROM " + tableInfo.name + whereArg, tableInfo.columns, mutex: mutexID);
 
             try
             {

@@ -144,7 +144,7 @@ namespace FPO_WPF_Test.Pages
                     frameInfoCycle = frameInfoCycle_arg;
                     gridModify_Recipe.Visibility = Visibility.Visible;
                     General.Update_RecipeNames(cbxPgmToModify, ProgramNames, ProgramIDs, Database.RecipeStatus.PRODnDRAFT);
-
+                 
                     isCbxToModifAvailable = true;
 
                     if (recipeName != "")
@@ -829,20 +829,15 @@ namespace FPO_WPF_Test.Pages
 
                 if (MyDatabase.IsConnected())
                 {
-                    int mutexID = MyDatabase.Wait();
                     RecipeInfo recipeInfo = new RecipeInfo();
                     recipeInfo.columns[recipeInfo.recipeName].value = ProgramNames[comboBox.SelectedIndex];
-                    MyDatabase.SendCommand_Read(recipeInfo, 
-                        orderBy: recipeInfo.columns[recipeInfo.version].id, isOrderAsc: false,
-                        isMutexReleased: false, mutex: mutexID);
-                    recipeInfo = (RecipeInfo)MyDatabase.ReadNext(typeof(RecipeInfo), mutex: mutexID);
+                    List<ITableInfo> tableInfos = MyDatabase.GetRows(recipeInfo, 
+                        orderBy: recipeInfo.columns[recipeInfo.version].id, isOrderAsc: false);
 
-                    while (recipeInfo != null)
+                    for (int i = 0; i < tableInfos.Count; i++)
                     {
-                        ProgramVersions.Add(recipeInfo.columns[recipeInfo.version].value);
-                        recipeInfo = (RecipeInfo)MyDatabase.ReadNext(typeof(RecipeInfo), mutex: mutexID);
+                        ProgramVersions.Add(tableInfos[i].columns[recipeInfo.version].value);
                     }
-                    MyDatabase.Signal(mutexID);
 
                     cbxVersionToCopy.ItemsSource = ProgramVersions;
 

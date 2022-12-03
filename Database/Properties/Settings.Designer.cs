@@ -2097,25 +2097,6 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"
-          <ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-            <server>localhost</server>
-            <userID>root</userID>
-            <password>Integra2022/</password>
-            <db>db1</db>
-          </ConnectionInfo>
-        ")]
-        public global::Database.ConnectionInfo ConnectionInfo {
-            get {
-                return ((global::Database.ConnectionInfo)(this["ConnectionInfo"]));
-            }
-            set {
-                this["ConnectionInfo"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
 <ArrayOfString xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
   <string>0</string>
@@ -2143,6 +2124,60 @@ namespace Database.Properties {
             }
             set {
                 this["ReaderUnavailable"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <server>localhost</server>
+  <userID>root</userID>
+  <password>Integra2022/</password>
+  <db>db1</db>
+</ConnectionInfo>")]
+        public global::Database.ConnectionInfo ConnectionInfo {
+            get {
+                return ((global::Database.ConnectionInfo)(this["ConnectionInfo"]));
+            }
+            set {
+                this["ConnectionInfo"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10000")]
+        public int MaxNumbRows {
+            get {
+                return ((int)(this["MaxNumbRows"]));
+            }
+            set {
+                this["MaxNumbRows"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Nombre de lignes demandées incorrect")]
+        public string Error_NumbRowsIncorrect {
+            get {
+                return ((string)(this["Error_NumbRowsIncorrect"]));
+            }
+            set {
+                this["Error_NumbRowsIncorrect"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Je n\'ai pas réussi à tout lire, il y a en trop")]
+        public string Error_IDidntReadItAll {
+            get {
+                return ((string)(this["Error_IDidntReadItAll"]));
+            }
+            set {
+                this["Error_IDidntReadItAll"] = value;
             }
         }
     }

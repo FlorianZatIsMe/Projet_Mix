@@ -21,7 +21,6 @@ namespace FPO_WPF_Test.Pages
     public partial class AuditTrail : Page
     {
         private readonly AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-        private readonly NameValueCollection MySettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
         private bool tbBefSelToUpdate = false;
         private bool tbBefFull = false;
         private bool tbAftSelToUpdate = false;
@@ -73,7 +72,7 @@ namespace FPO_WPF_Test.Pages
             DateTime dtAfter = Convert.ToDateTime(((DateTime)dpDateAfter.SelectedDate).ToString("dd.MM.yyyy") + " " + tbTimeAfter.Text);
             List<string> eventTypes = new List<string>();
             int mutexID = -1;
-
+            // change mutex by a read all (penser à limiter le nombre de ligne max)
             if ((bool)cbEvent.IsChecked) eventTypes.Add(Settings.Default.General_AuditTrailEvent_Event);
             if ((bool)cbAlarm.IsChecked) eventTypes.Add(AlarmSettings.AlarmType_Alarm);
             if ((bool)cbWarning.IsChecked) eventTypes.Add(AlarmSettings.AlarmType_Warning);

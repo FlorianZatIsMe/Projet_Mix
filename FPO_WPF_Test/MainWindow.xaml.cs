@@ -55,7 +55,10 @@ namespace FPO_WPF_Test
         private bool isWindowLoaded = false;
         private bool wasAutoBackupStarted = false;
         private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-
+        private void fonctionTest(string text)
+        {
+            MessageBox.Show(text);
+        }
         public MainWindow()
         {
 #if DEBUG
@@ -66,7 +69,12 @@ namespace FPO_WPF_Test
 #endif
             LogManager.ReconfigExistingLoggers(); // Explicit refresh of Layouts and updates active Logger-objects
 
+            AlarmManagement.ActiveAlarmEvent += ActiveAlarmEvent;
+            AlarmManagement.InactiveAlarmEvent += InactiveAlarmEvent;
             /*
+
+            Queue<object> q = new Queue<object>();
+
             Environment.Exit(1);
             //*/
 
@@ -122,6 +130,7 @@ namespace FPO_WPF_Test
 
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
             auditTrailInfo.columns[auditTrailInfo.description].value = General.auditTrail_BackupDesc;
+            // easy to make mutex better
             int mutexID = MyDatabase.Wait();
             MyDatabase.SendCommand_Read(auditTrailInfo, 
                 orderBy: auditTrailInfo.columns[auditTrailInfo.id].id, isOrderAsc: false, 
@@ -145,7 +154,7 @@ namespace FPO_WPF_Test
             bool wasBackupSucceeded = false;
             int nBackupAttempt = 0;
             int mutexID;
-
+            // mutex à retirer
             mutexID = MyDatabase.Connect(false);
 
             while (!wasBackupSucceeded && nBackupAttempt < 3)
@@ -192,6 +201,26 @@ namespace FPO_WPF_Test
             General.loggedUsername = username;
             General.currentRole = role;
             labelUser.Text = username + ", " + role;
+        }
+        private void ActiveAlarmEvent()
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                menuItemAlarm.Icon = new Image
+                {
+                    Source = new BitmapImage(new Uri(@".\Resources\img_alarm_act.png", UriKind.Relative))
+                };
+            });
+        }
+        private void InactiveAlarmEvent()
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                menuItemAlarm.Icon = new Image
+                {
+                    Source = new BitmapImage(new Uri(@".\Resources\img_alarm_en.png", UriKind.Relative))
+                };
+            });
         }
         private void FxCycleStart(object sender, RoutedEventArgs e)
         {
