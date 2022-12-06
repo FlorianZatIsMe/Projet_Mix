@@ -67,7 +67,7 @@ namespace FPO_WPF_Test
 
             AlarmManagement.ActiveAlarmEvent += ActiveAlarmEvent;
             AlarmManagement.InactiveAlarmEvent += InactiveAlarmEvent;
-            //*
+            /*
             ReadInfo readInfo = new ReadInfo(
                 _dtBefore: DateTime.Now.AddDays(-10),
                 _dtAfter: DateTime.Now);
