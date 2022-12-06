@@ -73,7 +73,43 @@ namespace Database
             ReaderUnavailable = Settings.Default.ReaderUnavailable;
         }
     }
+    public class ReadInfo
+    {
+        public ITableInfo tableInfo { get; }
+        public string orderBy { get; }
+        public bool isOrderAsc { get; }
+        public string customWhere { get; }
+        public DateTime? dtBefore { get; }
+        public DateTime? dtAfter { get; }
+        public string[] eventTypes { get; }
+        public ReadInfo(ITableInfo _tableInfo = null, 
+            string _orderBy = null, 
+            bool _isOrderAsc = true, 
+            DateTime? _dtBefore = null, 
+            DateTime? _dtAfter = null, 
+            string[] _eventTypes = null,
+            string _customWhere = "")
+        {
+            tableInfo = _tableInfo;
+            orderBy = _orderBy;
+            isOrderAsc = _isOrderAsc;
+            dtBefore = _dtBefore;
+            dtAfter = _dtAfter;
+            eventTypes = _eventTypes;
+            customWhere = _customWhere;
+        }
+        public ReadInfo(ReadInfo _readInfo, ITableInfo _tableInfo = null)
+        {
+            tableInfo = _tableInfo;
 
+            orderBy = _readInfo.orderBy;
+            isOrderAsc = _readInfo.isOrderAsc;
+            dtBefore = _readInfo.dtBefore;
+            dtAfter = _readInfo.dtAfter;
+            eventTypes = _readInfo.eventTypes;
+            customWhere = _readInfo.customWhere;
+        }
+    }
     public static class MyDatabase
     {
         private static MySqlConnection connection;
@@ -275,7 +311,7 @@ namespace Database
             int mutexID = Wait(mutex);
             bool result = false;
 
-            logger.Debug("SendCommand " + commandText + GetMutexIDs());
+            logger.Debug("SendCommand |" + commandText + "|" + GetMutexIDs());
 
             if (!IsConnected())
             {
@@ -297,7 +333,7 @@ namespace Database
 
             if (!isCommandOk)
             {
-                logger.Error(Settings.Default.Error02);
+                logger.Error(Settings.Default.Error02 + isCommandOk.ToString());
                 MessageBox.Show(Settings.Default.Error02);
                 goto End;
             }
@@ -340,10 +376,37 @@ namespace Database
 
             SendCommand(@"SELECT * FROM " + tableInfo.name + whereArg + orderArg, tableInfo.columns, isMutexReleased, mutex);
         }
-        public static int SendCommand_ReadAuditTrail(DateTime dtBefore, DateTime dtAfter, string[] eventTypes = null, string orderBy = null, bool isOrderAsc = true, bool isMutexReleased = true)
+        public static void SendCommand_Read(ReadInfo readInfo, bool isMutexReleased = true, int mutex = -1)
         {
-            int mutexID = Wait();
+            logger.Debug("SendCommand_Read " + GetMutexIDs());
 
+            if (!IsConnected())
+            {
+                logger.Error(Settings.Default.Error01);
+                MessageBox.Show(Settings.Default.Error01);
+                return;
+            }
+
+            string tableArg = GetArg(readInfo.tableInfo.columns, " AND ");
+            string whereArg = "";
+            if (tableArg != "" || readInfo.customWhere != "")
+            {
+                whereArg = " WHERE " + tableArg + readInfo.customWhere;
+            }
+
+            string orderArg = "";
+            if (readInfo.orderBy != null)
+            {
+                orderArg = " ORDER BY " + readInfo.orderBy + (readInfo.isOrderAsc ? " ASC" : " DESC");
+            }
+
+            SendCommand(commandText: @"SELECT * FROM " + readInfo.tableInfo.name + whereArg + orderArg, 
+                columns: readInfo.tableInfo.columns, 
+                isMutexReleased: isMutexReleased, 
+                mutex: mutex);
+        }
+        public static int SendCommand_ReadAuditTrail(DateTime dtBefore, DateTime dtAfter, string[] eventTypes = null, string orderBy = null, bool isOrderAsc = true, bool isMutexReleased = true, int mutex = -1)
+        {
             logger.Debug("SendCommand_ReadAuditTrail " + GetMutexIDs());
 
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
@@ -396,6 +459,79 @@ namespace Database
                     columns.Add(new Column()
                     {
                         value = eventTypes[i]
+                    });
+                }
+            }
+
+            SendCommand(@"SELECT * FROM " + auditTrailInfo.name + " WHERE " + whereDateTime + eventType + orderArg, columns, isMutexReleased: isMutexReleased, mutex: mutex);
+
+        End:
+            //if (isMutexReleased) Signal(mutexID);
+            return mutex;
+        }
+        public static int SendCommand_ReadAuditTrail(ReadInfo readInfo, bool isMutexReleased = true, int mutex = -1)
+        {
+            int mutexID = Wait(mutex);
+
+            if (readInfo.dtBefore == null || readInfo.dtAfter == null)
+            {
+                logger.Error(Settings.Default.Error_ReadAudit_ArgIncorrect);
+                MessageBox.Show(Settings.Default.Error_ReadAudit_ArgIncorrect);
+                return mutexID;
+            }
+
+            logger.Debug("SendCommand_ReadAuditTrail " + GetMutexIDs());
+
+            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+
+            if (!IsConnected())
+            {
+                logger.Error(Settings.Default.Error01);
+                MessageBox.Show(Settings.Default.Error01);
+                goto End;
+            }
+
+            string whereDateTime = auditTrailInfo.columns[auditTrailInfo.dateTime].id + " >= @0 AND " + auditTrailInfo.columns[auditTrailInfo.dateTime].id + " <= @1";
+            string eventType = " AND (";
+            string orderArg = "";
+
+            if (readInfo.eventTypes != null && readInfo.eventTypes.Length != 0)
+            {
+                for (int i = 0; i < readInfo.eventTypes.Length - 1; i++)
+                {
+                    eventType += auditTrailInfo.columns[auditTrailInfo.eventType].id + " = @" + (i + 2).ToString() + " OR ";
+                }
+                eventType += auditTrailInfo.columns[auditTrailInfo.eventType].id + " = @" + (readInfo.eventTypes.Length + 1).ToString() + ")";
+            }
+            else
+            {
+                eventType = "";
+            }
+
+            if (readInfo.orderBy != null)
+            {
+                orderArg = " ORDER BY " + readInfo.orderBy + (readInfo.isOrderAsc ? " ASC" : " DESC");
+            }
+
+            List<Column> columns = new List<Column>();
+
+            columns.Add(new Column()
+            {
+                value = ((DateTime)readInfo.dtBefore).ToString("yyyy-MM-dd HH:mm:ss")
+            });
+
+            columns.Add(new Column()
+            {
+                value = ((DateTime)readInfo.dtAfter).ToString("yyyy-MM-dd HH:mm:ss")
+            });
+
+            if (readInfo.eventTypes != null)
+            {
+                for (int i = 0; i < readInfo.eventTypes.Length; i++)
+                {
+                    columns.Add(new Column()
+                    {
+                        value = readInfo.eventTypes[i]
                     });
                 }
             }
@@ -550,7 +686,7 @@ namespace Database
                 {
                     if (tableInfo.columns.Count != reader.FieldCount)
                     {
-                        logger.Error(Settings.Default.Error14);
+                        logger.Error(Settings.Default.Error14 + tableInfo.columns.Count.ToString() + ", "+ reader.FieldCount.ToString() + ", " + tableInfo.GetType().ToString());
                         MessageBox.Show(Settings.Default.Error14);
                     }
                     //return null;
@@ -913,6 +1049,89 @@ namespace Database
             return tables;
         }
 
+        public static List<ITableInfo> GetRows(ReadInfo readInfo, int nRows = 0, bool isMutexReleased = true, int mutex = -1)
+        {
+            logger.Debug("GetRows " + GetMutexIDs());
+
+            if (nRows > Settings.Default.MaxNumbRows || nRows < 0)
+            {
+                logger.Error(Settings.Default.Error_NumbRowsIncorrect);
+                MessageBox.Show(Settings.Default.Error_NumbRowsIncorrect);
+                return null;
+            }
+
+            int mutexID = Wait(mutex);
+            SendCommand_Read(readInfo: readInfo, isMutexReleased: false, mutex: mutexID);
+
+            List<ITableInfo> tables = new List<ITableInfo>();
+            ITableInfo table;
+            int i = 0;
+            int n = nRows == 0 ? Settings.Default.MaxNumbRows : nRows;
+
+            table = (ITableInfo)ReadNext(readInfo.tableInfo.GetType(), mutexID);
+
+            while (table != null && i < n)
+            {
+                tables.Add(table);
+                table = (ITableInfo)ReadNext(readInfo.tableInfo.GetType(), mutexID);
+                i++;
+            }
+
+            if (nRows == 0 && i == n)
+            {
+                logger.Error(Settings.Default.Error_IDidntReadItAll);
+                MessageBox.Show(Settings.Default.Error_IDidntReadItAll);
+            }
+
+            if (isMutexReleased) Signal(mutexID);
+            return tables;
+        }
+        public static List<ITableInfo> GetAuditTrailRows(ReadInfo _readInfo, int nRows = 0, bool isMutexReleased = true, int mutex = -1)
+        {
+            logger.Debug("GetAuditTrailRows " + GetMutexIDs());
+            ReadInfo readInfo = new ReadInfo(_readInfo, new AuditTrailInfo());
+
+            if (nRows > Settings.Default.MaxNumbRows || nRows < 0)
+            {
+                logger.Error(Settings.Default.Error_NumbRowsIncorrect);
+                MessageBox.Show(Settings.Default.Error_NumbRowsIncorrect);
+                return null;
+            }
+
+            if (readInfo.dtBefore == null || readInfo.dtAfter == null)
+            {
+                logger.Error(Settings.Default.Error_ReadAudit_ArgIncorrect);
+                MessageBox.Show(Settings.Default.Error_ReadAudit_ArgIncorrect);
+                return null;
+            }
+
+            int mutexID = Wait(mutex);
+            SendCommand_ReadAuditTrail(readInfo: readInfo, isMutexReleased: false, mutex: mutexID);
+
+            List<ITableInfo> tables = new List<ITableInfo>();
+            ITableInfo table;
+            int i = 0;
+            int n = nRows == 0 ? Settings.Default.MaxNumbRows : nRows;
+
+            table = (ITableInfo)ReadNext(readInfo.tableInfo.GetType(), mutexID);
+
+            while (table != null && i < n)
+            {
+                tables.Add(table);
+                table = (ITableInfo)ReadNext(readInfo.tableInfo.GetType(), mutexID);
+                i++;
+            }
+
+            if (nRows == 0 && i == n)
+            {
+                logger.Error(Settings.Default.Error_IDidntReadItAll);
+                MessageBox.Show(Settings.Default.Error_IDidntReadItAll);
+            }
+
+            if (isMutexReleased) Signal(mutexID);
+            return tables;
+        }
+
         public static string[] GetOneRow_array(ITableInfo tableInfo, string id)
         {
             int mutexID = Wait();
@@ -1040,7 +1259,7 @@ namespace Database
             int mutexID = Wait();
 
             TempInfo tempInfo = new TempInfo();
-            string fields = tempInfo.columns[1].id + " DECIMAL(5,1) NOT NULL, " + tempInfo.columns[2].id + " DECIMAL(5,1) NOT NULL";
+            string fields = tempInfo.columns[0].id + " DECIMAL(5,1) NOT NULL, " + tempInfo.columns[1].id + " DECIMAL(5,1) NOT NULL";
 
             logger.Debug("CreateTempTable " + fields + GetMutexIDs());
 
@@ -1051,10 +1270,10 @@ namespace Database
                 goto End;
             }
 
-            SendCommand(@"DROP TABLE IF EXISTS " + Settings.Default.Temp_TableName);
+            SendCommand(@"DROP TABLE IF EXISTS " + Settings.Default.Temp_TableName, mutex: mutexID);
             SendCommand(@"CREATE TABLE " + Settings.Default.Temp_TableName + " (" +
                     "id  INT NOT NULL auto_increment PRIMARY KEY," +
-                    fields + ")");
+                    fields + ")", mutex: mutexID);
             /*
             Close_reader();
 
@@ -1107,7 +1326,7 @@ namespace Database
                 goto End;
             }
 
-            SendCommand(@"SELECT " + select + " FROM " + tempInfo.name + ";");
+            SendCommand(@"SELECT " + select + " FROM " + tempInfo.name + ";", mutex: mutexID);
             /*
             Close_reader();
 
@@ -1154,13 +1373,13 @@ namespace Database
 
         private static bool SetCommand(MySqlCommand command, List<Column> columns)
         {
-            bool result = false;
+            logger.Debug("SetCommand");
 
             if (columns.Count() == 0)
             {
                 logger.Error(Settings.Default.Error08);
                 MessageBox.Show(Settings.Default.Error08);
-                return result;
+                return false;
             }
 
             for (int i = 0; i < columns.Count(); i++)
@@ -1168,9 +1387,17 @@ namespace Database
 
                 if (columns[i].value != "" && columns[i].value != null)
                 {
-                    logger.Trace("Value " + i.ToString() + ": " + columns[i].value);
-                    command.Parameters.AddWithValue("@" + i.ToString(), columns[i].value);
-                    result = true;
+                    try
+                    {
+                        logger.Trace("Value " + i.ToString() + ": " + columns[i].value);
+                        command.Parameters.AddWithValue("@" + i.ToString(), columns[i].value);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error(ex.Message);
+                        MessageBox.Show(ex.Message);
+                        return false;
+                    }
                 }
             }
 
@@ -1187,7 +1414,7 @@ namespace Database
                 command.Parameters.AddWithValue("@" + i.ToString(), columns[indexes[i]].value);
             }             
              */
-            return result;
+            return true;
         }
 
         private static int GetNextMutex()

@@ -2129,24 +2129,6 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-  <server>localhost</server>
-  <userID>root</userID>
-  <password>Integra2022/</password>
-  <db>db1</db>
-</ConnectionInfo>")]
-        public global::Database.ConnectionInfo ConnectionInfo {
-            get {
-                return ((global::Database.ConnectionInfo)(this["ConnectionInfo"]));
-            }
-            set {
-                this["ConnectionInfo"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10000")]
         public int MaxNumbRows {
             get {
@@ -2178,6 +2160,37 @@ namespace Database.Properties {
             }
             set {
                 this["Error_IDidntReadItAll"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"
+          <ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+            <server>localhost</server>
+            <userID>root</userID>
+            <password>Integra2022/</password>
+            <db>db1</db>
+          </ConnectionInfo>
+        ")]
+        public global::Database.ConnectionInfo ConnectionInfo {
+            get {
+                return ((global::Database.ConnectionInfo)(this["ConnectionInfo"]));
+            }
+            set {
+                this["ConnectionInfo"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Date et temps avant ou après incorrect")]
+        public string Error_ReadAudit_ArgIncorrect {
+            get {
+                return ((string)(this["Error_ReadAudit_ArgIncorrect"]));
+            }
+            set {
+                this["Error_ReadAudit_ArgIncorrect"] = value;
             }
         }
     }

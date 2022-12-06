@@ -55,10 +55,6 @@ namespace FPO_WPF_Test
         private bool isWindowLoaded = false;
         private bool wasAutoBackupStarted = false;
         private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        private void fonctionTest(string text)
-        {
-            MessageBox.Show(text);
-        }
         public MainWindow()
         {
 #if DEBUG
@@ -72,8 +68,22 @@ namespace FPO_WPF_Test
             AlarmManagement.ActiveAlarmEvent += ActiveAlarmEvent;
             AlarmManagement.InactiveAlarmEvent += InactiveAlarmEvent;
             /*
+            ReadInfo readInfo = new ReadInfo(
+                _dtBefore: DateTime.Now.AddDays(-10),
+                _dtAfter: DateTime.Now);
 
-            Queue<object> q = new Queue<object>();
+            List<ITableInfo> tableInfos = MyDatabase.GetAuditTrailRows(readInfo);
+            string row;
+            for (int i = 0; i < tableInfos.Count; i++)
+            {
+                row = "";
+                for (int j = 0; j < tableInfos[i].columns.Count; j++)
+                {
+                    row += tableInfos[i].columns[j].value;
+                }
+                logger.Trace(row);
+            }
+            MessageBox.Show("Fini");
 
             Environment.Exit(1);
             //*/
@@ -119,7 +129,7 @@ namespace FPO_WPF_Test
             //*
             RS232Weight.rs232.Initialize();
             RS232Pump.rs232.Initialize();
-            //SpeedMixerModbus.Initialize();
+            SpeedMixerModbus.Initialize();
             if (RS232Pump.rs232.IsOpen())
             {
                 RS232Pump.rs232.BlockUse();

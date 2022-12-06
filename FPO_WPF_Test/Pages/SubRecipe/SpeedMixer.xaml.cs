@@ -277,7 +277,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 recipeInfo.columns[recipeInfo.monitorType].value = DatabaseSettings.General_TrueValue_Write;
                 //recipeInfo.columns[recipeInfo.monitorType].value = (bool)cbMonitorType.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
                 recipeInfo.columns[recipeInfo.pressureUnit].value = cbxPressureUnit.Text;
-                recipeInfo.columns[recipeInfo.scurve].value = "";// tbSCurve.Text;
+                recipeInfo.columns[recipeInfo.scurve].value = "-";// tbSCurve.Text;
                 recipeInfo.columns[recipeInfo.coldtrap].value = (bool)cbColdTrap.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
 
                 int i = 0;
@@ -392,11 +392,11 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                         if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
                             min: Settings.Default.RecipeMix_Speed_Min, max: Settings.Default.RecipeMix_Speed_Max))
                         {
-                            FormatControl[i + j] = true;
+                            FormatControl[i + 3 * j] = true;
                         }
                         else
                         {
-                            FormatControl[i + j] = false;
+                            FormatControl[i + 3 * j] = false;
                         }
                     }
                 }
@@ -408,7 +408,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
 
             TextBox textBox = sender as TextBox;
             int i = ControlsIDs[recipeSpeedMixerInfo.time00];
-
+            //MessageBox.Show(i.ToString() + " - " + recipeSpeedMixerInfo.time00.ToString());
             for (int j = 0; j < PhasesNumber; j++)
             {
                 if (textBox == times[j])
@@ -418,12 +418,13 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                         if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
                             min: Settings.Default.RecipeMix_Time_Min, max: Settings.Default.RecipeMix_Time_Max))
                         {
-                            FormatControl[i + j] = true;
+                            FormatControl[i + 3 * j] = true;
                         }
                         else
                         {
-                            FormatControl[i + j] = false;
+                            FormatControl[i + 3 * j] = false;
                         }
+                        //MessageBox.Show((i+j).ToString() + " - " + FormatControl[i + j].ToString());
                     }
                 }
             }
@@ -445,11 +446,11 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                         if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
                             min: Settings.Default.RecipeMix_Pressure_Min, max: Settings.Default.RecipeMix_Pressure_Max))
                         {
-                            FormatControl[i + j] = true;
+                            FormatControl[i + 3 * j] = true;
                         }
                         else
                         {
-                            FormatControl[i + j] = false;
+                            FormatControl[i + 3 * j] = false;
                         }
                     }
                 }
@@ -537,13 +538,14 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             for (int i = 0; i < FormatControl.Length; i++)
             {
                 n += FormatControl[i] ? 1 : 0;
+                //MessageBox.Show(i.ToString() + " - " + FormatControl[i].ToString());
             }
 
             for (int i = 1; i < PhasesNumber; i++)
             {
                 x += (bool)toggleButtons[i].IsChecked ? 0 : 3; // Pour chaque checkbox décoché, on ajoutera 3 au score final
             }
-            //MessageBox.Show(n.ToString() + " + " + x.ToString() + " = " + (n+x).ToString() + " / " + FormatControl.Length.ToString());
+            MessageBox.Show(n.ToString() + " + " + x.ToString() + " = " + (n+x).ToString() + " / " + FormatControl.Length.ToString());
             return (n + x) == FormatControl.Length;
         }
     }

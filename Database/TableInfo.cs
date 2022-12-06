@@ -26,7 +26,9 @@ namespace Database
     {
         public string id { get; }
         public string displayName { get; }
+        public Type type { get; }
         public string value { get; set; }
+
         public Column(string id_arg = "", string displayName_arg = "")
         {
             id = id_arg;
@@ -518,8 +520,12 @@ namespace Database
         public TempResultInfo()
         {
             name = "";
+            columns = new List<Column>();
 
-            columns = new List<Column>(Settings.Default.TempResult_ColN);
+            for (int i = 0; i < Settings.Default.TempResult_ColN; i++)
+            {
+                columns.Add(new Column());
+            }
 
             speedMean = Settings.Default.TempResult_ColN_speedMean;
             pressureMean = Settings.Default.TempResult_ColN_pressureMean;
