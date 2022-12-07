@@ -147,6 +147,15 @@ namespace FPO_WPF_Test
 
             if (MyDatabase.IsConnected())
             {
+                List<RecipeInfo> tables = MyDatabase.GetLastRecipes(recipeStatus);
+
+                for (int i = 0; i < tables.Count; i++)
+                {
+                    ProgramNames.Add(tables[i].columns[tables[i].recipeName].value);
+                    ProgramIDs.Add(tables[i].columns[tables[i].id].value);
+                }
+
+                /*
                 MyDatabase.SendCommand_GetLastRecipes(recipeStatus);
                 //string[] array;
                 RecipeInfo recipeInfo;
@@ -167,7 +176,7 @@ namespace FPO_WPF_Test
                 {
                     logger.Error(DatabaseSettings.ReaderUnavailable);
                     MessageBox.Show(DatabaseSettings.ReaderUnavailable);
-                }
+                }*/
                 //MyDatabase.Disconnect();
             }
             else

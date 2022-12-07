@@ -685,6 +685,39 @@ namespace FPO_WPF_Test
 
             if (firstAlarmId != lastAlarmId && lastAlarmId != -1)
             {
+                //AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+                List<AuditTrailInfo> tables = MyDatabase.GetAlarms(firstAlarmId, lastAlarmId);
+
+                for (int i = 0; i < tables.Count; i++)
+                {
+                    if (tables[i] != null)
+                    {
+                        timestamp = tables[i].columns[tables[i].dateTime].value;
+                        description = tables[i].columns[tables[i].description].value;
+                        status = tables[i].columns[tables[i].valueAfter].value;
+                        alarm = timestamp + " - " + description + " - " + status;
+
+                        gfxs[pagesNumber - 1].DrawString(alarm,
+                            new XFont(fontDoc, fontBodySize1),
+                            status == AlarmStatus.ACTIVE.ToString() ? XBrushes.Red :
+                            ((status == AlarmStatus.ACK.ToString() || status == AlarmStatus.RAZACK.ToString()) ? XBrushes.Blue :
+                            ((status == AlarmStatus.INACTIVE.ToString() || status == AlarmStatus.RAZ.ToString()) ? XBrushes.Green : XBrushes.Black)),
+                            x: margin, y: currentY, XStringFormats.TopLeft);
+                        currentY += Alarm_marginB_Alarms + heightAlarmText;
+
+                        // Si on a atteint le bas de la page, on crée un nouvelle page
+                        if (IsIndextoLow(page, currentY + Alarm_marginB_Alarms + heightAlarmText))
+                        {
+                            currentY = NewPage(page);
+
+                            gfxs[pagesNumber - 1].DrawString(Alarm_Title + " " + Alarm_Continued,
+                                new XFont(fontDoc, fontTitleSize),
+                                XBrushes.Black, x: margin, y: currentY, XStringFormats.TopLeft);
+                            currentY += Alarm_marginB_Title + fontDoc_fontTitleSize_Height;
+                        }
+                    }
+                }
+                    /*
                 int mutexID = MyDatabase.SendCommand_ReadAlarms(firstAlarmId, lastAlarmId);
                 AuditTrailInfo auditTrailInfo;
                 do
@@ -718,7 +751,7 @@ namespace FPO_WPF_Test
                         }
                     }
                 } while (auditTrailInfo != null);
-                MyDatabase.Signal(mutexID);
+                MyDatabase.Signal(mutexID);//*/
             }
             else
             {

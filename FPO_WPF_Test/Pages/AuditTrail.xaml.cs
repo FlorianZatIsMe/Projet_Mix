@@ -89,7 +89,15 @@ namespace FPO_WPF_Test.Pages
             }
             else
             {
-                mutexID = MyDatabase.SendCommand_ReadAuditTrail(dtBefore: dtBefore, dtAfter: dtAfter, eventTypes: eventTypes.ToArray(), orderBy: auditTrailInfo.columns[auditTrailInfo.id].id, isOrderAsc: false, isMutexReleased: false);
+                ReadInfo readInfo = new ReadInfo(
+                    _dtBefore: dtBefore,
+                    _dtAfter: dtAfter, 
+                    _eventTypes: eventTypes.ToArray(),
+                    _orderBy: auditTrailInfo.columns[auditTrailInfo.id].id,
+                    _isOrderAsc: false);
+                List<string[]> tables = MyDatabase.GetAuditTrailRows(readInfo);
+
+                //mutexID = MyDatabase.SendCommand_ReadAuditTrail(dtBefore: dtBefore, dtAfter: dtAfter, eventTypes: eventTypes.ToArray(), orderBy: auditTrailInfo.columns[auditTrailInfo.id].id, isOrderAsc: false, isMutexReleased: false);
 
                 //Création des colonnes
                 foreach (Column column in auditTrailInfo.columns)
@@ -97,6 +105,22 @@ namespace FPO_WPF_Test.Pages
                     dt.Columns.Add(new DataColumn(column.displayName));
                 }
 
+                for (int i = 0; i < tables.Count; i++)
+                {
+                    try
+                    {
+                        tables[i][auditTrailInfo.dateTime] = Convert.ToDateTime(tables[i][auditTrailInfo.dateTime]).ToString("dd.MMMyyyy HH:mm:ss");
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error(ex.Message);
+                    }
+
+                    row = dt.NewRow();
+                    row.ItemArray = tables[i];
+                    dt.Rows.Add(row);
+                }
+                /*
                 //Ajout des lignes
                 do
                 {
@@ -118,13 +142,14 @@ namespace FPO_WPF_Test.Pages
                         dt.Rows.Add(row);
                     }
                 } while (array != null);
-
+                */
                 //Implémentation dans la DataGrid dataGridAuditTrail
                 dataGridAuditTrail.ItemsSource = dt.DefaultView;
                 dataGridAuditTrail.Columns[auditTrailInfo.id].Visibility = Visibility.Collapsed;
             }
 
-            MyDatabase.Disconnect(mutexID);
+            MyDatabase.Disconnect();
+            //MyDatabase.Disconnect(mutexID);
         }
         private void ButtonFilter_Click(object sender, RoutedEventArgs e)
         {

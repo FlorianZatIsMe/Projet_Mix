@@ -67,12 +67,14 @@ namespace FPO_WPF_Test
 
             AlarmManagement.ActiveAlarmEvent += ActiveAlarmEvent;
             AlarmManagement.InactiveAlarmEvent += InactiveAlarmEvent;
-            //*
+            /*
             ReadInfo readInfo = new ReadInfo(
                 _dtBefore: DateTime.Now.AddDays(-10),
                 _dtAfter: DateTime.Now);
 
-            List<ITableInfo> tableInfos = MyDatabase.GetAuditTrailRows(readInfo);
+            AlarmManagement.Initialize(new Alarm_Management.IniInfo() { AuditTrail_SystemUsername = Settings.Default.General_SystemUsername });
+
+            List<ITableInfo> tableInfos = MyDatabase.GetAlarms(2000, 2100);
             string row;
             for (int i = 0; i < tableInfos.Count; i++)
             {
@@ -141,12 +143,16 @@ namespace FPO_WPF_Test
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
             auditTrailInfo.columns[auditTrailInfo.description].value = General.auditTrail_BackupDesc;
             // easy to make mutex better
-            int mutexID = MyDatabase.Wait();
-            MyDatabase.SendCommand_Read(auditTrailInfo, 
-                orderBy: auditTrailInfo.columns[auditTrailInfo.id].id, isOrderAsc: false, 
-                isMutexReleased: false, mutex: mutexID);
-            auditTrailInfo = (AuditTrailInfo)MyDatabase.ReadNext(typeof(AuditTrailInfo), mutex: mutexID);
-            MyDatabase.Signal(mutexID);
+
+            ReadInfo readInfo = new ReadInfo(
+                _tableInfo: auditTrailInfo,
+                _orderBy: auditTrailInfo.columns[auditTrailInfo.id].id,
+                _isOrderAsc: false
+                );
+
+            List<ITableInfo> tableInfos = MyDatabase.GetRows(readInfo, 1);
+            // check if result is null
+            auditTrailInfo = (AuditTrailInfo)tableInfos[0];
 
             DateTime dtLastBackup = Convert.ToDateTime(auditTrailInfo.columns[auditTrailInfo.dateTime].value);
             if (dtLastBackup.CompareTo(General.NextBackupTime.AddDays(-1)) < 0)

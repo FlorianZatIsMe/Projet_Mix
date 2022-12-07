@@ -748,10 +748,10 @@ namespace Database
             //logger.Trace(array.Length.ToString());
             return array;
         }
-        public static bool[] ReadNextBool()
+        public static bool[] ReadNextBool(int mutex = -1)
         {
-            int mutexID = Wait();
-            bool[] array = new bool[0];
+            int mutexID = Wait(mutex);
+            bool[] array = null;
 
             logger.Debug("ReadNextBool " + GetMutexIDs());
 
@@ -769,17 +769,25 @@ namespace Database
                 goto End;
             }
 
-            array = new bool[reader.FieldCount - 2];
-
-            if (reader.Read())
+            try
             {
-                for (int i = 0; i < reader.FieldCount - 2; i++)
+                if (reader.Read())
                 {
-                    array[i] = reader.GetBoolean(i + 2);
+                    array = new bool[reader.FieldCount - 2];
+
+                    for (int i = 0; i < reader.FieldCount - 2; i++)
+                    {
+                        array[i] = reader.GetBoolean(i + 2);
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+            }
+
         End:
-            Signal(mutexID);
+            if (mutex == -1) Signal(mutexID);
             return array;
         }
 
@@ -1011,128 +1019,7 @@ namespace Database
             Signal(mutexID);
             return tableInfo;
         }
-        public static List<ITableInfo> GetRows(ITableInfo tableInfo, int nRows = 0, string orderBy = null, bool isOrderAsc = true, bool isMutexReleased = true, int mutex = -1)
-        {
-            logger.Debug("GetRows " + GetMutexIDs());
-
-            if (nRows > Settings.Default.MaxNumbRows || nRows < 0)
-            {
-                logger.Error(Settings.Default.Error_NumbRowsIncorrect);
-                MessageBox.Show(Settings.Default.Error_NumbRowsIncorrect);
-                return null;
-            }
-
-            int mutexID = Wait(mutex);
-            SendCommand_Read(tableInfo: tableInfo, orderBy: orderBy, isOrderAsc: isOrderAsc, isMutexReleased: false, mutex: mutexID);
-
-            List<ITableInfo> tables = new List<ITableInfo>();
-            ITableInfo table;
-            int i = 0;
-            int n = nRows == 0 ? Settings.Default.MaxNumbRows : nRows;
-
-            table = (ITableInfo)ReadNext(tableInfo.GetType(), mutexID);
-
-            while (table != null && i < n)
-            {
-                tables.Add(table);
-                table = (ITableInfo)ReadNext(tableInfo.GetType(), mutexID);
-                i++;
-            }
-
-            if (nRows == 0 && i == n)
-            {
-                logger.Error(Settings.Default.Error_IDidntReadItAll);
-                MessageBox.Show(Settings.Default.Error_IDidntReadItAll);
-            }
-
-            if(isMutexReleased) Signal(mutexID);
-            return tables;
-        }
-
-        public static List<ITableInfo> GetRows(ReadInfo readInfo, int nRows = 0, bool isMutexReleased = true, int mutex = -1)
-        {
-            logger.Debug("GetRows " + GetMutexIDs());
-
-            if (nRows > Settings.Default.MaxNumbRows || nRows < 0)
-            {
-                logger.Error(Settings.Default.Error_NumbRowsIncorrect);
-                MessageBox.Show(Settings.Default.Error_NumbRowsIncorrect);
-                return null;
-            }
-
-            int mutexID = Wait(mutex);
-            SendCommand_Read(readInfo: readInfo, isMutexReleased: false, mutex: mutexID);
-
-            List<ITableInfo> tables = new List<ITableInfo>();
-            ITableInfo table;
-            int i = 0;
-            int n = nRows == 0 ? Settings.Default.MaxNumbRows : nRows;
-
-            table = (ITableInfo)ReadNext(readInfo.tableInfo.GetType(), mutexID);
-
-            while (table != null && i < n)
-            {
-                tables.Add(table);
-                table = (ITableInfo)ReadNext(readInfo.tableInfo.GetType(), mutexID);
-                i++;
-            }
-
-            if (nRows == 0 && i == n)
-            {
-                logger.Error(Settings.Default.Error_IDidntReadItAll);
-                MessageBox.Show(Settings.Default.Error_IDidntReadItAll);
-            }
-
-            if (isMutexReleased) Signal(mutexID);
-            return tables;
-        }
-        public static List<ITableInfo> GetAuditTrailRows(ReadInfo _readInfo, int nRows = 0, bool isMutexReleased = true, int mutex = -1)
-        {
-            logger.Debug("GetAuditTrailRows " + GetMutexIDs());
-            ReadInfo readInfo = new ReadInfo(_readInfo, new AuditTrailInfo());
-
-            if (nRows > Settings.Default.MaxNumbRows || nRows < 0)
-            {
-                logger.Error(Settings.Default.Error_NumbRowsIncorrect);
-                MessageBox.Show(Settings.Default.Error_NumbRowsIncorrect);
-                return null;
-            }
-
-            if (readInfo.dtBefore == null || readInfo.dtAfter == null)
-            {
-                logger.Error(Settings.Default.Error_ReadAudit_ArgIncorrect);
-                MessageBox.Show(Settings.Default.Error_ReadAudit_ArgIncorrect);
-                return null;
-            }
-
-            int mutexID = Wait(mutex);
-            SendCommand_ReadAuditTrail(readInfo: readInfo, isMutexReleased: false, mutex: mutexID);
-
-            List<ITableInfo> tables = new List<ITableInfo>();
-            ITableInfo table;
-            int i = 0;
-            int n = nRows == 0 ? Settings.Default.MaxNumbRows : nRows;
-
-            table = (ITableInfo)ReadNext(readInfo.tableInfo.GetType(), mutexID);
-
-            while (table != null && i < n)
-            {
-                tables.Add(table);
-                table = (ITableInfo)ReadNext(readInfo.tableInfo.GetType(), mutexID);
-                i++;
-            }
-
-            if (nRows == 0 && i == n)
-            {
-                logger.Error(Settings.Default.Error_IDidntReadItAll);
-                MessageBox.Show(Settings.Default.Error_IDidntReadItAll);
-            }
-
-            if (isMutexReleased) Signal(mutexID);
-            return tables;
-        }
-
-        public static string[] GetOneRow_array(ITableInfo tableInfo, string id)
+        public static string[] GetOneArrayRow(ITableInfo tableInfo, string id)
         {
             int mutexID = Wait();
             string[] array;
@@ -1165,6 +1052,221 @@ namespace Database
             Signal(mutexID);
             return array;
         }
+        public static bool[] GetOneBoolRow(ITableInfo table)
+        {
+            int mutexID = Wait();
+
+            logger.Debug("GetOneBoolRow " + GetMutexIDs());
+
+            //ITableInfo tableInfo;
+            bool[] result = null;
+
+            if (!IsConnected())
+            {
+                logger.Error(Settings.Default.Error01);
+                MessageBox.Show(Settings.Default.Error01);
+                //return null;
+                goto End;
+            }
+
+            ReadInfo readInfo = new ReadInfo(
+                _tableInfo: table);
+            SendCommand_Read(readInfo, isMutexReleased: false, mutex: mutexID);
+            result = ReadNextBool(mutexID);
+
+            if (result == null)
+            {
+                logger.Error(Settings.Default.Error17);
+                MessageBox.Show(Settings.Default.Error17);
+                //return null;
+                goto End;
+            }
+
+            if (ReadNextBool(mutexID) != null)
+            {
+                logger.Error(Settings.Default.Error15);
+                MessageBox.Show(Settings.Default.Error15);
+                //return null;
+                goto End;
+            }
+        End:
+            //Close_reader();
+            Signal(mutexID);
+            return result;
+        }
+        public static List<ITableInfo> GetRows(ITableInfo tableInfo, int nRows = 0, string orderBy = null, bool isOrderAsc = true, bool isMutexReleased = true, int mutex = -1)
+        {
+            logger.Debug("GetRows " + GetMutexIDs());
+
+            if (nRows > Settings.Default.MaxNumbRows || nRows < 0)
+            {
+                logger.Error(Settings.Default.Error_NumbRowsIncorrect);
+                MessageBox.Show(Settings.Default.Error_NumbRowsIncorrect);
+                return null;
+            }
+
+            int mutexID = Wait(mutex);
+            SendCommand_Read(tableInfo: tableInfo, orderBy: orderBy, isOrderAsc: isOrderAsc, isMutexReleased: false, mutex: mutexID);
+
+            List<ITableInfo> tables = new List<ITableInfo>();
+            ITableInfo table;
+            int i = 1;
+            int n = nRows == 0 ? Settings.Default.MaxNumbRows : nRows;
+            /*
+            table = (ITableInfo)ReadNext(tableInfo.GetType(), mutexID);
+
+            while (table != null && i < n)
+            {
+                tables.Add(table);
+                table = (ITableInfo)ReadNext(tableInfo.GetType(), mutexID);
+                i++;
+            }*/
+
+            do
+            {
+                table = (ITableInfo)ReadNext(tableInfo.GetType(), mutexID);
+                if(table != null) tables.Add(table);
+                i++;
+                logger.Fatal(i.ToString() + ", " + n.ToString());
+            } while (table != null && i < n);
+
+            if (nRows == 0 && i == n)
+            {
+                logger.Error(Settings.Default.Error_IDidntReadItAll);
+                MessageBox.Show(Settings.Default.Error_IDidntReadItAll);
+            }
+
+            if(isMutexReleased) Signal(mutexID);
+            return tables;
+        }
+        public static List<ITableInfo> GetRows(ReadInfo readInfo, int nRows = 0, bool isMutexReleased = true, int mutex = -1)
+        {
+            logger.Debug("GetRows " + GetMutexIDs());
+
+            if (nRows > Settings.Default.MaxNumbRows || nRows < 0)
+            {
+                logger.Error(Settings.Default.Error_NumbRowsIncorrect);
+                MessageBox.Show(Settings.Default.Error_NumbRowsIncorrect);
+                return null;
+            }
+
+            int mutexID = Wait(mutex);
+            SendCommand_Read(readInfo: readInfo, isMutexReleased: false, mutex: mutexID);
+
+            List<ITableInfo> tables = new List<ITableInfo>();
+            ITableInfo table;
+            int i = 0;
+            int n = nRows == 0 ? Settings.Default.MaxNumbRows : nRows;
+/*
+            table = (ITableInfo)ReadNext(readInfo.tableInfo.GetType(), mutexID);
+            while (table != null && i < n)
+            {
+                tables.Add(table);
+                table = (ITableInfo)ReadNext(readInfo.tableInfo.GetType(), mutexID);
+                i++;
+            }
+*/
+            do
+            {
+                table = (ITableInfo)ReadNext(readInfo.tableInfo.GetType(), mutexID);
+                if(table != null) tables.Add(table);
+                i++;
+            } while (table != null && i < n);
+
+            if (nRows == 0 && i == n)
+            {
+                logger.Error(Settings.Default.Error_IDidntReadItAll);
+                MessageBox.Show(Settings.Default.Error_IDidntReadItAll);
+            }
+
+            if (isMutexReleased) Signal(mutexID);
+            return tables;
+        }
+        public static List<string[]> GetAuditTrailRows(ReadInfo _readInfo, int nRows = 0, bool isMutexReleased = true, int mutex = -1)
+        {
+            logger.Debug("GetAuditTrailRows " + GetMutexIDs());
+            ReadInfo readInfo = new ReadInfo(_readInfo, new AuditTrailInfo());
+
+            if (nRows > Settings.Default.MaxNumbRows || nRows < 0)
+            {
+                logger.Error(Settings.Default.Error_NumbRowsIncorrect);
+                MessageBox.Show(Settings.Default.Error_NumbRowsIncorrect);
+                return null;
+            }
+
+            if (readInfo.dtBefore == null || readInfo.dtAfter == null)
+            {
+                logger.Error(Settings.Default.Error_ReadAudit_ArgIncorrect);
+                MessageBox.Show(Settings.Default.Error_ReadAudit_ArgIncorrect);
+                return null;
+            }
+
+            int mutexID = Wait(mutex);
+            SendCommand_ReadAuditTrail(readInfo: readInfo, isMutexReleased: false, mutex: mutexID);
+
+            List<string[]> tables = new List<string[]>();
+            string[] table;
+            int i = 0;
+            int n = nRows == 0 ? Settings.Default.MaxNumbRows : nRows;
+
+            table = ReadNext(mutexID);
+
+            while (table != null && i < n)
+            {
+                tables.Add(table);
+                table = ReadNext(mutexID);
+                i++;
+            }
+
+            if (nRows == 0 && i == n)
+            {
+                logger.Error(Settings.Default.Error_IDidntReadItAll);
+                MessageBox.Show(Settings.Default.Error_IDidntReadItAll);
+            }
+
+            if (isMutexReleased) Signal(mutexID);
+            return tables;
+        }
+        public static List<AuditTrailInfo> GetAlarms(int firstId, int lastId, bool readAlert = false)
+        {
+            logger.Debug("GetAlarms " + GetMutexIDs());
+
+            int mutexID = SendCommand_ReadAlarms(firstId, lastId, readAlert);
+
+            List<AuditTrailInfo> tables = new List<AuditTrailInfo>();
+            AuditTrailInfo table;
+
+            table = (AuditTrailInfo)ReadNext(typeof(AuditTrailInfo), mutexID);
+
+            while (table != null)
+            {
+                tables.Add(table);
+                table = (AuditTrailInfo)ReadNext(typeof(AuditTrailInfo), mutexID);
+            }
+
+            Signal(mutexID);
+            return tables;
+        }
+        public static List<RecipeInfo> GetLastRecipes(RecipeStatus status = RecipeStatus.PRODnDRAFT)
+        {
+            logger.Debug("GetLastRecipes " + GetMutexIDs());
+
+            SendCommand_GetLastRecipes(status);
+
+            List<RecipeInfo> tables = new List<RecipeInfo>();
+            RecipeInfo table;
+
+            table = (RecipeInfo)ReadNext(typeof(RecipeInfo));
+
+            while (table != null)
+            {
+                tables.Add(table);
+                table = (RecipeInfo)ReadNext(typeof(RecipeInfo));
+            }
+
+            return tables;
+        }
+
         public static int GetMax(ITableInfo tableInfo, string column, int mutex = -1)
         {
             int mutexID = Wait(mutex);

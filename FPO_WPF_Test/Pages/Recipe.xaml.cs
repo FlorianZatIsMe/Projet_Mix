@@ -831,8 +831,15 @@ namespace FPO_WPF_Test.Pages
                 {
                     RecipeInfo recipeInfo = new RecipeInfo();
                     recipeInfo.columns[recipeInfo.recipeName].value = ProgramNames[comboBox.SelectedIndex];
-                    List<ITableInfo> tableInfos = MyDatabase.GetRows(recipeInfo, 
-                        orderBy: recipeInfo.columns[recipeInfo.version].id, isOrderAsc: false);
+
+                    ReadInfo readInfo = new ReadInfo(
+                        _tableInfo: recipeInfo,
+                        _orderBy: recipeInfo.columns[recipeInfo.version].id,
+                        _isOrderAsc: false);
+
+                    List<ITableInfo> tableInfos = MyDatabase.GetRows(readInfo);
+/*                    List<ITableInfo> tableInfos = MyDatabase.GetRows(recipeInfo,
+                        orderBy: recipeInfo.columns[recipeInfo.version].id, isOrderAsc: false);*/
 
                     for (int i = 0; i < tableInfos.Count; i++)
                     {
