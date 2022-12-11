@@ -44,6 +44,10 @@ namespace Database
     {
         int id { get; }
     }
+    public interface IdtTableInfo : ITempTableInfo
+    {
+        int dateTime { get; }
+    }
     public interface ISeqInfo : ITableInfo
     {
         int seqType { get; }
@@ -55,7 +59,7 @@ namespace Database
         void SetRecipeParameters(string[] array); // ou get
         void SetRecipeParameters(ISeqInfo recipe); // ou get
     }
-    public class AuditTrailInfo : ITableInfo
+    public class AuditTrailInfo : ITableInfo, IdtTableInfo
     {
         public AuditTrailInfo()
         {

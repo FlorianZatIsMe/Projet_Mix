@@ -37,7 +37,7 @@ namespace FPO_WPF_Test.Pages
             logger.Debug("Start");
 
             // if alarm active and not connected... (to add)
-            if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+            //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
             frameMain = frameMain_arg;
             frameMain.ContentRendered += new EventHandler(FrameMain_ContentRendered);
@@ -62,7 +62,8 @@ namespace FPO_WPF_Test.Pages
             string[] array;
             //string[] columnNames = MySettings["Columns"].Split(',');
 
-            if (MyDatabase.IsConnected()) // while loop is better
+            //if (MyDatabase.IsConnected()) // while loop is better
+            if(true)
             {
                 try
                 {
@@ -74,7 +75,10 @@ namespace FPO_WPF_Test.Pages
 
                     foreach (Tuple<int, int> id in AlarmManagement.ActiveAlarms)
                     {
-                        array = MyDatabase.GetOneArrayRow(new AuditTrailInfo(), AlarmManagement.Alarms[id.Item1, id.Item2].id.ToString());
+                        // A CORRIGER : IF RESULT IS FALSE
+                        Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneArrayRow(new AuditTrailInfo(), AlarmManagement.Alarms[id.Item1, id.Item2].id.ToString()); });
+                        array = (string[])t.Result;
+                        //array = MyDatabase.GetOneArrayRow(new AuditTrailInfo(), AlarmManagement.Alarms[id.Item1, id.Item2].id.ToString());
 
                         if (array != null)
                         {
@@ -147,7 +151,7 @@ namespace FPO_WPF_Test.Pages
             if (frameMain.Content != this)
             {
                 // if no alarm and not deconected... (to add)
-                MyDatabase.Disconnect();
+                //MyDatabase.Disconnect();
 
                 frameMain.ContentRendered -= FrameMain_ContentRendered;
                 //stopUpdating = true;

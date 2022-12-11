@@ -74,7 +74,7 @@ namespace FPO_WPF_Test
 
             AlarmManagement.Initialize(new Alarm_Management.IniInfo() { AuditTrail_SystemUsername = Settings.Default.General_SystemUsername });
 
-            List<ITableInfo> tableInfos = MyDatabase.GetAlarms(2000, 2100);
+            List<AuditTrailInfo> tableInfos = MyDatabase.GetAlarms(2000, 2100);
             string row;
             for (int i = 0; i < tableInfos.Count; i++)
             {
@@ -85,8 +85,31 @@ namespace FPO_WPF_Test
                 }
                 logger.Trace(row);
             }
-            MessageBox.Show("Fini ou pas");
+            /
 
+            AuditTrailInfo auditTrail1 = new AuditTrailInfo();
+            auditTrail1.columns[auditTrail1.username].value = "Test user";
+            auditTrail1.columns[auditTrail1.eventType].value = "Event";
+            auditTrail1.columns[auditTrail1.description].value = "Quesu<Task> test 1";
+            Task<object> t1 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTrail1); });
+
+            AuditTrailInfo auditTrail2 = new AuditTrailInfo();
+            auditTrail2.columns[auditTrail2.username].value = "Test user";
+            auditTrail2.columns[auditTrail2.eventType].value = "Event";
+            auditTrail2.columns[auditTrail2.description].value = "Quesu<Task> test 2";
+            Task<object> t2 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTrail2); });
+
+            AuditTrailInfo auditTrail3 = new AuditTrailInfo();
+            auditTrail3.columns[auditTrail3.username].value = "Test user";
+            auditTrail3.columns[auditTrail3.eventType].value = "Event";
+            auditTrail3.columns[auditTrail3.description].value = "Quesu<Task> test 3";
+            Task<object> t3 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTrail3); });
+
+            logger.Fatal(t1.Result.ToString());
+            logger.Fatal(t2.Result.ToString());
+            logger.Fatal(t3.Result.ToString());
+
+            MessageBox.Show("Fini je crois");
             Environment.Exit(1);
             //*/
 
@@ -100,7 +123,10 @@ namespace FPO_WPF_Test
             auditTrailInfo.columns[auditTrailInfo.username].value = General.loggedUsername;
             auditTrailInfo.columns[auditTrailInfo.eventType].value = Settings.Default.General_AuditTrailEvent_Event;
             auditTrailInfo.columns[auditTrailInfo.description].value = Settings.Default.General_auditTrail_StartApp;
-            MyDatabase.InsertRow(auditTrailInfo);
+            //MyDatabase.InsertRow(auditTrailInfo);
+
+            // A corriger if insert didn't work
+            MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTrailInfo); });
 
             frameMain.Content = new Pages.Status();
             frameInfoCycle.Content = null;
@@ -150,8 +176,19 @@ namespace FPO_WPF_Test
                 _isOrderAsc: false
                 );
 
-            List<ITableInfo> tableInfos = MyDatabase.GetRows(readInfo, 1);
+            //List<ITableInfo> tableInfos = MyDatabase.GetRows(readInfo, 1);
+            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetRows(readInfo, 1); });
+            List<ITableInfo> tableInfos = (List<ITableInfo>)t.Result;
+
             // check if result is null
+
+            if (tableInfos == null)
+            {
+                MessageBox.Show("C'est pas bien de ne pas se connecter à la base de données");
+                logger.Error("C'est pas bien de ne pas se connecter à la base de données");
+                return;
+            }
+
             auditTrailInfo = (AuditTrailInfo)tableInfos[0];
 
             DateTime dtLastBackup = Convert.ToDateTime(auditTrailInfo.columns[auditTrailInfo.dateTime].value);
@@ -162,7 +199,7 @@ namespace FPO_WPF_Test
             }
             else
             {
-                MyDatabase.Disconnect();
+                //MyDatabase.Disconnect();
             }
         }
         private bool ExecuteBackupAuto()
@@ -171,7 +208,8 @@ namespace FPO_WPF_Test
             int nBackupAttempt = 0;
             int mutexID;
             // mutex à retirer
-            mutexID = MyDatabase.Connect(false);
+            mutexID = -1;
+            //mutexID = MyDatabase.Connect(false);
 
             while (!wasBackupSucceeded && nBackupAttempt < 3)
             {
@@ -184,11 +222,14 @@ namespace FPO_WPF_Test
                     auditTrailInfo.columns[auditTrailInfo.username].value = Settings.Default.General_SystemUsername;
                     auditTrailInfo.columns[auditTrailInfo.eventType].value = Settings.Default.General_AuditTrailEvent_Event;
                     auditTrailInfo.columns[auditTrailInfo.description].value = Settings.Default.General_auditTrail_BackupFailedDesc + nBackupAttempt.ToString();
-                    MyDatabase.InsertRow(auditTrailInfo, mutexID);
+
+                    // A CORRIGER: CHECK IF RESULT FALSE
+                    MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTrailInfo); });
+                    //MyDatabase.InsertRow(auditTrailInfo, mutexID);
                 }
             }
 
-            MyDatabase.Disconnect(mutexID);
+            //MyDatabase.Disconnect(mutexID);
 
             if (!wasBackupSucceeded) AlarmManagement.NewAlarm(4, 0);
 

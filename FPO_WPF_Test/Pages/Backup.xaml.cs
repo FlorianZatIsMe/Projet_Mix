@@ -66,7 +66,7 @@ namespace FPO_WPF_Test.Pages
         {
             logger.Debug("Backup_Click");
 
-            if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+            //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
             Task<bool> task = Task<bool>.Factory.StartNew(() => ExecuteBackup(General.loggedUsername));
 
             wpStatus.Visibility = Visibility.Visible;
@@ -76,7 +76,7 @@ namespace FPO_WPF_Test.Pages
                 progressBar.Value = (double)(100 * General.count / maxBackupCount);
                 await Task.Delay(10);
             }
-            MyDatabase.Disconnect();
+            //MyDatabase.Disconnect();
 
             if (task.Result)
             {
@@ -144,7 +144,10 @@ namespace FPO_WPF_Test.Pages
                 auditTInfo.columns[auditTInfo.username].value = Settings.Default.General_SystemUsername;
                 auditTInfo.columns[auditTInfo.eventType].value = Settings.Default.General_AuditTrailEvent_Event;
                 auditTInfo.columns[auditTInfo.description].value = General.auditTrail_BackupDesc;
-                MyDatabase.InsertRow(auditTInfo, mutex);
+
+                // A CORRIGER : IF RESULT IS FALSE
+                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTInfo); });
+                //MyDatabase.InsertRow(auditTInfo, mutex);
 
                 //MyDatabase.Disconnect();
 
@@ -245,14 +248,17 @@ namespace FPO_WPF_Test.Pages
 
                 if (process.ExitCode == 0)
                 {
-                    if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+                    //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
                     AuditTrailInfo auditTInfo = new AuditTrailInfo();
                     auditTInfo.columns[auditTInfo.username].value = username;
                     auditTInfo.columns[auditTInfo.eventType].value = Settings.Default.General_AuditTrailEvent_Event;// "Evènement";
                     auditTInfo.columns[auditTInfo.description].value = General.auditTrail_RestoreDesc;
-                    MyDatabase.InsertRow(auditTInfo);
-                    MyDatabase.Disconnect();
+
+                    // A CORRIGER : IF RESULT IS FALSE
+                    Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTInfo); });
+                    //MyDatabase.InsertRow(auditTInfo);
+                    //MyDatabase.Disconnect();
 
                     General.count = nLines;
                     MessageBox.Show(Settings.Default.ArchBack_restoreSuccessfull);

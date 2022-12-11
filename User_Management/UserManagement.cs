@@ -55,7 +55,10 @@ namespace User_Management
             accessTableInfo = new AccessTableInfo();
             accessTableInfo.columns[accessTableInfo.role].value = role;
             // check if result null
-            CurrentAccessTable = MyDatabase.GetOneBoolRow(accessTableInfo);
+
+            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneBoolRow(accessTableInfo); });
+            CurrentAccessTable = (bool[])t.Result;
+            //CurrentAccessTable = MyDatabase.GetOneBoolRow(accessTableInfo);
 
             //MyDatabase.SendCommand_Read(accessTableInfo);
             //CurrentAccessTable = MyDatabase.ReadNextBool();

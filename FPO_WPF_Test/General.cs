@@ -208,7 +208,7 @@ namespace FPO_WPF_Test
             RecipeInfo recipeInfo;
             ISeqInfo recipeSeqInfo;
 
-            if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+            //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
             if (!MyDatabase.IsConnected())
             {
@@ -410,7 +410,7 @@ namespace FPO_WPF_Test
             else 
             {
                 frameMain.Content = new Status();
-                MyDatabase.Disconnect();
+                //MyDatabase.Disconnect();
             }
         }
         public static void PrintReport(int id)

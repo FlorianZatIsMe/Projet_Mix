@@ -37,11 +37,11 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
             frameMain = frameMain_arg;
             frameInfoCycle = inputInfoCycleFrame;
-            if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+            //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
             InitializeComponent();
             
             General.Update_RecipeNames(cbxProgramName, ProgramNames, ProgramIDs, RecipeStatus.PROD);
-            MyDatabase.Disconnect();
+            //MyDatabase.Disconnect();
         }
         private void FxOK(object sender, RoutedEventArgs e)
         {
@@ -56,7 +56,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
         {
             logger.Debug("FxAnnuler");
 
-            MyDatabase.Disconnect();
+            //MyDatabase.Disconnect();
             frameMain.Content = new Status();
         }
         private void TbOFnumber_KeyDown(object sender, KeyEventArgs e)

@@ -10,6 +10,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -77,9 +78,10 @@ namespace FPO_WPF_Test.Pages
             if ((bool)cbAlarm.IsChecked) eventTypes.Add(AlarmSettings.AlarmType_Alarm);
             if ((bool)cbWarning.IsChecked) eventTypes.Add(AlarmSettings.AlarmType_Warning);
 
-            if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+            //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
-            if (!MyDatabase.IsConnected()) // while loop is better
+            //if (!MyDatabase.IsConnected()) // while loop is better
+            if(false)
             {
                 dt.Columns.Add(new DataColumn(Settings.Default.AuditTrail_ErrorTitle));
                 row = dt.NewRow();
@@ -95,7 +97,11 @@ namespace FPO_WPF_Test.Pages
                     _eventTypes: eventTypes.ToArray(),
                     _orderBy: auditTrailInfo.columns[auditTrailInfo.id].id,
                     _isOrderAsc: false);
-                List<string[]> tables = MyDatabase.GetAuditTrailRows(readInfo);
+
+                // A CORRIGER : IF RESULT IS FALSE
+                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetAuditTrailRows(readInfo); });
+                List<string[]> tables = (List<string[]>)t.Result;
+                //List<string[]> tables = MyDatabase.GetAuditTrailRows(readInfo);
 
                 //mutexID = MyDatabase.SendCommand_ReadAuditTrail(dtBefore: dtBefore, dtAfter: dtAfter, eventTypes: eventTypes.ToArray(), orderBy: auditTrailInfo.columns[auditTrailInfo.id].id, isOrderAsc: false, isMutexReleased: false);
 
@@ -148,7 +154,7 @@ namespace FPO_WPF_Test.Pages
                 dataGridAuditTrail.Columns[auditTrailInfo.id].Visibility = Visibility.Collapsed;
             }
 
-            MyDatabase.Disconnect();
+            //MyDatabase.Disconnect();
             //MyDatabase.Disconnect(mutexID);
         }
         private void ButtonFilter_Click(object sender, RoutedEventArgs e)
@@ -342,6 +348,21 @@ namespace FPO_WPF_Test.Pages
                 dpDateBefore.DisplayDateEnd = dpDateAfter.SelectedDate;
                 dpAftSelToUpdate = false;
             }
+        }
+        private void FrameMain_ContentRendered(object sender, EventArgs e)
+        {
+            logger.Debug("FrameMain_ContentRendered");
+            Frame frameMain = new Frame();
+            if (frameMain.Content != this)
+            {
+                // if no alarm and not deconected... (to add)
+                //MyDatabase.Disconnect();
+
+                frameMain.ContentRendered -= FrameMain_ContentRendered;
+                //updateAlarmTimer.Dispose();
+                //Dispose(disposing: true); // Il va peut-être falloir sortir ça du "if"
+            }
+
         }
     }
 }

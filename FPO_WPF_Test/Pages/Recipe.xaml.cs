@@ -131,7 +131,7 @@ namespace FPO_WPF_Test.Pages
             frameMain = frameMain_arg;
             isFrameLoaded = false;
 
-            if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+            //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
             InitializeComponent();
 
             switch (action)
@@ -174,7 +174,7 @@ namespace FPO_WPF_Test.Pages
             }
 
             // Si on a testé une recette et qu'on revient ici alors on ne se déconnecte pas
-            if (action != Action.Modify || recipeName == "") MyDatabase.Disconnect();
+            //if (action != Action.Modify || recipeName == "") //MyDatabase.Disconnect();
         }
 
         /* Create_NewRecipe()
@@ -534,9 +534,9 @@ namespace FPO_WPF_Test.Pages
         {
             logger.Debug("ButtonCreate_Click");
 
-            if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+            //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
             Create_NewRecipe(tbRecipeNameNew.Text, 1, RecipeStatus.DRAFT);
-            MyDatabase.Disconnect();
+            //MyDatabase.Disconnect();
         }
         private async void CbxPgmToModify_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -546,7 +546,7 @@ namespace FPO_WPF_Test.Pages
             {
                 logger.Trace("CbxPgmToModify_SelectionChanged");
 
-                if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+                //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
                 ComboBox comboBox = sender as ComboBox;
                 curMethodDoneOnGoing = true;
@@ -558,7 +558,7 @@ namespace FPO_WPF_Test.Pages
                 while (curMethodDoneOnGoing) await Task.Delay(Settings.Default.Recipe_WaitRecipeDisplayedDelay); 
 
                 panelInfoRecipe.Visibility = Visibility.Visible;
-                MyDatabase.Disconnect();
+                //MyDatabase.Disconnect();
             }
         }
         private void ButtonModify_Click(object sender, RoutedEventArgs e)
@@ -568,7 +568,7 @@ namespace FPO_WPF_Test.Pages
             int currentIndex = cbxPgmToModify.SelectedIndex;
             RecipeInfo recipeInfo = new RecipeInfo();
 
-            MyDatabase.Connect();
+            //MyDatabase.Connect();
 
             if (!MyDatabase.IsConnected())
             {
@@ -620,7 +620,7 @@ namespace FPO_WPF_Test.Pages
                 MessageBox.Show(Settings.Default.Recipe_Error_IncorrectStatus);
             }
 
-            MyDatabase.Disconnect();
+            //MyDatabase.Disconnect();
         }
         private void ButtonActDel_Click(object sender, RoutedEventArgs e)
         {
@@ -630,7 +630,7 @@ namespace FPO_WPF_Test.Pages
             RecipeInfo recipeInfo;
             RecipeInfo recipeToUpdate;
 
-            MyDatabase.Connect();
+            //MyDatabase.Connect();
 
             if (!MyDatabase.IsConnected())
             {
@@ -644,7 +644,8 @@ namespace FPO_WPF_Test.Pages
             if (recipeInfo == null)
             {
                 MessageBox.Show(Settings.Default.Recipe_Error_RecipeNotFound);
-                goto End;
+                return;
+                //goto End;
             }
 
 
@@ -734,8 +735,8 @@ namespace FPO_WPF_Test.Pages
                 logger.Error(Settings.Default.Recipe_DelAct_Error_NoRadiobt);
                 MessageBox.Show(Settings.Default.Recipe_DelAct_Error_NoRadiobt);
             }
-        End:
-            MyDatabase.Disconnect();
+        //End:
+            //MyDatabase.Disconnect();
         }
         private void CbxAddDefaultText(ComboBox comboBox, int index)
         {
@@ -768,7 +769,7 @@ namespace FPO_WPF_Test.Pages
             {
                 RadioButton radioButton = sender as RadioButton;
 
-                if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+                //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
                 if (radioButton == rbActivate)
                 {
@@ -780,7 +781,7 @@ namespace FPO_WPF_Test.Pages
                     General.Update_RecipeNames(cbxPgmToActDelete, ProgramNames, ProgramIDs, RecipeStatus.PRODnDRAFT);
                     btDelAct.Content = Settings.Default.Recipe_btDelAct_Delete;
                 }
-                MyDatabase.Disconnect();
+                //MyDatabase.Disconnect();
             }
         }
         private void Test_Sequence_Click(object sender, RoutedEventArgs e)
@@ -817,7 +818,7 @@ namespace FPO_WPF_Test.Pages
 
             if (isCbxToCopyAvailable)
             {
-                if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+                //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
                 isCbxVersionCpyAvailable = false;
 
@@ -875,7 +876,7 @@ namespace FPO_WPF_Test.Pages
                 while (curMethodDoneOnGoing) await Task.Delay(Settings.Default.Recipe_WaitRecipeDisplayedDelay);
 
                 panelVersionRecipe.Visibility = Visibility.Visible;
-                MyDatabase.Disconnect();
+                //MyDatabase.Disconnect();
             }
         }
         private async void CbxVersionToCopy_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -886,7 +887,7 @@ namespace FPO_WPF_Test.Pages
             {
                 logger.Trace("CbxVersionToCopy_SelectionChanged");
 
-                if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+                //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
                 ComboBox comboBox = sender as ComboBox;
 
@@ -900,14 +901,14 @@ namespace FPO_WPF_Test.Pages
                 Display_Recipe(recipeInfo.columns[recipeInfo.id].value);
                 while (curMethodDoneOnGoing) await Task.Delay(Settings.Default.Recipe_WaitRecipeDisplayedDelay);
 
-                MyDatabase.Disconnect();
+                //MyDatabase.Disconnect();
             }
         }
         private void ButtonCopy_Click(object sender, RoutedEventArgs e)
         {
             logger.Debug("ButtonCopy_Click");
 
-            if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+            //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
             if (Create_NewRecipe(tbRecipeNameCpy.Text, 1, RecipeStatus.DRAFT, false))
             {
@@ -917,7 +918,7 @@ namespace FPO_WPF_Test.Pages
                 isCbxToCopyAvailable = true;
             }
 
-            MyDatabase.Disconnect();
+            //MyDatabase.Disconnect();
         }
 
         // VERIFIE LA CONNECTION DE LA BASE DE DONNéES PARTOUT !!!!! MOTHER FUCKER ¨¨
