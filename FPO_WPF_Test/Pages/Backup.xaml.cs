@@ -34,7 +34,6 @@ namespace FPO_WPF_Test.Pages
         private static readonly int nDaysBefDelBackup = Settings.Default.Backup_nDaysBefDelBackup;// 10;
         private static string lastBackupFileName;
         private static int nLines;
-        private static readonly AlarmManagement alarmManagement;
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public Backup()

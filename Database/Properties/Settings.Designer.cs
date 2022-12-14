@@ -2165,14 +2165,25 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"
-          <ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-            <server>localhost</server>
-            <userID>root</userID>
-            <password>Integra2022/</password>
-            <db>db1</db>
-          </ConnectionInfo>
-        ")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Date et temps avant ou après incorrect")]
+        public string Error_ReadAudit_ArgIncorrect {
+            get {
+                return ((string)(this["Error_ReadAudit_ArgIncorrect"]));
+            }
+            set {
+                this["Error_ReadAudit_ArgIncorrect"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <server>localhost</server>
+  <userID>root</userID>
+  <password>Integra2022/</password>
+  <db>db1</db>
+</ConnectionInfo>")]
         public global::Database.ConnectionInfo ConnectionInfo {
             get {
                 return ((global::Database.ConnectionInfo)(this["ConnectionInfo"]));
@@ -2184,13 +2195,25 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Date et temps avant ou après incorrect")]
-        public string Error_ReadAudit_ArgIncorrect {
+        [global::System.Configuration.DefaultSettingValueAttribute("mg/g")]
+        public string RecipeWeight_mgG_Unit {
             get {
-                return ((string)(this["Error_ReadAudit_ArgIncorrect"]));
+                return ((string)(this["RecipeWeight_mgG_Unit"]));
             }
             set {
-                this["Error_ReadAudit_ArgIncorrect"] = value;
+                this["RecipeWeight_mgG_Unit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("g/g")]
+        public string RecipeWeight_gG_Unit {
+            get {
+                return ((string)(this["RecipeWeight_gG_Unit"]));
+            }
+            set {
+                this["RecipeWeight_gG_Unit"] = value;
             }
         }
     }

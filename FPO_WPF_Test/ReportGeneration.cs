@@ -686,7 +686,10 @@ namespace FPO_WPF_Test
             if (firstAlarmId != lastAlarmId && lastAlarmId != -1)
             {
                 //AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-                List<AuditTrailInfo> tables = MyDatabase.GetAlarms(firstAlarmId, lastAlarmId);
+                // nul corriger ça
+                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetAlarms(firstAlarmId, lastAlarmId); });
+                List<AuditTrailInfo> tables = (List<AuditTrailInfo>)t.Result;
+                //List <AuditTrailInfo> tables = MyDatabase.GetAlarms(firstAlarmId, lastAlarmId);
 
                 for (int i = 0; i < tables.Count; i++)
                 {
@@ -959,9 +962,13 @@ namespace FPO_WPF_Test
 
             int nextSeqType;
             int seqNumber = 1;
+            Task<object> t;
 
             // Initialize cycle information
-            CycleTableInfo cycleTableInfo = (CycleTableInfo)MyDatabase.GetOneRow(typeof(CycleTableInfo), id);
+            // A CORRIGER : IF RESULT IS FALSE
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(CycleTableInfo), id); });
+            CycleTableInfo cycleTableInfo = (CycleTableInfo)t.Result;
+            //CycleTableInfo cycleTableInfo = (CycleTableInfo)MyDatabase.GetOneRow(typeof(CycleTableInfo), id);
             ISeqInfo cycleSeqInfo;
 
             if (cycleTableInfo == null)
@@ -1008,7 +1015,10 @@ namespace FPO_WPF_Test
             while (cycleSeqInfo.columns[cycleSeqInfo.nextSeqType].value != null && cycleSeqInfo.columns[cycleSeqInfo.nextSeqType].value != "")
             {
                 nextSeqType = int.Parse(cycleSeqInfo.columns[cycleSeqInfo.nextSeqType].value);
-                cycleSeqInfo = (ISeqInfo)MyDatabase.GetOneRow(Pages.Sequence.list[nextSeqType].subCycleInfo.GetType(), cycleSeqInfo.columns[cycleSeqInfo.nextSeqId].value);
+                // A CORRIGER : IF RESULT IS FALSE
+                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(Pages.Sequence.list[nextSeqType].subCycleInfo.GetType(), cycleSeqInfo.columns[cycleSeqInfo.nextSeqId].value); });
+                cycleSeqInfo = (ISeqInfo)t.Result;
+                //cycleSeqInfo = (ISeqInfo)MyDatabase.GetOneRow(Pages.Sequence.list[nextSeqType].subCycleInfo.GetType(), cycleSeqInfo.columns[cycleSeqInfo.nextSeqId].value);
 
                 if (cycleSeqInfo == null)
                 {

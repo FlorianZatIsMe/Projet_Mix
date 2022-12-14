@@ -41,6 +41,12 @@ namespace Database
     {
         public string AlarmType_Alarm;
         public string AlarmType_Warning;
+        public string RecipeWeight_mgG_Unit;
+        public decimal? RecipeWeight_mgG_Conversion;
+        public string RecipeWeight_gG_Unit;
+        public decimal? RecipeWeight_gG_Conversion;
+        public string CycleFinalWeight_g_Unit;
+        public decimal? CycleFinalWeight_g_Conversion;
     }
     public enum RecipeStatus
     {
@@ -129,11 +135,12 @@ namespace Database
         private static readonly System.Timers.Timer QueueEmptyTimer;
         private static readonly System.Timers.Timer IsQueueAvailableTimer;
         private static int QueueEmptyCount = 0;
+        private static Task lastTask;
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         // Future interface
-        private static IniInfo info;
+        public static IniInfo info;
 
         static MyDatabase()
         {
@@ -192,32 +199,27 @@ namespace Database
                 logger.Error("Start TaskDeQueue");
                 IsQueueAvailableTimer.Enabled = false;
                 if (!IsConnected()) Connect();
+                //if(lastTask != null) lastTask.Wait();
                 TaskDeQueue();
             }
         }
-        private static void TaskDeQueue()
+        private async static void TaskDeQueue()
         {
             if (taskQueue.Count > 0)
             {
                 logger.Debug("Dequeue on going");
                 QueueEmptyCount = 0;
-                Task t;
-                t = taskQueue.Dequeue();
-                t.Start();
-                t.Wait();
+                lastTask = taskQueue.Dequeue();
+                lastTask.Start();
+                lastTask.Wait();
 
-                if (taskQueue.Count > 0)
-                {
-                    TaskDeQueue();
-                }
-                else
-                {
-                    IsQueueAvailableTimer.Start();
-                }
+                if (taskQueue.Count == 0) await Task.Delay(10);
+                TaskDeQueue();
             }
             else
             {
-                logger.Debug("No Dequeue possible");
+                logger.Error("Wait for new task");
+                IsQueueAvailableTimer.Start();
             }
         }
         public static Task<object> TaskEnQueue(Func<object> function)
@@ -231,28 +233,16 @@ namespace Database
             // From AlarmManagement
             if (info.AlarmType_Alarm == null && info_arg.AlarmType_Alarm != null) info.AlarmType_Alarm = info_arg.AlarmType_Alarm;
             if (info.AlarmType_Warning == null && info_arg.AlarmType_Warning != null) info.AlarmType_Warning = info_arg.AlarmType_Warning;
-            // From Recipe
-            /*            if (info.recipe_tableName == null && info_arg.recipe_tableName != null) info.recipe_tableName = info_arg.recipe_tableName;
-                        if (info.recipe_colNameId == null && info_arg.recipe_colNameId != null) info.recipe_colNameId = info_arg.recipe_colNameId;
-                        if (info.recipe_colNameName == null && info_arg.recipe_colNameName != null) info.recipe_colNameName = info_arg.recipe_colNameName;
-                        if (info.recipe_colNameVersion == null && info_arg.recipe_colNameVersion != null) info.recipe_colNameVersion = info_arg.recipe_colNameVersion;
-                        if (info.recipe_colNameStatus == null && info_arg.recipe_colNameStatus != null) info.recipe_colNameStatus = info_arg.recipe_colNameStatus;
-                        if (info.recipe_statusDraft == null && info_arg.recipe_statusDraft != null) info.recipe_statusDraft = info_arg.recipe_statusDraft;
-                        if (info.recipe_statusProd == null && info_arg.recipe_statusProd != null) info.recipe_statusProd = info_arg.recipe_statusProd;
-                        if (info.recipe_statusObsol == null && info_arg.recipe_statusObsol != null) info.recipe_statusObsol = info_arg.recipe_statusObsol;
-                        */
+            // From MainWindow
+            if (info.RecipeWeight_mgG_Unit == null && info_arg.RecipeWeight_mgG_Unit != null) info.RecipeWeight_mgG_Unit = info_arg.RecipeWeight_mgG_Unit;
+            if (info.RecipeWeight_mgG_Conversion == null && info_arg.RecipeWeight_mgG_Conversion != null) info.RecipeWeight_mgG_Conversion = info_arg.RecipeWeight_mgG_Conversion;
+            if (info.RecipeWeight_gG_Unit == null && info_arg.RecipeWeight_gG_Unit != null) info.RecipeWeight_gG_Unit = info_arg.RecipeWeight_gG_Unit;
+            if (info.RecipeWeight_gG_Conversion == null && info_arg.RecipeWeight_gG_Conversion != null) info.RecipeWeight_gG_Conversion = info_arg.RecipeWeight_gG_Conversion;
+            if (info.CycleFinalWeight_g_Unit == null && info_arg.CycleFinalWeight_g_Unit != null) info.CycleFinalWeight_g_Unit = info_arg.CycleFinalWeight_g_Unit;
+            if (info.CycleFinalWeight_g_Conversion == null && info_arg.CycleFinalWeight_g_Conversion != null) info.CycleFinalWeight_g_Conversion = info_arg.CycleFinalWeight_g_Conversion;
+
             logger.Trace(info.AlarmType_Alarm);
             logger.Trace(info.AlarmType_Warning);
-            /*
-            logger.Trace(info.recipe_tableName);
-            logger.Trace(info.recipe_colNameId);
-            logger.Trace(info.recipe_colNameName);
-            logger.Trace(info.recipe_colNameVersion);
-            logger.Trace(info.recipe_colNameStatus);
-            logger.Trace(info.recipe_statusDraft);
-            logger.Trace(info.recipe_statusProd);
-            logger.Trace(info.recipe_statusObsol);
-            */
             //isInitialized = true;
         }
         private static void ScanConnectTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
@@ -285,29 +275,6 @@ namespace Database
             {
                 logger.Error(ex.Message);
             }
-        }
-        public static int Wait(int mutex = -1)
-        {
-            logger.Debug("Wait " + GetMutexIDs());
-            /*
-            int mutexID;
-
-            if (mutex == -1)
-            {
-                mutexID = GetNextMutex();
-                mutexIDs.Add(mutexID);
-                while (mutexIDs[0] != mutexID) signal.WaitOne();
-                signal.Reset();
-            }
-            else
-            {
-                mutexID = mutex;
-            }
-
-            logger.Trace("Wait " + GetMutexIDs());
-
-            return mutexID;*/
-            return 0;
         }
         public static int Connect(bool isMutexReleased = true)
         {
@@ -1582,12 +1549,13 @@ namespace Database
             return result;
         }
 
-        public static void CreateTempTable()
+        public static bool CreateTempTable()
         {
             int mutexID = Wait();
 
             TempInfo tempInfo = new TempInfo();
             string fields = tempInfo.columns[0].id + " DECIMAL(5,1) NOT NULL, " + tempInfo.columns[1].id + " DECIMAL(5,1) NOT NULL";
+            bool result = false;
 
             logger.Debug("CreateTempTable " + fields + GetMutexIDs());
 
@@ -1598,8 +1566,8 @@ namespace Database
                 goto End;
             }
 
-            SendCommand(@"DROP TABLE IF EXISTS " + Settings.Default.Temp_TableName, mutex: mutexID);
-            SendCommand(@"CREATE TABLE " + Settings.Default.Temp_TableName + " (" +
+            result = SendCommand(@"DROP TABLE IF EXISTS " + Settings.Default.Temp_TableName, mutex: mutexID);
+            if(result) result = SendCommand(@"CREATE TABLE " + Settings.Default.Temp_TableName + " (" +
                     "id  INT NOT NULL auto_increment PRIMARY KEY," +
                     fields + ")", mutex: mutexID);
         /*
@@ -1636,8 +1604,9 @@ namespace Database
             Close_reader();
             Signal(mutexID);
             //dbReady = true;
+            return result;
         }
-        public static void SelectFromTemp()
+        public static TempResultInfo GetResultRowTemp()
         {
             int mutexID = Wait();
 
@@ -1672,6 +1641,7 @@ namespace Database
         */
         End:
             Signal(mutexID);
+            return (TempResultInfo)ReadNext(typeof(TempResultInfo));
         }
 
         public static void Close_reader() { if (!IsReaderNotAvailable()) reader.Close(); }
@@ -1750,6 +1720,29 @@ namespace Database
             lastMutexID = (lastMutexID + 1) % 200;
             return lastMutexID;
         }
+        public static int Wait(int mutex = -1)
+        {
+            //logger.Debug("Wait " + GetMutexIDs());
+            /*
+            int mutexID;
+
+            if (mutex == -1)
+            {
+                mutexID = GetNextMutex();
+                mutexIDs.Add(mutexID);
+                while (mutexIDs[0] != mutexID) signal.WaitOne();
+                signal.Reset();
+            }
+            else
+            {
+                mutexID = mutex;
+            }
+
+            logger.Trace("Wait " + GetMutexIDs());
+
+            return mutexID;*/
+            return 0;
+        }
         public static void Signal(int mutex)
         {/*
             if (mutex != mutexIDs[0])
@@ -1760,7 +1753,7 @@ namespace Database
 
             mutexIDs.RemoveAt(0);
             signal.Set();*/
-            logger.Debug("Signal " + GetMutexIDs());
+            //logger.Debug("Signal " + GetMutexIDs());
         }
         private static string GetMutexIDs()
         {

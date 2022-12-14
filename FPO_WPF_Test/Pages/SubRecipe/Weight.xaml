@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:p="clr-namespace:FPO_WPF_Test.Properties"
       xmlns:local="clr-namespace:FPO_WPF_Test.Pages.SubRecipe"
       mc:Ignorable="d" 
       d:DesignHeight="350" d:DesignWidth="1400"
@@ -136,9 +137,8 @@
                                           SelectedIndex="0"
                                           Height="30"
                                           VerticalContentAlignment="Center">
-                                    <ComboBoxItem Content="mg/kg"/>
-                                    <ComboBoxItem Content="g/kg"/>
-                                    <ComboBoxItem Content="kg/kg"/>
+                                    <ComboBoxItem Content="{Binding Source={x:Static p:Settings.Default}, Path=RecipeWeight_mgG_Unit}"/>
+                                    <ComboBoxItem Content="{Binding Source={x:Static p:Settings.Default}, Path=RecipeWeight_gG_Unit}"/>
                                 </ComboBox>
 
                                 <TextBlock Grid.Column="0"

@@ -691,18 +691,23 @@
     <Setting Name="Error_IDidntReadItAll" Type="System.String" Scope="User">
       <Value Profile="(Default)">Je n'ai pas réussi à tout lire, il y a en trop</Value>
     </Setting>
-    <Setting Name="ConnectionInfo" Type="Database.ConnectionInfo" Scope="User">
-      <Value Profile="(Default)">
-          &lt;ConnectionInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
-            &lt;server&gt;localhost&lt;/server&gt;
-            &lt;userID&gt;root&lt;/userID&gt;
-            &lt;password&gt;Integra2022/&lt;/password&gt;
-            &lt;db&gt;db1&lt;/db&gt;
-          &lt;/ConnectionInfo&gt;
-        </Value>
-    </Setting>
     <Setting Name="Error_ReadAudit_ArgIncorrect" Type="System.String" Scope="User">
       <Value Profile="(Default)">Date et temps avant ou après incorrect</Value>
+    </Setting>
+    <Setting Name="ConnectionInfo" Type="Database.ConnectionInfo" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ConnectionInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;server&gt;localhost&lt;/server&gt;
+  &lt;userID&gt;root&lt;/userID&gt;
+  &lt;password&gt;Integra2022/&lt;/password&gt;
+  &lt;db&gt;db1&lt;/db&gt;
+&lt;/ConnectionInfo&gt;</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_mgG_Unit" Type="System.String" Scope="User">
+      <Value Profile="(Default)">mg/g</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_gG_Unit" Type="System.String" Scope="User">
+      <Value Profile="(Default)">g/g</Value>
     </Setting>
   </Settings>
 </SettingsFile>

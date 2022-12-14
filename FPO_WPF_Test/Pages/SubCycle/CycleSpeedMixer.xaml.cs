@@ -93,6 +93,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
         public CycleSpeedMixer(SubCycleArg subCycleArg)
         {
             logger.Debug("Start");
+            Task<object> t;
 
             subCycle = subCycleArg;
             subCycle.frameMain.ContentRendered += new EventHandler(ThisFrame_ContentRendered);
@@ -145,32 +146,45 @@ namespace FPO_WPF_Test.Pages.SubCycle
             // On affiche sur le panneau d'information que la séquence est en cours
             General.CurrentCycleInfo.UpdateCurrentSpeedMixerInfo(new string[] { Settings.Default.CycleInfo_Mix_StatusOnGoing });
 
-
+            /*
             if (!MyDatabase.IsConnected()) // Si l'on est connecté à la base de données
             {
                 logger.Error(DatabaseSettings.Error01);
                 return;
-            }
+            }*/
 
             // Penser à changer ça
-            MyDatabase.CreateTempTable();
+            // A CORRIGER : IF RESULT IS FALSE
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.CreateTempTable(); });
+            //MyDatabase.CreateTempTable();
 
             // currentPhaseParameters =  liste des paramètres pour notre séquence
             //this.currentPhaseParameters = MyDatabase.GetOneRow("recipe_speedmixer", whereColumns: new string[] { "id" }, whereValues: new string[] { id });
 
-            recipeSpeedMixerInfo = (RecipeSpeedMixerInfo)MyDatabase.GetOneRow(typeof(RecipeSpeedMixerInfo), subCycle.id);
+            // A CORRIGER : IF RESULT IS FALSE
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeSpeedMixerInfo), subCycle.id); });
+            recipeSpeedMixerInfo = (RecipeSpeedMixerInfo)t.Result;
+            //recipeSpeedMixerInfo = (RecipeSpeedMixerInfo)MyDatabase.GetOneRow(typeof(RecipeSpeedMixerInfo), subCycle.id);
 
             CycleSpeedMixerInfo cycleSMInfo = new CycleSpeedMixerInfo();
             //cycleSpeedMixerInfo.SetRecipeParameters(currentPhaseParameters);
-            cycleSMInfo.SetRecipeParameters(recipeSpeedMixerInfo);
+            cycleSMInfo.SetRecipeParameters(recipeSpeedMixerInfo, subCycle.idCycle);
 
-            MyDatabase.InsertRow(cycleSMInfo);
+            // A CORRIGER : IF RESULT IS FALSE
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(cycleSMInfo); });
+            //MyDatabase.InsertRow(cycleSMInfo);
 
-            idSubCycle = MyDatabase.GetMax(cycleSMInfo.name, cycleSMInfo.columns[cycleSMInfo.id].id);
+            // A CORRIGER : IF RESULT IS FALSE
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(cycleSMInfo.name, cycleSMInfo.columns[cycleSMInfo.id].id); });
+            idSubCycle = (int)t.Result;
+            //idSubCycle = MyDatabase.GetMax(cycleSMInfo.name, cycleSMInfo.columns[cycleSMInfo.id].id);
 
             subCycle.prevSeqInfo.columns[subCycle.prevSeqInfo.nextSeqType].value = cycleSMInfo.seqType.ToString();
             subCycle.prevSeqInfo.columns[subCycle.prevSeqInfo.nextSeqId].value = idSubCycle.ToString();
-            MyDatabase.Update_Row(subCycle.prevSeqInfo, subCycle.idPrevious.ToString());
+
+            // A CORRIGER : IF RESULT IS FALSE
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(subCycle.prevSeqInfo, subCycle.idPrevious.ToString()); });
+            //MyDatabase.Update_Row(subCycle.prevSeqInfo, subCycle.idPrevious.ToString());
             //MyDatabase.Update_Row(tablePrevious, new string[] { "next_seq_type", "next_seq_id" }, new string[] { "1", idSubCycle.ToString() }, idPrevious.ToString());
 
             //MyDatabase.Disconnect();
@@ -476,7 +490,9 @@ namespace FPO_WPF_Test.Pages.SubCycle
             TempInfo tempInfo = new TempInfo();
             tempInfo.columns[tempInfo.speed].value = currentSpeed.ToString();
             tempInfo.columns[tempInfo.pressure].value = currentPressure.ToString();
-            MyDatabase.InsertRow(tempInfo);
+            // A CORRIGER : IF RESULT IS FALSE
+            MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(tempInfo); });
+            //MyDatabase.InsertRow(tempInfo);
             //MyDatabase.InsertRow("temp", "speed, pressure", new string[] { currentSpeed.ToString(), currentPressure.ToString() });
 
             currentPhaseTime--;
@@ -548,6 +564,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
         private void EndSequence()
         {
             logger.Debug("EndSequence");
+            Task<object> t;
 
             // On arrête les timers (celle qui gère le temps de la séquence, la température du cold trap et celle qui gère la dispo de la pompe)
             sequenceTimer.Stop();
@@ -565,11 +582,13 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
             //if (!MyDatabase.IsConnected()) MyDatabase.Connect(); // Il va falloir supprimer ça
 
-            MyDatabase.SelectFromTemp();
-            TempResultInfo tempResultInfo = (TempResultInfo)MyDatabase.ReadNext(typeof(TempResultInfo));
+            // A CORRIGER : IF RESULT IS FALSE
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetResultRowTemp(); });
+            TempResultInfo tempResultInfo = (TempResultInfo)t.Result;
+            //TempResultInfo tempResultInfo = MyDatabase.GetResultRowTemp();
             //string[] array = MyDatabase.ReadNext();
             string comment = "";
-            MyDatabase.Close_reader();
+            //MyDatabase.Close_reader();
 
             CycleSpeedMixerInfo cycleSpeedMixerInfo = new CycleSpeedMixerInfo();
             cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.dateTimeEnd].value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -578,7 +597,9 @@ namespace FPO_WPF_Test.Pages.SubCycle
             cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.pressureMean].value = tempResultInfo.columns[tempResultInfo.pressureMean].value;
             cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.speedStd].value = tempResultInfo.columns[tempResultInfo.speedStd].value;
             cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.pressureStd].value = tempResultInfo.columns[tempResultInfo.pressureStd].value;
-            MyDatabase.Update_Row(cycleSpeedMixerInfo, idSubCycle.ToString());
+            // A CORRIGER : IF RESULT IS FALSE
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(cycleSpeedMixerInfo, idSubCycle.ToString()); });
+            //MyDatabase.Update_Row(cycleSpeedMixerInfo, idSubCycle.ToString());
 
 //            MyDatabase.Update_Row("cycle_speedmixer",
 //                new string[] { "date_time_end", "time_mix_eff", "speed_mean", "pressure_mean", "speed_std", "pressure_std" },

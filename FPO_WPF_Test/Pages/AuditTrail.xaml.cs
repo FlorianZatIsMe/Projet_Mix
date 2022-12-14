@@ -38,7 +38,7 @@ namespace FPO_WPF_Test.Pages
             logger.Debug("Start");
 
             InitializeComponent();
-
+            
             dpDateAfter.SelectedDate = DateTime.Now;
             dpDateAfter.DisplayDateStart = DateTime.Now.AddDays(-numberOfDaysBefore);
             dpDateAfter.DisplayDateEnd = DateTime.Now;
@@ -171,16 +171,16 @@ namespace FPO_WPF_Test.Pages
         }
         private void TbTimeBefore_LayoutUpdated(object sender, EventArgs e)
         {
-            logger.Debug("TbTimeBefore_LayoutUpdated");
-
             if (tbBefSelToUpdate)
             {
+                logger.Debug("TbTimeBefore_LayoutUpdated tbBefSelToUpdate");
                 int n = (int)(tbTimeBefore.CaretIndex / 3);
                 tbTimeBefore.Select(n * 3, 2);
                 tbBefSelToUpdate = false;
             }
             else if (tbBefFull)
             {
+                logger.Debug("TbTimeBefore_LayoutUpdated tbBefFull");
                 MoveTimeCursor(tbTimeBefore, false);
                 tbBefFull = false;
             }
@@ -214,16 +214,16 @@ namespace FPO_WPF_Test.Pages
         }
         private void TbTimeAfter_LayoutUpdated(object sender, EventArgs e)
         {
-            logger.Debug("TbTimeAfter_LayoutUpdated");
-
             if (tbAftSelToUpdate)
             {
+                logger.Debug("TbTimeAfter_LayoutUpdated tbAftSelToUpdate");
                 int n = (int)(tbTimeAfter.CaretIndex / 3);
                 tbTimeAfter.Select(n * 3, 2);
                 tbAftSelToUpdate = false;
             }
             else if (tbAftFull)
             {
+                logger.Debug("TbTimeAfter_LayoutUpdated tbAftFull");
                 MoveTimeCursor(tbTimeAfter, false);
                 tbAftFull = false;
             }
@@ -319,10 +319,9 @@ namespace FPO_WPF_Test.Pages
         }
         private void DpDateBefore_LayoutUpdated(object sender, EventArgs e)
         {
-            logger.Debug("DpDateBefore_LayoutUpdated");
-
             if (dpBefSelToUpdate)
             {
+                logger.Debug("DpDateBefore_LayoutUpdated dpBefSelToUpdate");
                 dpDateAfter.DisplayDateStart = dpDateBefore.SelectedDate;
                 dpBefSelToUpdate = false;
             }
@@ -341,10 +340,9 @@ namespace FPO_WPF_Test.Pages
         }
         private void DpDateAfter_LayoutUpdated(object sender, EventArgs e)
         {
-            logger.Debug("DpDateAfter_LayoutUpdated");
-
             if (dpAftSelToUpdate)
             {
+                logger.Debug("DpDateAfter_LayoutUpdated dpAftSelToUpdate");
                 dpDateBefore.DisplayDateEnd = dpDateAfter.SelectedDate;
                 dpAftSelToUpdate = false;
             }

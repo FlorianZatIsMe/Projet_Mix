@@ -30,12 +30,14 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         private readonly Frame parentFrame;
         private readonly bool[] FormatControl = new bool[Settings.Default.RecipeWeight_IdDBControls.list.Count];
         private bool CurrentFormatControl_tbBarcode;
+        public string test { get { return "Salut"; } }
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public Weight(Frame frame, string seqNumber)
         {
             logger.Debug("Start");
+            DataContext = test;
             
             ControlsIDs = new int[recipeWeightInfo.columns.Count];
             List<int> list = Settings.Default.RecipeWeight_IdDBControls.list;

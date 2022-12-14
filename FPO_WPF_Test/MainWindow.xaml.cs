@@ -36,8 +36,7 @@ namespace FPO_WPF_Test
         Modify,
         Copy,
         Delete
-    }
-    /*
+    }    /*
     public static class GeneralSettings
     {
         public static string General_SystemUsername { get; }
@@ -55,6 +54,7 @@ namespace FPO_WPF_Test
         private bool isWindowLoaded = false;
         private bool wasAutoBackupStarted = false;
         private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        public static string test = "Salut";
         public MainWindow()
         {
 #if DEBUG
@@ -68,46 +68,6 @@ namespace FPO_WPF_Test
             AlarmManagement.ActiveAlarmEvent += ActiveAlarmEvent;
             AlarmManagement.InactiveAlarmEvent += InactiveAlarmEvent;
             /*
-            ReadInfo readInfo = new ReadInfo(
-                _dtBefore: DateTime.Now.AddDays(-10),
-                _dtAfter: DateTime.Now);
-
-            AlarmManagement.Initialize(new Alarm_Management.IniInfo() { AuditTrail_SystemUsername = Settings.Default.General_SystemUsername });
-
-            List<AuditTrailInfo> tableInfos = MyDatabase.GetAlarms(2000, 2100);
-            string row;
-            for (int i = 0; i < tableInfos.Count; i++)
-            {
-                row = "";
-                for (int j = 0; j < tableInfos[i].columns.Count; j++)
-                {
-                    row += tableInfos[i].columns[j].value;
-                }
-                logger.Trace(row);
-            }
-            /
-
-            AuditTrailInfo auditTrail1 = new AuditTrailInfo();
-            auditTrail1.columns[auditTrail1.username].value = "Test user";
-            auditTrail1.columns[auditTrail1.eventType].value = "Event";
-            auditTrail1.columns[auditTrail1.description].value = "Quesu<Task> test 1";
-            Task<object> t1 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTrail1); });
-
-            AuditTrailInfo auditTrail2 = new AuditTrailInfo();
-            auditTrail2.columns[auditTrail2.username].value = "Test user";
-            auditTrail2.columns[auditTrail2.eventType].value = "Event";
-            auditTrail2.columns[auditTrail2.description].value = "Quesu<Task> test 2";
-            Task<object> t2 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTrail2); });
-
-            AuditTrailInfo auditTrail3 = new AuditTrailInfo();
-            auditTrail3.columns[auditTrail3.username].value = "Test user";
-            auditTrail3.columns[auditTrail3.eventType].value = "Event";
-            auditTrail3.columns[auditTrail3.description].value = "Quesu<Task> test 3";
-            Task<object> t3 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTrail3); });
-
-            logger.Fatal(t1.Result.ToString());
-            logger.Fatal(t2.Result.ToString());
-            logger.Fatal(t3.Result.ToString());
 
             MessageBox.Show("Fini je crois");
             Environment.Exit(1);
@@ -146,7 +106,16 @@ namespace FPO_WPF_Test
             while (!isWindowLoaded) await Task.Delay(Settings.Default.Main_WaitPageLoadedDelay);
 
             AlarmManagement.Initialize(new Alarm_Management.IniInfo() { AuditTrail_SystemUsername = Settings.Default.General_SystemUsername });
-            
+            MyDatabase.Initialize(new Database.IniInfo()
+            {
+                CycleFinalWeight_g_Unit = Settings.Default.CycleFinalWeight_g_Unit,
+                CycleFinalWeight_g_Conversion = Settings.Default.CycleFinalWeight_g_Conversion,
+                RecipeWeight_mgG_Unit = Settings.Default.RecipeWeight_mgG_Unit,
+                RecipeWeight_mgG_Conversion = Settings.Default.RecipeWeight_mgG_Conversion,
+                RecipeWeight_gG_Unit = Settings.Default.RecipeWeight_gG_Unit,
+                RecipeWeight_gG_Conversion = Settings.Default.RecipeWeight_gG_Conversion
+            });
+
             // 
             //
             //

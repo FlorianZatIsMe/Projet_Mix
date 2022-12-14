@@ -145,9 +145,13 @@ namespace FPO_WPF_Test
 
             //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
-            if (MyDatabase.IsConnected())
+            //if (MyDatabase.IsConnected())
+            if(true)
             {
-                List<RecipeInfo> tables = MyDatabase.GetLastRecipes(recipeStatus);
+                // A CORRIGER : IF RESULT IS FALSE
+                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetLastRecipes(recipeStatus); });
+                List<RecipeInfo> tables = (List<RecipeInfo>)t.Result;
+                //List<RecipeInfo> tables = MyDatabase.GetLastRecipes(recipeStatus);
 
                 for (int i = 0; i < tables.Count; i++)
                 {
@@ -209,15 +213,18 @@ namespace FPO_WPF_Test
             ISeqInfo recipeSeqInfo;
 
             //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
-
+            /*
             if (!MyDatabase.IsConnected())
             {
                 logger.Error(DatabaseSettings.Error01);
                 MessageBox.Show(DatabaseSettings.Error01);
                 return;
-            }
+            }*/
 
-            recipeInfo = (RecipeInfo)MyDatabase.GetOneRow(typeof(RecipeInfo), recipeID);
+            // A CORRIGER : IF RESULT IS FALSE
+            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeInfo), recipeID); });
+            recipeInfo = (RecipeInfo)t.Result;
+            //recipeInfo = (RecipeInfo)MyDatabase.GetOneRow(typeof(RecipeInfo), recipeID);
 
             if (recipeInfo == null || recipeInfo.columns[recipeInfo.id].value != recipeID)
             {
@@ -240,22 +247,32 @@ namespace FPO_WPF_Test
             cycleTableInfo.columns[cycleTableInfo.jobNumber].value = OFnumber;
             cycleTableInfo.columns[cycleTableInfo.batchNumber].value = OFnumber;
             cycleTableInfo.columns[cycleTableInfo.quantityValue].value = finalWeight;
-            cycleTableInfo.columns[cycleTableInfo.quantityUnit].value = "g";
+            cycleTableInfo.columns[cycleTableInfo.quantityUnit].value = Settings.Default.CycleFinalWeight_g_Unit;
             cycleTableInfo.columns[cycleTableInfo.itemNumber].value = recipe_name;
             cycleTableInfo.columns[cycleTableInfo.recipeName].value = recipe_name;
             cycleTableInfo.columns[cycleTableInfo.recipeVersion].value = recipe_version;
             cycleTableInfo.columns[cycleTableInfo.equipmentName].value = equipement_name;
             cycleTableInfo.columns[cycleTableInfo.username].value = General.loggedUsername;
-            cycleTableInfo.columns[cycleTableInfo.isItATest].value = isTest ? "1" : "0";
-            MyDatabase.InsertRow(cycleTableInfo);
+            cycleTableInfo.columns[cycleTableInfo.isItATest].value = isTest ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+
+            // A CORRIGER : IF RESULT IS FALSE
+            Task<object> t1 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(cycleTableInfo); });
+            //MyDatabase.InsertRow(cycleTableInfo);
 
             CurrentCycleInfo = new CycleInfo(cycleTableInfo, frameInfoCycle);
-            int idCycle = MyDatabase.GetMax(cycleTableInfo.name, cycleTableInfo.columns[cycleTableInfo.id].id);
+            // A CORRIGER : IF RESULT IS FALSE
+            Task<object> t2 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(cycleTableInfo.name, cycleTableInfo.columns[cycleTableInfo.id].id); });
+            int idCycle = (int)t2.Result;
+            //int idCycle = MyDatabase.GetMax(cycleTableInfo.name, cycleTableInfo.columns[cycleTableInfo.id].id);
 
             while (nextSeqID != "" && nextSeqID != null)
             {
                 logger.Debug("GetOneRow " + Sequence.list[int.Parse(nextSeqType)].subRecipeInfo.GetType().ToString() + " " + nextSeqID);
-                recipeSeqInfo = (ISeqInfo)MyDatabase.GetOneRow(Sequence.list[int.Parse(nextSeqType)].subRecipeInfo.GetType(), nextSeqID);
+
+                // A CORRIGER : IF RESULT IS FALSE
+                Task<object> t3 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(Sequence.list[int.Parse(nextSeqType)].subRecipeInfo.GetType(), nextSeqID); });
+                recipeSeqInfo = (ISeqInfo)t3.Result;
+                //recipeSeqInfo = (ISeqInfo)MyDatabase.GetOneRow(Sequence.list[int.Parse(nextSeqType)].subRecipeInfo.GetType(), nextSeqID);
 
                 if (recipeSeqInfo.columns.Count() != 0 && recipeSeqInfo.columns[recipeSeqInfo.id].value == nextSeqID)
                 {
@@ -281,16 +298,28 @@ namespace FPO_WPF_Test
             auditTrailInfo.columns[auditTrailInfo.username].value = loggedUsername;
             auditTrailInfo.columns[auditTrailInfo.eventType].value = Settings.Default.General_AuditTrailEvent_Event;
             auditTrailInfo.columns[auditTrailInfo.description].value = Settings.Default.General_AuditTrail_StartCycle1 + OFnumber + Settings.Default.General_AuditTrail_StartCycle2 + recipe_name + " version " + recipe_version;
-            MyDatabase.InsertRow(auditTrailInfo);
+
+            // A CORRIGER : IF RESULT IS FALSE
+            Task<object> t4 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTrailInfo); });
+            //MyDatabase.InsertRow(auditTrailInfo);
 
             string firstAlarmId;
             if (AlarmManagement.ActiveAlarms.Count > 0) firstAlarmId = AlarmManagement.Alarms[AlarmManagement.ActiveAlarms[0].Item1, AlarmManagement.ActiveAlarms[0].Item2].id.ToString();
-            else firstAlarmId = MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id).ToString();
+            else
+            {
+                // A CORRIGER : IF RESULT IS FALSE
+                Task<object> t5 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id); });
+                firstAlarmId = ((int)t5.Result).ToString();
+                //firstAlarmId = MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id).ToString();
+            }
 
             cycleTableInfo = new CycleTableInfo();
             cycleTableInfo.columns[cycleTableInfo.dateTimeStartCycle].value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             cycleTableInfo.columns[cycleTableInfo.firstAlarmId].value = firstAlarmId;
-            MyDatabase.Update_Row(cycleTableInfo, idCycle.ToString());
+
+            // A CORRIGER : IF RESULT IS FALSE
+            Task<object> t6 = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(cycleTableInfo, idCycle.ToString()); });
+            //MyDatabase.Update_Row(cycleTableInfo, idCycle.ToString());
 
             SubCycleArg subCycleArg = new SubCycleArg(frameMain, frameInfoCycle, firstSeqID, idCycle, idCycle, cycleTableInfo.name, new CycleTableInfo(), isTest);
             frameMain.Content = Activator.CreateInstance(Pages.Sequence.list[int.Parse(firstSeqType)].subCycPgType, new object[] { subCycleArg });
@@ -315,16 +344,8 @@ namespace FPO_WPF_Test
         {
             logger.Debug("EndSequence");
 
-            CycleTableInfo cycleTableInfo = new CycleTableInfo();
-            cycleTableInfo.columns[cycleTableInfo.dateTimeEndCycle].value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            cycleTableInfo.columns[cycleTableInfo.comment].value = comment;
-            MyDatabase.Update_Row(cycleTableInfo, idCycle.ToString());
-
             string nextSeqId;
             int nextRecipeSeqType;
-
-            //string[] valuesSubCycle = new string[0];
-            //int i;
 
             ICycleSeqInfo cycleSeqInfo;
             ICycleSeqInfo prevCycleSeqInfo;
@@ -344,7 +365,11 @@ namespace FPO_WPF_Test
             {
                 // Note pour plus tard: ce serait bien de retirer les "1" et de les remplacer par un truc comme recipeWeightInfo.nextSeqType
                 nextRecipeSeqType = int.Parse(recipeParam.columns[recipeParam.nextSeqType].value);
-                recipeParam = (ISeqInfo)MyDatabase.GetOneRow(typeof(ISeqInfo), recipeParam.columns[recipeParam.id].value);
+
+                // A CORRIGER : IF RESULT IS FALSE
+                Task<object> t2 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(ISeqInfo), recipeParam.columns[recipeParam.id].value); });
+                recipeParam = (ISeqInfo)t2.Result;
+                //recipeParam = (ISeqInfo)MyDatabase.GetOneRow(typeof(ISeqInfo), recipeParam.columns[recipeParam.id].value);
 
                 row = "recipeParameters ";
                 for (int j = 0; j < recipeParam.columns.Count(); j++)
@@ -361,7 +386,7 @@ namespace FPO_WPF_Test
                 }
 
                 cycleSeqInfo = Sequence.list[nextRecipeSeqType].subCycleInfo;
-                cycleSeqInfo.SetRecipeParameters(recipeParam);
+                cycleSeqInfo.SetRecipeParameters(recipeParam, idCycle);
 
                 row = cycleSeqInfo.GetType().ToString() + " ";
                 for (int j = 0; j < cycleSeqInfo.columns.Count(); j++)
@@ -371,15 +396,24 @@ namespace FPO_WPF_Test
                 logger.Trace(row);
 
                 // On insert les infos de recettes dans la bonne table
-                MyDatabase.InsertRow(cycleSeqInfo);
+                // A CORRIGER : IF RESULT IS FALSE
+                Task<object> t3 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(cycleSeqInfo); });
+                //MyDatabase.InsertRow(cycleSeqInfo);
 
                 // On met à jour les infos "type" et "id" de la séquence qu'on vient de renseigner dans la précédente séquence
-                nextSeqId = MyDatabase.GetMax(cycleSeqInfo.name, cycleSeqInfo.columns[cycleSeqInfo.id].id).ToString();
+
+                // A CORRIGER : IF RESULT IS FALSE
+                Task<object> t4 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(cycleSeqInfo.name, cycleSeqInfo.columns[cycleSeqInfo.id].id); });
+                nextSeqId = ((int)t4.Result).ToString();
+                //nextSeqId = MyDatabase.GetMax(cycleSeqInfo.name, cycleSeqInfo.columns[cycleSeqInfo.id].id).ToString();
 
                 prevCycleSeqInfo = Sequence.list[previousSeqType].subCycleInfo;
                 prevCycleSeqInfo.columns[prevCycleSeqInfo.nextSeqType].value = nextRecipeSeqType.ToString();
                 prevCycleSeqInfo.columns[prevCycleSeqInfo.nextSeqId].value = nextSeqId;
-                MyDatabase.Update_Row(prevCycleSeqInfo, previousSeqId);
+
+                // A CORRIGER : IF RESULT IS FALSE
+                Task<object> t5 = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(prevCycleSeqInfo, previousSeqId); });
+                //MyDatabase.Update_Row(prevCycleSeqInfo, previousSeqId);
 
                 // La dernière séquence devient l'ancienne
                 previousSeqType = nextRecipeSeqType;
@@ -387,16 +421,25 @@ namespace FPO_WPF_Test
 
             }
 
-            cycleTableInfo = new CycleTableInfo();
+            CycleTableInfo cycleTableInfo = new CycleTableInfo();
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-            string lastAlarmId = MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id).ToString();
+
+            // A CORRIGER : IF RESULT IS FALSE
+            Task<object> t6 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id); });
+            string lastAlarmId = ((int)t6.Result).ToString();
+            //string lastAlarmId = MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id).ToString();
             cycleTableInfo.columns[cycleTableInfo.dateTimeEndCycle].value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             cycleTableInfo.columns[cycleTableInfo.lastAlarmId].value = lastAlarmId;
-            MyDatabase.Update_Row(cycleTableInfo, idCycle.ToString());
+
+            // A CORRIGER : IF RESULT IS FALSE
+            Task<object> t7 = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(cycleTableInfo, idCycle.ToString()); });
+            //MyDatabase.Update_Row(cycleTableInfo, idCycle.ToString());
+
+            CurrentCycleInfo.StopSequence();
+            Task t = Task.Factory.StartNew(() => PrintReport(idCycle));
 
             MessageBox.Show(Settings.Default.Cycle_Info_CycleOver);
-            CurrentCycleInfo.StopSequence();
-            PrintReport(idCycle);
+            t.Wait();
             MessageBox.Show(Settings.Default.Cycle_Info_ReportGenerated);
 
             // On cache le panneau d'information
@@ -404,7 +447,10 @@ namespace FPO_WPF_Test
 
             if (isTest)
             {
-                cycleTableInfo = (CycleTableInfo)MyDatabase.GetOneRow(typeof(CycleTableInfo), idCycle.ToString());
+                // A CORRIGER : IF RESULT IS FALSE
+                Task<object> t8 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(CycleTableInfo), idCycle.ToString()); });
+                cycleTableInfo = (CycleTableInfo)t8.Result;
+                //cycleTableInfo = (CycleTableInfo)MyDatabase.GetOneRow(typeof(CycleTableInfo), idCycle.ToString());
                 frameMain.Content = new Recipe(Action.Modify, frameMain, frameInfoCycle, cycleTableInfo.columns.Count == 0 ? "" : cycleTableInfo.columns[cycleTableInfo.recipeName].value);
             }
             else 

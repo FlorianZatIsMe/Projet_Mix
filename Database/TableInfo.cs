@@ -56,8 +56,8 @@ namespace Database
     }
     public interface ICycleSeqInfo : ISeqInfo
     {
-        void SetRecipeParameters(string[] array); // ou get
-        void SetRecipeParameters(ISeqInfo recipe); // ou get
+        //void SetRecipeParameters(string[] array); // ou get
+        void SetRecipeParameters(ISeqInfo recipe, int idCycle); // ou get
     }
     public class AuditTrailInfo : ITableInfo, IdtTableInfo
     {
@@ -362,35 +362,30 @@ namespace Database
 
 
         private RecipeWeightInfo recipeWeightInfo = new RecipeWeightInfo();
-        public void SetRecipeParameters(string[] array)
-        {
-            NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-
-            if (array.Length != recipeWeightInfo.columns.Count())
-            {
-                logger.Error("Taille du tableau incorrect");
-                return;
-            }
-
-            columns[product].value = array[recipeWeightInfo.seqName];
-            columns[setpoint].value = array[recipeWeightInfo.setpoint];
-            columns[min].value = array[recipeWeightInfo.min];
-            columns[max].value = array[recipeWeightInfo.max];
-            columns[unit].value = array[recipeWeightInfo.unit];
-            columns[decimalNumber].value = array[recipeWeightInfo.decimalNumber];
-        }
-        public void SetRecipeParameters(ISeqInfo seqInfo)
+        public void SetRecipeParameters(ISeqInfo seqInfo, int idCycle)
         {
             // Vérifier que le type, idem pour speedmixer
             RecipeWeightInfo recipeWInfo = seqInfo as RecipeWeightInfo;
-            NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
+            
+            // A CORRIGER : IF RESULT IS FALSE
+            CycleTableInfo cycleTableInfo = (CycleTableInfo)MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(CycleTableInfo), idCycle.ToString()); }).Result;
+
+            decimal convRatio = (cycleTableInfo.columns[cycleTableInfo.quantityUnit].value == MyDatabase.info.CycleFinalWeight_g_Unit ? (decimal)MyDatabase.info.CycleFinalWeight_g_Conversion : 0) *
+                (recipeWInfo.columns[recipeWInfo.unit].value == MyDatabase.info.RecipeWeight_gG_Unit ? (decimal)MyDatabase.info.RecipeWeight_gG_Conversion :
+                recipeWInfo.columns[recipeWInfo.unit].value == MyDatabase.info.RecipeWeight_mgG_Unit ? (decimal)MyDatabase.info.RecipeWeight_mgG_Conversion : 0);
 
             columns[product].value = recipeWInfo.columns[recipeWInfo.seqName].value;
-            columns[setpoint].value = recipeWInfo.columns[recipeWInfo.setpoint].value;
-            columns[min].value = recipeWInfo.columns[recipeWInfo.min].value;
-            columns[max].value = recipeWInfo.columns[recipeWInfo.max].value;
-            columns[unit].value = recipeWInfo.columns[recipeWInfo.unit].value;
+            columns[setpoint].value = (convRatio * decimal.Parse(recipeWInfo.columns[recipeWInfo.setpoint].value) * decimal.Parse(cycleTableInfo.columns[cycleTableInfo.quantityValue].value)).ToString("N" + recipeWInfo.columns[recipeWInfo.decimalNumber].value);
+            columns[min].value = (convRatio * decimal.Parse(recipeWInfo.columns[recipeWInfo.min].value) * decimal.Parse(cycleTableInfo.columns[cycleTableInfo.quantityValue].value)).ToString("N" + recipeWInfo.columns[recipeWInfo.decimalNumber].value);
+            columns[max].value = (convRatio * decimal.Parse(recipeWInfo.columns[recipeWInfo.max].value) * decimal.Parse(cycleTableInfo.columns[cycleTableInfo.quantityValue].value)).ToString("N" + recipeWInfo.columns[recipeWInfo.decimalNumber].value);
+            columns[unit].value = cycleTableInfo.columns[cycleTableInfo.quantityUnit].value;
             columns[decimalNumber].value = recipeWInfo.columns[recipeWInfo.decimalNumber].value;
+
+            logger.Fatal((cycleTableInfo.columns[cycleTableInfo.quantityUnit].value == MyDatabase.info.CycleFinalWeight_g_Unit ? (decimal)MyDatabase.info.CycleFinalWeight_g_Conversion : 0));
+            logger.Fatal(recipeWInfo.columns[recipeWeightInfo.unit].value + ", " + MyDatabase.info.RecipeWeight_gG_Unit + ", " + (decimal)MyDatabase.info.RecipeWeight_gG_Conversion);
+            logger.Fatal(recipeWInfo.columns[recipeWeightInfo.unit].value + ", " + MyDatabase.info.RecipeWeight_mgG_Unit + ", " + (decimal)MyDatabase.info.RecipeWeight_mgG_Conversion);
+            //logger.Fatal(recipeWInfo.columns[recipeWInfo.decimalNumber].value);
         }
     }
     public class CycleSpeedMixerInfo : ICycleSeqInfo
@@ -449,7 +444,7 @@ namespace Database
 
 
         private RecipeSpeedMixerInfo recipeSpeedMixerInfo = new RecipeSpeedMixerInfo();
-        public void SetRecipeParameters(string[] array)
+   /*     public void SetRecipeParameters(string[] array)
         {
             NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -475,8 +470,8 @@ namespace Database
             columns[speedMax].value = array[recipeSpeedMixerInfo.speedMax];
             columns[pressureMin].value = array[recipeSpeedMixerInfo.pressureMin];
             columns[pressureMax].value = array[recipeSpeedMixerInfo.pressureMax];
-        }
-        public void SetRecipeParameters(ISeqInfo seqInfo)
+        }*/
+        public void SetRecipeParameters(ISeqInfo seqInfo, int idCycle)
         {
             RecipeSpeedMixerInfo recipeSMInfo = seqInfo as RecipeSpeedMixerInfo;
             NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
