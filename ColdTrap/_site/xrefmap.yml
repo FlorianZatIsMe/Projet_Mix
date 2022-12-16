@@ -1,0 +1,28 @@
+### YamlMime:XRefMap
+sorted: true
+references:
+- uid: Driver.ColdTrap
+  name: Driver.ColdTrap
+  href: api/Driver.ColdTrap.html
+  commentId: N:Driver.ColdTrap
+  fullName: Driver.ColdTrap
+  nameWithType: Driver.ColdTrap
+- uid: Driver.ColdTrap.ColdTrap
+  name: ColdTrap
+  href: api/Driver.ColdTrap.ColdTrap.html
+  commentId: T:Driver.ColdTrap.ColdTrap
+  fullName: Driver.ColdTrap.ColdTrap
+  nameWithType: ColdTrap
+- uid: Driver.ColdTrap.ColdTrap.IsTempOK
+  name: IsTempOK()
+  href: api/Driver.ColdTrap.ColdTrap.html#Driver_ColdTrap_ColdTrap_IsTempOK
+  commentId: M:Driver.ColdTrap.ColdTrap.IsTempOK
+  fullName: Driver.ColdTrap.ColdTrap.IsTempOK()
+  nameWithType: ColdTrap.IsTempOK()
+- uid: Driver.ColdTrap.ColdTrap.IsTempOK*
+  name: IsTempOK
+  href: api/Driver.ColdTrap.ColdTrap.html#Driver_ColdTrap_ColdTrap_IsTempOK_
+  commentId: Overload:Driver.ColdTrap.ColdTrap.IsTempOK
+  isSpec: "True"
+  fullName: Driver.ColdTrap.ColdTrap.IsTempOK
+  nameWithType: ColdTrap.IsTempOK

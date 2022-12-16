@@ -14,13 +14,25 @@ using User_Management.Properties;
 
 namespace User_Management
 {
+    /// <summary>
+    ///  This is the summary
+    /// </summary>
+    /// <remarks>This is a remark</remarks>
     public static class UserManagement
     {
+        /// <summary>
+        ///  This is a variable
+        /// </summary>
+        /// <value>variable description</value>
         private static bool[] CurrentAccessTable;
         private static AccessTableInfo accessTableInfo = new AccessTableInfo();
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+        /// <summary>
+        ///  This is a method
+        /// </summary>
+        /// <param name="username">Description of username parameter</param>
         public static string UpdateAccessTable(string username)
         {
             logger.Debug("UpdateAccessTable");
@@ -41,7 +53,6 @@ namespace User_Management
                 foreach (object groupMember in (IEnumerable)members)
                 {
                     DirectoryEntry member = new DirectoryEntry(groupMember);
-                    //MessageBox.Show(member.Name);
                     if (member.Name.ToLower() == username.ToLower())
                     {
                         if (role == null) role = appGroups[i, 1];
@@ -54,40 +65,25 @@ namespace User_Management
 
             accessTableInfo = new AccessTableInfo();
             accessTableInfo.columns[accessTableInfo.role].value = role;
-            // check if result null
 
             Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneBoolRow(accessTableInfo); });
             CurrentAccessTable = (bool[])t.Result;
-            //CurrentAccessTable = MyDatabase.GetOneBoolRow(accessTableInfo);
+            CurrentAccessTable = (bool[])null;
 
-            //MyDatabase.SendCommand_Read(accessTableInfo);
-            //CurrentAccessTable = MyDatabase.ReadNextBool();
-            // si CurrentAccessTable = null alors faire qqch
             return role;
-
-
-
-            /*
-            WindowsIdentity windowsIdentity = new WindowsIdentity("florian.polomack@integralife.com");
-            WindowsPrincipal principal = new WindowsPrincipal(windowsIdentity);
-            MessageBox.Show(principal.IsInRole(@"BUILTIN\Users").ToString());
-            //*/
-
-            /*
-            //PrincipalContext ctx = new PrincipalContext(ContextType.Domain, userName: "x", password: "*", name: "integra-ls.com");
-            PrincipalContext ctx_local = new PrincipalContext(ContextType.Machine, userName: "Julien", password: "Integra2021*", name: "DCHLOCPRD077");
-            PrincipalContext ctx = new PrincipalContext(ContextType.Domain, userName: "florian.polomack", password: "7Up1n5t5t&", name: "integra-ls.com");
-            UserPrincipal user = UserPrincipal.FindByIdentity(ctx, "florian.polomack");
-            GroupPrincipal groupPrincipal = GroupPrincipal.FindByIdentity(ctx_local, "MixingApplication_Supervisor");// @"BUILTIN\Users");
-            MessageBox.Show(user.IsMemberOf(groupPrincipal).ToString());
-            //*/
-
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public static bool[] GetCurrentAccessTable()
         {
             logger.Debug("GetCurrentAccessTable");
-
             return CurrentAccessTable;
         }
     }
 }
+
+
+
+

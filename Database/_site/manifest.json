@@ -1,0 +1,488 @@
+{
+  "homepages": [],
+  "source_base_path": "C:/Temp/FPO_WPF_Test/Database",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html",
+          "hash": "ZcRFJgNhvhM6kAH28Vkb5TxxGPe7FlftmernEpHWKBw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/intro.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/intro.html",
+          "hash": "yF4cM99miGSsrT64oV0kgkl56YkQylthgw5Gl1aJqzo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "articles/toc.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/toc.html",
+          "hash": "BlPxk5mtl2kgfcZUgkEguqiSAR/EUyUTT4EdebwkQvs="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html",
+          "hash": "GGOovSab6ZFxRkwbTiKX/AxcXz9WU1qSZOSIhjRqq74="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.AccessTableInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.AccessTableInfo.html",
+          "hash": "J/x8Ts4mPja8juk3/XxdiosJnzXZf1CzcahiYQ+z3lM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.AuditTrailInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.AuditTrailInfo.html",
+          "hash": "k7RdIgE2k781Qfnw/9wtuwvTnDHnYZznzHlUQYtxEHg="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.Column.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.Column.html",
+          "hash": "kWD5RQ0jQ9OBVBYRzycHYviURmF0vwVXkoyMdLJfozI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.Config.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.Config.html",
+          "hash": "P00nLBua79B3QK8QaqFyteKnTz97x+cawSv40e/K41s="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.Configuration_old.Connection_Info.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.Configuration_old.Connection_Info.html",
+          "hash": "Qubw4nVVtKiZJIaGpG2r4WdrMHcrZR8xsNbx7/W1M74="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.Configuration_old.DB_Features.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.Configuration_old.DB_Features.html",
+          "hash": "bbQVG1YFxU12lrgVj1pBo5JSF/ieRbrqGidw6A6F618="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.Configuration_old.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.Configuration_old.html",
+          "hash": "mDKtQCrO9fv31GK8+sIg9hD+3pn8PLpon+xNXvmcw1M="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.ConnectionInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.ConnectionInfo.html",
+          "hash": "oBiqG4Mswv7TNjIWeEjqhZmUkHj3cOclpxxy0/tLI+4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.CycleSpeedMixerInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.CycleSpeedMixerInfo.html",
+          "hash": "1jQryj7r6quM8J/2x5gHpIpKS54+StC1AH0B/SQ2XcA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.CycleTableInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.CycleTableInfo.html",
+          "hash": "4eVygXHULPfw0rvNh1/Om7V0sYanu2GDIO80oTkjnaU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.CycleWeightInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.CycleWeightInfo.html",
+          "hash": "PmB6AhQcIQd43BqRWzTNVw84vcgIuJkPV3lyRwc52mw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.DatabaseSettings.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.DatabaseSettings.html",
+          "hash": "CiLGqHhVjp6gSkjPpR45ERwkY1jErJx5kB3fQBXwMMc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.General.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.General.html",
+          "hash": "J+HbXFiHfCdYdi80EQxMhGDyBmRArNQDWVHT7JP6kBc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.IColumn.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.IColumn.html",
+          "hash": "c22JD3Hv1YTUD4pqfrn2nggYzYxH6cvMgTAMb87gq2o="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.IConfig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.IConfig.html",
+          "hash": "FG/ykbwN8x0W61q8C5cndT6lL+mTbCK0Q3xEw8bWEzc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.ICycleSeqInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.ICycleSeqInfo.html",
+          "hash": "8qTsNyGElQvSvZK3bn3m6jSmMuMSQUPzaQQJAEa+uQc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.ISeqInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.ISeqInfo.html",
+          "hash": "6C+hUpetTzh9/+jjkrIkCAGHPbZtWeESea1dR58qSwc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.ITableInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.ITableInfo.html",
+          "hash": "AwhWXSjnv20JrINlLCQApH6RVzdnbC8pQYCWpehOFVM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.ITempTableInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.ITempTableInfo.html",
+          "hash": "uLyPsUhPb4eE9xHemmyTNT7BmmJfyWODWr8pQdUcNP4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.IdtTableInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.IdtTableInfo.html",
+          "hash": "ZZcJhzr34PkaNFK9JTUOTmEDIQzy94AAHjQoYh+/KYQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.IniInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.IniInfo.html",
+          "hash": "uP5VtkopPqeR/21ZmIrHKEwuvHrSRzgRBLUd9EGci60="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.MyDatabase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.MyDatabase.html",
+          "hash": "FLsoauaqWU9Bj++iZRpKPRTgvemLyHzyjsVWK+VndJE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.ReadInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.ReadInfo.html",
+          "hash": "I4cSqrDueFIi+ioiOgFT3fCq/7dY8SFQJuIm3iKmL0U="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.RecipeInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.RecipeInfo.html",
+          "hash": "P5V14IzKUO+/BTnFY8EIkMbp55ot6nif8Iu0ESDUt2w="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.RecipeSpeedMixerInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.RecipeSpeedMixerInfo.html",
+          "hash": "8eQKwB0TBXtdIg1NFlQSAxOR2cl5u6F7Bwql0Qww4gU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.RecipeStatus.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.RecipeStatus.html",
+          "hash": "bgHz7Lc357nc+SOnF68u4Wx55KG+j4WK4Nh6iE4lSLU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.RecipeWeightInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.RecipeWeightInfo.html",
+          "hash": "MuHOtqEwGuawOkPTo1PzZ64ZHygFPRn//F39IORxuO0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.TempInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.TempInfo.html",
+          "hash": "sb815qTALJxAsKNE+JMSM0nU5kw1VArF/ABJboY2UyY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.TempResultInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.TempResultInfo.html",
+          "hash": "hhwI5aQ3MLTw6K8hRUcpaEYMgBZntMcPTU6Y8c0Zw9s="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/Database.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Database.html",
+          "hash": "oIsubSWiZyByhLO3+0Mqx1vw9qRikzaoqbMPe+gnW/w="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "obj/api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html",
+          "hash": "K1V7PQRm0x5jWz2D/IbYo3qHWnPd67qxyFYUemblrFY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html",
+          "hash": "Oa9PuD4E1hvZnCkVjUgzNBX6S00Zo5YilamTERTZo54="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    }
+  ],
+  "incremental_info": [
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Disable incremental build by force rebuild option.",
+        "incrementalPhase": "build",
+        "total_file_count": 0,
+        "skipped_file_count": 0,
+        "full_build_reason_code": "ForceRebuild"
+      },
+      "processors": {
+        "ConceptualDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 3,
+          "skipped_file_count": 0
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 30,
+          "skipped_file_count": 0
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        }
+      }
+    },
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Cannot support incremental post processing, the reason is: it's disabled.",
+        "incrementalPhase": "postProcessing",
+        "total_file_count": 0,
+        "skipped_file_count": 0
+      },
+      "processors": {}
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

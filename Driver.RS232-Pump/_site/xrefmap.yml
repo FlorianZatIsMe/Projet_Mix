@@ -1,0 +1,34 @@
+### YamlMime:XRefMap
+sorted: true
+references:
+- uid: Driver_RS232_Pump
+  name: Driver_RS232_Pump
+  href: api/Driver_RS232_Pump.html
+  commentId: N:Driver_RS232_Pump
+  fullName: Driver_RS232_Pump
+  nameWithType: Driver_RS232_Pump
+- uid: Driver_RS232_Pump.RS232Pump
+  name: RS232Pump
+  href: api/Driver_RS232_Pump.RS232Pump.html
+  commentId: T:Driver_RS232_Pump.RS232Pump
+  fullName: Driver_RS232_Pump.RS232Pump
+  nameWithType: RS232Pump
+- uid: Driver_RS232_Pump.RS232Pump.GetData
+  name: GetData()
+  href: api/Driver_RS232_Pump.RS232Pump.html#Driver_RS232_Pump_RS232Pump_GetData
+  commentId: M:Driver_RS232_Pump.RS232Pump.GetData
+  fullName: Driver_RS232_Pump.RS232Pump.GetData()
+  nameWithType: RS232Pump.GetData()
+- uid: Driver_RS232_Pump.RS232Pump.GetData*
+  name: GetData
+  href: api/Driver_RS232_Pump.RS232Pump.html#Driver_RS232_Pump_RS232Pump_GetData_
+  commentId: Overload:Driver_RS232_Pump.RS232Pump.GetData
+  isSpec: "True"
+  fullName: Driver_RS232_Pump.RS232Pump.GetData
+  nameWithType: RS232Pump.GetData
+- uid: Driver_RS232_Pump.RS232Pump.rs232
+  name: rs232
+  href: api/Driver_RS232_Pump.RS232Pump.html#Driver_RS232_Pump_RS232Pump_rs232
+  commentId: F:Driver_RS232_Pump.RS232Pump.rs232
+  fullName: Driver_RS232_Pump.RS232Pump.rs232
+  nameWithType: RS232Pump.rs232

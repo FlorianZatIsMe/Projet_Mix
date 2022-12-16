@@ -1,0 +1,440 @@
+{
+  "homepages": [],
+  "source_base_path": "C:/Temp/FPO_WPF_Test/FPO_WPF_Test",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html",
+          "hash": "ZcRFJgNhvhM6kAH28Vkb5TxxGPe7FlftmernEpHWKBw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/intro.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/intro.html",
+          "hash": "yF4cM99miGSsrT64oV0kgkl56YkQylthgw5Gl1aJqzo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "articles/toc.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/toc.html",
+          "hash": "BlPxk5mtl2kgfcZUgkEguqiSAR/EUyUTT4EdebwkQvs="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html",
+          "hash": "GGOovSab6ZFxRkwbTiKX/AxcXz9WU1qSZOSIhjRqq74="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.Action.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.Action.html",
+          "hash": "BBIim+fJuNAvcKOZTRCWcqbSgAPyaz9sCujOa4EmdBY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.App.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.App.html",
+          "hash": "CRyNGTmR8r/QXGwW0/AWuqnp8Pk+Ge1q68Nu26V4wNw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.LogIn.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.LogIn.html",
+          "hash": "4kOc3cH92SK1OReUUN5h9BfWQo0AytO68qDeA1p/Uo4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.MainWindow.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.MainWindow.html",
+          "hash": "otJYrzGAGKsQqaM2sskdmacjsjDSsC44Spls4uuh7ws="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.Pages.ActiveAlarms.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.Pages.ActiveAlarms.html",
+          "hash": "NTQ/SvF5w1a3o7BMEIYtsNLiZCrWVuLOajPR26xtHf8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.Pages.Archiving.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.Pages.Archiving.html",
+          "hash": "3yK8+uVWj6wx5ELzIyI8IEeGBIyO8UEGAWMRIzPljhQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.Pages.AuditTrail.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.Pages.AuditTrail.html",
+          "hash": "rgZFlEXv5Ygtcy1y0PnQyhZij/58ovG8U8tKaqSdzT8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.Pages.Backup.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.Pages.Backup.html",
+          "hash": "0Sf4sTo/ijb864AOC2sepK0W4jQoeDvQzmpHGGUxT1U="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.Pages.ISubCycle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.Pages.ISubCycle.html",
+          "hash": "S45zFsIERVgSN6LRSrGo0Vk+ErplAioOaztMEuyv9l0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.Pages.ISubRecipe.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.Pages.ISubRecipe.html",
+          "hash": "gKBDC6yYbFkswzKkUYvWjEV4gXjZCIXU68sKAwUyKqA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.Pages.IdDBControls.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.Pages.IdDBControls.html",
+          "hash": "Gnm1DdNUhK6icpbwvhaslMuGl0j/21VIMxT4R1dJIAk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.Pages.Recipe.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.Pages.Recipe.html",
+          "hash": "OtOK80gEnglw8EzlClog26bK4Mf/hMsFZL1aRTHtBC8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.Pages.Seq.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.Pages.Seq.html",
+          "hash": "AiP1Bp6c+lkkjv7Q1ARGzgTqHS1Ovnl/PIlSOov57RY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.Pages.Sequence.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.Pages.Sequence.html",
+          "hash": "TensyuVcQWGs83QVBhZODgaqvC2jwrnzDVsNTZFeVlU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.Pages.Status.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.Pages.Status.html",
+          "hash": "iQMuqa+3HyTKYq+BkmjR7NqVKQu1PDOTTK7QpivNtDs="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.Pages.SubCycle.CycleInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.Pages.SubCycle.CycleInfo.html",
+          "hash": "jDHIUVIdGm9aqd4Mgv0NxXdlUMsO5FzsCl/nsAlu9Is="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.Pages.SubCycle.CycleSpeedMixer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.Pages.SubCycle.CycleSpeedMixer.html",
+          "hash": "nxMjV9c7He8WtCnCGW4hAkZ4WM6WI/Iv0PkzhyeRpE0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.Pages.SubCycle.CycleWeight.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.Pages.SubCycle.CycleWeight.html",
+          "hash": "X0z00A8Ioh0jTX+DXELgJYFMA7vELbp8/JWIj/EcS04="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.Pages.SubCycle.PreCycle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.Pages.SubCycle.PreCycle.html",
+          "hash": "u4gMN8LiT4mcKsEfNk+flEqB6+qeUMMGzgP+7oeEdc8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.Pages.SubCycle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.Pages.SubCycle.html",
+          "hash": "UsY3kCRHMmxbzKGLCWPguI+WK87b7a6xdRIC1C9jM6U="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.Pages.SubCycleArg.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.Pages.SubCycleArg.html",
+          "hash": "Q9kld4L0SRHKyBtBBu8Ir9WamilIJi7kOZwcF0Iznqs="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.Pages.SubRecipe.SpeedMixer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.Pages.SubRecipe.SpeedMixer.html",
+          "hash": "1uRaVGAJwE1XEkYP24ZAI7K5z1qESh/07RXAuTBA/Dk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.Pages.SubRecipe.Weight.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.Pages.SubRecipe.Weight.html",
+          "hash": "NglaypLAwSl4zO2zBcNcu+QUrqi9Ow1vnxx77w+ryrY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.Pages.SubRecipe.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.Pages.SubRecipe.html",
+          "hash": "vux0MqtdpRSJO6N71YJxiCs/4CKtUTPmKV5btybUdUI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.Pages.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.Pages.html",
+          "hash": "7Ju3U8+rovAPqTnSTuvSVEI6baxi8IXZ3Xl0Jxl+YJE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/FPO_WPF_Test.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FPO_WPF_Test.html",
+          "hash": "KJZ/j3agx9PBLYpCXu8I51H9nOi3N35+5BbHC2HfmNY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "obj/api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html",
+          "hash": "amYk8quJR2fMH+p8clLqQAqtzVregE0ftJtihixiRM4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html",
+          "hash": "Oa9PuD4E1hvZnCkVjUgzNBX6S00Zo5YilamTERTZo54="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    }
+  ],
+  "incremental_info": [
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Disable incremental build by force rebuild option.",
+        "incrementalPhase": "build",
+        "total_file_count": 0,
+        "skipped_file_count": 0,
+        "full_build_reason_code": "ForceRebuild"
+      },
+      "processors": {
+        "ConceptualDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 3,
+          "skipped_file_count": 0
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 26,
+          "skipped_file_count": 0
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        }
+      }
+    },
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Cannot support incremental post processing, the reason is: it's disabled.",
+        "incrementalPhase": "postProcessing",
+        "total_file_count": 0,
+        "skipped_file_count": 0
+      },
+      "processors": {}
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}
