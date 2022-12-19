@@ -7,8 +7,14 @@ using System.Threading.Tasks;
 
 namespace Database.Configuration_old
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class DB_Features : ConfigurationElement
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [ConfigurationProperty("Server", DefaultValue = "", IsRequired = true)]
         public string Server
         {

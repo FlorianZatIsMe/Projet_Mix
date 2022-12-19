@@ -23,6 +23,9 @@ using Database.Properties;
 
 namespace Database
 {
+    /// <summary>
+    /// ConnectionInfo
+    /// </summary>
     [SettingsSerializeAs(SettingsSerializeAs.Xml)]
     public class ConnectionInfo
     {
@@ -79,6 +82,7 @@ namespace Database
             ReaderUnavailable = Settings.Default.ReaderUnavailable;
         }
     }
+
     public class ReadInfo
     {
         public ITableInfo tableInfo { get; }
@@ -116,6 +120,9 @@ namespace Database
             customWhere = _readInfo.customWhere;
         }
     }
+    /// <summary>
+    /// Class MyDatabase
+    /// </summary>
     public static class MyDatabase
     {
         private static MySqlConnection connection;
@@ -176,6 +183,11 @@ namespace Database
             IsQueueAvailableTimer.Elapsed += IsQueueAvailableTimer_OnTimedEvent;
             IsQueueAvailableTimer.Start();
         }
+        /// <summary>
+        /// Timer
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
         private static void QueueEmptyTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
             if(QueueEmptyCount > 0 && QueueEmptyCount < 4) logger.Fatal("QueueEmptyCount: " + QueueEmptyCount.ToString());

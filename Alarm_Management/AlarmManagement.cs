@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Alarm_Management
 {
-    //
-    //  Classes utilisées en lien avec le fichier de configuration pour détailler la liste d'alarmes
-    //
+    /// <summary>
+    /// class
+    /// </summary>
     public class ConfigAlarm
     {
         public int id1 { get; set; }
@@ -18,19 +18,26 @@ namespace Alarm_Management
         public string description { get; set; }
         public AlarmType type { get; set; }
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
     [SettingsSerializeAs(SettingsSerializeAs.Xml)]
     public class ConfigAlarms
     {
         public ConfigAlarm[] configAlarms { get; set; }
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
     public enum AlarmType
     {
         Alarm,
         Warning,
         None
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public enum AlarmStatus
     {
         RAZ,
@@ -40,6 +47,9 @@ namespace Alarm_Management
         ACK,
         None
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public class Alarm
     {
         public int id;
@@ -108,6 +118,10 @@ namespace Alarm_Management
             alarms[4, 0] = new Alarm("Backup automatique complet de la base de données échoué aprés 3 tentatives", AlarmType.Warning);
             */
         }
+        /// <summary>
+        /// Initialize
+        /// </summary>
+        /// <param name="info"></param>
         public static void Initialize(IniInfo info)
         {
             logger.Debug("Initialize");

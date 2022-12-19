@@ -493,9 +493,10 @@ namespace Driver.MODBUS.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ConnectionInfo xmlns:xsd=\"http://www.w3" +
-            ".org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n  <" +
-            "ipAddress>10.10.1.2</ipAddress>\r\n  <port>503</port>\r\n</ConnectionInfo>")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\r\n          <ConnectionInfo xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xs" +
+            "i=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n            <ipAddress>10.10.1.2" +
+            "</ipAddress>\r\n            <port>503</port>\r\n          </ConnectionInfo>\r\n       " +
+            " ")]
         public global::Driver_MODBUS.ConnectionInfo ConnectionInfo {
             get {
                 return ((global::Driver_MODBUS.ConnectionInfo)(this["ConnectionInfo"]));

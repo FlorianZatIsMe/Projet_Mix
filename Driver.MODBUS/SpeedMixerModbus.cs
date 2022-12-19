@@ -14,14 +14,18 @@ using EasyModbus;
 
 namespace Driver_MODBUS
 {
-
+    /// <summary>
+    /// 
+    /// </summary>
     [SettingsSerializeAs(SettingsSerializeAs.Xml)]
     public class ConnectionInfo
     {
         public string ipAddress { get; set; }
         public int port { get; set; }
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
     public static class SpeedMixerSettings
     {
         public static int MixerStatusId_ReadyToRun { get; }
@@ -43,7 +47,9 @@ namespace Driver_MODBUS
             MixerStatusId_RobotAtHome = Settings.Default.MixerStatusId_RobotAtHome;
         }
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
     public static class SpeedMixerModbus
     {
         private static ModbusClient speedMixer;

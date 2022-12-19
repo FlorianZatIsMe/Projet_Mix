@@ -2177,24 +2177,6 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-  <server>localhost</server>
-  <userID>root</userID>
-  <password>Integra2022/</password>
-  <db>db1</db>
-</ConnectionInfo>")]
-        public global::Database.ConnectionInfo ConnectionInfo {
-            get {
-                return ((global::Database.ConnectionInfo)(this["ConnectionInfo"]));
-            }
-            set {
-                this["ConnectionInfo"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("mg/g")]
         public string RecipeWeight_mgG_Unit {
             get {
@@ -2214,6 +2196,25 @@ namespace Database.Properties {
             }
             set {
                 this["RecipeWeight_gG_Unit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"
+          <ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+            <server>localhost</server>
+            <userID>root</userID>
+            <password>Integra2022/</password>
+            <db>db1</db>
+          </ConnectionInfo>
+        ")]
+        public global::Database.ConnectionInfo ConnectionInfo {
+            get {
+                return ((global::Database.ConnectionInfo)(this["ConnectionInfo"]));
+            }
+            set {
+                this["ConnectionInfo"] = value;
             }
         }
     }
