@@ -464,7 +464,7 @@
     <Setting Name="Info01" Type="System.String" Scope="User">
       <Value Profile="(Default)">Tentative de reconnexion. Statut: </Value>
     </Setting>
-    <Setting Name="Error01" Type="System.String" Scope="User">
+    <Setting Name="Error_connectToDbFailed" Type="System.String" Scope="User">
       <Value Profile="(Default)">Connection à la base de données échouée</Value>
     </Setting>
     <Setting Name="Error02" Type="System.String" Scope="User">
@@ -679,9 +679,6 @@
   &lt;string&gt;0&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
-    <Setting Name="ReaderUnavailable" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Le reader n'est pas disponible</Value>
-    </Setting>
     <Setting Name="MaxNumbRows" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10000</Value>
     </Setting>
@@ -700,6 +697,9 @@
     <Setting Name="RecipeWeight_gG_Unit" Type="System.String" Scope="User">
       <Value Profile="(Default)">g/g</Value>
     </Setting>
+    <Setting Name="ICycleSeqInfo_Error_RecipeIncorrect" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Type de la recette utilisé incorrect</Value>
+    </Setting>
     <Setting Name="ConnectionInfo" Type="Database.ConnectionInfo" Scope="User">
       <Value Profile="(Default)">
           &lt;ConnectionInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
@@ -709,6 +709,12 @@
             &lt;db&gt;db1&lt;/db&gt;
           &lt;/ConnectionInfo&gt;
         </Value>
+    </Setting>
+    <Setting Name="Error_FromHere" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Elle vient d'ici l'erreur</Value>
+    </Setting>
+    <Setting Name="ICycleSeqInfo_Error_convRatioIncorrect" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Unités de pesée incorrectes</Value>
     </Setting>
   </Settings>
 </SettingsFile>

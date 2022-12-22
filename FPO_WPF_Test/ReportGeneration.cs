@@ -268,13 +268,13 @@ namespace FPO_WPF_Test
 
             return y + marginH_GeneralInfo + (int)((values.Length - 1) / 2) * generalInfoHeight + textHeight;
         }
-        private double GenerateSequence(int seqType, PdfPage page, int n, double y, ISeqInfo cycleSeqInfo)
+        private double GenerateSequence(int seqType, PdfPage page, int n, double y, ISeqTabInfo cycleSeqInfo)
         {
-            if (seqType == recipeWeightInfo.seqType)
+            if (seqType == recipeWeightInfo.SeqType)
             {
                 return GenerateWeightSeq(page, n, y, cycleSeqInfo);
             }
-            else if (seqType == recipeSpeedMixerInfo.seqType)
+            else if (seqType == recipeSpeedMixerInfo.SeqType)
             {
                 return GenerateSpeedMixerSeq(page, n, y, cycleSeqInfo);
 
@@ -302,49 +302,49 @@ namespace FPO_WPF_Test
         private readonly string weightSeq_statusFAIL = "FAIL";
         private readonly int weightSeq_statusColumnNumber = 4;
 
-        private double GenerateWeightSeq(PdfPage page, int n, double y, ISeqInfo cycleSeqInfo)
+        private double GenerateWeightSeq(PdfPage page, int n, double y, ISeqTabInfo cycleSeqInfo)
         {
             logger.Debug("GenerateWeightSeq");
 
             CycleWeightInfo cycleWeightInfo = cycleSeqInfo as CycleWeightInfo;
 
-            if (cycleWeightInfo.columns == null) return -1;
+            if (cycleWeightInfo.Columns == null) return -1;
 
-            string product = cycleWeightInfo.columns[cycleWeightInfo.product].value;//3
-            string wasWeightManual = cycleWeightInfo.columns[cycleWeightInfo.wasWeightManual].value;//4
-            string dateTime = (cycleWeightInfo.columns[cycleWeightInfo.dateTime].value == "" || 
-                cycleWeightInfo.columns[cycleWeightInfo.dateTime] == null) ? na : 
-                cycleWeightInfo.columns[cycleWeightInfo.dateTime].value; //5
+            string product = cycleWeightInfo.Columns[cycleWeightInfo.Product].Value;//3
+            string wasWeightManual = cycleWeightInfo.Columns[cycleWeightInfo.WasWeightManual].Value;//4
+            string dateTime = (cycleWeightInfo.Columns[cycleWeightInfo.DateTime].Value == "" || 
+                cycleWeightInfo.Columns[cycleWeightInfo.DateTime] == null) ? na : 
+                cycleWeightInfo.Columns[cycleWeightInfo.DateTime].Value; //5
             string actualValue;
             string setpoint;
             string minimum;
             string maximum;
-            string unit = cycleWeightInfo.columns[cycleWeightInfo.unit].value;//10
-            string decimalNumber = cycleWeightInfo.columns[cycleWeightInfo.decimalNumber].value;//11
+            string unit = cycleWeightInfo.Columns[cycleWeightInfo.Unit].Value;//10
+            string decimalNumber = cycleWeightInfo.Columns[cycleWeightInfo.DecimalNumber].Value;//11
 
             try {
-                actualValue = decimal.Parse(cycleWeightInfo.columns[cycleWeightInfo.actualValue].value).ToString("N" + decimalNumber); //6
+                actualValue = decimal.Parse(cycleWeightInfo.Columns[cycleWeightInfo.WeightedValue].Value).ToString("N" + decimalNumber); //6
             }
             catch (Exception) {
                 actualValue = na;
             }
 
             try {
-                setpoint = decimal.Parse(cycleWeightInfo.columns[cycleWeightInfo.setpoint].value).ToString("N" + decimalNumber);//7
+                setpoint = decimal.Parse(cycleWeightInfo.Columns[cycleWeightInfo.Setpoint].Value).ToString("N" + decimalNumber);//7
             }
             catch (Exception) {
                 setpoint = na;
             }
 
             try {
-                minimum = decimal.Parse(cycleWeightInfo.columns[cycleWeightInfo.min].value).ToString("N" + decimalNumber);//8
+                minimum = decimal.Parse(cycleWeightInfo.Columns[cycleWeightInfo.Min].Value).ToString("N" + decimalNumber);//8
             }
             catch (Exception) {
                 minimum = na;
             }
 
             try {
-                maximum = decimal.Parse(cycleWeightInfo.columns[cycleWeightInfo.max].value).ToString("N" + decimalNumber);
+                maximum = decimal.Parse(cycleWeightInfo.Columns[cycleWeightInfo.Max].Value).ToString("N" + decimalNumber);
             }
             catch (Exception) {
                 maximum = na;
@@ -466,33 +466,33 @@ namespace FPO_WPF_Test
 
         private readonly string smSeq_speedUnit = "RPM";
 
-        private double GenerateSpeedMixerSeq(PdfPage page, int n, double y, ISeqInfo cycleSeqInfo)
+        private double GenerateSpeedMixerSeq(PdfPage page, int n, double y, ISeqTabInfo cycleSeqInfo)
         {
             logger.Debug("GenerateSpeedMixerSeq");
 
             CycleSpeedMixerInfo cycleSpeedMixerInfo = cycleSeqInfo as CycleSpeedMixerInfo;
 
-            string dtStartSpeedMixerSeq = cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.dateTimeStart].value == "" ? na : cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.dateTimeStart].value;
-            string dtEndSpeedMixerSeq = cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.dateTimeEnd].value == "" ? na : cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.dateTimeEnd].value;
-            string timeMixTh = cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.timeMixTh].value;
-            string timeMixEff = cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.timeMixEff].value == "" ? na : cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.timeMixEff].value;
+            string dtStartSpeedMixerSeq = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.DateTimeStart].Value == "" ? na : cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.DateTimeStart].Value;
+            string dtEndSpeedMixerSeq = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.DateTimeEnd].Value == "" ? na : cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.DateTimeEnd].Value;
+            string timeMixTh = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.TimeSeqTh].Value;
+            string timeMixEff = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.TimeSeqEff].Value == "" ? na : cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.TimeSeqEff].Value;
             string timeSpeedMixerSeq;
 
-            string pressureUnit = cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.pressureUnit].value;
+            string pressureUnit = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.PressureUnit].Value;
 
-            string speedMin = cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.speedMin].value;
-            string speedMax = cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.speedMax].value;
+            string speedMin = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.SpeedMin].Value;
+            string speedMax = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.SpeedMax].Value;
             string speedParam = speedMin + smSeq_speedUnit + " - " + speedMax + smSeq_speedUnit;
 
-            string pressureMin = cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.pressureMin].value;
-            string pressureMax = cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.pressureMax].value;
+            string pressureMin = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.PressureMin].Value;
+            string pressureMax = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.PressureMax].Value;
             string pressureParam = pressureMin + pressureUnit + " - " + pressureMax + pressureUnit;
 
-            string speedMean = cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.speedMean].value == "" ? na : (double.Parse(cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.pressureMean].value).ToString("N0") + smSeq_speedUnit);
-            string pressureMean = cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.pressureMean].value == "" ? na : (double.Parse(cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.pressureMean].value).ToString("N2") + pressureUnit);
+            string speedMean = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.SpeedAvg].Value == "" ? na : (double.Parse(cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.PressureAvg].Value).ToString("N0") + smSeq_speedUnit);
+            string pressureMean = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.PressureAvg].Value == "" ? na : (double.Parse(cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.PressureAvg].Value).ToString("N2") + pressureUnit);
             
-            string speedSTD = cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.speedStd].value == "" ? na : (double.Parse(cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.speedStd].value).ToString("N0") + smSeq_speedUnit);
-            string pressureSTD = cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.pressureStd].value == "" ? na : (double.Parse(cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.pressureStd].value).ToString("N2") + pressureUnit);
+            string speedSTD = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.SpeedStd].Value == "" ? na : (double.Parse(cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.SpeedStd].Value).ToString("N0") + smSeq_speedUnit);
+            string pressureSTD = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.PressureStd].Value == "" ? na : (double.Parse(cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.PressureStd].Value).ToString("N2") + pressureUnit);
             
             XRect rect;
             double currentShift = 0;
@@ -695,9 +695,9 @@ namespace FPO_WPF_Test
                 {
                     if (tables[i] != null)
                     {
-                        timestamp = tables[i].columns[tables[i].dateTime].value;
-                        description = tables[i].columns[tables[i].description].value;
-                        status = tables[i].columns[tables[i].valueAfter].value;
+                        timestamp = tables[i].Columns[tables[i].DateTime].Value;
+                        description = tables[i].Columns[tables[i].Description].Value;
+                        status = tables[i].Columns[tables[i].ValueAfter].Value;
                         alarm = timestamp + " - " + description + " - " + status;
 
                         gfxs[pagesNumber - 1].DrawString(alarm,
@@ -969,7 +969,7 @@ namespace FPO_WPF_Test
             t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(CycleTableInfo), id); });
             CycleTableInfo cycleTableInfo = (CycleTableInfo)t.Result;
             //CycleTableInfo cycleTableInfo = (CycleTableInfo)MyDatabase.GetOneRow(typeof(CycleTableInfo), id);
-            ISeqInfo cycleSeqInfo;
+            ISeqTabInfo cycleSeqInfo;
 
             if (cycleTableInfo == null)
             {
@@ -978,19 +978,19 @@ namespace FPO_WPF_Test
                 return;
             }
 
-            jobNumber = cycleTableInfo.columns[cycleTableInfo.jobNumber].value;
-            batchNumber = cycleTableInfo.columns[cycleTableInfo.batchNumber].value;
-            qtyNumber = cycleTableInfo.columns[cycleTableInfo.quantityValue].value + cycleTableInfo.columns[cycleTableInfo.quantityUnit].value;
-            itemNumber = cycleTableInfo.columns[cycleTableInfo.itemNumber].value;
-            recipeNameVersion = cycleTableInfo.columns[cycleTableInfo.recipeName].value + " - Version " + cycleTableInfo.columns[cycleTableInfo.recipeVersion].value;
-            equipmentName = cycleTableInfo.columns[cycleTableInfo.equipmentName].value;
-            dtStartCycle = cycleTableInfo.columns[cycleTableInfo.dateTimeStartCycle].value;
-            dtEndCycle = cycleTableInfo.columns[cycleTableInfo.dateTimeEndCycle].value;
-            user = cycleTableInfo.columns[cycleTableInfo.username].value;
-            firstAlarmId = cycleTableInfo.columns[cycleTableInfo.firstAlarmId].value == "" ? -1 : int.Parse(cycleTableInfo.columns[cycleTableInfo.firstAlarmId].value);
-            lastAlarmId = cycleTableInfo.columns[cycleTableInfo.lastAlarmId].value == "" ? -1 : int.Parse(cycleTableInfo.columns[cycleTableInfo.lastAlarmId].value);
-            comment = cycleTableInfo.columns[cycleTableInfo.comment].value;
-            isTest = cycleTableInfo.columns[cycleTableInfo.isItATest].value == DatabaseSettings.General_TrueValue_Read;
+            jobNumber = cycleTableInfo.Columns[cycleTableInfo.JobNumber].Value;
+            batchNumber = cycleTableInfo.Columns[cycleTableInfo.BatchNumber].Value;
+            qtyNumber = cycleTableInfo.Columns[cycleTableInfo.FinalWeight].Value + cycleTableInfo.Columns[cycleTableInfo.FinalWeightUnit].Value;
+            itemNumber = cycleTableInfo.Columns[cycleTableInfo.ItemNumber].Value;
+            recipeNameVersion = cycleTableInfo.Columns[cycleTableInfo.RecipeName].Value + " - Version " + cycleTableInfo.Columns[cycleTableInfo.RecipeVersion].Value;
+            equipmentName = cycleTableInfo.Columns[cycleTableInfo.EquipmentName].Value;
+            dtStartCycle = cycleTableInfo.Columns[cycleTableInfo.DateTimeStartCycle].Value;
+            dtEndCycle = cycleTableInfo.Columns[cycleTableInfo.DateTimeEndCycle].Value;
+            user = cycleTableInfo.Columns[cycleTableInfo.Username].Value;
+            firstAlarmId = cycleTableInfo.Columns[cycleTableInfo.FirstAlarmId].Value == "" ? -1 : int.Parse(cycleTableInfo.Columns[cycleTableInfo.FirstAlarmId].Value);
+            lastAlarmId = cycleTableInfo.Columns[cycleTableInfo.LastAlarmId].Value == "" ? -1 : int.Parse(cycleTableInfo.Columns[cycleTableInfo.LastAlarmId].Value);
+            comment = cycleTableInfo.Columns[cycleTableInfo.Comment].Value;
+            isTest = cycleTableInfo.Columns[cycleTableInfo.IsItATest].Value == DatabaseSettings.General_TrueValue_Read;
 
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             document = new PdfDocument();
@@ -1012,12 +1012,12 @@ namespace FPO_WPF_Test
 
             cycleSeqInfo = cycleTableInfo;
 
-            while (cycleSeqInfo.columns[cycleSeqInfo.nextSeqType].value != null && cycleSeqInfo.columns[cycleSeqInfo.nextSeqType].value != "")
+            while (cycleSeqInfo.Columns[cycleSeqInfo.NextSeqType].Value != null && cycleSeqInfo.Columns[cycleSeqInfo.NextSeqType].Value != "")
             {
-                nextSeqType = int.Parse(cycleSeqInfo.columns[cycleSeqInfo.nextSeqType].value);
+                nextSeqType = int.Parse(cycleSeqInfo.Columns[cycleSeqInfo.NextSeqType].Value);
                 // A CORRIGER : IF RESULT IS FALSE
-                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(Pages.Sequence.list[nextSeqType].subCycleInfo.GetType(), cycleSeqInfo.columns[cycleSeqInfo.nextSeqId].value); });
-                cycleSeqInfo = (ISeqInfo)t.Result;
+                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(Pages.Sequence.list[nextSeqType].subCycleInfo.GetType(), cycleSeqInfo.Columns[cycleSeqInfo.NextSeqId].Value); });
+                cycleSeqInfo = (ISeqTabInfo)t.Result;
                 //cycleSeqInfo = (ISeqInfo)MyDatabase.GetOneRow(Pages.Sequence.list[nextSeqType].subCycleInfo.GetType(), cycleSeqInfo.columns[cycleSeqInfo.nextSeqId].value);
 
                 if (cycleSeqInfo == null)

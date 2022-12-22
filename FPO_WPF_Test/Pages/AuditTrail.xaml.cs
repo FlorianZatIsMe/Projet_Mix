@@ -85,7 +85,7 @@ namespace FPO_WPF_Test.Pages
             {
                 dt.Columns.Add(new DataColumn(Settings.Default.AuditTrail_ErrorTitle));
                 row = dt.NewRow();
-                row.ItemArray = new string[] { DatabaseSettings.Error01 };
+                row.ItemArray = new string[] { DatabaseSettings.Error_connectToDbFailed };
                 dt.Rows.Add(row);
                 dataGridAuditTrail.ItemsSource = dt.DefaultView;
             }
@@ -95,7 +95,7 @@ namespace FPO_WPF_Test.Pages
                     _dtBefore: dtBefore,
                     _dtAfter: dtAfter, 
                     _eventTypes: eventTypes.ToArray(),
-                    _orderBy: auditTrailInfo.columns[auditTrailInfo.id].id,
+                    _orderBy: auditTrailInfo.Columns[auditTrailInfo.Id].Id,
                     _isOrderAsc: false);
 
                 // A CORRIGER : IF RESULT IS FALSE
@@ -106,16 +106,16 @@ namespace FPO_WPF_Test.Pages
                 //mutexID = MyDatabase.SendCommand_ReadAuditTrail(dtBefore: dtBefore, dtAfter: dtAfter, eventTypes: eventTypes.ToArray(), orderBy: auditTrailInfo.columns[auditTrailInfo.id].id, isOrderAsc: false, isMutexReleased: false);
 
                 //Création des colonnes
-                foreach (Column column in auditTrailInfo.columns)
+                foreach (Column column in auditTrailInfo.Columns)
                 {
-                    dt.Columns.Add(new DataColumn(column.displayName));
+                    dt.Columns.Add(new DataColumn(column.DisplayName));
                 }
 
                 for (int i = 0; i < tables.Count; i++)
                 {
                     try
                     {
-                        tables[i][auditTrailInfo.dateTime] = Convert.ToDateTime(tables[i][auditTrailInfo.dateTime]).ToString("dd.MMMyyyy HH:mm:ss");
+                        tables[i][auditTrailInfo.DateTime] = Convert.ToDateTime(tables[i][auditTrailInfo.DateTime]).ToString("dd.MMMyyyy HH:mm:ss");
                     }
                     catch (Exception ex)
                     {
@@ -151,7 +151,7 @@ namespace FPO_WPF_Test.Pages
                 */
                 //Implémentation dans la DataGrid dataGridAuditTrail
                 dataGridAuditTrail.ItemsSource = dt.DefaultView;
-                dataGridAuditTrail.Columns[auditTrailInfo.id].Visibility = Visibility.Collapsed;
+                dataGridAuditTrail.Columns[auditTrailInfo.Id].Visibility = Visibility.Collapsed;
             }
 
             //MyDatabase.Disconnect();

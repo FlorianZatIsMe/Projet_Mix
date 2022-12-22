@@ -27,7 +27,7 @@ namespace FPO_WPF_Test.Pages
     public partial class Backup : Page
     {
         private readonly AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-        private static readonly string dbName = DatabaseSettings.ConnectionInfo.db;
+        private static readonly string dbName = DatabaseSettings.ConnectionInfo.Db;
         public static readonly string backupPath = Settings.Default.Backup_backupPath;// @"C:\Temp\Backups\";
         private static readonly string backupExtFile = Settings.Default.ArchBack_ExtFile;
         private readonly int maxBackupCount = Settings.Default.Backup_maxBackupCount;// 22;
@@ -97,15 +97,15 @@ namespace FPO_WPF_Test.Pages
             bool isBackupSucceeded = false;
 
             lastBackupFileName = DateTime.Now.ToString("yyyy.MM.dd_HH.mm.ss") + Settings.Default.Backup_fileName_backup + 
-                DatabaseSettings.ConnectionInfo.db + 
+                DatabaseSettings.ConnectionInfo.Db + 
                 (username == Settings.Default.General_SystemUsername ? Settings.Default.ArchBack_fileName_auto : Settings.Default.ArchBack_fileName_man) + 
                 backupExtFile;
 
             string batchFile = Settings.Default.Backup_Backup_batchFile;// @".\Resources\DB_backup";
             string arg1 = "\"" + DatabaseSettings.DBAppFolder + "\"";// @"C:\Program Files\MariaDB 10.9\bin" + "\"";
-            string arg2 = DatabaseSettings.ConnectionInfo.userID;// "root";
-            string arg3 = DatabaseSettings.ConnectionInfo.password;// "Integra2022/";
-            string arg4 = DatabaseSettings.ConnectionInfo.db;// dbName;
+            string arg2 = DatabaseSettings.ConnectionInfo.UserID;// "root";
+            string arg3 = DatabaseSettings.ConnectionInfo.Password;// "Integra2022/";
+            string arg4 = DatabaseSettings.ConnectionInfo.Db;// dbName;
             string arg5 = backupPath + lastBackupFileName;
             string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5;
             //MessageBox.Show(command);    
@@ -140,9 +140,9 @@ namespace FPO_WPF_Test.Pages
                 logger.Warn("c'est peut-être nul ça (je veux dire la gestion du mutex), il faut ajouter un wait non ?");
 
                 AuditTrailInfo auditTInfo = new AuditTrailInfo();
-                auditTInfo.columns[auditTInfo.username].value = Settings.Default.General_SystemUsername;
-                auditTInfo.columns[auditTInfo.eventType].value = Settings.Default.General_AuditTrailEvent_Event;
-                auditTInfo.columns[auditTInfo.description].value = General.auditTrail_BackupDesc;
+                auditTInfo.Columns[auditTInfo.Username].Value = Settings.Default.General_SystemUsername;
+                auditTInfo.Columns[auditTInfo.EventType].Value = Settings.Default.General_AuditTrailEvent_Event;
+                auditTInfo.Columns[auditTInfo.Description].Value = General.auditTrail_BackupDesc;
 
                 // A CORRIGER : IF RESULT IS FALSE
                 Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTInfo); });
@@ -220,9 +220,9 @@ namespace FPO_WPF_Test.Pages
             {
                 string batchFile = Settings.Default.Backup_Restore_batchFile;// @".\Resources\DB_restore";
                 string arg1 = "\"" + DatabaseSettings.DBAppFolder + "\"";// @"C:\Program Files\MariaDB 10.9\bin" + "\"";
-                string arg2 = DatabaseSettings.ConnectionInfo.userID;// "root";
-                string arg3 = DatabaseSettings.ConnectionInfo.password;// "Integra2022/";
-                string arg4 = DatabaseSettings.ConnectionInfo.db;// dbName;
+                string arg2 = DatabaseSettings.ConnectionInfo.UserID;// "root";
+                string arg3 = DatabaseSettings.ConnectionInfo.Password;// "Integra2022/";
+                string arg4 = DatabaseSettings.ConnectionInfo.Db;// dbName;
                 string arg5 = backupPath + restoreFileName;
                 string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5;
                 //MessageBox.Show(command);    
@@ -250,9 +250,9 @@ namespace FPO_WPF_Test.Pages
                     //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
                     AuditTrailInfo auditTInfo = new AuditTrailInfo();
-                    auditTInfo.columns[auditTInfo.username].value = username;
-                    auditTInfo.columns[auditTInfo.eventType].value = Settings.Default.General_AuditTrailEvent_Event;// "Evènement";
-                    auditTInfo.columns[auditTInfo.description].value = General.auditTrail_RestoreDesc;
+                    auditTInfo.Columns[auditTInfo.Username].Value = username;
+                    auditTInfo.Columns[auditTInfo.EventType].Value = Settings.Default.General_AuditTrailEvent_Event;// "Evènement";
+                    auditTInfo.Columns[auditTInfo.Description].Value = General.auditTrail_RestoreDesc;
 
                     // A CORRIGER : IF RESULT IS FALSE
                     Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTInfo); });

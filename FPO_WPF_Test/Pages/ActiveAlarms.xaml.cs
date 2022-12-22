@@ -68,9 +68,9 @@ namespace FPO_WPF_Test.Pages
                 try
                 {
                     //Création des colonnes
-                    foreach (Column column in auditTrailInfo.columns)
+                    foreach (Column column in auditTrailInfo.Columns)
                     {
-                        dt.Columns.Add(new DataColumn(column.displayName));
+                        dt.Columns.Add(new DataColumn(column.DisplayName));
                     }
 
                     foreach (Tuple<int, int> id in AlarmManagement.ActiveAlarms)
@@ -84,7 +84,7 @@ namespace FPO_WPF_Test.Pages
                         {
                             try
                             {
-                                array[auditTrailInfo.dateTime] = Convert.ToDateTime(array[auditTrailInfo.dateTime]).ToString("dd.MMMyyyy HH:mm:ss");
+                                array[auditTrailInfo.DateTime] = Convert.ToDateTime(array[auditTrailInfo.DateTime]).ToString("dd.MMMyyyy HH:mm:ss");
                             }
                             catch (Exception ex)
                             {
@@ -101,7 +101,7 @@ namespace FPO_WPF_Test.Pages
                     {
                         //Implémentation dans la DataGrid 
                         dataGridAlarms.ItemsSource = dt.DefaultView;
-                        dataGridAlarms.Columns[auditTrailInfo.id].Visibility = Visibility.Collapsed;
+                        dataGridAlarms.Columns[auditTrailInfo.Id].Visibility = Visibility.Collapsed;
                     });
                 }
                 catch (Exception) { }
@@ -110,7 +110,7 @@ namespace FPO_WPF_Test.Pages
             {
                 dt.Columns.Add(new DataColumn(Settings.Default.AuditTrail_ErrorTitle));
                 row = dt.NewRow();
-                row.ItemArray = new string[] { DatabaseSettings.Error01 };
+                row.ItemArray = new string[] { DatabaseSettings.Error_connectToDbFailed };
                 dt.Rows.Add(row);
 
                 this.Dispatcher.Invoke(() =>

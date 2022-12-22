@@ -4,7 +4,7 @@
       "src": [
         {
           "files": [
-            "src/**.csproj"
+            "User_Management/**/**.csproj"
           ]
         }
       ],

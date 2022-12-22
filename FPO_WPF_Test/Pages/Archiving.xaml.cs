@@ -97,14 +97,14 @@ namespace FPO_WPF_Test.Pages
             bool isArchiveSucceeded = false;
             string lastRecordDate_s = lastRecordDate.ToString("yyyy-MM-dd HH:mm:ss");
 
-            lastArchiveFileName = DateTime.Now.ToString("yyyy.MM.dd_HH.mm.ss") + Settings.Default.Archiving_fileName_archive + DatabaseSettings.ConnectionInfo.db + (username == Settings.Default.General_SystemUsername ? Settings.Default.ArchBack_fileName_auto : Settings.Default.ArchBack_fileName_man) + archiveExtFile;
+            lastArchiveFileName = DateTime.Now.ToString("yyyy.MM.dd_HH.mm.ss") + Settings.Default.Archiving_fileName_archive + DatabaseSettings.ConnectionInfo.Db + (username == Settings.Default.General_SystemUsername ? Settings.Default.ArchBack_fileName_auto : Settings.Default.ArchBack_fileName_man) + archiveExtFile;
 
             string batchFile = Settings.Default.Archiving_Archive_batchFile;// @".\Resources\DB_backup_part_table";
             string arg1 = "\"" + DatabaseSettings.DBAppFolder + "\"";// @"C:\Program Files\MariaDB 10.9\bin" + "\"";
-            string arg2 = DatabaseSettings.ConnectionInfo.userID;// "root";
-            string arg3 = DatabaseSettings.ConnectionInfo.password;// "Integra2022/";
-            string arg4 = DatabaseSettings.ConnectionInfo.db;// dbName;
-            string arg5 = "\"" + auditTrailInfo.columns[auditTrailInfo.dateTime].id + "<'" + lastRecordDate_s + "'" + "\"";
+            string arg2 = DatabaseSettings.ConnectionInfo.UserID;// "root";
+            string arg3 = DatabaseSettings.ConnectionInfo.Password;// "Integra2022/";
+            string arg4 = DatabaseSettings.ConnectionInfo.Db;// dbName;
+            string arg5 = "\"" + auditTrailInfo.Columns[auditTrailInfo.DateTime].Id + "<'" + lastRecordDate_s + "'" + "\"";
             string arg6 = archivingPath + lastArchiveFileName;
             string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5 + " " + arg6;
             //MessageBox.Show(command);
@@ -136,9 +136,9 @@ namespace FPO_WPF_Test.Pages
                 //MyDatabase.DeleteRows(new AuditTrailInfo(), lastRecordDate);
 
                 AuditTrailInfo auditTInfo = new AuditTrailInfo();
-                auditTInfo.columns[auditTInfo.username].value = username;
-                auditTInfo.columns[auditTInfo.eventType].value = Settings.Default.General_AuditTrailEvent_Event;
-                auditTInfo.columns[auditTInfo.description].value = General.auditTrail_ArchiveDesc;
+                auditTInfo.Columns[auditTInfo.Username].Value = username;
+                auditTInfo.Columns[auditTInfo.EventType].Value = Settings.Default.General_AuditTrailEvent_Event;
+                auditTInfo.Columns[auditTInfo.Description].Value = General.auditTrail_ArchiveDesc;
 
                 // A CORRIGER : IF RESULT IS FALSE
                 Task<object> t2 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTInfo); });
@@ -193,9 +193,9 @@ namespace FPO_WPF_Test.Pages
             {
                 string batchFile = Settings.Default.Archiving_Restore_batchFile;// @".\Resources\DB_restore";
                 string arg1 = "\"" + DatabaseSettings.DBAppFolder + "\"";// @"C:\Program Files\MariaDB 10.9\bin" + "\"";
-                string arg2 = DatabaseSettings.ConnectionInfo.userID;// "root";
-                string arg3 = DatabaseSettings.ConnectionInfo.password;// "Integra2022/";
-                string arg4 = DatabaseSettings.ConnectionInfo.db;// dbName;
+                string arg2 = DatabaseSettings.ConnectionInfo.UserID;// "root";
+                string arg3 = DatabaseSettings.ConnectionInfo.Password;// "Integra2022/";
+                string arg4 = DatabaseSettings.ConnectionInfo.Db;// dbName;
                 string arg5 = archivingPath + restoreFileName;
                 string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5;
                 //MessageBox.Show(command);    
@@ -223,9 +223,9 @@ namespace FPO_WPF_Test.Pages
                     //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
                     AuditTrailInfo auditTInfo = new AuditTrailInfo();
-                    auditTInfo.columns[auditTInfo.username].value = username;
-                    auditTInfo.columns[auditTInfo.eventType].value = Settings.Default.General_AuditTrailEvent_Event;
-                    auditTInfo.columns[auditTInfo.description].value = General.auditTrail_RestArchDesc;
+                    auditTInfo.Columns[auditTInfo.Username].Value = username;
+                    auditTInfo.Columns[auditTInfo.EventType].Value = Settings.Default.General_AuditTrailEvent_Event;
+                    auditTInfo.Columns[auditTInfo.Description].Value = General.auditTrail_RestArchDesc;
 
                     // A CORRIGER : IF RESULT IS FALSE
                     Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTInfo); });

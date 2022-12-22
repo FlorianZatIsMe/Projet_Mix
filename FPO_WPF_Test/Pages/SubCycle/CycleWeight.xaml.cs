@@ -103,16 +103,16 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
             // Refaire ces calculs plus sérieusement une fois que tout est clarifié, il faut arrondir aussi
 
-            tbPhaseName.Text = recipeWeightInfo.columns[3].value;
-            labelWeight.Text = Settings.Default.CycleWeight_WeightField + " (" + Settings.Default.CycleWeight_SetpointField + ": " + cycleWeightInfo.columns[cycleWeightInfo.setpoint].value + Settings.Default.CycleFinalWeight_g_Unit + ")";
-            labelWeightLimits.Text = "[ " + cycleWeightInfo.columns[cycleWeightInfo.min].value + "; " + cycleWeightInfo.columns[cycleWeightInfo.max].value + " ]";
+            tbPhaseName.Text = recipeWeightInfo.Columns[3].Value;
+            labelWeight.Text = Settings.Default.CycleWeight_WeightField + " (" + Settings.Default.CycleWeight_SetpointField + ": " + cycleWeightInfo.Columns[cycleWeightInfo.Setpoint].Value + Settings.Default.CycleFinalWeight_g_Unit + ")";
+            labelWeightLimits.Text = "[ " + cycleWeightInfo.Columns[cycleWeightInfo.Min].Value + "; " + cycleWeightInfo.Columns[cycleWeightInfo.Max].Value + " ]";
 
             // if setpoint, min, max are incorrect
             if (false)
             {
                 MessageBox.Show("Message d'erreur quelconque");
                 logger.Error("Message d'erreur quelconque");
-                General.EndSequence(recipeWeightInfo, frameMain: subCycle.frameMain, frameInfoCycle: subCycle.frameInfoCycle, idCycle: subCycle.idCycle, previousSeqType: this.cycleWeightInfo.seqType, previousSeqId: idSubCycle.ToString(), isTest: subCycle.isTest, comment: Settings.Default.Report_Comment_CycleAborted);
+                General.EndSequence(recipeWeightInfo, frameMain: subCycle.frameMain, frameInfoCycle: subCycle.frameInfoCycle, idCycle: subCycle.idCycle, previousSeqType: this.cycleWeightInfo.SeqType, previousSeqId: idSubCycle.ToString(), isTest: subCycle.isTest, comment: Settings.Default.Report_Comment_CycleAborted);
                 Dispose(disposing: true); // Il va peut-être falloir sortir ça du "if"
                 return;
             }
@@ -121,24 +121,24 @@ namespace FPO_WPF_Test.Pages.SubCycle
             t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(cycleWeightInfo); });
             //MyDatabase.InsertRow(cycleWInfo);
             // A CORRIGER : IF RESULT IS FALSE
-            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(cycleWeightInfo.name, cycleWeightInfo.columns[cycleWeightInfo.id].id); });
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(cycleWeightInfo.TabName, cycleWeightInfo.Columns[cycleWeightInfo.Id].Id); });
             idSubCycle = (int)t.Result;
             //idSubCycle = MyDatabase.GetMax(cycleWInfo.name, cycleWInfo.columns[cycleWInfo.id].id);
 
-            subCycle.prevSeqInfo.columns[subCycle.prevSeqInfo.nextSeqType].value = cycleWeightInfo.seqType.ToString();
-            subCycle.prevSeqInfo.columns[subCycle.prevSeqInfo.nextSeqId].value = idSubCycle.ToString();
+            subCycle.prevSeqInfo.Columns[subCycle.prevSeqInfo.NextSeqType].Value = cycleWeightInfo.SeqType.ToString();
+            subCycle.prevSeqInfo.Columns[subCycle.prevSeqInfo.NextSeqId].Value = idSubCycle.ToString();
 
             // A CORRIGER : IF RESULT IS FALSE
             t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(subCycle.prevSeqInfo, subCycle.idPrevious.ToString()); });
             //MyDatabase.Update_Row(subCycle.prevSeqInfo, subCycle.idPrevious.ToString());
 
-            if (recipeWeightInfo.columns[recipeWeightInfo.isBarcodeUsed].value == DatabaseSettings.General_TrueValue_Read) // Si le contrôle du code barre est activé, on affiche les bonnes infos
+            if (recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Value == DatabaseSettings.General_TrueValue_Read) // Si le contrôle du code barre est activé, on affiche les bonnes infos
             {
                 isScanningStep = true;
                 tbScan.Focus();
-                labelScan.Text = Settings.Default.CycleWeight_Request_ScanProduct + " " + recipeWeightInfo.columns[3].value;
+                labelScan.Text = Settings.Default.CycleWeight_Request_ScanProduct + " " + recipeWeightInfo.Columns[3].Value;
             }
-            else if (recipeWeightInfo.columns[recipeWeightInfo.isBarcodeUsed].value == DatabaseSettings.General_FalseValue_Read) // Si on ne contrôle pas le code barre, on affiche les bonnes infos
+            else if (recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Value == DatabaseSettings.General_FalseValue_Read) // Si on ne contrôle pas le code barre, on affiche les bonnes infos
             {
                 isScanningStep = false;
                 labelScan.Visibility = Visibility.Collapsed;
@@ -147,8 +147,8 @@ namespace FPO_WPF_Test.Pages.SubCycle
             }
             else
             {
-                logger.Error(Settings.Default.CycleWeight_Error_IncorrectValue + recipeWeightInfo.columns[recipeWeightInfo.isBarcodeUsed].id + " (" + recipeWeightInfo.columns[recipeWeightInfo.isBarcodeUsed].value + ")");
-                MessageBox.Show(Settings.Default.CycleWeight_Error_IncorrectValue + recipeWeightInfo.columns[recipeWeightInfo.isBarcodeUsed].id + " (" + recipeWeightInfo.columns[recipeWeightInfo.isBarcodeUsed].value + ")");
+                logger.Error(Settings.Default.CycleWeight_Error_IncorrectValue + recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Id + " (" + recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Value + ")");
+                MessageBox.Show(Settings.Default.CycleWeight_Error_IncorrectValue + recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Id + " (" + recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Value + ")");
             }
 
             getWeightTimer.Start();
@@ -252,8 +252,8 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 try
                 {
                     isWeightCorrect = 
-                        decimal.Parse(tbWeight.Text) >= decimal.Parse(cycleWeightInfo.columns[cycleWeightInfo.min].value) && 
-                        decimal.Parse(tbWeight.Text) <= decimal.Parse(cycleWeightInfo.columns[cycleWeightInfo.max].value);
+                        decimal.Parse(tbWeight.Text) >= decimal.Parse(cycleWeightInfo.Columns[cycleWeightInfo.Min].Value) && 
+                        decimal.Parse(tbWeight.Text) <= decimal.Parse(cycleWeightInfo.Columns[cycleWeightInfo.Max].Value);
                 }
                 catch (Exception ex)
                 {
@@ -273,7 +273,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
                 if (isBalanceFree)
                 {
-                    if (recipeWeightInfo.columns[recipeWeightInfo.nextSeqType].value != recipeWeightInfo.seqType.ToString()) 
+                    if (recipeWeightInfo.Columns[recipeWeightInfo.NextSeqType].Value != recipeWeightInfo.SeqType.ToString()) 
                         RS232Weight.rs232.SetCommand("@");
 
                     //taskGetWeight.Wait();
@@ -284,9 +284,9 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 General.CurrentCycleInfo.UpdateCurrentWeightInfo(new string[] { tbWeight.Text });
 
                 CycleWeightInfo cycleWInfo = new CycleWeightInfo();
-                cycleWInfo.columns[cycleWInfo.wasWeightManual].value = isBalanceFree ? DatabaseSettings.General_FalseValue_Write : DatabaseSettings.General_TrueValue_Write;
-                cycleWInfo.columns[cycleWInfo.dateTime].value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                cycleWInfo.columns[cycleWInfo.actualValue].value = tbWeight.Text;
+                cycleWInfo.Columns[cycleWInfo.WasWeightManual].Value = isBalanceFree ? DatabaseSettings.General_FalseValue_Write : DatabaseSettings.General_TrueValue_Write;
+                cycleWInfo.Columns[cycleWInfo.DateTime].Value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                cycleWInfo.Columns[cycleWInfo.WeightedValue].Value = tbWeight.Text;
 
                 // A CORRIGER : IF RESULT IS FALSE
                 t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(cycleWInfo, idSubCycle.ToString()); });
@@ -298,7 +298,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 }
                 */
 
-                SubCycleArg sub= new SubCycleArg(subCycle.frameMain, subCycle.frameInfoCycle, recipeWeightInfo.columns[recipeWeightInfo.nextSeqId].value, subCycle.idCycle, idSubCycle, recipeWeightInfo.name, new CycleWeightInfo(), subCycle.isTest);
+                SubCycleArg sub= new SubCycleArg(subCycle.frameMain, subCycle.frameInfoCycle, recipeWeightInfo.Columns[recipeWeightInfo.NextSeqId].Value, subCycle.idCycle, idSubCycle, recipeWeightInfo.TabName, new CycleWeightInfo(), subCycle.isTest);
 
                 General.NextSequence(recipeWeightInfo, subCycle.frameMain, subCycle.frameInfoCycle, subCycle.idCycle, idSubCycle, 0, new CycleWeightInfo(), subCycle.isTest);
             }
@@ -326,7 +326,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
             if (e.Key == Key.Enter)
             {
-                if (recipeWeightInfo.columns[recipeWeightInfo.barcode].value == textbox.Text)
+                if (recipeWeightInfo.Columns[recipeWeightInfo.Barcode].Value == textbox.Text)
                 {
                     isScanningStep = false;
                     labelScan.Visibility = Visibility.Collapsed;
@@ -336,7 +336,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 else
                 {
                     textbox.Text = "";
-                    MessageBox.Show(Settings.Default.CycleWeigh_IncorrectBarcode + " " + recipeWeightInfo.columns[recipeWeightInfo.barcode].value);
+                    MessageBox.Show(Settings.Default.CycleWeigh_IncorrectBarcode + " " + recipeWeightInfo.Columns[recipeWeightInfo.Barcode].Value);
                 }
             }
         }
@@ -350,7 +350,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 {
                     subCycle.frameMain.ContentRendered -= FrameMain_ContentRendered;
 
-                    General.EndSequence(recipeWeightInfo, frameMain: subCycle.frameMain, frameInfoCycle: subCycle.frameInfoCycle, idCycle: subCycle.idCycle, previousSeqType: cycleWeightInfo.seqType, previousSeqId: idSubCycle.ToString(), isTest: subCycle.isTest, comment: Settings.Default.Report_Comment_CycleAborted);
+                    General.EndSequence(recipeWeightInfo, frameMain: subCycle.frameMain, frameInfoCycle: subCycle.frameInfoCycle, idCycle: subCycle.idCycle, previousSeqType: cycleWeightInfo.SeqType, previousSeqId: idSubCycle.ToString(), isTest: subCycle.isTest, comment: Settings.Default.Report_Comment_CycleAborted);
 
                     Dispose(disposing: true); // Il va peut-être falloir sortir ça du "if"
                 }

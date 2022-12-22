@@ -2,97 +2,149 @@
 using System.Collections.Generic;
 using System.Linq;
 using MySqlConnector;
-using System.Collections.Specialized;
 using System.Windows;
 using System.Configuration;
-using System.Collections.ObjectModel;
-using System.Data.Common;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Threading;
-using System.IO;
-using System.Text;
-using Microsoft.Extensions.Configuration;
 using Database.Properties;
 
-
-
 // CONFIURE "yyyy-MM-dd HH:mm:ss" SOME DAY, PLEASE
-
-
 
 namespace Database
 {
     /// <summary>
-    /// ConnectionInfo
+    /// Class to store information of connection to the database in the settings
     /// </summary>
+    /// <para>Creation revision: 001</para>
     [SettingsSerializeAs(SettingsSerializeAs.Xml)]
     public class ConnectionInfo
     {
-        public string server { get; set; }
-        public string userID { get; set; }
-        public string password { get; set; }
-        public string db { get; set; }
+        ///<value>Database server name</value>
+        public string Server { get; set; }
+
+        ///<value>User ID to log on the database</value>
+        public string UserID { get; set; }
+
+        ///<value>Password of the user ID</value>
+        public string Password { get; set; }
+
+        ///<value>Database to use</value>
+        public string Db { get; set; }
     }
-    public interface IColumn
-    {
-        string name { get; }
-        string displayName { get; }
-        string value { get; set; }
-    }
+
+    /// <summary>
+    /// Structure of the information from other projects required to initialize the class MyDatabase
+    /// </summary>
+    /// <para>Creation revision: 001</para>
     public struct IniInfo
     {
+        ///<value>Event type to put in the audit trail in case of alarm (see class AuditTrailInfo)</value>
         public string AlarmType_Alarm;
+        ///<value>Event type to put in the audit trail in case of warning (see class AuditTrailInfo)</value>
         public string AlarmType_Warning;
+        ///<value>Unit mg/g to put in the weight recipe database table (used by the class CycleWeightInfo)</value>
         public string RecipeWeight_mgG_Unit;
+        ///<value>Conversion value of the unit mg/g. Used to calculate the conversion ratio in the class CycleWeightInfo</value>
         public decimal? RecipeWeight_mgG_Conversion;
+        ///<value>Unit g/g to put in the weight recipe database table (used by the class CycleWeightInfo)</value>
         public string RecipeWeight_gG_Unit;
+        ///<value>Conversion value of the unit g/g. Used to calculate the conversion ratio in the class CycleWeightInfo</value>
         public decimal? RecipeWeight_gG_Conversion;
+        ///<value>Unit g to put in the cycle database table (used by the class CycleWeightInfo)</value>
         public string CycleFinalWeight_g_Unit;
+        ///<value>Conversion value of the unit g. Used to calculate the conversion ratio in the class CycleWeightInfo</value>
         public decimal? CycleFinalWeight_g_Conversion;
     }
+
+    /// <summary>
+    /// Enumeration of the status of the recipes. Can be used to filter recipes by one of those status 
+    /// </summary>
+    /// <remarks>See method GetRecipeStatus to translate the status to put in the applicable database table</remarks>
     public enum RecipeStatus
     {
+        ///<value>Production status (recipes in production can be used for production)</value>
         PROD,
+        ///<value>Draft status (recipes in draft can't be used in production but can be tested by allowed user)</value>
         DRAFT,
+        ///<value>Obsolete status (obsolete recipes can't be used at all but they can be brought back by allowed user)</value>
         OBSOLETE,
+        ///<value>Production or draft recipes (value used to filter recipes in production or in draft)</value>
         PRODnDRAFT,
+        ///<value>No status. Recipes should have this status</value>
         None
     }
+
+    /// <summary>
+    /// Static class used to allow other projects to access some values from the settings
+    /// </summary>
     public static class DatabaseSettings
     {
-        public static string Error01 { get; }
+        ///<value>Message displayed if the connection to the database fails</value>
+        public static string Error_connectToDbFailed { get; }
+        ///<value>Value "true" when read from a database table</value>
         public static string General_TrueValue_Read { get; }
+        ///<value>Value "false" when read from a database table</value>
         public static string General_FalseValue_Read { get; }
+        ///<value>Value "true" to write to a database table</value>
         public static string General_TrueValue_Write { get; }
+        ///<value>Value "false" to write to a database table</value>
         public static string General_FalseValue_Write { get; }
+        ///<value>Information of connection to the database</value>
         public static ConnectionInfo ConnectionInfo { get; }
+        ///<value>Folder of the application of the database</value>
         public static string DBAppFolder { get; }
-        public static string ReaderUnavailable { get; }
 
+        // Constructor: initialize each variable of the class
         static DatabaseSettings()
         {
-            Error01 = Settings.Default.Error01;
+            // Initialization of each variable of the class based on settings
+            Error_connectToDbFailed = Settings.Default.Error_connectToDbFailed;
             General_TrueValue_Read = Settings.Default.General_TrueValue_Read;
             General_FalseValue_Read = Settings.Default.General_FalseValue_Read;
             General_TrueValue_Write = Settings.Default.General_TrueValue_Write;
             General_FalseValue_Write = Settings.Default.General_FalseValue_Write;
             ConnectionInfo = Settings.Default.ConnectionInfo;
             DBAppFolder = Settings.Default.DBAppFolder;
-            ReaderUnavailable = Settings.Default.ReaderUnavailable;
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class ReadInfo
     {
-        public ITableInfo tableInfo { get; }
+        ///<value></value>
+        public IComTabInfo tableInfo { get; }
+
+        ///<value></value>
         public string orderBy { get; }
+
+        ///<value></value>
         public bool isOrderAsc { get; }
+
+        ///<value></value>
         public string customWhere { get; }
+
+        ///<value></value>
         public DateTime? dtBefore { get; }
+
+        ///<value></value>
         public DateTime? dtAfter { get; }
+
+        ///<value></value>
         public string[] eventTypes { get; }
-        public ReadInfo(ITableInfo _tableInfo = null,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="_tableInfo"></param>
+        /// <param name="_orderBy"></param>
+        /// <param name="_isOrderAsc"></param>
+        /// <param name="_dtBefore"></param>
+        /// <param name="_dtAfter"></param>
+        /// <param name="_eventTypes"></param>
+        /// <param name="_customWhere"></param>
+        public ReadInfo(IComTabInfo _tableInfo = null,
             string _orderBy = null,
             bool _isOrderAsc = true,
             DateTime? _dtBefore = null,
@@ -108,7 +160,13 @@ namespace Database
             eventTypes = _eventTypes;
             customWhere = _customWhere;
         }
-        public ReadInfo(ReadInfo _readInfo, ITableInfo _tableInfo = null)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="_readInfo"></param>
+        /// <param name="_tableInfo"></param>
+        public ReadInfo(ReadInfo _readInfo, IComTabInfo _tableInfo = null)
         {
             tableInfo = _tableInfo;
 
@@ -135,7 +193,7 @@ namespace Database
         private static bool StopScan = false;
         private static bool isConnecting = false;
         private static readonly System.Timers.Timer scanConnectTimer;
-        public static IConfig config;
+        //public static IConfig config;
         private static ManualResetEvent signal = new ManualResetEvent(true);
         public static Queue<Task<object>> taskQueue = new Queue<Task<object>>();
         //public static event Action TaskToDeQueueEvent = null;
@@ -245,6 +303,7 @@ namespace Database
             // From AlarmManagement
             if (info.AlarmType_Alarm == null && info_arg.AlarmType_Alarm != null) info.AlarmType_Alarm = info_arg.AlarmType_Alarm;
             if (info.AlarmType_Warning == null && info_arg.AlarmType_Warning != null) info.AlarmType_Warning = info_arg.AlarmType_Warning;
+
             // From MainWindow
             if (info.RecipeWeight_mgG_Unit == null && info_arg.RecipeWeight_mgG_Unit != null) info.RecipeWeight_mgG_Unit = info_arg.RecipeWeight_mgG_Unit;
             if (info.RecipeWeight_mgG_Conversion == null && info_arg.RecipeWeight_mgG_Conversion != null) info.RecipeWeight_mgG_Conversion = info_arg.RecipeWeight_mgG_Conversion;
@@ -252,7 +311,7 @@ namespace Database
             if (info.RecipeWeight_gG_Conversion == null && info_arg.RecipeWeight_gG_Conversion != null) info.RecipeWeight_gG_Conversion = info_arg.RecipeWeight_gG_Conversion;
             if (info.CycleFinalWeight_g_Unit == null && info_arg.CycleFinalWeight_g_Unit != null) info.CycleFinalWeight_g_Unit = info_arg.CycleFinalWeight_g_Unit;
             if (info.CycleFinalWeight_g_Conversion == null && info_arg.CycleFinalWeight_g_Conversion != null) info.CycleFinalWeight_g_Conversion = info_arg.CycleFinalWeight_g_Conversion;
-
+            
             logger.Trace(info.AlarmType_Alarm);
             logger.Trace(info.AlarmType_Warning);
             //isInitialized = true;
@@ -271,10 +330,10 @@ namespace Database
         {
             MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder
             {
-                Server = Settings.Default.ConnectionInfo.server,
-                UserID = Settings.Default.ConnectionInfo.userID,
-                Password = Settings.Default.ConnectionInfo.password,
-                Database = Settings.Default.ConnectionInfo.db,
+                Server = Settings.Default.ConnectionInfo.Server,
+                UserID = Settings.Default.ConnectionInfo.UserID,
+                Password = Settings.Default.ConnectionInfo.Password,
+                Database = Settings.Default.ConnectionInfo.Db,
             };
 
             connection = new MySqlConnection(builder.ConnectionString);
@@ -303,10 +362,10 @@ namespace Database
 
                 MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder
                 {
-                    Server = Settings.Default.ConnectionInfo.server,
-                    UserID = Settings.Default.ConnectionInfo.userID,
-                    Password = Settings.Default.ConnectionInfo.password,
-                    Database = Settings.Default.ConnectionInfo.db,
+                    Server = Settings.Default.ConnectionInfo.Server,
+                    UserID = Settings.Default.ConnectionInfo.UserID,
+                    Password = Settings.Default.ConnectionInfo.Password,
+                    Database = Settings.Default.ConnectionInfo.Db,
                     AllowZeroDateTime = true,
                     Pooling = true,
                     MinimumPoolSize = 2
@@ -408,8 +467,8 @@ namespace Database
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 goto End;
             }
 
@@ -448,18 +507,18 @@ namespace Database
             return result;
         }
 
-        public static void SendCommand_Read(ITableInfo tableInfo, string orderBy = null, bool isOrderAsc = true, bool isMutexReleased = true, int mutex = -1)
+        public static void SendCommand_Read(IComTabInfo tableInfo, string orderBy = null, bool isOrderAsc = true, bool isMutexReleased = true, int mutex = -1)
         {
             logger.Debug("SendCommand_Read " + GetMutexIDs());
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return;
             }
 
-            string whereArg = " WHERE " + GetArg(tableInfo.columns, " AND ");
+            string whereArg = " WHERE " + GetArg(tableInfo.Columns, " AND ");
 
             string orderArg = "";
             if (orderBy != null)
@@ -467,7 +526,7 @@ namespace Database
                 orderArg = " ORDER BY " + orderBy + (isOrderAsc ? " ASC" : " DESC");
             }
 
-            SendCommand(@"SELECT * FROM " + tableInfo.name + whereArg + orderArg, tableInfo.columns, isMutexReleased, mutex);
+            SendCommand(@"SELECT * FROM " + tableInfo.TabName + whereArg + orderArg, tableInfo.Columns, isMutexReleased, mutex);
         }
         public static void SendCommand_Read(ReadInfo readInfo, bool isMutexReleased = true, int mutex = -1)
         {
@@ -475,12 +534,12 @@ namespace Database
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return;
             }
 
-            string tableArg = GetArg(readInfo.tableInfo.columns, " AND ");
+            string tableArg = GetArg(readInfo.tableInfo.Columns, " AND ");
             string whereArg = "";
             if (tableArg != "" || readInfo.customWhere != "")
             {
@@ -493,8 +552,8 @@ namespace Database
                 orderArg = " ORDER BY " + readInfo.orderBy + (readInfo.isOrderAsc ? " ASC" : " DESC");
             }
 
-            SendCommand(commandText: @"SELECT * FROM " + readInfo.tableInfo.name + whereArg + orderArg,
-                columns: readInfo.tableInfo.columns,
+            SendCommand(commandText: @"SELECT * FROM " + readInfo.tableInfo.TabName + whereArg + orderArg,
+                columns: readInfo.tableInfo.Columns,
                 isMutexReleased: isMutexReleased,
                 mutex: mutex);
         }
@@ -506,12 +565,12 @@ namespace Database
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 goto End;
             }
 
-            string whereDateTime = auditTrailInfo.columns[auditTrailInfo.dateTime].id + " >= @0 AND " + auditTrailInfo.columns[auditTrailInfo.dateTime].id + " <= @1";
+            string whereDateTime = auditTrailInfo.Columns[auditTrailInfo.DateTime].Id + " >= @0 AND " + auditTrailInfo.Columns[auditTrailInfo.DateTime].Id + " <= @1";
             string eventType = " AND (";
             string orderArg = "";
 
@@ -519,9 +578,9 @@ namespace Database
             {
                 for (int i = 0; i < eventTypes.Length - 1; i++)
                 {
-                    eventType += auditTrailInfo.columns[auditTrailInfo.eventType].id + " = @" + (i + 2).ToString() + " OR ";
+                    eventType += auditTrailInfo.Columns[auditTrailInfo.EventType].Id + " = @" + (i + 2).ToString() + " OR ";
                 }
-                eventType += auditTrailInfo.columns[auditTrailInfo.eventType].id + " = @" + (eventTypes.Length + 1).ToString() + ")";
+                eventType += auditTrailInfo.Columns[auditTrailInfo.EventType].Id + " = @" + (eventTypes.Length + 1).ToString() + ")";
             }
             else
             {
@@ -537,12 +596,12 @@ namespace Database
 
             columns.Add(new Column()
             {
-                value = dtBefore.ToString("yyyy-MM-dd HH:mm:ss")
+                Value = dtBefore.ToString("yyyy-MM-dd HH:mm:ss")
             });
 
             columns.Add(new Column()
             {
-                value = dtAfter.ToString("yyyy-MM-dd HH:mm:ss")
+                Value = dtAfter.ToString("yyyy-MM-dd HH:mm:ss")
             });
 
             if (eventTypes != null)
@@ -551,12 +610,12 @@ namespace Database
                 {
                     columns.Add(new Column()
                     {
-                        value = eventTypes[i]
+                        Value = eventTypes[i]
                     });
                 }
             }
 
-            SendCommand(@"SELECT * FROM " + auditTrailInfo.name + " WHERE " + whereDateTime + eventType + orderArg, columns, isMutexReleased: isMutexReleased, mutex: mutex);
+            SendCommand(@"SELECT * FROM " + auditTrailInfo.TabName + " WHERE " + whereDateTime + eventType + orderArg, columns, isMutexReleased: isMutexReleased, mutex: mutex);
 
         End:
             //if (isMutexReleased) Signal(mutexID);
@@ -579,12 +638,12 @@ namespace Database
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 goto End;
             }
 
-            string whereDateTime = auditTrailInfo.columns[auditTrailInfo.dateTime].id + " >= @0 AND " + auditTrailInfo.columns[auditTrailInfo.dateTime].id + " <= @1";
+            string whereDateTime = auditTrailInfo.Columns[auditTrailInfo.DateTime].Id + " >= @0 AND " + auditTrailInfo.Columns[auditTrailInfo.DateTime].Id + " <= @1";
             string eventType = " AND (";
             string orderArg = "";
 
@@ -592,9 +651,9 @@ namespace Database
             {
                 for (int i = 0; i < readInfo.eventTypes.Length - 1; i++)
                 {
-                    eventType += auditTrailInfo.columns[auditTrailInfo.eventType].id + " = @" + (i + 2).ToString() + " OR ";
+                    eventType += auditTrailInfo.Columns[auditTrailInfo.EventType].Id + " = @" + (i + 2).ToString() + " OR ";
                 }
-                eventType += auditTrailInfo.columns[auditTrailInfo.eventType].id + " = @" + (readInfo.eventTypes.Length + 1).ToString() + ")";
+                eventType += auditTrailInfo.Columns[auditTrailInfo.EventType].Id + " = @" + (readInfo.eventTypes.Length + 1).ToString() + ")";
             }
             else
             {
@@ -610,12 +669,12 @@ namespace Database
 
             columns.Add(new Column()
             {
-                value = ((DateTime)readInfo.dtBefore).ToString("yyyy-MM-dd HH:mm:ss")
+                Value = ((DateTime)readInfo.dtBefore).ToString("yyyy-MM-dd HH:mm:ss")
             });
 
             columns.Add(new Column()
             {
-                value = ((DateTime)readInfo.dtAfter).ToString("yyyy-MM-dd HH:mm:ss")
+                Value = ((DateTime)readInfo.dtAfter).ToString("yyyy-MM-dd HH:mm:ss")
             });
 
             if (readInfo.eventTypes != null)
@@ -624,12 +683,12 @@ namespace Database
                 {
                     columns.Add(new Column()
                     {
-                        value = readInfo.eventTypes[i]
+                        Value = readInfo.eventTypes[i]
                     });
                 }
             }
 
-            SendCommand(@"SELECT * FROM " + auditTrailInfo.name + " WHERE " + whereDateTime + eventType + orderArg, columns, isMutexReleased: isMutexReleased, mutex: mutexID);
+            SendCommand(@"SELECT * FROM " + auditTrailInfo.TabName + " WHERE " + whereDateTime + eventType + orderArg, columns, isMutexReleased: isMutexReleased, mutex: mutexID);
 
         End:
             //if (isMutexReleased) Signal(mutexID);
@@ -652,8 +711,8 @@ namespace Database
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 goto End;
             }
 
@@ -664,18 +723,18 @@ namespace Database
             }
 
             string whereId =
-                auditTrailInfo.columns[auditTrailInfo.id].id + " >= @0 AND " +
-                auditTrailInfo.columns[auditTrailInfo.id].id + " <= @1 AND ";
+                auditTrailInfo.Columns[auditTrailInfo.Id].Id + " >= @0 AND " +
+                auditTrailInfo.Columns[auditTrailInfo.Id].Id + " <= @1 AND ";
             string eventType = readAlert ?
-                "(" + auditTrailInfo.columns[auditTrailInfo.eventType].id + " = '" + info.AlarmType_Alarm + "' OR " +
-                auditTrailInfo.columns[auditTrailInfo.eventType].id + " = '" + info.AlarmType_Warning + "')"
-                : auditTrailInfo.columns[auditTrailInfo.eventType].id + " = '" + info.AlarmType_Alarm + "'";
+                "(" + auditTrailInfo.Columns[auditTrailInfo.EventType].Id + " = '" + info.AlarmType_Alarm + "' OR " +
+                auditTrailInfo.Columns[auditTrailInfo.EventType].Id + " = '" + info.AlarmType_Warning + "')"
+                : auditTrailInfo.Columns[auditTrailInfo.EventType].Id + " = '" + info.AlarmType_Alarm + "'";
 
             List<Column> columns = new List<Column>();
-            columns.Add(new Column() { value = firstId.ToString() });
-            columns.Add(new Column() { value = lastId.ToString() });
+            columns.Add(new Column() { Value = firstId.ToString() });
+            columns.Add(new Column() { Value = lastId.ToString() });
 
-            SendCommand(@"SELECT * FROM " + auditTrailInfo.name + " WHERE " + whereId + eventType, columns, isMutexReleased: false, mutex: mutexID);
+            SendCommand(@"SELECT * FROM " + auditTrailInfo.TabName + " WHERE " + whereId + eventType, columns, isMutexReleased: false, mutex: mutexID);
 
         End:
             //Signal(mutexID);
@@ -696,17 +755,17 @@ namespace Database
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return;
             }
 
             string statusFilter =
-                status == RecipeStatus.DRAFT ? recipeInfo.columns[recipeInfo.status].id + " = " + GetRecipeStatus(RecipeStatus.DRAFT) :
-                status == RecipeStatus.OBSOLETE ? recipeInfo.columns[recipeInfo.status].id + " = " + GetRecipeStatus(RecipeStatus.OBSOLETE) :
-                status == RecipeStatus.PROD ? recipeInfo.columns[recipeInfo.status].id + " = " + GetRecipeStatus(RecipeStatus.PROD) :
-                status == RecipeStatus.PRODnDRAFT ? "(" + recipeInfo.columns[recipeInfo.status].id + " = " + GetRecipeStatus(RecipeStatus.PROD) + " OR " +
-                recipeInfo.columns[recipeInfo.status].id + " = " + GetRecipeStatus(RecipeStatus.DRAFT) + ")" : "";
+                status == RecipeStatus.DRAFT ? recipeInfo.Columns[recipeInfo.Status].Id + " = " + GetRecipeStatus(RecipeStatus.DRAFT) :
+                status == RecipeStatus.OBSOLETE ? recipeInfo.Columns[recipeInfo.Status].Id + " = " + GetRecipeStatus(RecipeStatus.OBSOLETE) :
+                status == RecipeStatus.PROD ? recipeInfo.Columns[recipeInfo.Status].Id + " = " + GetRecipeStatus(RecipeStatus.PROD) :
+                status == RecipeStatus.PRODnDRAFT ? "(" + recipeInfo.Columns[recipeInfo.Status].Id + " = " + GetRecipeStatus(RecipeStatus.PROD) + " OR " +
+                recipeInfo.Columns[recipeInfo.Status].Id + " = " + GetRecipeStatus(RecipeStatus.DRAFT) + ")" : "";
 
             if (statusFilter == "")
             {
@@ -715,14 +774,14 @@ namespace Database
                 return;
             }
 
-            SendCommand("SELECT * FROM " + recipeInfo.name +
-                " WHERE ((" + recipeInfo.columns[recipeInfo.recipeName].id + ", " +
-                recipeInfo.columns[recipeInfo.version].id + ") IN " +
-                "(SELECT " + recipeInfo.columns[recipeInfo.recipeName].id +
-                ", MAX(" + recipeInfo.columns[recipeInfo.version].id + ") " +
-                "FROM " + recipeInfo.name +
-                " GROUP BY " + recipeInfo.columns[recipeInfo.recipeName].id + ")) AND " +
-                statusFilter + " ORDER BY " + recipeInfo.columns[recipeInfo.recipeName].id + ";");
+            SendCommand("SELECT * FROM " + recipeInfo.TabName +
+                " WHERE ((" + recipeInfo.Columns[recipeInfo.Name].Id + ", " +
+                recipeInfo.Columns[recipeInfo.Version].Id + ") IN " +
+                "(SELECT " + recipeInfo.Columns[recipeInfo.Name].Id +
+                ", MAX(" + recipeInfo.Columns[recipeInfo.Version].Id + ") " +
+                "FROM " + recipeInfo.TabName +
+                " GROUP BY " + recipeInfo.Columns[recipeInfo.Name].Id + ")) AND " +
+                statusFilter + " ORDER BY " + recipeInfo.Columns[recipeInfo.Name].Id + ";");
 
             /*
             SendCommand("SELECT " +
@@ -739,18 +798,18 @@ namespace Database
              */
         }
 
-        public static ITempTableInfo ReadNext(Type tableType, int mutex = -1)
+        public static IBasTabInfo ReadNext(Type tableType, int mutex = -1)
         {
             int mutexID = Wait(mutex);
 
-            ITempTableInfo tableInfo = Activator.CreateInstance(tableType) as ITempTableInfo;
+            IBasTabInfo tableInfo = Activator.CreateInstance(tableType) as IBasTabInfo;
 
             logger.Debug("ReadNext ITableInfo" + GetMutexIDs());
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 //return null;
                 tableInfo = null;
                 goto End;
@@ -767,19 +826,19 @@ namespace Database
 
             try
             {
-                if (reader.Read() && tableInfo.columns.Count == reader.FieldCount)
+                if (reader.Read() && tableInfo.Columns.Count == reader.FieldCount)
                 {
                     for (int i = 0; i < reader.FieldCount; i++)
                     {
-                        tableInfo.columns[i].value = reader[i].ToString();
-                        logger.Trace(tableInfo.columns[i].id + ": " + tableInfo.columns[i].value);
+                        tableInfo.Columns[i].Value = reader[i].ToString();
+                        logger.Trace(tableInfo.Columns[i].Id + ": " + tableInfo.Columns[i].Value);
                     }
                 }
                 else
                 {
-                    if (tableInfo.columns.Count != reader.FieldCount)
+                    if (tableInfo.Columns.Count != reader.FieldCount)
                     {
-                        logger.Error(Settings.Default.Error14 + tableInfo.columns.Count.ToString() + ", " + reader.FieldCount.ToString() + ", " + tableInfo.GetType().ToString());
+                        logger.Error(Settings.Default.Error14 + tableInfo.Columns.Count.ToString() + ", " + reader.FieldCount.ToString() + ", " + tableInfo.GetType().ToString());
                         MessageBox.Show(Settings.Default.Error14);
                     }
                     //return null;
@@ -806,8 +865,8 @@ namespace Database
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 goto End;
             }
 
@@ -850,8 +909,8 @@ namespace Database
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 goto End;
             }
 
@@ -884,7 +943,7 @@ namespace Database
             return array;
         }
 
-        public static bool InsertRow(ITempTableInfo tableInfo, int mutex = -1)
+        public static bool InsertRow(IBasTabInfo tableInfo, int mutex = -1)
         {
             int mutexID = Wait(mutex);
             bool result = false;
@@ -893,12 +952,12 @@ namespace Database
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 goto End;
             }
 
-            if (tableInfo.columns == null || tableInfo.columns.Count() == 0)
+            if (tableInfo.Columns == null || tableInfo.Columns.Count() == 0)
             {
                 logger.Error(Settings.Default.Error08);
                 MessageBox.Show(Settings.Default.Error08);
@@ -912,11 +971,11 @@ namespace Database
             //
             // Get arg, c'est nul !!! GET ARG je te dis
             //
-            for (int i = 0; i < tableInfo.columns.Count(); i++)
+            for (int i = 0; i < tableInfo.Columns.Count(); i++)
             {
-                if (tableInfo.columns[i].value != "" && tableInfo.columns[i].value != null)
+                if (tableInfo.Columns[i].Value != "" && tableInfo.Columns[i].Value != null)
                 {
-                    columnFields = columnFields + tableInfo.columns[i].id + ", ";
+                    columnFields = columnFields + tableInfo.Columns[i].Id + ", ";
                     valueFields = valueFields + "@" + i.ToString() + ", ";
                     logger.Trace(i.ToString() + ": " + columnFields + " - " + valueFields);
                 }
@@ -929,9 +988,9 @@ namespace Database
             }
             logger.Fatal("CORRIGE MOI çA !!!");
             MySqlCommand command = connection.CreateCommand();
-            command.CommandText = @"INSERT INTO " + tableInfo.name + " (" + columnFields + ") VALUES (" + valueFields + ");";
+            command.CommandText = @"INSERT INTO " + tableInfo.TabName + " (" + columnFields + ") VALUES (" + valueFields + ");";
             logger.Trace("Insert command: " + command.CommandText);
-            SetCommand(command, tableInfo.columns);
+            SetCommand(command, tableInfo.Columns);
 
             try
             {
@@ -954,18 +1013,18 @@ namespace Database
         {
             //bool result = false;
 
-            ITempTableInfo tableInfo = obj as ITempTableInfo;
+            IBasTabInfo tableInfo = obj as IBasTabInfo;
 
             logger.Debug("InsertRow ITableInfo" + GetMutexIDs());
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return false;
             }
 
-            if (tableInfo.columns == null || tableInfo.columns.Count() == 0)
+            if (tableInfo.Columns == null || tableInfo.Columns.Count() == 0)
             {
                 logger.Error(Settings.Default.Error08);
                 MessageBox.Show(Settings.Default.Error08);
@@ -979,11 +1038,11 @@ namespace Database
             //
             // Get arg, c'est nul !!! GET ARG je te dis
             //
-            for (int i = 0; i < tableInfo.columns.Count(); i++)
+            for (int i = 0; i < tableInfo.Columns.Count(); i++)
             {
-                if (tableInfo.columns[i].value != "" && tableInfo.columns[i].value != null)
+                if (tableInfo.Columns[i].Value != "" && tableInfo.Columns[i].Value != null)
                 {
-                    columnFields = columnFields + tableInfo.columns[i].id + ", ";
+                    columnFields = columnFields + tableInfo.Columns[i].Id + ", ";
                     valueFields = valueFields + "@" + i.ToString() + ", ";
                     logger.Trace(i.ToString() + ": " + columnFields + " - " + valueFields);
                 }
@@ -996,9 +1055,9 @@ namespace Database
             }
 
             MySqlCommand command = connection.CreateCommand();
-            command.CommandText = @"INSERT INTO " + tableInfo.name + " (" + columnFields + ") VALUES (" + valueFields + ");";
+            command.CommandText = @"INSERT INTO " + tableInfo.TabName + " (" + columnFields + ") VALUES (" + valueFields + ");";
             logger.Trace("Insert command: " + command.CommandText);
-            SetCommand(command, tableInfo.columns);
+            SetCommand(command, tableInfo.Columns);
 
             try
             {
@@ -1015,7 +1074,7 @@ namespace Database
             return false;
         }
 
-        public static bool Update_Row(ITableInfo tableInfo, string id, int mutex = -1)
+        public static bool Update_Row(IComTabInfo tableInfo, string id, int mutex = -1)
         {
             //int mutexID = Wait(mutex);
             bool result = false;
@@ -1024,12 +1083,12 @@ namespace Database
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 goto End;
             }
 
-            if (tableInfo.columns == null || tableInfo.columns.Count() == 0)
+            if (tableInfo.Columns == null || tableInfo.Columns.Count() == 0)
             {
                 logger.Error(Settings.Default.Error08);
                 MessageBox.Show(Settings.Default.Error08);
@@ -1038,12 +1097,12 @@ namespace Database
 
             Close_reader();
 
-            string whereArg = " WHERE " + tableInfo.columns[tableInfo.id].id + " = @" + tableInfo.id.ToString();
-            string setArg = " SET " + GetArg(tableInfo.columns, ", ");
+            string whereArg = " WHERE " + tableInfo.Columns[tableInfo.Id].Id + " = @" + tableInfo.Id.ToString();
+            string setArg = " SET " + GetArg(tableInfo.Columns, ", ");
             //bool isCommandOk = true;
 
-            tableInfo.columns[tableInfo.id].value = id;
-            SendCommand(@"UPDATE " + tableInfo.name + setArg + whereArg, tableInfo.columns, mutex: mutex);
+            tableInfo.Columns[tableInfo.Id].Value = id;
+            SendCommand(@"UPDATE " + tableInfo.TabName + setArg + whereArg, tableInfo.Columns, mutex: mutex);
         /*
         MySqlCommand command = connection.CreateCommand();
         command.CommandText = @"UPDATE " + tableInfo.name + setArg + whereArg;
@@ -1074,54 +1133,54 @@ namespace Database
             return result;
         }
 
-        public static bool DeleteRow(ITableInfo tableInfo, string id)
+        public static bool DeleteRow(IComTabInfo tableInfo, string id)
         {
             bool result = false;
 
-            logger.Debug("DeleteRow " + tableInfo.name + " " + id + GetMutexIDs());
+            logger.Debug("DeleteRow " + tableInfo.TabName + " " + id + GetMutexIDs());
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return result;
             }
 
-            string whereArg = " WHERE " + tableInfo.columns[tableInfo.id].id + " = @0 ";
+            string whereArg = " WHERE " + tableInfo.Columns[tableInfo.Id].Id + " = @0 ";
 
             List<Column> columns = new List<Column>();
-            columns.Add(new Column() { value = id });
+            columns.Add(new Column() { Value = id });
 
-            SendCommand(@"DELETE FROM " + tableInfo.name + whereArg, columns);
+            SendCommand(@"DELETE FROM " + tableInfo.TabName + whereArg, columns);
 
             return result;
         }
-        public static bool DeleteRows(IdtTableInfo tableInfo, DateTime lastRecordDate)
+        public static bool DeleteRows(IDtTabInfo tableInfo, DateTime lastRecordDate)
         {
             bool result = false;
 
-            logger.Debug("DeleteRows " + tableInfo.name + GetMutexIDs());
+            logger.Debug("DeleteRows " + tableInfo.TabName + GetMutexIDs());
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return result;
             }
 
-            SendCommand(@"DELETE FROM " + tableInfo.name + " WHERE " + tableInfo.columns[tableInfo.dateTime].id + " < \"" + lastRecordDate.ToString("yyyy-MM-dd HH:mm:ss") + "\"");
+            SendCommand(@"DELETE FROM " + tableInfo.TabName + " WHERE " + tableInfo.Columns[tableInfo.DateTime].Id + " < \"" + lastRecordDate.ToString("yyyy-MM-dd HH:mm:ss") + "\"");
 
             Close_reader();
             return result;
         }
 
-        public static ITableInfo GetOneRow(Type tableType = null, string id = null, ITableInfo table = null)
+        public static IComTabInfo GetOneRow(Type tableType = null, string id = null, IComTabInfo table = null)
         {
             int mutexID = Wait();
 
             logger.Debug("GetOneRow" + GetMutexIDs());
 
-            ITableInfo tableInfo;
+            IComTabInfo tableInfo;
 
             if (tableType == null && id == null && table == null)
             {
@@ -1134,26 +1193,26 @@ namespace Database
 
             if (table == null)
             {
-                tableInfo = Activator.CreateInstance(tableType) as ITableInfo;
+                tableInfo = Activator.CreateInstance(tableType) as IComTabInfo;
             }
             else
             {
-                tableInfo = Activator.CreateInstance(table.GetType()) as ITableInfo;
-                tableInfo.columns = table.columns;
+                tableInfo = Activator.CreateInstance(table.GetType()) as IComTabInfo;
+                tableInfo.Columns = table.Columns;
             }
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 //return null;
                 tableInfo = null;
                 goto End;
             }
 
-            if (table == null) tableInfo.columns[tableInfo.id].value = id;
+            if (table == null) tableInfo.Columns[tableInfo.Id].Value = id;
             SendCommand_Read(tableInfo, isMutexReleased: false, mutex: mutexID);
-            tableInfo = (ITableInfo)ReadNext(tableInfo.GetType(), mutexID);
+            tableInfo = (IComTabInfo)ReadNext(tableInfo.GetType(), mutexID);
 
             if (tableInfo == null)
             {
@@ -1176,7 +1235,7 @@ namespace Database
             Signal(mutexID);
             return tableInfo;
         }
-        public static string[] GetOneArrayRow(ITableInfo tableInfo, string id)
+        public static string[] GetOneArrayRow(IComTabInfo tableInfo, string id)
         {
             int mutexID = Wait();
             string[] array;
@@ -1185,14 +1244,14 @@ namespace Database
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 //return null;
                 array = null;
                 goto End;
             }
 
-            tableInfo.columns[tableInfo.id].value = id;
+            tableInfo.Columns[tableInfo.Id].Value = id;
             SendCommand_Read(tableInfo, isMutexReleased: false, mutex: mutexID);
             array = ReadNext(mutexID);
 
@@ -1209,7 +1268,7 @@ namespace Database
             Signal(mutexID);
             return array;
         }
-        public static bool[] GetOneBoolRow(ITableInfo table)
+        public static bool[] GetOneBoolRow(IComTabInfo table)
         {
             int mutexID = Wait();
 
@@ -1220,8 +1279,8 @@ namespace Database
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 //return null;
                 goto End;
             }
@@ -1255,15 +1314,15 @@ namespace Database
         {
             logger.Debug("GetOneBoolRow " + GetMutexIDs());
 
-            ITableInfo table = obj as ITableInfo;
+            IComTabInfo table = obj as IComTabInfo;
 
             //ITableInfo tableInfo;
             bool[] result = null;
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 //return null;
                 goto End;
             }
@@ -1292,7 +1351,7 @@ namespace Database
             //Close_reader();
             return;
         }
-        public static List<ITableInfo> GetRows(ITableInfo tableInfo, int nRows = 0, string orderBy = null, bool isOrderAsc = true, bool isMutexReleased = true, int mutex = -1)
+        public static List<IComTabInfo> GetRows(IComTabInfo tableInfo, int nRows = 0, string orderBy = null, bool isOrderAsc = true, bool isMutexReleased = true, int mutex = -1)
         {
             logger.Debug("GetRows " + GetMutexIDs());
 
@@ -1306,8 +1365,8 @@ namespace Database
             int mutexID = Wait(mutex);
             SendCommand_Read(tableInfo: tableInfo, orderBy: orderBy, isOrderAsc: isOrderAsc, isMutexReleased: false, mutex: mutexID);
 
-            List<ITableInfo> tables = new List<ITableInfo>();
-            ITableInfo table;
+            List<IComTabInfo> tables = new List<IComTabInfo>();
+            IComTabInfo table;
             int i = 1;
             int n = nRows == 0 ? Settings.Default.MaxNumbRows : nRows;
             /*
@@ -1322,7 +1381,7 @@ namespace Database
 
             do
             {
-                table = (ITableInfo)ReadNext(tableInfo.GetType(), mutexID);
+                table = (IComTabInfo)ReadNext(tableInfo.GetType(), mutexID);
                 if (table != null) tables.Add(table);
                 i++;
                 logger.Fatal(i.ToString() + ", " + n.ToString());
@@ -1337,7 +1396,7 @@ namespace Database
             if (isMutexReleased) Signal(mutexID);
             return tables;
         }
-        public static List<ITableInfo> GetRows(ReadInfo readInfo, int nRows = 0, bool isMutexReleased = true, int mutex = -1)
+        public static List<IComTabInfo> GetRows(ReadInfo readInfo, int nRows = 0, bool isMutexReleased = true, int mutex = -1)
         {
             logger.Debug("GetRows " + GetMutexIDs());
 
@@ -1350,16 +1409,16 @@ namespace Database
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return null;
             }
 
             int mutexID = Wait(mutex);
             SendCommand_Read(readInfo: readInfo, isMutexReleased: false, mutex: mutexID);
 
-            List<ITableInfo> tables = new List<ITableInfo>();
-            ITableInfo table;
+            List<IComTabInfo> tables = new List<IComTabInfo>();
+            IComTabInfo table;
             int i = 0;
             int n = nRows == 0 ? Settings.Default.MaxNumbRows : nRows;
             /*
@@ -1373,7 +1432,7 @@ namespace Database
             */
             do
             {
-                table = (ITableInfo)ReadNext(readInfo.tableInfo.GetType(), mutexID);
+                table = (IComTabInfo)ReadNext(readInfo.tableInfo.GetType(), mutexID);
                 if (table != null) tables.Add(table);
                 i++;
             } while (table != null && i < n);
@@ -1472,23 +1531,23 @@ namespace Database
             return tables;
         }
 
-        public static int GetMax(ITableInfo tableInfo, string column, int mutex = -1)
+        public static int GetMax(IComTabInfo tableInfo, string column, int mutex = -1)
         {
             int mutexID = Wait(mutex);
             int result = -1;
 
-            logger.Debug("GetMax " + tableInfo.name + GetMutexIDs());
+            logger.Debug("GetMax " + tableInfo.TabName + GetMutexIDs());
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 goto End;
             }
 
             int n;
-            string whereArg = " WHERE " + GetArg(tableInfo.columns, " AND ");
-            SendCommand(@"SELECT MAX(" + column + ") FROM " + tableInfo.name + whereArg, tableInfo.columns, mutex: mutexID);
+            string whereArg = " WHERE " + GetArg(tableInfo.Columns, " AND ");
+            SendCommand(@"SELECT MAX(" + column + ") FROM " + tableInfo.TabName + whereArg, tableInfo.Columns, mutex: mutexID);
 
             try
             {
@@ -1529,8 +1588,8 @@ namespace Database
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 goto End;
             }
 
@@ -1566,15 +1625,15 @@ namespace Database
             int mutexID = Wait();
 
             TempInfo tempInfo = new TempInfo();
-            string fields = tempInfo.columns[0].id + " DECIMAL(5,1) NOT NULL, " + tempInfo.columns[1].id + " DECIMAL(5,1) NOT NULL";
+            string fields = tempInfo.Columns[0].Id + " DECIMAL(5,1) NOT NULL, " + tempInfo.Columns[1].Id + " DECIMAL(5,1) NOT NULL";
             bool result = false;
 
             logger.Debug("CreateTempTable " + fields + GetMutexIDs());
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 goto End;
             }
 
@@ -1623,19 +1682,19 @@ namespace Database
             int mutexID = Wait();
 
             TempInfo tempInfo = new TempInfo();
-            string select = "AVG(" + tempInfo.columns[tempInfo.speed].id + "), AVG(" + tempInfo.columns[tempInfo.pressure].id +
-                "), STD(" + tempInfo.columns[tempInfo.speed].id + "), STD(" + tempInfo.columns[tempInfo.pressure].id + ")";
+            string select = "AVG(" + tempInfo.Columns[tempInfo.Speed].Id + "), AVG(" + tempInfo.Columns[tempInfo.Pressure].Id +
+                "), STD(" + tempInfo.Columns[tempInfo.Speed].Id + "), STD(" + tempInfo.Columns[tempInfo.Pressure].Id + ")";
 
             logger.Debug("SelectFromTemp " + select + GetMutexIDs());
 
             if (!IsConnected())
             {
-                logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 goto End;
             }
 
-            SendCommand(@"SELECT " + select + " FROM " + tempInfo.name + ";", mutex: mutexID);
+            SendCommand(@"SELECT " + select + " FROM " + tempInfo.TabName + ";", mutex: mutexID);
         /*
         Close_reader();
 
@@ -1675,7 +1734,7 @@ namespace Database
 
             for (int i = 0; i < columns.Count(); i++)
             {
-                if (columns[i].value != null && columns[i].value != "") arg += (arg == prefix ? "" : separator) + columns[i].id + "=@" + i.ToString();
+                if (columns[i].Value != null && columns[i].Value != "") arg += (arg == prefix ? "" : separator) + columns[i].Id + "=@" + i.ToString();
             }
 
             return arg;
@@ -1695,12 +1754,12 @@ namespace Database
             for (int i = 0; i < columns.Count(); i++)
             {
 
-                if (columns[i].value != "" && columns[i].value != null)
+                if (columns[i].Value != "" && columns[i].Value != null)
                 {
                     try
                     {
-                        logger.Trace("Value " + i.ToString() + ": " + columns[i].value);
-                        command.Parameters.AddWithValue("@" + i.ToString(), columns[i].value);
+                        logger.Trace("Value " + i.ToString() + ": " + columns[i].Value);
+                        command.Parameters.AddWithValue("@" + i.ToString(), columns[i].Value);
                     }
                     catch (Exception ex)
                     {

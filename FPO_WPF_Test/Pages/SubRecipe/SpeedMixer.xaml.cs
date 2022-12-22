@@ -41,7 +41,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
         {
             logger.Debug("Start");
 
-            ControlsIDs = new int[recipeSpeedMixerInfo.columns.Count];
+            ControlsIDs = new int[recipeSpeedMixerInfo.Columns.Count];
             List<int> list = Settings.Default.RecipeMix_IdDBControls.list;
             int n = 0;
 
@@ -106,7 +106,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             pressures[8] = tbPressure08;
             pressures[9] = tbPressure09;
 
-            FormatControl[ControlsIDs[recipeSpeedMixerInfo.scurve]] = true;
+            FormatControl[ControlsIDs[recipeSpeedMixerInfo.Scurve]] = true;
         }
         private void RadioButton_Click_1(object sender, RoutedEventArgs e)
         {
@@ -151,9 +151,9 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 times[id - 1].Text = "";
                 pressures[id - 1].Text = "";
 
-                FormatControl[ControlsIDs[recipeSpeedMixerInfo.speed00] + id - 1] = false;
-                FormatControl[ControlsIDs[recipeSpeedMixerInfo.time00] + id - 1] = false;
-                FormatControl[ControlsIDs[recipeSpeedMixerInfo.pressure00] + id - 1] = false;
+                FormatControl[ControlsIDs[recipeSpeedMixerInfo.Speed00] + id - 1] = false;
+                FormatControl[ControlsIDs[recipeSpeedMixerInfo.Time00] + id - 1] = false;
+                FormatControl[ControlsIDs[recipeSpeedMixerInfo.Pressure00] + id - 1] = false;
 
                 if (id != 10)
                 {
@@ -208,22 +208,22 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 MessageBox.Show(ex.Message);
             }
         }
-        public void SetPage(ISeqInfo seqInfo)
+        public void SetPage(ISeqTabInfo seqInfo)
         {
             logger.Debug("SetPage");
 
             RecipeSpeedMixerInfo recipeInfo = seqInfo as RecipeSpeedMixerInfo;
             int i;
 
-            tbProgramName.Text = recipeInfo.columns[recipeInfo.seqName].value;
-            tbAcceleration.Text = recipeInfo.columns[recipeInfo.acceleration].value;
-            tbDeceleration.Text = recipeInfo.columns[recipeInfo.deceleration].value;
-            cbVacuum.IsChecked = recipeInfo.columns[recipeInfo.vaccum_control].value == DatabaseSettings.General_TrueValue_Read;
+            tbProgramName.Text = recipeInfo.Columns[recipeInfo.Name].Value;
+            tbAcceleration.Text = recipeInfo.Columns[recipeInfo.Acceleration].Value;
+            tbDeceleration.Text = recipeInfo.Columns[recipeInfo.Deceleration].Value;
+            cbVacuum.IsChecked = recipeInfo.Columns[recipeInfo.Vaccum_control].Value == DatabaseSettings.General_TrueValue_Read;
             //if (recipeInfo.columns[recipeInfo.isVentgasAir].value == DatabaseSettings.General_TrueValue_Read) rbAir.IsChecked = true;
             //cbMonitorType.IsChecked = recipeInfo.columns[recipeInfo.monitorType].value == DatabaseSettings.General_TrueValue_Read;
-            cbxPressureUnit.Text = recipeInfo.columns[recipeInfo.pressureUnit].value;
+            cbxPressureUnit.Text = recipeInfo.Columns[recipeInfo.PressureUnit].Value;
             //tbSCurve.Text = recipeInfo.columns[recipeInfo.scurve].value;
-            cbColdTrap.IsChecked = recipeInfo.columns[recipeInfo.coldtrap].value == DatabaseSettings.General_TrueValue_Read;
+            cbColdTrap.IsChecked = recipeInfo.Columns[recipeInfo.Coldtrap].Value == DatabaseSettings.General_TrueValue_Read;
 
             TbProgramName_LostFocus(tbProgramName, new RoutedEventArgs());
             TbAcceleration_LostFocus(tbAcceleration, new RoutedEventArgs());
@@ -232,11 +232,11 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             //TbSCurve_LostFocus(tbSCurve, new RoutedEventArgs());
 
             i = 0;
-            while (i != 10 && recipeInfo.columns[recipeInfo.speed00 + 3 * i].value != "")
+            while (i != 10 && recipeInfo.Columns[recipeInfo.Speed00 + 3 * i].Value != "")
             {
-                speeds[i].Text = recipeInfo.columns[recipeInfo.speed00 + 3 * i].value;
-                times[i].Text = recipeInfo.columns[recipeInfo.time00 + 3 * i].value;
-                pressures[i].Text = recipeInfo.columns[recipeInfo.pressure00 + 3 * i].value;
+                speeds[i].Text = recipeInfo.Columns[recipeInfo.Speed00 + 3 * i].Value;
+                times[i].Text = recipeInfo.Columns[recipeInfo.Time00 + 3 * i].Value;
+                pressures[i].Text = recipeInfo.Columns[recipeInfo.Pressure00 + 3 * i].Value;
 
                 if (i > 0)
                 {
@@ -250,17 +250,17 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                 i++;
             }
 
-            tbSpeedMin.Text = recipeInfo.columns[recipeInfo.speedMin].value;
-            tbSpeedMax.Text = recipeInfo.columns[recipeInfo.speedMax].value;
-            tbPressureMin.Text = recipeInfo.columns[recipeInfo.pressureMin].value;
-            tbPressureMax.Text = recipeInfo.columns[recipeInfo.pressureMax].value;
+            tbSpeedMin.Text = recipeInfo.Columns[recipeInfo.SpeedMin].Value;
+            tbSpeedMax.Text = recipeInfo.Columns[recipeInfo.SpeedMax].Value;
+            tbPressureMin.Text = recipeInfo.Columns[recipeInfo.PressureMin].Value;
+            tbPressureMax.Text = recipeInfo.Columns[recipeInfo.PressureMax].Value;
 
             TbSpeedMin_LostFocus(tbSpeedMin, new RoutedEventArgs());
             TbSpeedMax_LostFocus(tbSpeedMax, new RoutedEventArgs());
             TbPressureMin_LostFocus(tbPressureMin, new RoutedEventArgs());
             TbPressureMax_LostFocus(tbPressureMax, new RoutedEventArgs());
         }
-        public ISeqInfo GetPage()
+        public ISeqTabInfo GetPage()
         {
             logger.Debug("GetPage");
 
@@ -268,31 +268,31 @@ namespace FPO_WPF_Test.Pages.SubRecipe
 
             try
             {
-                recipeInfo.columns[recipeInfo.seqName].value = tbProgramName.Text;
-                recipeInfo.columns[recipeInfo.acceleration].value = int.Parse(tbAcceleration.Text, NumberStyles.AllowThousands).ToString();
-                recipeInfo.columns[recipeInfo.deceleration].value = int.Parse(tbDeceleration.Text, NumberStyles.AllowThousands).ToString();
-                recipeInfo.columns[recipeInfo.vaccum_control].value = (bool)cbVacuum.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
-                recipeInfo.columns[recipeInfo.isVentgasAir].value = DatabaseSettings.General_TrueValue_Write;
+                recipeInfo.Columns[recipeInfo.Name].Value = tbProgramName.Text;
+                recipeInfo.Columns[recipeInfo.Acceleration].Value = int.Parse(tbAcceleration.Text, NumberStyles.AllowThousands).ToString();
+                recipeInfo.Columns[recipeInfo.Deceleration].Value = int.Parse(tbDeceleration.Text, NumberStyles.AllowThousands).ToString();
+                recipeInfo.Columns[recipeInfo.Vaccum_control].Value = (bool)cbVacuum.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+                recipeInfo.Columns[recipeInfo.IsVentgasAir].Value = DatabaseSettings.General_TrueValue_Write;
                 //UrecipeInfo.columns[recipeInfo.isVentgasAir].value = (bool)rbAir.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
-                recipeInfo.columns[recipeInfo.monitorType].value = DatabaseSettings.General_TrueValue_Write;
+                recipeInfo.Columns[recipeInfo.MonitorType].Value = DatabaseSettings.General_TrueValue_Write;
                 //recipeInfo.columns[recipeInfo.monitorType].value = (bool)cbMonitorType.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
-                recipeInfo.columns[recipeInfo.pressureUnit].value = cbxPressureUnit.Text;
-                recipeInfo.columns[recipeInfo.scurve].value = "-";// tbSCurve.Text;
-                recipeInfo.columns[recipeInfo.coldtrap].value = (bool)cbColdTrap.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+                recipeInfo.Columns[recipeInfo.PressureUnit].Value = cbxPressureUnit.Text;
+                recipeInfo.Columns[recipeInfo.Scurve].Value = "-";// tbSCurve.Text;
+                recipeInfo.Columns[recipeInfo.Coldtrap].Value = (bool)cbColdTrap.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
 
                 int i = 0;
                 do
                 {
-                    recipeInfo.columns[recipeInfo.speed00 + 3 * i].value = int.Parse(speeds[i].Text, NumberStyles.AllowThousands).ToString();
-                    recipeInfo.columns[recipeInfo.time00 + 3 * i].value = int.Parse(times[i].Text, NumberStyles.AllowThousands).ToString();
-                    recipeInfo.columns[recipeInfo.pressure00 + 3 * i].value = int.Parse(pressures[i].Text, NumberStyles.AllowThousands).ToString();
+                    recipeInfo.Columns[recipeInfo.Speed00 + 3 * i].Value = int.Parse(speeds[i].Text, NumberStyles.AllowThousands).ToString();
+                    recipeInfo.Columns[recipeInfo.Time00 + 3 * i].Value = int.Parse(times[i].Text, NumberStyles.AllowThousands).ToString();
+                    recipeInfo.Columns[recipeInfo.Pressure00 + 3 * i].Value = int.Parse(pressures[i].Text, NumberStyles.AllowThousands).ToString();
                     i++;
                 } while (i != 10 && (bool)toggleButtons[i].IsChecked);
 
-                recipeInfo.columns[recipeInfo.speedMin].value = int.Parse(tbSpeedMin.Text, NumberStyles.AllowThousands).ToString();
-                recipeInfo.columns[recipeInfo.speedMax].value = int.Parse(tbSpeedMax.Text, NumberStyles.AllowThousands).ToString();
-                recipeInfo.columns[recipeInfo.pressureMin].value = int.Parse(tbPressureMin.Text, NumberStyles.AllowThousands).ToString();
-                recipeInfo.columns[recipeInfo.pressureMax].value = int.Parse(tbPressureMax.Text, NumberStyles.AllowThousands).ToString();
+                recipeInfo.Columns[recipeInfo.SpeedMin].Value = int.Parse(tbSpeedMin.Text, NumberStyles.AllowThousands).ToString();
+                recipeInfo.Columns[recipeInfo.SpeedMax].Value = int.Parse(tbSpeedMax.Text, NumberStyles.AllowThousands).ToString();
+                recipeInfo.Columns[recipeInfo.PressureMin].Value = int.Parse(tbPressureMin.Text, NumberStyles.AllowThousands).ToString();
+                recipeInfo.Columns[recipeInfo.PressureMax].Value = int.Parse(tbPressureMax.Text, NumberStyles.AllowThousands).ToString();
             }
             catch (Exception ex)
             {
@@ -308,7 +308,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             logger.Debug("TbProgramName_LostFocus");
 
             TextBox textBox = sender as TextBox;
-            int i = ControlsIDs[recipeSpeedMixerInfo.seqName];
+            int i = ControlsIDs[recipeSpeedMixerInfo.Name];
 
             if (General.Verify_Format(textBox, isNotNull: true, isNumber: false, Settings.Default.RecipeMix_ProgramName_nCharMax))
             {
@@ -325,7 +325,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             logger.Debug("TbAcceleration_LostFocus");
 
             TextBox textBox = sender as TextBox;
-            int i = ControlsIDs[recipeSpeedMixerInfo.acceleration];
+            int i = ControlsIDs[recipeSpeedMixerInfo.Acceleration];
 
             if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
                 min: Settings.Default.RecipeMix_Acceleration_Min, max: Settings.Default.RecipeMix_Acceleration_Max))
@@ -343,7 +343,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             logger.Debug("TbDeceleration_LostFocus");
 
             TextBox textBox = sender as TextBox;
-            int i = ControlsIDs[recipeSpeedMixerInfo.deceleration];
+            int i = ControlsIDs[recipeSpeedMixerInfo.Deceleration];
 
             if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
                 min: Settings.Default.RecipeMix_Deceleration_Min, max: Settings.Default.RecipeMix_Deceleration_Max))
@@ -373,7 +373,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }*/
             //MessageBox.Show(FormatControl[i].ToString());
 
-            int i = ControlsIDs[recipeSpeedMixerInfo.scurve];
+            int i = ControlsIDs[recipeSpeedMixerInfo.Scurve];
             FormatControl[i] = true;
         }
         private void TbSpeed_LostFocus(object sender, RoutedEventArgs e)
@@ -381,7 +381,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             logger.Debug("TbSpeed_LostFocus");
 
             TextBox textBox = sender as TextBox;
-            int i = ControlsIDs[recipeSpeedMixerInfo.speed00];
+            int i = ControlsIDs[recipeSpeedMixerInfo.Speed00];
 
             for (int j = 0; j < PhasesNumber; j++)
             {
@@ -407,7 +407,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             logger.Debug("TbTime_LostFocus");
 
             TextBox textBox = sender as TextBox;
-            int i = ControlsIDs[recipeSpeedMixerInfo.time00];
+            int i = ControlsIDs[recipeSpeedMixerInfo.Time00];
             //MessageBox.Show(i.ToString() + " - " + recipeSpeedMixerInfo.time00.ToString());
             for (int j = 0; j < PhasesNumber; j++)
             {
@@ -435,7 +435,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
 
             //pressures[0] = tbPressure00;
             TextBox textBox = sender as TextBox;
-            int i = ControlsIDs[recipeSpeedMixerInfo.pressure00];
+            int i = ControlsIDs[recipeSpeedMixerInfo.Pressure00];
 
             for (int j = 0; j < PhasesNumber; j++)
             {
@@ -461,7 +461,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             logger.Debug("TbSpeedMin_LostFocus");
 
             TextBox textBox = sender as TextBox;
-            int i = ControlsIDs[recipeSpeedMixerInfo.speedMin];
+            int i = ControlsIDs[recipeSpeedMixerInfo.SpeedMin];
 
             if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
                 min: Settings.Default.RecipeMix_Speed_Min, max: tbSpeedMax.Text == "" ? Settings.Default.RecipeMix_Speed_Max : decimal.Parse(tbSpeedMax.Text)))
@@ -479,7 +479,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             logger.Debug("TbSpeedMax_LostFocus");
 
             TextBox textBox = sender as TextBox;
-            int i = ControlsIDs[recipeSpeedMixerInfo.speedMax];
+            int i = ControlsIDs[recipeSpeedMixerInfo.SpeedMax];
 
             if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
                 min: tbSpeedMin.Text == "" ? Settings.Default.RecipeMix_Speed_Min : decimal.Parse(tbSpeedMin.Text), max: Settings.Default.RecipeMix_Speed_Max))
@@ -497,7 +497,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             logger.Debug("TbPressureMin_LostFocus");
 
             TextBox textBox = sender as TextBox;
-            int i = ControlsIDs[recipeSpeedMixerInfo.pressureMin];
+            int i = ControlsIDs[recipeSpeedMixerInfo.PressureMin];
 
             if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
                 min: Settings.Default.RecipeMix_Pressure_Min, max: tbPressureMax.Text == "" ? Settings.Default.RecipeMix_Pressure_Max : decimal.Parse(tbPressureMax.Text)))
@@ -515,7 +515,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             logger.Debug("TbPressureMax_LostFocus");
 
             TextBox textBox = sender as TextBox;
-            int i = ControlsIDs[recipeSpeedMixerInfo.pressureMax];
+            int i = ControlsIDs[recipeSpeedMixerInfo.PressureMax];
 
             if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
                 min: tbPressureMin.Text == "" ? Settings.Default.RecipeMix_Pressure_Min : decimal.Parse(tbPressureMin.Text), max: Settings.Default.RecipeMix_Pressure_Max))

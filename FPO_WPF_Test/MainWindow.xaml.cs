@@ -49,7 +49,6 @@ namespace FPO_WPF_Test
 
     public partial class MainWindow : Window
     {
-        //private readonly NameValueCollection AuditTrailSettings = ConfigurationManager.GetSection("Database/Audit_Trail") as NameValueCollection;
         private readonly System.Timers.Timer currentTimeTimer;
         private bool isWindowLoaded = false;
         private bool wasAutoBackupStarted = false;
@@ -69,6 +68,9 @@ namespace FPO_WPF_Test
             AlarmManagement.InactiveAlarmEvent += InactiveAlarmEvent;
             /*
 
+            CycleWeightInfo c = new CycleWeightInfo();
+            c.SetRecipeParameters(new RecipeWeightInfo(), 0);
+
             MessageBox.Show("Fini je crois");
             Environment.Exit(1);
             //*/
@@ -80,9 +82,9 @@ namespace FPO_WPF_Test
             labelSoftwareName.Text = General.application_name + " version " + General.application_version;
 
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-            auditTrailInfo.columns[auditTrailInfo.username].value = General.loggedUsername;
-            auditTrailInfo.columns[auditTrailInfo.eventType].value = Settings.Default.General_AuditTrailEvent_Event;
-            auditTrailInfo.columns[auditTrailInfo.description].value = Settings.Default.General_auditTrail_StartApp;
+            auditTrailInfo.Columns[auditTrailInfo.Username].Value = General.loggedUsername;
+            auditTrailInfo.Columns[auditTrailInfo.EventType].Value = Settings.Default.General_AuditTrailEvent_Event;
+            auditTrailInfo.Columns[auditTrailInfo.Description].Value = Settings.Default.General_auditTrail_StartApp;
             //MyDatabase.InsertRow(auditTrailInfo);
 
             // A corriger if insert didn't work
@@ -99,6 +101,17 @@ namespace FPO_WPF_Test
             };
             currentTimeTimer.Elapsed += CurrentTimer_OnTimedEvent;
             currentTimeTimer.Start();
+
+            for (int i = 0; i < Pages.Sequence.list.Count; i++)
+            {
+                if (Pages.Sequence.list[i].subRecipeInfo.SeqType != i || Pages.Sequence.list[i].subCycleInfo.SeqType != i)
+                {
+                    MessageBox.Show(Settings.Default.Recipe_Error_listIncorrect);
+                    logger.Error(Settings.Default.Recipe_Error_listIncorrect);
+                    Environment.Exit(1);
+                }
+            }
+
             Initialize();
         }
         private async void Initialize()
@@ -136,18 +149,18 @@ namespace FPO_WPF_Test
             //*/
 
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-            auditTrailInfo.columns[auditTrailInfo.description].value = General.auditTrail_BackupDesc;
+            auditTrailInfo.Columns[auditTrailInfo.Description].Value = General.auditTrail_BackupDesc;
             // easy to make mutex better
 
             ReadInfo readInfo = new ReadInfo(
                 _tableInfo: auditTrailInfo,
-                _orderBy: auditTrailInfo.columns[auditTrailInfo.id].id,
+                _orderBy: auditTrailInfo.Columns[auditTrailInfo.Id].Id,
                 _isOrderAsc: false
                 );
 
             //List<ITableInfo> tableInfos = MyDatabase.GetRows(readInfo, 1);
             Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetRows(readInfo, 1); });
-            List<ITableInfo> tableInfos = (List<ITableInfo>)t.Result;
+            List<IComTabInfo> tableInfos = (List<IComTabInfo>)t.Result;
 
             // check if result is null
 
@@ -160,7 +173,7 @@ namespace FPO_WPF_Test
 
             auditTrailInfo = (AuditTrailInfo)tableInfos[0];
 
-            DateTime dtLastBackup = Convert.ToDateTime(auditTrailInfo.columns[auditTrailInfo.dateTime].value);
+            DateTime dtLastBackup = Convert.ToDateTime(auditTrailInfo.Columns[auditTrailInfo.DateTime].Value);
             if (dtLastBackup.CompareTo(General.NextBackupTime.AddDays(-1)) < 0)
             {
                 logger.Debug("ExecuteBackupAuto at start");
@@ -188,9 +201,9 @@ namespace FPO_WPF_Test
                 if (!wasBackupSucceeded)
                 {
                     AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-                    auditTrailInfo.columns[auditTrailInfo.username].value = Settings.Default.General_SystemUsername;
-                    auditTrailInfo.columns[auditTrailInfo.eventType].value = Settings.Default.General_AuditTrailEvent_Event;
-                    auditTrailInfo.columns[auditTrailInfo.description].value = Settings.Default.General_auditTrail_BackupFailedDesc + nBackupAttempt.ToString();
+                    auditTrailInfo.Columns[auditTrailInfo.Username].Value = Settings.Default.General_SystemUsername;
+                    auditTrailInfo.Columns[auditTrailInfo.EventType].Value = Settings.Default.General_AuditTrailEvent_Event;
+                    auditTrailInfo.Columns[auditTrailInfo.Description].Value = Settings.Default.General_auditTrail_BackupFailedDesc + nBackupAttempt.ToString();
 
                     // A CORRIGER: CHECK IF RESULT FALSE
                     MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTrailInfo); });

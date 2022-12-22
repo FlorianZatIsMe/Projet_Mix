@@ -63,10 +63,10 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 return;
             }*/
 
-            labelOFNumber.Text = cycleTableInfo.columns[cycleTableInfo.batchNumber].value;
-            labelRecipeName.Text = cycleTableInfo.columns[cycleTableInfo.recipeName].value;
-            labelRecipeVersion.Text = cycleTableInfo.columns[cycleTableInfo.recipeVersion].value;
-            labelFinalWeight.Text = cycleTableInfo.columns[cycleTableInfo.quantityValue].value;
+            labelOFNumber.Text = cycleTableInfo.Columns[cycleTableInfo.BatchNumber].Value;
+            labelRecipeName.Text = cycleTableInfo.Columns[cycleTableInfo.RecipeName].Value;
+            labelRecipeVersion.Text = cycleTableInfo.Columns[cycleTableInfo.RecipeVersion].Value;
+            labelFinalWeight.Text = cycleTableInfo.Columns[cycleTableInfo.FinalWeight].Value;
 
             SetVisibility(true);
         }
@@ -114,13 +114,13 @@ namespace FPO_WPF_Test.Pages.SubCycle
                         //auditTrailInfo = (AuditTrailInfo)MyDatabase.GetOneRow(typeof(AuditTrailInfo), AlarmManagement.Alarms[AlarmManagement.ActiveAlarms[i].Item1, AlarmManagement.ActiveAlarms[i].Item2].id.ToString());
 
                         // S'il n'y a pas eu d'erreur, on affiche les infos de l'alarme
-                        if (auditTrailInfo.columns.Count() != 0)
+                        if (auditTrailInfo.Columns.Count() != 0)
                         {
                             this.Dispatcher.Invoke(() =>
                             {
-                                AddRow(auditTrailInfo.columns[auditTrailInfo.dateTime].value + " - " +
-                                    auditTrailInfo.columns[auditTrailInfo.description].value + " - " +
-                                    auditTrailInfo.columns[auditTrailInfo.valueAfter].value);
+                                AddRow(auditTrailInfo.Columns[auditTrailInfo.DateTime].Value + " - " +
+                                    auditTrailInfo.Columns[auditTrailInfo.Description].Value + " - " +
+                                    auditTrailInfo.Columns[auditTrailInfo.ValueAfter].Value);
                             });
                         }
                         else
@@ -150,13 +150,13 @@ namespace FPO_WPF_Test.Pages.SubCycle
                     //auditTrailInfo = (AuditTrailInfo)MyDatabase.GetOneRow(typeof(AuditTrailInfo), AlarmManagement.RAZalarms[i].ToString());
 
                     // S'il n'y a pas eu d'erreur, on affiche les infos de l'alarme
-                    if (auditTrailInfo.columns.Count() != 0)
+                    if (auditTrailInfo.Columns.Count() != 0)
                     {
                         this.Dispatcher.Invoke(() =>
                         {
-                            AddRow(auditTrailInfo.columns[auditTrailInfo.dateTime].value + " - " +
-                                auditTrailInfo.columns[auditTrailInfo.description].value + " - " +
-                                auditTrailInfo.columns[auditTrailInfo.valueAfter].value);
+                            AddRow(auditTrailInfo.Columns[auditTrailInfo.DateTime].Value + " - " +
+                                auditTrailInfo.Columns[auditTrailInfo.Description].Value + " - " +
+                                auditTrailInfo.Columns[auditTrailInfo.ValueAfter].Value);
                         });
                     }
                     else
@@ -169,7 +169,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             }
             checkAlarmsTimer.Enabled = true;
         }
-        public void NewInfo(ISeqInfo cycleSeqInfo)
+        public void NewInfo(ISeqTabInfo cycleSeqInfo)
         {
             logger.Debug("NewInfo(ISeqInfo cycleSeqInfo)");
 
@@ -201,35 +201,35 @@ namespace FPO_WPF_Test.Pages.SubCycle
             TextBlock productName = new TextBlock
             {
                 Foreground = Brushes.Wheat,
-                Text = cycleWeightInfo.columns[cycleWeightInfo.product].displayName + ": " + 
-                recipeWeightInfo.columns[recipeWeightInfo.seqName].value
+                Text = cycleWeightInfo.Columns[cycleWeightInfo.Product].DisplayName + ": " + 
+                recipeWeightInfo.Columns[recipeWeightInfo.Name].Value
             };
 
             TextBlock min = new TextBlock
             {
                 Foreground = Brushes.Wheat,
                 Margin = new Thickness(20, 0, 0, 0),
-                Text = cycleWeightInfo.columns[cycleWeightInfo.min].displayName + ": " + 
-                Math.Round(decimal.Parse(recipeWeightInfo.columns[recipeWeightInfo.min].value), 
-                int.Parse(recipeWeightInfo.columns[recipeWeightInfo.decimalNumber].value))
-                .ToString("N" + recipeWeightInfo.columns[recipeWeightInfo.decimalNumber].value).ToString()
+                Text = cycleWeightInfo.Columns[cycleWeightInfo.Min].DisplayName + ": " + 
+                Math.Round(decimal.Parse(recipeWeightInfo.Columns[recipeWeightInfo.Min].Value), 
+                int.Parse(recipeWeightInfo.Columns[recipeWeightInfo.DecimalNumber].Value))
+                .ToString("N" + recipeWeightInfo.Columns[recipeWeightInfo.DecimalNumber].Value).ToString()
             };
 
             TextBlock max = new TextBlock
             {
                 Foreground = Brushes.Wheat,
                 Margin = new Thickness(20, 0, 0, 0),
-                Text = cycleWeightInfo.columns[cycleWeightInfo.max].displayName + ": " +
-                Math.Round(decimal.Parse(recipeWeightInfo.columns[recipeWeightInfo.max].value),
-                int.Parse(recipeWeightInfo.columns[recipeWeightInfo.decimalNumber].value))
-                .ToString("N" + recipeWeightInfo.columns[recipeWeightInfo.decimalNumber].value).ToString()
+                Text = cycleWeightInfo.Columns[cycleWeightInfo.Max].DisplayName + ": " +
+                Math.Round(decimal.Parse(recipeWeightInfo.Columns[recipeWeightInfo.Max].Value),
+                int.Parse(recipeWeightInfo.Columns[recipeWeightInfo.DecimalNumber].Value))
+                .ToString("N" + recipeWeightInfo.Columns[recipeWeightInfo.DecimalNumber].Value).ToString()
             };
 
             TextBlock actualWeight = new TextBlock
             {
                 Foreground = Brushes.Wheat,
                 Margin = new Thickness(20, 0, 0, 0),
-                Text = cycleWeightInfo.columns[cycleWeightInfo.actualValue].displayName + ": -"
+                Text = cycleWeightInfo.Columns[cycleWeightInfo.WeightedValue].DisplayName + ": -"
             };
 
             wrapPanel.Children.Add(productName);
@@ -255,7 +255,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             TextBlock programName = new TextBlock
             {
                 Foreground = Brushes.Wheat,
-                Text = cycleSpeedMixerInfo.columns[cycleSpeedMixerInfo.mixName].displayName + ": " + recipeSpeedMixerInfo.columns[recipeSpeedMixerInfo.seqName].value
+                Text = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.Name].DisplayName + ": " + recipeSpeedMixerInfo.Columns[recipeSpeedMixerInfo.Name].Value
             };
 
             TextBlock status = new TextBlock
@@ -277,7 +277,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
             CycleWeightInfo cycleWeightInfo = new CycleWeightInfo();
             (wrapPanels[seqNumber].Children[3] as TextBlock).Text = 
-                cycleWeightInfo.columns[cycleWeightInfo.actualValue].displayName + ": " + 
+                cycleWeightInfo.Columns[cycleWeightInfo.WeightedValue].DisplayName + ": " + 
                 info[0];
         }
         public void UpdateCurrentSpeedMixerInfo(string[] info)

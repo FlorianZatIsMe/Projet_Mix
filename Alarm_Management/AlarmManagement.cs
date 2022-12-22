@@ -166,17 +166,17 @@ namespace Alarm_Management
 
 
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-            auditTrailInfo.columns[auditTrailInfo.username].value = AuditTrail_SystemUsername;
-            auditTrailInfo.columns[auditTrailInfo.eventType].value = GetAlarmType(Alarms[id1, id2].Type);
-            auditTrailInfo.columns[auditTrailInfo.description].value = GetAlarmDescription(id1, id2);
-            auditTrailInfo.columns[auditTrailInfo.valueBefore].value = statusBefore.ToString();
-            auditTrailInfo.columns[auditTrailInfo.valueAfter].value = statusAfter.ToString();
+            auditTrailInfo.Columns[auditTrailInfo.Username].Value = AuditTrail_SystemUsername;
+            auditTrailInfo.Columns[auditTrailInfo.EventType].Value = GetAlarmType(Alarms[id1, id2].Type);
+            auditTrailInfo.Columns[auditTrailInfo.Description].Value = GetAlarmDescription(id1, id2);
+            auditTrailInfo.Columns[auditTrailInfo.ValueBefore].Value = statusBefore.ToString();
+            auditTrailInfo.Columns[auditTrailInfo.ValueAfter].Value = statusAfter.ToString();
 
             MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTrailInfo); });
             //MyDatabase.InsertRow(auditTrailInfo, mutexID);
 
 
-            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id); });
+            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(auditTrailInfo.TabName, auditTrailInfo.Columns[auditTrailInfo.Id].Id); });
             Alarms[id1, id2].id = (int)t.Result;
             //Alarms[id1, id2].id = MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id, mutex: mutexID);
             Alarms[id1, id2].Status = statusAfter;
@@ -272,16 +272,16 @@ namespace Alarm_Management
             if (statusAfter != AlarmStatus.None)
             {
                 AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-                auditTrailInfo.columns[auditTrailInfo.username].value = AuditTrail_SystemUsername;
-                auditTrailInfo.columns[auditTrailInfo.eventType].value = GetAlarmType(Alarms[id1, id2].Type);
-                auditTrailInfo.columns[auditTrailInfo.description].value = GetAlarmDescription(id1, id2);
-                auditTrailInfo.columns[auditTrailInfo.valueBefore].value = statusBefore.ToString();
-                auditTrailInfo.columns[auditTrailInfo.valueAfter].value = statusAfter.ToString();
+                auditTrailInfo.Columns[auditTrailInfo.Username].Value = AuditTrail_SystemUsername;
+                auditTrailInfo.Columns[auditTrailInfo.EventType].Value = GetAlarmType(Alarms[id1, id2].Type);
+                auditTrailInfo.Columns[auditTrailInfo.Description].Value = GetAlarmDescription(id1, id2);
+                auditTrailInfo.Columns[auditTrailInfo.ValueBefore].Value = statusBefore.ToString();
+                auditTrailInfo.Columns[auditTrailInfo.ValueAfter].Value = statusAfter.ToString();
                 MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTrailInfo); });
                 //MyDatabase.InsertRow(auditTrailInfo, mutexID);
 
 
-                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id); });
+                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(auditTrailInfo.TabName, auditTrailInfo.Columns[auditTrailInfo.Id].Id); });
                 Alarms[id1, id2].id = (int)t.Result;
                 //Alarms[id1, id2].id = MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id, mutex: mutexID);
                 Alarms[id1, id2].Status = statusAfter;
@@ -341,15 +341,15 @@ namespace Alarm_Management
             mutexID = -1;
 
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-            auditTrailInfo.columns[auditTrailInfo.username].value = AuditTrail_SystemUsername;
-            auditTrailInfo.columns[auditTrailInfo.eventType].value = GetAlarmType(Alarms[id1, id2].Type);
-            auditTrailInfo.columns[auditTrailInfo.description].value = GetAlarmDescription(id1, id2);
-            auditTrailInfo.columns[auditTrailInfo.valueBefore].value = statusBefore.ToString();
-            auditTrailInfo.columns[auditTrailInfo.valueAfter].value = statusAfter.ToString();
+            auditTrailInfo.Columns[auditTrailInfo.Username].Value = AuditTrail_SystemUsername;
+            auditTrailInfo.Columns[auditTrailInfo.EventType].Value = GetAlarmType(Alarms[id1, id2].Type);
+            auditTrailInfo.Columns[auditTrailInfo.Description].Value = GetAlarmDescription(id1, id2);
+            auditTrailInfo.Columns[auditTrailInfo.ValueBefore].Value = statusBefore.ToString();
+            auditTrailInfo.Columns[auditTrailInfo.ValueAfter].Value = statusAfter.ToString();
             MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTrailInfo); });
             //MyDatabase.InsertRow(auditTrailInfo, mutexID);
 
-            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id); });
+            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(auditTrailInfo.TabName, auditTrailInfo.Columns[auditTrailInfo.Id].Id); });
             Alarms[id1, id2].id = (int)t.Result;
             //Alarms[id1, id2].id = MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id, mutex: mutexID);
             Alarms[id1, id2].Status = statusAfter;

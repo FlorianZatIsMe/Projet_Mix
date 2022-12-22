@@ -1,4 +1,4 @@
-﻿namespace Database.Properties {
+﻿/*namespace Database.Properties {
     
     
     // Cette classe vous permet de gérer des événements spécifiques dans la classe de paramètres :
@@ -26,3 +26,4 @@
         }
     }
 }
+*/

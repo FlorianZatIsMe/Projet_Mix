@@ -1449,12 +1449,12 @@ namespace Database.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Connection à la base de données échouée")]
-        public string Error01 {
+        public string Error_connectToDbFailed {
             get {
-                return ((string)(this["Error01"]));
+                return ((string)(this["Error_connectToDbFailed"]));
             }
             set {
-                this["Error01"] = value;
+                this["Error_connectToDbFailed"] = value;
             }
         }
         
@@ -2117,18 +2117,6 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Le reader n\'est pas disponible")]
-        public string ReaderUnavailable {
-            get {
-                return ((string)(this["ReaderUnavailable"]));
-            }
-            set {
-                this["ReaderUnavailable"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10000")]
         public int MaxNumbRows {
             get {
@@ -2201,6 +2189,18 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Type de la recette utilisé incorrect")]
+        public string ICycleSeqInfo_Error_RecipeIncorrect {
+            get {
+                return ((string)(this["ICycleSeqInfo_Error_RecipeIncorrect"]));
+            }
+            set {
+                this["ICycleSeqInfo_Error_RecipeIncorrect"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute(@"
           <ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
             <server>localhost</server>
@@ -2215,6 +2215,30 @@ namespace Database.Properties {
             }
             set {
                 this["ConnectionInfo"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Elle vient d\'ici l\'erreur")]
+        public string Error_FromHere {
+            get {
+                return ((string)(this["Error_FromHere"]));
+            }
+            set {
+                this["Error_FromHere"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Unités de pesée incorrectes")]
+        public string ICycleSeqInfo_Error_convRatioIncorrect {
+            get {
+                return ((string)(this["ICycleSeqInfo_Error_convRatioIncorrect"]));
+            }
+            set {
+                this["ICycleSeqInfo_Error_convRatioIncorrect"] = value;
             }
         }
     }

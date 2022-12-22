@@ -256,19 +256,19 @@ namespace Driver_MODBUS
                 speedMixer.WriteSingleRegister(Settings.Default.Register_MixName + i, 0);
             }
 
-            speedMixer.WriteSingleRegister(Settings.Default.Register_Acceleration, int.Parse(recipe.columns[recipe.acceleration].value));  // Acceleration
-            speedMixer.WriteSingleRegister(Settings.Default.Register_Deceleration, int.Parse(recipe.columns[recipe.deceleration].value));  // Deceleration
+            speedMixer.WriteSingleRegister(Settings.Default.Register_Acceleration, int.Parse(recipe.Columns[recipe.Acceleration].Value));  // Acceleration
+            speedMixer.WriteSingleRegister(Settings.Default.Register_Deceleration, int.Parse(recipe.Columns[recipe.Deceleration].Value));  // Deceleration
             speedMixer.WriteSingleRegister(Settings.Default.Register_VacuumInUse, 
-                recipe.columns[recipe.vaccum_control].value == Database.General.trueValue ? 
+                recipe.Columns[recipe.Vaccum_control].Value == DatabaseSettings.General_TrueValue_Read ? 
                 Settings.Default.VacuumInUse_Yes : Settings.Default.VacuumInUse_No);    // Vacuum in Use (0=No ; 1=Yes)
 
             //speedMixer.WriteSingleRegister(3048, 0);    // ça ne fonctionne pas, ça devrait être le choix du vent gas
             //speedMixer.WriteSingleRegister(3049, 0);    // Monitor type Je pense que ça ne fonctionne pas
-            string pUnit = recipe.columns[recipe.pressureUnit].value;
-            vaccumScale = pUnit == recipe.pUnit_Torr ? Settings.Default.VacuumScale_Torr :
-                pUnit == recipe.pUnit_mBar ? Settings.Default.VacuumScale_mBar :
-                pUnit == recipe.pUnit_inHg ? Settings.Default.VacuumScale_inHg :
-                pUnit == recipe.pUnit_PSIA ? Settings.Default.VacuumScale_PSIA : Settings.Default.VacuumScale_Error;
+            string pUnit = recipe.Columns[recipe.PressureUnit].Value;
+            vaccumScale = pUnit == recipe.PUnit_Torr ? Settings.Default.VacuumScale_Torr :
+                pUnit == recipe.PUnit_mBar ? Settings.Default.VacuumScale_mBar :
+                pUnit == recipe.PUnit_inHg ? Settings.Default.VacuumScale_inHg :
+                pUnit == recipe.PUnit_PSIA ? Settings.Default.VacuumScale_PSIA : Settings.Default.VacuumScale_Error;
 
             if (vaccumScale != Settings.Default.VacuumScale_Error) speedMixer.WriteSingleRegister(Settings.Default.Register_VacuumScale, vaccumScale);    // Vacuum Scale (1=Torr ; 2=mBar ; 3=inHg ; 4=PSIA)
             else 
@@ -285,9 +285,9 @@ namespace Driver_MODBUS
 
             for (int i = 0; i < 10; i++)
             {
-                speedFromDB = recipe.columns[recipe.speed00 + 3 * i].value;
-                timeFromDB = recipe.columns[recipe.time00 + 3 * i].value;
-                pressureFromDB = recipe.columns[recipe.pressure00 + 3 * i].value;
+                speedFromDB = recipe.Columns[recipe.Speed00 + 3 * i].Value;
+                timeFromDB = recipe.Columns[recipe.Time00 + 3 * i].Value;
+                pressureFromDB = recipe.Columns[recipe.Pressure00 + 3 * i].Value;
 
                 speedParameter = (speedFromDB == "" || speedFromDB == null) ? 0 : int.Parse(speedFromDB);
                 timeParameter = (timeFromDB == "" || timeFromDB == null) ? 0 : int.Parse(timeFromDB);
