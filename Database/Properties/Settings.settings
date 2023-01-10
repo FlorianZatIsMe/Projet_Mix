@@ -700,21 +700,32 @@
     <Setting Name="ICycleSeqInfo_Error_RecipeIncorrect" Type="System.String" Scope="User">
       <Value Profile="(Default)">Type de la recette utilisé incorrect</Value>
     </Setting>
-    <Setting Name="ConnectionInfo" Type="Database.ConnectionInfo" Scope="User">
-      <Value Profile="(Default)">
-          &lt;ConnectionInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
-            &lt;server&gt;localhost&lt;/server&gt;
-            &lt;userID&gt;root&lt;/userID&gt;
-            &lt;password&gt;Integra2022/&lt;/password&gt;
-            &lt;db&gt;db1&lt;/db&gt;
-          &lt;/ConnectionInfo&gt;
-        </Value>
-    </Setting>
     <Setting Name="Error_FromHere" Type="System.String" Scope="User">
       <Value Profile="(Default)">Elle vient d'ici l'erreur</Value>
     </Setting>
     <Setting Name="ICycleSeqInfo_Error_convRatioIncorrect" Type="System.String" Scope="User">
       <Value Profile="(Default)">Unités de pesée incorrectes</Value>
+    </Setting>
+    <Setting Name="ConnectionInfo" Type="Database.ConnectionInfo" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ConnectionInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;Server&gt;localhost&lt;/Server&gt;
+  &lt;UserID&gt;root&lt;/UserID&gt;
+  &lt;Password&gt;Integra2022/&lt;/Password&gt;
+  &lt;Db&gt;db1&lt;/Db&gt;
+&lt;/ConnectionInfo&gt;</Value>
+    </Setting>
+    <Setting Name="QueueEmptyTimer_Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="IsQueueAvailableTimer_Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="QueueEmptyCount_Max" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="TaskDeQueue_Wait" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
     </Setting>
   </Settings>
 </SettingsFile>

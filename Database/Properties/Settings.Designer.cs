@@ -2201,25 +2201,6 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"
-          <ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-            <server>localhost</server>
-            <userID>root</userID>
-            <password>Integra2022/</password>
-            <db>db1</db>
-          </ConnectionInfo>
-        ")]
-        public global::Database.ConnectionInfo ConnectionInfo {
-            get {
-                return ((global::Database.ConnectionInfo)(this["ConnectionInfo"]));
-            }
-            set {
-                this["ConnectionInfo"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Elle vient d\'ici l\'erreur")]
         public string Error_FromHere {
             get {
@@ -2239,6 +2220,72 @@ namespace Database.Properties {
             }
             set {
                 this["ICycleSeqInfo_Error_convRatioIncorrect"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <Server>localhost</Server>
+  <UserID>root</UserID>
+  <Password>Integra2022/</Password>
+  <Db>db1</Db>
+</ConnectionInfo>")]
+        public global::Database.ConnectionInfo ConnectionInfo {
+            get {
+                return ((global::Database.ConnectionInfo)(this["ConnectionInfo"]));
+            }
+            set {
+                this["ConnectionInfo"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int QueueEmptyTimer_Interval {
+            get {
+                return ((int)(this["QueueEmptyTimer_Interval"]));
+            }
+            set {
+                this["QueueEmptyTimer_Interval"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int IsQueueAvailableTimer_Interval {
+            get {
+                return ((int)(this["IsQueueAvailableTimer_Interval"]));
+            }
+            set {
+                this["IsQueueAvailableTimer_Interval"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int QueueEmptyCount_Max {
+            get {
+                return ((int)(this["QueueEmptyCount_Max"]));
+            }
+            set {
+                this["QueueEmptyCount_Max"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int TaskDeQueue_Wait {
+            get {
+                return ((int)(this["TaskDeQueue_Wait"]));
+            }
+            set {
+                this["TaskDeQueue_Wait"] = value;
             }
         }
     }

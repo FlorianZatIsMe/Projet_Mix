@@ -68,9 +68,6 @@ namespace FPO_WPF_Test
             AlarmManagement.InactiveAlarmEvent += InactiveAlarmEvent;
             /*
 
-            CycleWeightInfo c = new CycleWeightInfo();
-            c.SetRecipeParameters(new RecipeWeightInfo(), 0);
-
             MessageBox.Show("Fini je crois");
             Environment.Exit(1);
             //*/

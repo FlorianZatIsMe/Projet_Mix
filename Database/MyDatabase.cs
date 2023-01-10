@@ -109,41 +109,41 @@ namespace Database
     }
 
     /// <summary>
-    /// 
+    /// Class containing the parameters required by other method (usually to select one or several row in a database table)
     /// </summary>
     public class ReadInfo
     {
-        ///<value></value>
-        public IComTabInfo tableInfo { get; }
+        ///<value>Object of database table. The values of this object can be used to select a set of rows</value>
+        public IComTabInfo TableInfo { get; }
 
-        ///<value></value>
-        public string orderBy { get; }
+        ///<value>Must contains the id of the column to use to sort the rows</value>
+        public string OrderBy { get; }
 
-        ///<value></value>
-        public bool isOrderAsc { get; }
+        ///<value>If value value = true then the order of the sort is ascending. Descending if false</value>
+        public bool IsOrderAsc { get; }
 
-        ///<value></value>
-        public string customWhere { get; }
+        ///<value>Used for tables containing a date and time column: date and time of the first row to filter</value>
+        public DateTime? DtBefore { get; }
 
-        ///<value></value>
-        public DateTime? dtBefore { get; }
+        ///<value>Used for tables containing a date and time column: date and time of the last row to filter</value>
+        public DateTime? DtAfter { get; }
 
-        ///<value></value>
-        public DateTime? dtAfter { get; }
+        ///<value>Used for tables containing an event type column. List of event types to filter</value>
+        public string[] EventTypes { get; }
 
-        ///<value></value>
-        public string[] eventTypes { get; }
+        ///<value>Parameter containing a custom SQL command to put after the WHERE statetement</value>
+        public string CustomWhere { get; }
 
         /// <summary>
-        /// 
+        /// Initialize all variables of the class from parameters
         /// </summary>
-        /// <param name="_tableInfo"></param>
-        /// <param name="_orderBy"></param>
-        /// <param name="_isOrderAsc"></param>
-        /// <param name="_dtBefore"></param>
-        /// <param name="_dtAfter"></param>
-        /// <param name="_eventTypes"></param>
-        /// <param name="_customWhere"></param>
+        /// <param name="_tableInfo"><see cref="TableInfo"/></param>
+        /// <param name="_orderBy"><see cref="OrderBy"/></param>
+        /// <param name="_isOrderAsc"><see cref="IsOrderAsc"/></param>
+        /// <param name="_dtBefore"><see cref="DtBefore"/></param>
+        /// <param name="_dtAfter"><see cref="DtAfter"/></param>
+        /// <param name="_eventTypes"><see cref="EventTypes"/></param>
+        /// <param name="_customWhere"><see cref="CustomWhere"/></param>
         public ReadInfo(IComTabInfo _tableInfo = null,
             string _orderBy = null,
             bool _isOrderAsc = true,
@@ -152,151 +152,174 @@ namespace Database
             string[] _eventTypes = null,
             string _customWhere = "")
         {
-            tableInfo = _tableInfo;
-            orderBy = _orderBy;
-            isOrderAsc = _isOrderAsc;
-            dtBefore = _dtBefore;
-            dtAfter = _dtAfter;
-            eventTypes = _eventTypes;
-            customWhere = _customWhere;
+            // Initialization of each variable of the class from parameters
+            TableInfo = _tableInfo;
+            OrderBy = _orderBy;
+            IsOrderAsc = _isOrderAsc;
+            DtBefore = _dtBefore;
+            DtAfter = _dtAfter;
+            EventTypes = _eventTypes;
+            CustomWhere = _customWhere;
         }
 
         /// <summary>
-        /// 
+        /// Initialize all variables of the class from another object of the same class (the database table is replaced though)
         /// </summary>
-        /// <param name="_readInfo"></param>
-        /// <param name="_tableInfo"></param>
+        /// <param name="_readInfo">Object of the same class</param>
+        /// <param name="_tableInfo"><see cref="TableInfo"/></param>
         public ReadInfo(ReadInfo _readInfo, IComTabInfo _tableInfo = null)
         {
-            tableInfo = _tableInfo;
+            // Initialization of the database table from parameter
+            TableInfo = _tableInfo;
 
-            orderBy = _readInfo.orderBy;
-            isOrderAsc = _readInfo.isOrderAsc;
-            dtBefore = _readInfo.dtBefore;
-            dtAfter = _readInfo.dtAfter;
-            eventTypes = _readInfo.eventTypes;
-            customWhere = _readInfo.customWhere;
+            // Initialization of each other variable of the class from parameter
+            OrderBy = _readInfo.OrderBy;
+            IsOrderAsc = _readInfo.IsOrderAsc;
+            DtBefore = _readInfo.DtBefore;
+            DtAfter = _readInfo.DtAfter;
+            EventTypes = _readInfo.EventTypes;
+            CustomWhere = _readInfo.CustomWhere;
         }
     }
+
     /// <summary>
-    /// Class MyDatabase
+    /// Main class of the namespace. This class allow the interface with a database (connect, disconnect, insert rows, update rows, delete rows, read rows)
     /// </summary>
     public static class MyDatabase
     {
-        private static MySqlConnection connection;
-        private static MySqlDataReader reader;
-        public static List<int> AlarmListID = new List<int>();
-        public static List<string> AlarmListDescription = new List<string>();
-        public static List<string> AlarmListStatus = new List<string>();
-        private readonly static List<int> mutexIDs = new List<int>();
-        private static int lastMutexID = 0;
-        private static bool StopScan = false;
-        private static bool isConnecting = false;
-        private static readonly System.Timers.Timer scanConnectTimer;
-        //public static IConfig config;
-        private static ManualResetEvent signal = new ManualResetEvent(true);
-        public static Queue<Task<object>> taskQueue = new Queue<Task<object>>();
-        //public static event Action TaskToDeQueueEvent = null;
-        private static readonly System.Timers.Timer QueueEmptyTimer;
-        private static readonly System.Timers.Timer IsQueueAvailableTimer;
-        private static int QueueEmptyCount = 0;
-        private static Task lastTask;
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();   // Variable allowing to logger events (debug, errors...)
+        private static MySqlConnection connection;  // Variable of the connection with the database
+        private static MySqlDataReader reader;      // Variable used to send command and get their result
 
-        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        // TIMER Check Connection
+        private static readonly System.Timers.Timer scanConnectTimer;   // Timer used to periodically check the status of the connection to the database. The timer is stopped when a disconnection of the database is required
+        private static bool StopScan = false;                           // Flag which is "true" when the connection is disconnecting
+        private static bool isConnecting = false;                       // Flag which is "true" when the connection is connecting
 
-        // Future interface
+        // TIMER Task Queue
+        private static readonly Queue<Task<object>> taskQueue = new Queue<Task<object>>(); // Queue of tasks to be executed. Note: to execute a public method of this class, it must be added to the queue
+        private static readonly System.Timers.Timer QueueEmptyTimer;        // Timer used to remove the connection to the database if the task queue is empty for too long
+        private static readonly System.Timers.Timer IsQueueAvailableTimer;  // Timer used to execute the next task on the queue
+        private static int QueueEmptyCount = 0;                             // Counter which increments when the task queue is empty          
+
+        /// <value>
+        /// Variable initialized by other projects
+        /// </value>
         public static IniInfo info;
 
+        //
+        // MAYBE TO DELETE
+        //
+
+        //private static Task lastTask; maybe to delete 
+        //private readonly static List<int> mutexIDs = new List<int>();
+        //private static ManualResetEvent signal = new ManualResetEvent(true);
+        //private static int lastMutexID = 0;
+        //public static List<int> AlarmListID = new List<int>();
+        //public static List<string> AlarmListDescription = new List<string>();
+        //public static List<string> AlarmListStatus = new List<string>();
+
+        // Constructor of the class called automatically
         static MyDatabase()
         {
-            logger.Debug("Start");
+            logger.Debug("Start");  // Log of the start of the class
 
-            // Initialisation des timers
+            // Initialization of the timer which will check the database connection
             scanConnectTimer = new System.Timers.Timer
             {
-                Interval = Settings.Default.scanConnectTimer_Interval,
-                AutoReset = false
+                Interval = Settings.Default.scanConnectTimer_Interval,  // Setting of the time in ms for the timer to elapse
+                AutoReset = false                                       // The timer isn't automatically reseted when it elapses, to reset the timer, it must be enabled or started
             };
-            scanConnectTimer.Elapsed += ScanConnectTimer_OnTimedEvent;
+            scanConnectTimer.Elapsed += ScanConnectTimer_OnTimedEvent;  // Reference of the method to be executed when the timer elapses
 
-            //Connect();
-
-            //Task.Factory.StartNew( () => TaskDeQueue_old() );
-            //TaskToDeQueueEvent += TaskDeQueue;
-
-            // Initialisation des timers
+            // Initialization of the timer which remove the connection to the database if the task queue is empty for too long
             QueueEmptyTimer = new System.Timers.Timer
             {
-                Interval = 1000,
-                AutoReset = true
+                Interval = Settings.Default.QueueEmptyTimer_Interval,   // Setting of the time in ms for the timer to elapse
+                AutoReset = true                                        // The time is automatically reseted when it elapses
             };
-            QueueEmptyTimer.Elapsed += QueueEmptyTimer_OnTimedEvent;
-            QueueEmptyTimer.Start();
+            QueueEmptyTimer.Elapsed += QueueEmptyTimer_OnTimedEvent;    // Reference of the method to be executed when the timer elapses
+            QueueEmptyTimer.Start();                                    // Start of the timer
 
+            // Initialization of the timer which executes the task on the queue
             IsQueueAvailableTimer = new System.Timers.Timer
             {
-                Interval = 100,
-                AutoReset = false
+                Interval = Settings.Default.IsQueueAvailableTimer_Interval, // Setting of the time in ms for the timer to elapse
+                AutoReset = false                                           // The timer isn't automatically reseted when it elapses, to reset the timer, it must be enabled or started
             };
-            IsQueueAvailableTimer.Elapsed += IsQueueAvailableTimer_OnTimedEvent;
-            IsQueueAvailableTimer.Start();
+            IsQueueAvailableTimer.Elapsed += IsQueueAvailableTimer_OnTimedEvent;    // Reference of the method to be executed when the timer elapses
+            IsQueueAvailableTimer.Start();                                          // Start of the timer
         }
-        /// <summary>
-        /// Timer
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="e"></param>
+
+        // Method executed when the empty queue timer elapses
         private static void QueueEmptyTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-            if(QueueEmptyCount > 0 && QueueEmptyCount < 4) logger.Fatal("QueueEmptyCount: " + QueueEmptyCount.ToString());
+            // If the database is not disconnected then we log a debug message
+            if(QueueEmptyCount > 0 && QueueEmptyCount < Settings.Default.QueueEmptyCount_Max+1) logger.Debug("QueueEmptyCount: " + QueueEmptyCount.ToString());
+
+            // If the queue is empty then...
             if (taskQueue.Count == 0)
             {
-                QueueEmptyCount++;
-                if (QueueEmptyCount > 3 && IsConnected())
-                {
-                    Disconnect();
-                }
+                QueueEmptyCount++;  // Increment of the empty queue counter
+                // If the counter reaches a setting value, the database is diconnected
+                if (QueueEmptyCount > Settings.Default.QueueEmptyCount_Max && IsConnected()) Disconnect();
             }
         }
+
+        // Method executed when the timer (which checks if the task queue isn't empty anymore) elapses
         private static void IsQueueAvailableTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-            if (taskQueue.Count == 0)
-            {
-                IsQueueAvailableTimer.Enabled = true;
-            }
+            // If the queue is empty then the timer is reseted
+            if (taskQueue.Count == 0) IsQueueAvailableTimer.Enabled = true;
+            // Else then...
             else
             {
-                logger.Error("Start TaskDeQueue");
-                IsQueueAvailableTimer.Enabled = false;
-                if (!IsConnected()) Connect();
+                logger.Debug("Start TaskDeQueue");      // Log a debug message
+                IsQueueAvailableTimer.Enabled = false;  // The timer is stopped
+                if (!IsConnected()) Connect();          // If the database is disconnected, it is connected
                 //if(lastTask != null) lastTask.Wait();
-                TaskDeQueue();
+                TaskDeQueue();                          // Execution of the next task on the queue
             }
         }
+
+        // Method which executes the next task from the queue
         private async static void TaskDeQueue()
         {
+            // If the task queue isn't empty then the next task is executed
             if (taskQueue.Count > 0)
             {
-                logger.Debug("Dequeue on going");
-                QueueEmptyCount = 0;
+                logger.Debug("Dequeue on going");   // Log a debug message
+                QueueEmptyCount = 0;                // Initialize the empty queue counter
+                Task task = taskQueue.Dequeue();    // Get the next task and remove it from the queue
+                task.Start();                       // Execute the task
+                task.Wait();                        // Wait for the task to end
+                /*
                 lastTask = taskQueue.Dequeue();
                 lastTask.Start();
-                lastTask.Wait();
+                lastTask.Wait();                 
+                 */
 
-                if (taskQueue.Count == 0) await Task.Delay(10);
-                TaskDeQueue();
+                if (taskQueue.Count == 0) await Task.Delay(Settings.Default.TaskDeQueue_Wait); // If the executed task was the last of the queue then the program waits few ms
+                TaskDeQueue();  // Execute the next task
             }
+            // Else (tha queue is empty) then...
             else
             {
-                logger.Error("Wait for new task");
-                IsQueueAvailableTimer.Start();
+                logger.Debug("Wait for new task");  // Log a debug message
+                IsQueueAvailableTimer.Start();      // Start the timer which 
             }
         }
+
+        /// <summary>
+        /// This method 
+        /// </summary>
+        /// <param name="function"></param>
+        /// <returns></returns>
         public static Task<object> TaskEnQueue(Func<object> function)
         {
-            Task<object> t = new Task<object>(function);
-            taskQueue.Enqueue(t);
-            return t;
+            Task<object> task = new Task<object>(function);
+            taskQueue.Enqueue(task);
+            return task;
         }
         public static void Initialize(IniInfo info_arg)
         {
@@ -358,6 +381,7 @@ namespace Database
             else
             {
                 logger.Debug("Connect " + isMutexReleased.ToString() + GetMutexIDs());
+
                 isConnecting = true;
 
                 MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder
@@ -370,8 +394,6 @@ namespace Database
                     Pooling = true,
                     MinimumPoolSize = 2
                 };
-
-
 
                 connection = new MySqlConnection(builder.ConnectionString);
 
@@ -414,42 +436,6 @@ namespace Database
             {
                 logger.Error(ex.Message);
             }
-
-            /*
-            int mutexID = Wait(mutex);
-
-            if (mutexIDs.Count != 1)
-            {
-                logger.Debug("No Disconnect" + GetMutexIDs());
-            }
-            else
-            {
-                if(!IsConnected())
-                {
-                    logger.Debug("Already disconnected" + GetMutexIDs());
-                    return;
-                }
-
-                logger.Debug("Disconnect " + GetMutexIDs());
-
-                scanConnectTimer.Stop();
-                StopScan = true;
-
-                while (isConnecting)
-                {
-                    logger.Debug("Disconnect on going");
-                    await Task.Delay(100);
-                }
-                StopScan = false;
-
-                try { connection.Close(); }
-                catch (Exception ex)
-                {
-                    logger.Error(ex.Message);
-                }
-            }
-
-            Signal(mutexID);*/
         }
         public static bool IsConnected()
         {
@@ -539,21 +525,21 @@ namespace Database
                 return;
             }
 
-            string tableArg = GetArg(readInfo.tableInfo.Columns, " AND ");
+            string tableArg = GetArg(readInfo.TableInfo.Columns, " AND ");
             string whereArg = "";
-            if (tableArg != "" || readInfo.customWhere != "")
+            if (tableArg != "" || readInfo.CustomWhere != "")
             {
-                whereArg = " WHERE " + tableArg + readInfo.customWhere;
+                whereArg = " WHERE " + tableArg + readInfo.CustomWhere;
             }
 
             string orderArg = "";
-            if (readInfo.orderBy != null)
+            if (readInfo.OrderBy != null)
             {
-                orderArg = " ORDER BY " + readInfo.orderBy + (readInfo.isOrderAsc ? " ASC" : " DESC");
+                orderArg = " ORDER BY " + readInfo.OrderBy + (readInfo.IsOrderAsc ? " ASC" : " DESC");
             }
 
-            SendCommand(commandText: @"SELECT * FROM " + readInfo.tableInfo.TabName + whereArg + orderArg,
-                columns: readInfo.tableInfo.Columns,
+            SendCommand(commandText: @"SELECT * FROM " + readInfo.TableInfo.TabName + whereArg + orderArg,
+                columns: readInfo.TableInfo.Columns,
                 isMutexReleased: isMutexReleased,
                 mutex: mutex);
         }
@@ -625,7 +611,7 @@ namespace Database
         {
             int mutexID = Wait(mutex);
 
-            if (readInfo.dtBefore == null || readInfo.dtAfter == null)
+            if (readInfo.DtBefore == null || readInfo.DtAfter == null)
             {
                 logger.Error(Settings.Default.Error_ReadAudit_ArgIncorrect);
                 MessageBox.Show(Settings.Default.Error_ReadAudit_ArgIncorrect);
@@ -647,43 +633,43 @@ namespace Database
             string eventType = " AND (";
             string orderArg = "";
 
-            if (readInfo.eventTypes != null && readInfo.eventTypes.Length != 0)
+            if (readInfo.EventTypes != null && readInfo.EventTypes.Length != 0)
             {
-                for (int i = 0; i < readInfo.eventTypes.Length - 1; i++)
+                for (int i = 0; i < readInfo.EventTypes.Length - 1; i++)
                 {
                     eventType += auditTrailInfo.Columns[auditTrailInfo.EventType].Id + " = @" + (i + 2).ToString() + " OR ";
                 }
-                eventType += auditTrailInfo.Columns[auditTrailInfo.EventType].Id + " = @" + (readInfo.eventTypes.Length + 1).ToString() + ")";
+                eventType += auditTrailInfo.Columns[auditTrailInfo.EventType].Id + " = @" + (readInfo.EventTypes.Length + 1).ToString() + ")";
             }
             else
             {
                 eventType = "";
             }
 
-            if (readInfo.orderBy != null)
+            if (readInfo.OrderBy != null)
             {
-                orderArg = " ORDER BY " + readInfo.orderBy + (readInfo.isOrderAsc ? " ASC" : " DESC");
+                orderArg = " ORDER BY " + readInfo.OrderBy + (readInfo.IsOrderAsc ? " ASC" : " DESC");
             }
 
             List<Column> columns = new List<Column>();
 
             columns.Add(new Column()
             {
-                Value = ((DateTime)readInfo.dtBefore).ToString("yyyy-MM-dd HH:mm:ss")
+                Value = ((DateTime)readInfo.DtBefore).ToString("yyyy-MM-dd HH:mm:ss")
             });
 
             columns.Add(new Column()
             {
-                Value = ((DateTime)readInfo.dtAfter).ToString("yyyy-MM-dd HH:mm:ss")
+                Value = ((DateTime)readInfo.DtAfter).ToString("yyyy-MM-dd HH:mm:ss")
             });
 
-            if (readInfo.eventTypes != null)
+            if (readInfo.EventTypes != null)
             {
-                for (int i = 0; i < readInfo.eventTypes.Length; i++)
+                for (int i = 0; i < readInfo.EventTypes.Length; i++)
                 {
                     columns.Add(new Column()
                     {
-                        Value = readInfo.eventTypes[i]
+                        Value = readInfo.EventTypes[i]
                     });
                 }
             }
@@ -1432,7 +1418,7 @@ namespace Database
             */
             do
             {
-                table = (IComTabInfo)ReadNext(readInfo.tableInfo.GetType(), mutexID);
+                table = (IComTabInfo)ReadNext(readInfo.TableInfo.GetType(), mutexID);
                 if (table != null) tables.Add(table);
                 i++;
             } while (table != null && i < n);
@@ -1458,7 +1444,7 @@ namespace Database
                 return null;
             }
 
-            if (readInfo.dtBefore == null || readInfo.dtAfter == null)
+            if (readInfo.DtBefore == null || readInfo.DtAfter == null)
             {
                 logger.Error(Settings.Default.Error_ReadAudit_ArgIncorrect);
                 MessageBox.Show(Settings.Default.Error_ReadAudit_ArgIncorrect);
@@ -1786,11 +1772,6 @@ namespace Database
             return true;
         }
 
-        private static int GetNextMutex()
-        { // Assure toi que cette fonction ne peut être appelé plusieurs fois en même temps
-            lastMutexID = (lastMutexID + 1) % 200;
-            return lastMutexID;
-        }
         public static int Wait(int mutex = -1)
         {
             //logger.Debug("Wait " + GetMutexIDs());
@@ -1827,14 +1808,15 @@ namespace Database
             //logger.Debug("Signal " + GetMutexIDs());
         }
         private static string GetMutexIDs()
-        {
+        {/*
             string text = " ";
             for (int i = 0; i < mutexIDs.Count; i++)
             {
                 text = text + mutexIDs[i].ToString() + "_";
             }
 
-            return text.TrimEnd('_');
+            return text.TrimEnd('_');*/
+            return "";
         }
 
         // Interface à implémenter
