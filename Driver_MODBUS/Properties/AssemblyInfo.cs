@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Les informations générales relatives à un assembly dépendent de
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("Driver.MODBUS")]
+[assembly: AssemblyTitle("Driver_MODBUS")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Integra")]
-[assembly: AssemblyProduct("Driver.MODBUS")]
+[assembly: AssemblyProduct("Driver_MODBUS")]
 [assembly: AssemblyCopyright("Copyright © Integra 2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

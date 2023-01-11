@@ -53,7 +53,7 @@ namespace FPO_WPF_Test.Pages
         }   
         ~AuditTrail()
         {
-            //MessageBox.Show("Audit Trail: Au revoir");
+            //General.ShowMessageBox("Audit Trail: Au revoir");
         }
         private void LoadAuditTrail(object sender, RoutedEventArgs e)
         {

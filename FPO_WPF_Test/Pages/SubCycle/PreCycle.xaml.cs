@@ -47,9 +47,13 @@ namespace FPO_WPF_Test.Pages.SubCycle
         {
             logger.Debug("FxOK");
 
-            if (MessageBox.Show(Settings.Default.PreCycle_Request_StartCycle, Settings.Default.PreCycle_Request_StartCycle_Title, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (General.ShowMessageBox(Settings.Default.PreCycle_Request_StartCycle, Settings.Default.PreCycle_Request_StartCycle_Title, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 General.StartCycle(ProgramIDs[cbxProgramName.SelectedIndex], tbOFnumber.Text, tbFinalWeight.Text, frameMain, frameInfoCycle, false);
+            }
+            else
+            {
+                logger.Debug("pas bien");
             }
         }
         private void FxAnnuler(object sender, RoutedEventArgs e)
@@ -67,7 +71,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
             if (e.Key == Key.Enter)
             {
-                MessageBox.Show(RS232Weight.GetData());
+                General.ShowMessageBox(RS232Weight.GetData());
 
                 if (RS232Weight.rs232.IsFree())
                 {

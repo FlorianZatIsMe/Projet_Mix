@@ -9,6 +9,11 @@ using System.Windows;
 
 namespace Driver_RS232
 {
+    public struct IniInfo
+    {
+        public Window Window;
+    }
+
     public class RS232
     {
         private readonly SerialPort serialPort;
@@ -21,6 +26,22 @@ namespace Driver_RS232
         private readonly System.Timers.Timer scanAlarmTimer;
         private readonly int alarmConnectId1;
         private readonly int alarmConnectId2;
+        private static IniInfo info;
+
+        private static void ShowMessageBox(string message)
+        {
+            if (info.Window != null)
+            {
+                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    MessageBox.Show(info.Window, message);
+                }));
+            }
+            else
+            {
+                MessageBox.Show(message);
+            }
+        }
 
         public RS232(SerialPort serialPort_arg, int alarmConnectId1_arg, int alarmConnectId2_arg, SerialDataReceivedEventHandler target)
         {
@@ -63,9 +84,10 @@ namespace Driver_RS232
 
             scanAlarmTimer.Enabled = true;
         }
-        public void Initialize()
+        public void Initialize(IniInfo info_arg)
         {
             Open();
+            info = info_arg;
             isRS232Active = true;
         }
         public void BlockUse() { isFree = false; }
@@ -93,12 +115,12 @@ namespace Driver_RS232
                 }
                 else
                 {
-                    MessageBox.Show("Connexion bloqué");
+                    ShowMessageBox("Connexion bloqué");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                ShowMessageBox(ex.Message);
             }
             return result;
         }
@@ -114,7 +136,7 @@ namespace Driver_RS232
             if (lastCommand == "!C802 0" || lastCommand == "!C802 1")
             {
                 // Il va falloir faire quelque chose s'il y une erreur: data != *C802 0
-                //MessageBox.Show(data);
+                //ShowMessageBox(data);
             }
         }*/
     }

@@ -26,11 +26,12 @@ using System.Linq;
 using NLog;
 using NLog.Common;
 using System.Threading;
+using Driver_ColdTrap;
 using FPO_WPF_Test.Properties;
 
 namespace FPO_WPF_Test
 {
-    public enum Action
+    public enum RcpAction
     {
         New,
         Modify,
@@ -52,8 +53,8 @@ namespace FPO_WPF_Test
         private readonly System.Timers.Timer currentTimeTimer;
         private bool isWindowLoaded = false;
         private bool wasAutoBackupStarted = false;
-        private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        public static string test = "Salut";
+        private readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         public MainWindow()
         {
 #if DEBUG
@@ -64,15 +65,17 @@ namespace FPO_WPF_Test
 #endif
             LogManager.ReconfigExistingLoggers(); // Explicit refresh of Layouts and updates active Logger-objects
 
-            AlarmManagement.ActiveAlarmEvent += ActiveAlarmEvent;
-            AlarmManagement.InactiveAlarmEvent += InactiveAlarmEvent;
             /*
 
-            MessageBox.Show("Fini je crois");
+            General.ShowMessageBox("Fini je crois");
             Environment.Exit(1);
             //*/
+            General.Initialize(new IniInfo() { Window = this });
 
             InitializeComponent();
+
+            AlarmManagement.ActiveAlarmEvent += ActiveAlarmEvent;
+            AlarmManagement.InactiveAlarmEvent += InactiveAlarmEvent;
 
             UpdateUser(username: UserPrincipal.Current.DisplayName.ToLower(),
                 role: UserManagement.UpdateAccessTable(UserPrincipal.Current.DisplayName));
@@ -103,7 +106,7 @@ namespace FPO_WPF_Test
             {
                 if (Pages.Sequence.list[i].subRecipeInfo.SeqType != i || Pages.Sequence.list[i].subCycleInfo.SeqType != i)
                 {
-                    MessageBox.Show(Settings.Default.Recipe_Error_listIncorrect);
+                    General.ShowMessageBox(Settings.Default.Recipe_Error_listIncorrect);
                     logger.Error(Settings.Default.Recipe_Error_listIncorrect);
                     Environment.Exit(1);
                 }
@@ -115,7 +118,6 @@ namespace FPO_WPF_Test
         {
             while (!isWindowLoaded) await Task.Delay(Settings.Default.Main_WaitPageLoadedDelay);
 
-            AlarmManagement.Initialize(new Alarm_Management.IniInfo() { AuditTrail_SystemUsername = Settings.Default.General_SystemUsername });
             MyDatabase.Initialize(new Database.IniInfo()
             {
                 CycleFinalWeight_g_Unit = Settings.Default.CycleFinalWeight_g_Unit,
@@ -123,8 +125,11 @@ namespace FPO_WPF_Test
                 RecipeWeight_mgG_Unit = Settings.Default.RecipeWeight_mgG_Unit,
                 RecipeWeight_mgG_Conversion = Settings.Default.RecipeWeight_mgG_Conversion,
                 RecipeWeight_gG_Unit = Settings.Default.RecipeWeight_gG_Unit,
-                RecipeWeight_gG_Conversion = Settings.Default.RecipeWeight_gG_Conversion
+                RecipeWeight_gG_Conversion = Settings.Default.RecipeWeight_gG_Conversion,
+                Window = this
             });
+
+            AlarmManagement.Initialize(new Alarm_Management.IniInfo() { AuditTrail_SystemUsername = Settings.Default.General_SystemUsername, Window = this });
 
             // 
             //
@@ -134,8 +139,10 @@ namespace FPO_WPF_Test
             //
             //
             //*
-            RS232Weight.rs232.Initialize();
-            RS232Pump.rs232.Initialize();
+            RS232Weight.rs232.Initialize(new Driver_RS232.IniInfo() { Window = this });
+            RS232Pump.rs232.Initialize(new Driver_RS232.IniInfo() { Window = this });
+            Driver_ColdTrap.ColdTrap.Initialize(new Driver_ColdTrap.IniInfo() { Window = this });
+            UserManagement.Initialize(new User_Management.IniInfo() { Window = this });
             SpeedMixerModbus.Initialize();
             if (RS232Pump.rs232.IsOpen())
             {
@@ -163,7 +170,7 @@ namespace FPO_WPF_Test
 
             if (tableInfos == null)
             {
-                MessageBox.Show("C'est pas bien de ne pas se connecter à la base de données");
+                General.ShowMessageBox("C'est pas bien de ne pas se connecter à la base de données");
                 logger.Error("C'est pas bien de ne pas se connecter à la base de données");
                 return;
             }
@@ -216,7 +223,7 @@ namespace FPO_WPF_Test
         }
         ~MainWindow()
         {
-            //MessageBox.Show("Au revoir");
+            //General.ShowMessageBox("Au revoir");
         }
         private void CurrentTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
@@ -281,19 +288,19 @@ namespace FPO_WPF_Test
         }
         private void FxProgramNew(object sender, RoutedEventArgs e)
         {
-            frameMain.Content = new Pages.Recipe(Action.New);
+            frameMain.Content = new Pages.Recipe(RcpAction.New);
         }
         private void FxProgramModify(object sender, RoutedEventArgs e)
         {
-            frameMain.Content = new Pages.Recipe(Action.Modify, frameMain, frameInfoCycle);
+            frameMain.Content = new Pages.Recipe(RcpAction.Modify, frameMain, frameInfoCycle);
         }
         private void FxProgramCopy(object sender, RoutedEventArgs e)
         {
-            frameMain.Content = new Pages.Recipe(Action.Copy);
+            frameMain.Content = new Pages.Recipe(RcpAction.Copy);
         }
         private void FxProgramDelete(object sender, RoutedEventArgs e)
         {
-            frameMain.Content = new Pages.Recipe(Action.Delete);
+            frameMain.Content = new Pages.Recipe(RcpAction.Delete);
         }
         private void FxAuditTrail(object sender, RoutedEventArgs e)
         {

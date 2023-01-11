@@ -59,7 +59,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             if (info.Length != 4)
             {
                 logger.Error(Settings.Default.CycleInfo_Error01);
-                MessageBox.Show(Settings.Default.CycleInfo_Error01);
+                General.ShowMessageBox(Settings.Default.CycleInfo_Error01);
                 return;
             }*/
 
@@ -126,7 +126,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                         else
                         {
                             logger.Error(Settings.Default.CycleInfo_Error02);
-                            MessageBox.Show(Settings.Default.CycleInfo_Error02);
+                            General.ShowMessageBox(Settings.Default.CycleInfo_Error02);
                         }
                     }
                 }
@@ -162,7 +162,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                     else
                     {
                         logger.Error(Settings.Default.CycleInfo_Error02);
-                        MessageBox.Show(Settings.Default.CycleInfo_Error02);
+                        General.ShowMessageBox(Settings.Default.CycleInfo_Error02);
                     }
                 }
                 AlarmManagement.RAZalarms.Clear();
@@ -184,7 +184,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             else
             {
                 logger.Error(Settings.Default.CycleInfo_Error03);
-                MessageBox.Show(Settings.Default.CycleInfo_Error03);
+                General.ShowMessageBox(Settings.Default.CycleInfo_Error03);
             }
         }
         public void NewInfo(RecipeWeightInfo recipeWeightInfo)

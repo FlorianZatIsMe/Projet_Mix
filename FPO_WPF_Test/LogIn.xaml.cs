@@ -42,7 +42,7 @@ namespace FPO_WPF_Test
 
             if (isCredentialValid)
             {
-                if (username.Text.ToLower() == "julien.aquilon") MessageBox.Show("Salut Chef");
+                if (username.Text.ToLower() == "julien.aquilon") General.ShowMessageBox("Salut Chef");
 
                 string role = UserManagement.UpdateAccessTable(username.Text);
                 mainWindow.UpdateUser(username.Text, role);
@@ -51,7 +51,7 @@ namespace FPO_WPF_Test
             }
             else
             {
-                MessageBox.Show(Settings.Default.LogIn_Info_PswIncorrect);
+                General.ShowMessageBox(Settings.Default.LogIn_Info_PswIncorrect);
             }
         }
         private void ButtonOk_Click(object sender, RoutedEventArgs e)

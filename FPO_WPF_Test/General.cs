@@ -18,6 +18,11 @@ using System.Windows.Media;
 
 namespace FPO_WPF_Test
 {
+    public struct IniInfo
+    {
+        public Window Window;
+    }
+
     internal static class General
     {
         public static CycleInfo CurrentCycleInfo;
@@ -35,6 +40,47 @@ namespace FPO_WPF_Test
         public static string text;
         public static DateTime NextBackupTime;
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private static IniInfo info;
+
+        public static void Initialize(IniInfo info_arg)
+        {
+            logger.Debug("Initialize");
+            info = info_arg;
+        }
+
+        public static MessageBoxResult ShowMessageBox(string message, string caption = "", MessageBoxButton button = MessageBoxButton.OK)
+        {
+            MessageBoxResult result = MessageBoxResult.None;
+            if (info.Window != null)
+            {
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    result = MessageBox.Show(owner: info.Window, messageBoxText: message, caption: caption, button: button);
+                }));
+            }
+            else
+            {
+                result = MessageBox.Show(message, caption, button);
+            }
+            return result;
+        }
+
+        public static MessageBoxResult ShowMessageBox(string message)
+        {
+            MessageBoxResult result = MessageBoxResult.None;
+            if (info.Window != null)
+            {
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    result = MessageBox.Show(owner: info.Window, messageBoxText: message);
+                }));
+            }
+            else
+            {
+                result = MessageBox.Show(message);
+            }
+            return result;
+        }
 
         static General()
         {
@@ -60,7 +106,7 @@ namespace FPO_WPF_Test
 
             if (isNotNull && textBox.Text == "")
             {
-                //MessageBox.Show(Settings.Default.General_Info_EmptyField);
+                //ShowMessageBox(Settings.Default.General_Info_EmptyField);
                 result = false;
                 goto End;
             }
@@ -73,7 +119,7 @@ namespace FPO_WPF_Test
 
                     if (min != -1 && max != -1 && (decimal.Parse(textBox.Text) < min || decimal.Parse(textBox.Text) > max))
                     {
-                        //MessageBox.Show(Settings.Default.General_Info_FieldOutOfRange + " [" + min.ToString() + " ; " + max.ToString() + "]");
+                        //ShowMessageBox(Settings.Default.General_Info_FieldOutOfRange + " [" + min.ToString() + " ; " + max.ToString() + "]");
 
                         if (decimal.Parse(textBox.Text) < min)
                         {
@@ -86,25 +132,25 @@ namespace FPO_WPF_Test
                         else
                         {
                             logger.Error("ça n'est pas possible OK");
-                            MessageBox.Show("ça n'est pas possible OK");
+                            ShowMessageBox("ça n'est pas possible OK");
                             result = false;
                             goto End;
                         }
                     }
                     else if (min != -1 && decimal.Parse(textBox.Text) < min)
                     {
-                        //MessageBox.Show(Settings.Default.General_Info_FieldBelowMin + min.ToString());
+                        //ShowMessageBox(Settings.Default.General_Info_FieldBelowMin + min.ToString());
                         textBox.Text = min.ToString();
                     }
                     else if (max != -1 && decimal.Parse(textBox.Text) > max)
                     {
-                        //MessageBox.Show(Settings.Default.General_Info_FieldAboveMax + max.ToString());
+                        //ShowMessageBox(Settings.Default.General_Info_FieldAboveMax + max.ToString());
                         textBox.Text = max.ToString();
                     }
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show(Settings.Default.General_Info_FieldNotANumber);
+                    ShowMessageBox(Settings.Default.General_Info_FieldNotANumber);
                     textBox.Text = "";
                     result = false;
                     goto End;
@@ -112,7 +158,7 @@ namespace FPO_WPF_Test
             }
             else if (textBox.Text.Length > parameter)
             {
-                //MessageBox.Show(Settings.Default.General_Info_FieldTooLong1 + parameter.ToString() + Settings.Default.General_Info_FieldTooLong2);
+                //ShowMessageBox(Settings.Default.General_Info_FieldTooLong1 + parameter.ToString() + Settings.Default.General_Info_FieldTooLong2);
                 result = false;
                 goto End;
             }
@@ -179,7 +225,7 @@ namespace FPO_WPF_Test
                 else
                 {
                     logger.Error(DatabaseSettings.ReaderUnavailable);
-                    MessageBox.Show(DatabaseSettings.ReaderUnavailable);
+                    ShowMessageBox(DatabaseSettings.ReaderUnavailable);
                 }*/
                 //MyDatabase.Disconnect();
             }
@@ -189,7 +235,7 @@ namespace FPO_WPF_Test
                 ProgramNames.Add(Settings.Default.Recipe_cbx_DefaultValue);
                 ProgramNames.Add(Settings.Default.Recipe_cbx_DefaultValue);
 
-                MessageBox.Show(DatabaseSettings.Error_connectToDbFailed);
+                ShowMessageBox(DatabaseSettings.Error_connectToDbFailed);
             }
 
             comboBox.ItemsSource = ProgramNames;
@@ -217,7 +263,7 @@ namespace FPO_WPF_Test
             if (!MyDatabase.IsConnected())
             {
                 logger.Error(DatabaseSettings.Error01);
-                MessageBox.Show(DatabaseSettings.Error01);
+                ShowMessageBox(DatabaseSettings.Error01);
                 return;
             }*/
 
@@ -229,7 +275,7 @@ namespace FPO_WPF_Test
             if (recipeInfo == null || recipeInfo.Columns[recipeInfo.Id].Value != recipeID)
             {
                 logger.Error(Settings.Default.Recipe_Error_RecipeNotFound);
-                MessageBox.Show(Settings.Default.Recipe_Error_RecipeNotFound);
+                ShowMessageBox(Settings.Default.Recipe_Error_RecipeNotFound);
                 return;
             }
 
@@ -285,7 +331,7 @@ namespace FPO_WPF_Test
                 }
                 else
                 {
-                    MessageBox.Show(Settings.Default.Recipe_Error_IncorrectRecipe);
+                    ShowMessageBox(Settings.Default.Recipe_Error_IncorrectRecipe);
                     nextSeqID = "";
                 }
 
@@ -354,7 +400,7 @@ namespace FPO_WPF_Test
             if (previousSeqType < 0 || previousSeqType >= Sequence.list.Count())
             {
                 logger.Error(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + previousSeqType.ToString());
-                MessageBox.Show(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + previousSeqType.ToString());
+                ShowMessageBox(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + previousSeqType.ToString());
                 return;
             }
 
@@ -381,7 +427,7 @@ namespace FPO_WPF_Test
                 if (nextRecipeSeqType < 0 || nextRecipeSeqType >= Sequence.list.Count())
                 {
                     logger.Error(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + nextRecipeSeqType.ToString());
-                    MessageBox.Show(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + nextRecipeSeqType.ToString());
+                    ShowMessageBox(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + nextRecipeSeqType.ToString());
                     return;
                 }
 
@@ -438,9 +484,9 @@ namespace FPO_WPF_Test
             CurrentCycleInfo.StopSequence();
             Task t = Task.Factory.StartNew(() => PrintReport(idCycle));
 
-            MessageBox.Show(Settings.Default.Cycle_Info_CycleOver);
+            ShowMessageBox(Settings.Default.Cycle_Info_CycleOver);
             t.Wait();
-            MessageBox.Show(Settings.Default.Cycle_Info_ReportGenerated);
+            ShowMessageBox(Settings.Default.Cycle_Info_ReportGenerated);
 
             // On cache le panneau d'information
             CurrentCycleInfo.SetVisibility(false);
@@ -451,7 +497,7 @@ namespace FPO_WPF_Test
                 Task<object> t8 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(CycleTableInfo), idCycle.ToString()); });
                 cycleTableInfo = (CycleTableInfo)t8.Result;
                 //cycleTableInfo = (CycleTableInfo)MyDatabase.GetOneRow(typeof(CycleTableInfo), idCycle.ToString());
-                frameMain.Content = new Recipe(Action.Modify, frameMain, frameInfoCycle, cycleTableInfo.Columns.Count == 0 ? "" : cycleTableInfo.Columns[cycleTableInfo.RecipeName].Value);
+                frameMain.Content = new Recipe(RcpAction.Modify, frameMain, frameInfoCycle, cycleTableInfo.Columns.Count == 0 ? "" : cycleTableInfo.Columns[cycleTableInfo.RecipeName].Value);
             }
             else 
             {

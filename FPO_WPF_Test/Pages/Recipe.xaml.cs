@@ -118,7 +118,7 @@ namespace FPO_WPF_Test.Pages
 
         private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public Recipe(Action action, Frame frameMain_arg = null, Frame frameInfoCycle_arg = null, string recipeName = "")
+        public Recipe(RcpAction action, Frame frameMain_arg = null, Frame frameInfoCycle_arg = null, string recipeName = "")
         {
             logger.Debug("Start");
 
@@ -130,11 +130,11 @@ namespace FPO_WPF_Test.Pages
 
             switch (action)
             {
-                case Action.New:
+                case RcpAction.New:
                     gridNewRecipe.Visibility = Visibility.Visible;
                     Create_NewSequence(recipeWeightInfo.SeqType.ToString());// MySettings["SubRecipeWeight_SeqType"]);
                     break;
-                case Action.Modify: // pour ça je pense qu'une comboBox est suffisant, on puet imaginer une fenêtre intermédiaire avec une liste et une champ pour filtrer mais ça me semble pas applicable à notre besoin
+                case RcpAction.Modify: // pour ça je pense qu'une comboBox est suffisant, on puet imaginer une fenêtre intermédiaire avec une liste et une champ pour filtrer mais ça me semble pas applicable à notre besoin
                     frameInfoCycle = frameInfoCycle_arg;
                     gridModify_Recipe.Visibility = Visibility.Visible;
                     General.Update_RecipeNames(cbxPgmToModify, ProgramNames, ProgramIDs, Database.RecipeStatus.PRODnDRAFT);
@@ -153,12 +153,12 @@ namespace FPO_WPF_Test.Pages
                         }
                     }
                     break;
-                case Action.Copy:
+                case RcpAction.Copy:
                     gridCopy_Recipe.Visibility = Visibility.Visible;
                     General.Update_RecipeNames(cbxPgmToCopy, ProgramNames, ProgramIDs, RecipeStatus.PRODnDRAFT);
                     isCbxToCopyAvailable = true;
                     break;
-                case Action.Delete:
+                case RcpAction.Delete:
                     gridDelete_Recipe.Visibility = Visibility.Visible;
                     General.Update_RecipeNames(cbxPgmToActDelete, ProgramNames, ProgramIDs, RecipeStatus.PRODnDRAFT);
                     isCbxToDeleteAvailable = true;
@@ -194,19 +194,19 @@ namespace FPO_WPF_Test.Pages
             Task<object> t;
             /*
             if (!MyDatabase.IsConnected()) {
-                MessageBox.Show(DatabaseSettings.Error01);
+                General.ShowMessageBox(DatabaseSettings.Error01);
                 return false;
             }*/
 
             if (recipeName == "") {
-                MessageBox.Show(Settings.Default.Recipe_Request_FillRecipeName);
+                General.ShowMessageBox(Settings.Default.Recipe_Request_FillRecipeName);
                 return false;
             }
 
             if (new_version <= 0)
             {
                 logger.Error(Settings.Default.Recipe_Error_IncorrectVersion);
-                MessageBox.Show(Settings.Default.Recipe_Error_IncorrectVersion);
+                General.ShowMessageBox(Settings.Default.Recipe_Error_IncorrectVersion);
                 return false;
             }
 
@@ -219,14 +219,14 @@ namespace FPO_WPF_Test.Pages
             if (new_version == 1 && 
                 isRecipeCreated &&
                 (int)(MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(recipeInfo, recipeInfo.Columns[recipeInfo.Version].Id); }).Result) != 0) {
-                MessageBox.Show(Settings.Default.Recipe_Info_ExistingRecipe);
+                General.ShowMessageBox(Settings.Default.Recipe_Info_ExistingRecipe);
                 return false;
             }
             /*
             if (new_version == 1 && 
                 isRecipeCreated &&
                 MyDatabase.GetMax(recipeInfo, recipeInfo.columns[recipeInfo.version].id) != 0) {
-                MessageBox.Show(Settings.Default.Recipe_Info_ExistingRecipe);
+                General.ShowMessageBox(Settings.Default.Recipe_Info_ExistingRecipe);
                 return false;
             }
              */
@@ -265,7 +265,7 @@ namespace FPO_WPF_Test.Pages
 
             // Si toutes les séquences ne sont pas correctement renseignées, on sort de là
             if (!isFormatOk) {
-                MessageBox.Show(Settings.Default.Recipe_Info_IncorrectFormat);
+                General.ShowMessageBox(Settings.Default.Recipe_Info_IncorrectFormat);
                 return false;
             }
 
@@ -301,8 +301,8 @@ namespace FPO_WPF_Test.Pages
             //if (isRecordOk) isRecordOk = MyDatabase.InsertRow(seqInfoList[0]);
 
             if (isRecordOk) {
-                if (new_version == 1) MessageBox.Show(Settings.Default.Recipe_Info_RecipeCreated);
-                else MessageBox.Show(Settings.Default.Recipe_Info_RecipeModified);
+                if (new_version == 1) General.ShowMessageBox(Settings.Default.Recipe_Info_RecipeCreated);
+                else General.ShowMessageBox(Settings.Default.Recipe_Info_RecipeModified);
                 return true;
             }
             // S'il y a eu une erreur, on supprime les lignes qui ont été créés.
@@ -324,7 +324,7 @@ namespace FPO_WPF_Test.Pages
                 } while (seqInfoList[i].Columns[seqInfoList[i].NextSeqId].Value != null);
             }
 
-            MessageBox.Show(Settings.Default.Recipe_Info_RecipeNotCreated);
+            General.ShowMessageBox(Settings.Default.Recipe_Info_RecipeNotCreated);
             return false;
         }
         private async void Display_Recipe(string id)
@@ -343,7 +343,7 @@ namespace FPO_WPF_Test.Pages
             if (!MyDatabase.IsConnected())
             {
                 logger.Error(DatabaseSettings.Error01);
-                MessageBox.Show(DatabaseSettings.Error01);
+                General.ShowMessageBox(DatabaseSettings.Error01);
                 return;
             }*/
 
@@ -354,7 +354,7 @@ namespace FPO_WPF_Test.Pages
 
             if (recipeInfo.Columns == null) // Si la requête envoyer ne contient qu'une seule ligne
             {
-                MessageBox.Show(Settings.Default.Recipe_Error_RecipeNotFound);
+                General.ShowMessageBox(Settings.Default.Recipe_Error_RecipeNotFound);
                 return;
             }
 
@@ -407,13 +407,13 @@ namespace FPO_WPF_Test.Pages
                     }
                     else
                     {
-                        MessageBox.Show(Settings.Default.Recipe_Error_IncorrectRecipe);
+                        General.ShowMessageBox(Settings.Default.Recipe_Error_IncorrectRecipe);
                         nextSeqID = "";
                     }
                 }
                 else
                 {
-                    MessageBox.Show(Settings.Default.Recipe_Error_FrameNotSeen);
+                    General.ShowMessageBox(Settings.Default.Recipe_Error_FrameNotSeen);
                 }
             } while (nextSeqID != "");
 
@@ -452,11 +452,11 @@ namespace FPO_WPF_Test.Pages
                     row = row + seqInfo.Columns[j].Value + " ";
                 }
 
-                MessageBox.Show(row);
+                General.ShowMessageBox(row);
             }
             else
             {
-                MessageBox.Show(frame.Content.GetType().ToString());
+                General.ShowMessageBox(frame.Content.GetType().ToString());
             }
 
         }
@@ -494,7 +494,7 @@ namespace FPO_WPF_Test.Pages
             /*
             if (!MyDatabase.IsConnected()) // while loop is better
             {
-                MessageBox.Show(DatabaseSettings.Error01);
+                General.ShowMessageBox(DatabaseSettings.Error01);
                 return;
             }*/
 
@@ -505,7 +505,7 @@ namespace FPO_WPF_Test.Pages
 
             if (recipeInfo == null)
             {
-                MessageBox.Show(Settings.Default.Recipe_Error_RecipeNotFound);
+                General.ShowMessageBox(Settings.Default.Recipe_Error_RecipeNotFound);
                 return;
             }
 
@@ -534,7 +534,7 @@ namespace FPO_WPF_Test.Pages
                 else
                 {
                     nextSeqType = "";
-                    MessageBox.Show(Settings.Default.Recipe_Error_IncorrectRecipe);
+                    General.ShowMessageBox(Settings.Default.Recipe_Error_IncorrectRecipe);
                 }
             }
         }
@@ -606,7 +606,7 @@ namespace FPO_WPF_Test.Pages
             if (!MyDatabase.IsConnected())
             {
                 logger.Error(DatabaseSettings.Error01);
-                MessageBox.Show(DatabaseSettings.Error01);
+                General.ShowMessageBox(DatabaseSettings.Error01);
                 return;
             }*/
 
@@ -614,7 +614,7 @@ namespace FPO_WPF_Test.Pages
             //if (labelStatus.Text == status[MyDatabase.GetRecipeStatus(RecipeStatus.PROD)])
             if (labelStatus.Text == status[MyDatabase.GetRecipeStatus(RecipeStatus.PROD)])
             {
-                if (MessageBox.Show(Settings.Default.Recipe_Request_UpdateProdRecipe, Settings.Default.General_Request_ConfirmationTitle, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (General.ShowMessageBox(Settings.Default.Recipe_Request_UpdateProdRecipe, Settings.Default.General_Request_ConfirmationTitle, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     // Création d'une nouvelle recette, l'ancienne version sera obsolète
                     if (Create_NewRecipe(ProgramNames[currentIndex], int.Parse(labelVersion.Text) + 1, RecipeStatus.DRAFT, false))
@@ -640,14 +640,14 @@ namespace FPO_WPF_Test.Pages
             //else if (labelStatus.Text == status[MyDatabase.GetRecipeStatus(RecipeStatus.DRAFT)])
             else if (labelStatus.Text == status[MyDatabase.GetRecipeStatus(RecipeStatus.DRAFT)])
             {
-                if (MessageBox.Show(Settings.Default.Recipe_Request_UpdateDraftRecipe, Settings.Default.General_Request_ConfirmationTitle, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (General.ShowMessageBox(Settings.Default.Recipe_Request_UpdateDraftRecipe, Settings.Default.General_Request_ConfirmationTitle, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     // Modification de la recette puis modification du status en draft
                     if (Create_NewRecipe(ProgramNames[currentIndex], int.Parse(labelVersion.Text), RecipeStatus.PROD, false))
                     {
                         Delete_Recipe(ProgramIDs[currentIndex]);
                         logger.Error("HERE");
-                        MessageBox.Show("This is not happening");
+                        General.ShowMessageBox("This is not happening");
 
                         // A CORRIGER : IF RESULT IS FALSE
                         t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(recipeInfo.TabName, recipeInfo.Columns[recipeInfo.Id].Id); });
@@ -673,7 +673,7 @@ namespace FPO_WPF_Test.Pages
             }
             else
             {
-                MessageBox.Show(Settings.Default.Recipe_Error_IncorrectStatus);
+                General.ShowMessageBox(Settings.Default.Recipe_Error_IncorrectStatus);
             }
 
             //MyDatabase.Disconnect();
@@ -692,7 +692,7 @@ namespace FPO_WPF_Test.Pages
             if (!MyDatabase.IsConnected())
             {
                 logger.Error(DatabaseSettings.Error01);
-                MessageBox.Show(DatabaseSettings.Error01);
+                General.ShowMessageBox(DatabaseSettings.Error01);
                 return;
             }*/
 
@@ -703,7 +703,7 @@ namespace FPO_WPF_Test.Pages
 
             if (recipeInfo == null)
             {
-                MessageBox.Show(Settings.Default.Recipe_Error_RecipeNotFound);
+                General.ShowMessageBox(Settings.Default.Recipe_Error_RecipeNotFound);
                 return;
                 //goto End;
             }
@@ -714,7 +714,7 @@ namespace FPO_WPF_Test.Pages
                 //if (recipeInfo.columns[recipeInfo.status].value == MyDatabase.GetRecipeStatus(RecipeStatus.PROD).ToString())
                 if (recipeInfo.Columns[recipeInfo.Status].Value == ((int)MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeInfo), ProgramIDs[currentIndex]); }).Result).ToString())
                 {
-                    if (MessageBox.Show(Settings.Default.Recipe_Request_DelProdRecipe1 + 
+                    if (General.ShowMessageBox(Settings.Default.Recipe_Request_DelProdRecipe1 + 
                         recipeInfo.Columns[recipeInfo.Name].DisplayName + " " + recipeInfo.Columns[recipeInfo.Name].Value + " " + 
                         recipeInfo.Columns[recipeInfo.Version].DisplayName + " " + recipeInfo.Columns[recipeInfo.Version].Value + 
                         Settings.Default.Recipe_Request_DelProdRecipe2, Settings.Default.General_Request_ConfirmationTitle, 
@@ -731,12 +731,12 @@ namespace FPO_WPF_Test.Pages
                         ProgramNames.RemoveAt(currentIndex);
 
                         CbxAddDefaultText(cbxPgmToActDelete, currentIndex);
-                        MessageBox.Show(Settings.Default.Recipe_Info_DelProdDone);
+                        General.ShowMessageBox(Settings.Default.Recipe_Info_DelProdDone);
                     }
                 }
                 else if (recipeInfo.Columns[recipeInfo.Status].Value == MyDatabase.GetRecipeStatus(RecipeStatus.DRAFT).ToString())
                 {
-                    if (MessageBox.Show(Settings.Default.Recipe_Request_DelDraftRecipe1 + 
+                    if (General.ShowMessageBox(Settings.Default.Recipe_Request_DelDraftRecipe1 + 
                         recipeInfo.Columns[recipeInfo.Name].DisplayName + " " + recipeInfo.Columns[recipeInfo.Name].Value + " " + 
                         recipeInfo.Columns[recipeInfo.Version].DisplayName + " " + recipeInfo.Columns[recipeInfo.Version].Value + 
                         Settings.Default.Recipe_Request_DelDraftRecipe2, Settings.Default.General_Request_ConfirmationTitle, 
@@ -768,22 +768,22 @@ namespace FPO_WPF_Test.Pages
                         }
                         else
                         {
-                            MessageBox.Show(Settings.Default.Recipe_Error_IncorrectVersion + ": " + recipeInfo.Columns[recipeInfo.Version].Value);
+                            General.ShowMessageBox(Settings.Default.Recipe_Error_IncorrectVersion + ": " + recipeInfo.Columns[recipeInfo.Version].Value);
                         }
 
                         // mettre ça dans une fonction et on recommence tout
                         CbxAddDefaultText(cbxPgmToActDelete, currentIndex);
-                        MessageBox.Show(Settings.Default.Recipe_Info_DelDraftDone);
+                        General.ShowMessageBox(Settings.Default.Recipe_Info_DelDraftDone);
                     }
                 }
                 else
                 {
-                    MessageBox.Show(Settings.Default.Recipe_Error_IncorrectStatus + ": " + status[int.Parse(recipeInfo.Columns[recipeInfo.Status].Value)]);
+                    General.ShowMessageBox(Settings.Default.Recipe_Error_IncorrectStatus + ": " + status[int.Parse(recipeInfo.Columns[recipeInfo.Status].Value)]);
                 }
             }
             else if ((bool)rbActivate.IsChecked)
             {
-                if (MessageBox.Show(Settings.Default.Recipe_Request_ActRecipe1 + 
+                if (General.ShowMessageBox(Settings.Default.Recipe_Request_ActRecipe1 + 
                     recipeInfo.Columns[recipeInfo.Name].Value + 
                     " version " + recipeInfo.Columns[recipeInfo.Version].Value + 
                     Settings.Default.Recipe_Request_ActRecipe2, Settings.Default.General_Request_ConfirmationTitle, 
@@ -801,13 +801,13 @@ namespace FPO_WPF_Test.Pages
                     ProgramNames.RemoveAt(currentIndex);
 
                     CbxAddDefaultText(cbxPgmToActDelete, currentIndex);
-                    MessageBox.Show(Settings.Default.Recipe_Info_ActDone);
+                    General.ShowMessageBox(Settings.Default.Recipe_Info_ActDone);
                 }
             }
             else
             {
                 logger.Error(Settings.Default.Recipe_DelAct_Error_NoRadiobt);
-                MessageBox.Show(Settings.Default.Recipe_DelAct_Error_NoRadiobt);
+                General.ShowMessageBox(Settings.Default.Recipe_DelAct_Error_NoRadiobt);
             }
         //End:
             //MyDatabase.Disconnect();
@@ -875,7 +875,7 @@ namespace FPO_WPF_Test.Pages
 
             if (finalWeight > 0)
             {
-                if (MessageBox.Show(Settings.Default.Recipe_Request_TestRecipe, Settings.Default.General_Request_ConfirmationTitle, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (General.ShowMessageBox(Settings.Default.Recipe_Request_TestRecipe, Settings.Default.General_Request_ConfirmationTitle, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     string id = ProgramIDs[cbxPgmToModify.SelectedIndex];
                     General.StartCycle(id, Settings.Default.General_na, finalWeight.ToString(), frameMain, frameInfoCycle, true);
@@ -883,7 +883,7 @@ namespace FPO_WPF_Test.Pages
             }
             else
             {
-                MessageBox.Show(Settings.Default.Cycle_Info_FinalWeightIncorrect);
+                General.ShowMessageBox(Settings.Default.Cycle_Info_FinalWeightIncorrect);
             }
         }
         private async void CbxPgmToCopy_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -949,7 +949,7 @@ namespace FPO_WPF_Test.Pages
                     cbxVersionToCopy.Items.Refresh();
                     cbxVersionToCopy.SelectedIndex = 0;
 
-                    MessageBox.Show(DatabaseSettings.Error_connectToDbFailed);
+                    General.ShowMessageBox(DatabaseSettings.Error_connectToDbFailed);
                 }
 
                 while (curMethodDoneOnGoing) await Task.Delay(Settings.Default.Recipe_WaitRecipeDisplayedDelay);

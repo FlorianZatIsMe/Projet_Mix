@@ -167,7 +167,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                General.ShowMessageBox(ex.Message);
             }
         }
         private void tgPhase_Checked(object sender, RoutedEventArgs e)
@@ -205,7 +205,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                General.ShowMessageBox(ex.Message);
             }
         }
         public void SetPage(ISeqTabInfo seqInfo)
@@ -297,7 +297,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                MessageBox.Show(ex.Message);
+                General.ShowMessageBox(ex.Message);
                 recipeInfo = null;
             }
 
@@ -318,7 +318,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //MessageBox.Show(FormatControl[i].ToString());
+            //General.ShowMessageBox(FormatControl[i].ToString());
         }
         private void TbAcceleration_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -336,7 +336,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //MessageBox.Show(FormatControl[i].ToString());
+            //General.ShowMessageBox(FormatControl[i].ToString());
         }
         private void TbDeceleration_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -354,7 +354,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //MessageBox.Show(FormatControl[i].ToString());
+            //General.ShowMessageBox(FormatControl[i].ToString());
         }
         private void TbSCurve_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -371,7 +371,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }*/
-            //MessageBox.Show(FormatControl[i].ToString());
+            //General.ShowMessageBox(FormatControl[i].ToString());
 
             int i = ControlsIDs[recipeSpeedMixerInfo.Scurve];
             FormatControl[i] = true;
@@ -408,7 +408,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
 
             TextBox textBox = sender as TextBox;
             int i = ControlsIDs[recipeSpeedMixerInfo.Time00];
-            //MessageBox.Show(i.ToString() + " - " + recipeSpeedMixerInfo.time00.ToString());
+            //General.ShowMessageBox(i.ToString() + " - " + recipeSpeedMixerInfo.time00.ToString());
             for (int j = 0; j < PhasesNumber; j++)
             {
                 if (textBox == times[j])
@@ -424,7 +424,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
                         {
                             FormatControl[i + 3 * j] = false;
                         }
-                        //MessageBox.Show((i+j).ToString() + " - " + FormatControl[i + j].ToString());
+                        //General.ShowMessageBox((i+j).ToString() + " - " + FormatControl[i + j].ToString());
                     }
                 }
             }
@@ -472,7 +472,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //MessageBox.Show(FormatControl[i].ToString());
+            //General.ShowMessageBox(FormatControl[i].ToString());
         }
         private void TbSpeedMax_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -490,7 +490,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //MessageBox.Show(FormatControl[i].ToString());
+            //General.ShowMessageBox(FormatControl[i].ToString());
         }
         private void TbPressureMin_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -508,7 +508,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //MessageBox.Show(FormatControl[i].ToString());
+            //General.ShowMessageBox(FormatControl[i].ToString());
         }
         private void TbPressureMax_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -526,7 +526,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //MessageBox.Show(FormatControl[i].ToString());
+            //General.ShowMessageBox(FormatControl[i].ToString());
         }
         public bool IsFormatOk()
         {
@@ -538,14 +538,14 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             for (int i = 0; i < FormatControl.Length; i++)
             {
                 n += FormatControl[i] ? 1 : 0;
-                //MessageBox.Show(i.ToString() + " - " + FormatControl[i].ToString());
+                //General.ShowMessageBox(i.ToString() + " - " + FormatControl[i].ToString());
             }
 
             for (int i = 1; i < PhasesNumber; i++)
             {
                 x += (bool)toggleButtons[i].IsChecked ? 0 : 3; // Pour chaque checkbox décoché, on ajoutera 3 au score final
             }
-            MessageBox.Show(n.ToString() + " + " + x.ToString() + " = " + (n+x).ToString() + " / " + FormatControl.Length.ToString());
+            General.ShowMessageBox(n.ToString() + " + " + x.ToString() + " = " + (n+x).ToString() + " / " + FormatControl.Length.ToString());
             return (n + x) == FormatControl.Length;
         }
     }

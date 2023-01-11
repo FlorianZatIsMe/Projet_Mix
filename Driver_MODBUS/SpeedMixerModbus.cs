@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Alarm_Management;
 using Database;
-using Driver.MODBUS.Properties;
+using Driver_MODBUS.Properties;
 using EasyModbus;
 
 namespace Driver_MODBUS
@@ -47,6 +47,12 @@ namespace Driver_MODBUS
             MixerStatusId_RobotAtHome = Settings.Default.MixerStatusId_RobotAtHome;
         }
     }
+
+    public struct IniInfo
+    {
+        public Window Window;
+    }
+
     /// <summary>
     /// 
     /// </summary>
@@ -63,6 +69,29 @@ namespace Driver_MODBUS
         private static readonly AlarmManagement alarmManagement = new AlarmManagement();
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private static IniInfo info;
+
+        public static void Initialize(IniInfo info_arg)
+        {
+            logger.Debug("Initialize");
+
+            info = info_arg;
+        }
+
+        private static void ShowMessageBox(string message)
+        {
+            if (info.Window != null)
+            {
+                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    MessageBox.Show(info.Window, message);
+                }));
+            }
+            else
+            {
+                MessageBox.Show(message);
+            }
+        }
 
         static SpeedMixerModbus()
         {
@@ -81,7 +110,7 @@ namespace Driver_MODBUS
         ~SpeedMixerModbus()
         {
             Disconnect();
-            MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - SpeedMixer: Au revoir");
+            ShowMessageBox(MethodBase.GetCurrentMethod().Name + " - SpeedMixer: Au revoir");
         }*/
         private static void ScanAlarmTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
@@ -121,7 +150,7 @@ namespace Driver_MODBUS
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                MessageBox.Show(ex.Message);
+                ShowMessageBox(ex.Message);
             }
         }
         public static bool IsConnected()
@@ -186,13 +215,13 @@ namespace Driver_MODBUS
                     }
 
                     if (vaccumScale != -1) speedMixer.WriteSingleRegister(Settings.Default.Register_VacuumScale, vaccumScale);    // Vacuum Scale (1=Torr ; 2=mBar ; 3=inHg ; 4=PSIA)
-                    else MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Qu'est-ce que t'as fait ?");
+                    else ShowMessageBox(MethodBase.GetCurrentMethod().Name + " - Qu'est-ce que t'as fait ?");
                     //SpeedMixer.WriteSingleRegister(3052, 0);    // S Curve, pas touche
 
                     speedMixer.WriteSingleRegister(Settings.Default.Register_ProgramId, 0);    // Numéro du programme
                     speedMixer.WriteSingleRegister(Settings.Default.Register_Instruction, 1);    // Commande pour mettre à jour tout les paramètres
 
-                    //MessageBox.Show("Alors...");
+                    //ShowMessageBox("Alors...");
 
                     //speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
 
@@ -202,7 +231,7 @@ namespace Driver_MODBUS
                         timeFromDB = array[13 + 3 * i];
                         pressureFromDB = array[14 + 3 * i];
 
-                        //MessageBox.Show(timeFromDB);
+                        //ShowMessageBox(timeFromDB);
 
                         speedParameter = (speedFromDB == "" || speedFromDB == null) ? 0 : int.Parse(speedFromDB);
                         timeParameter = (timeFromDB == "" || timeFromDB == null) ? 0 : int.Parse(timeFromDB);
@@ -220,12 +249,12 @@ namespace Driver_MODBUS
                 catch (Exception ex)
                 {
                     logger.Error(ex.Message);
-                    MessageBox.Show(ex.Message);
+                    ShowMessageBox(ex.Message);
                 }
             }
             else
             {
-                MessageBox.Show("Problème de connection avec le SpeedMixer");
+                ShowMessageBox("Problème de connection avec le SpeedMixer");
             }
         }
         public static void SetProgram(RecipeSpeedMixerInfo recipe)
@@ -235,7 +264,7 @@ namespace Driver_MODBUS
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error01);
-                //MessageBox.Show(Settings.Default.Error01);
+                //ShowMessageBox(Settings.Default.Error01);
                 return;
             }
 
@@ -274,7 +303,7 @@ namespace Driver_MODBUS
             else 
             {
                 logger.Error(Settings.Default.Error02);
-                MessageBox.Show(Settings.Default.Error02);
+                ShowMessageBox(Settings.Default.Error02);
             }
             //SpeedMixer.WriteSingleRegister(3052, 0);    // S Curve, pas touche
 
@@ -309,7 +338,7 @@ namespace Driver_MODBUS
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error01);
-                //MessageBox.Show(Settings.Default.Error01);
+                //ShowMessageBox(Settings.Default.Error01);
                 return;
             }
 
@@ -330,7 +359,7 @@ namespace Driver_MODBUS
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error01);
-                //MessageBox.Show(Settings.Default.Error01);
+                //ShowMessageBox(Settings.Default.Error01);
                 return;
             }
 
@@ -351,7 +380,7 @@ namespace Driver_MODBUS
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error01);
-                //MessageBox.Show(Settings.Default.Error01);
+                //ShowMessageBox(Settings.Default.Error01);
                 return;
             }
 
@@ -372,7 +401,7 @@ namespace Driver_MODBUS
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error01);
-                //MessageBox.Show(Settings.Default.Error01);
+                //ShowMessageBox(Settings.Default.Error01);
                 return status;
             }
 
@@ -383,7 +412,7 @@ namespace Driver_MODBUS
             for (int i = 0; i < 8; i++)
             {
                 status[i] = (uintMessage & mask) == (0x01 << i);
-                //MessageBox.Show(i.ToString() + " - " + (status[i]).ToString());
+                //ShowMessageBox(i.ToString() + " - " + (status[i]).ToString());
                 mask <<= 1;
             }
 
@@ -396,7 +425,7 @@ namespace Driver_MODBUS
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error01);
-                //MessageBox.Show(Settings.Default.Error01);
+                //ShowMessageBox(Settings.Default.Error01);
                 return -1;
             }
 
@@ -410,7 +439,7 @@ namespace Driver_MODBUS
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error01);
-                //MessageBox.Show(Settings.Default.Error01);
+                //ShowMessageBox(Settings.Default.Error01);
                 return -1;
             }
 

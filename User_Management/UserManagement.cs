@@ -15,6 +15,15 @@ using User_Management.Properties;
 namespace User_Management
 {
     /// <summary>
+    /// Structure of the information from other projects required to initialize the main class
+    /// </summary>
+    public struct IniInfo
+    {
+        ///<value>Main window of the application. Is used to attach the MessageBoxes to it</value>
+        public Window Window;
+    }
+
+    /// <summary>
     /// This class allows the update of the access table variable. The access table can then be used by other projects to allow or avoid accesses.
     /// <para>Creation revision: 001</para>
     /// </summary>
@@ -25,7 +34,36 @@ namespace User_Management
         // Contains the information of the database table "access_table"
         private static readonly AccessTableInfo accessTableInfo = new AccessTableInfo();
         // Allow the actions logging for debug
-        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private static IniInfo info;
+
+        /// <summary>
+        /// Method called by other project which initializes the variable <see cref="info"/>
+        /// </summary>
+        /// <param name="info_arg"><see cref="IniInfo"/> variable which contains the applicable settings from the calling project</param>
+        public static void Initialize(IniInfo info_arg)
+        {
+            logger.Debug("Initialize"); // Log a debug message
+            info = info_arg;            // Set the info variable from the parameter
+        }
+
+        // Method to show MessageBoxes in front of the main window
+        private static void ShowMessageBox(string message)
+        {
+            // If the class was updated (the main window variable was set) then the MessageBox is shown in front of the main window
+            if (info.Window != null)
+            {
+                Application.Current.Dispatcher.BeginInvoke(new Action(() => // Invoke the action MessageBox
+                {
+                    MessageBox.Show(info.Window, message);                  // Show the MessageBox in front of the main window
+                }));
+            }
+            // else (if the main window variable wasn't set) then
+            else
+            {
+                MessageBox.Show(message);   // Show the default MessageBox
+            }
+        }
         /// <summary>
         /// Update the access table variable
         /// </summary>
@@ -94,8 +132,8 @@ namespace User_Management
         /// <returns>The access table variable</returns>
         public static bool[] GetCurrentAccessTable()
         {
-            logger.Debug("GetCurrentAccessTable");
-            return CurrentAccessTable;
+            logger.Debug("GetCurrentAccessTable");  //  Log a debug message
+            return CurrentAccessTable;              // Return the access table variable
         }
     }
 }

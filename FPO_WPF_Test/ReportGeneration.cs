@@ -280,7 +280,7 @@ namespace FPO_WPF_Test
 
             }
 
-            MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Et bah alors !");
+            General.ShowMessageBox(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Et bah alors !");
             return -2;
         }
 
@@ -974,7 +974,7 @@ namespace FPO_WPF_Test
             if (cycleTableInfo == null)
             {
                 logger.Error(Settings.Default.Report_Info_CycleInfoNotFound);
-                MessageBox.Show(Settings.Default.Report_Info_CycleInfoNotFound);
+                General.ShowMessageBox(Settings.Default.Report_Info_CycleInfoNotFound);
                 return;
             }
 
@@ -1023,7 +1023,7 @@ namespace FPO_WPF_Test
                 if (cycleSeqInfo == null)
                 {
                     logger.Error(Settings.Default.Report_Info_CycleInfoNotFound);
-                    MessageBox.Show(Settings.Default.Report_Info_CycleInfoNotFound);
+                    General.ShowMessageBox(Settings.Default.Report_Info_CycleInfoNotFound);
                     return;
                 }
 
@@ -1056,7 +1056,7 @@ namespace FPO_WPF_Test
                 }
                 else
                 {
-                    MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Et bah alors !");
+                    General.ShowMessageBox(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Et bah alors !");
                 }*/
 
                 seqNumber++;

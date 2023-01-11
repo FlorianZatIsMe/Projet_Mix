@@ -172,7 +172,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //MessageBox.Show(FormatControl[i].ToString());
+            //General.ShowMessageBox(FormatControl[i].ToString());
         }
         private void TbBarcode_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -192,7 +192,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
 
             CurrentFormatControl_tbBarcode = FormatControl[i];
 
-            //MessageBox.Show(FormatControl[i].ToString());
+            //General.ShowMessageBox(FormatControl[i].ToString());
         }
         private void TbSetpoint_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -223,7 +223,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //MessageBox.Show(FormatControl[i].ToString());
+            //General.ShowMessageBox(FormatControl[i].ToString());
         }
         private void TbMin_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -253,7 +253,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //MessageBox.Show(FormatControl[i].ToString());
+            //General.ShowMessageBox(FormatControl[i].ToString());
         }
         private void TbMax_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -282,7 +282,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //MessageBox.Show(FormatControl[i].ToString());
+            //General.ShowMessageBox(FormatControl[i].ToString());
         }
         public bool IsFormatOk()
         {
@@ -297,7 +297,7 @@ namespace FPO_WPF_Test.Pages.SubRecipe
             }
 
             x = (bool)cbIsBarcode.IsChecked ? 0 : 1;
-            //MessageBox.Show(((n + x) == FormatControl.Length).ToString() + " - " + (n + x).ToString() + " = " + n.ToString() + " + " + x.ToString() + " / " + FormatControl.Length.ToString()); //((n + x) == FormatControl.Length).ToString() + n.ToString + x.ToString() + FormatControl.Length.ToString()
+            //General.ShowMessageBox(((n + x) == FormatControl.Length).ToString() + " - " + (n + x).ToString() + " = " + n.ToString() + " + " + x.ToString() + " / " + FormatControl.Length.ToString()); //((n + x) == FormatControl.Length).ToString() + n.ToString + x.ToString() + FormatControl.Length.ToString()
             return (n+x) == FormatControl.Length;
         }
     }

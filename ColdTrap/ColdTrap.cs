@@ -5,12 +5,41 @@ using System.Text;
 using System.Windows;
 using NationalInstruments.DAQmx;
 
-namespace Driver.ColdTrap
+namespace Driver_ColdTrap
 {
+    public struct IniInfo
+    {
+        public Window Window;
+    }
     public static class ColdTrap
     {
         private readonly static Task myTask;
         private readonly static DigitalSingleChannelReader myDigitalReader;
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private static IniInfo info;
+
+        public static void Initialize(IniInfo info_arg)
+        {
+            logger.Debug("Initialize");
+
+            info = info_arg;
+        }
+
+        private static void ShowMessageBox(string message)
+        {
+            if (info.Window != null)
+            {
+                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    MessageBox.Show(info.Window, message);
+                }));
+            }
+            else
+            {
+                MessageBox.Show(message);
+            }
+        }
+
         static ColdTrap()
         {
             try
@@ -28,7 +57,7 @@ namespace Driver.ColdTrap
             }
             catch (DaqException exception)
             {
-                MessageBox.Show("DaqException: " + exception.Message);
+                ShowMessageBox("DaqException: " + exception.Message);
                 //dispose task
                 myTask.Dispose();
             }
@@ -47,14 +76,14 @@ namespace Driver.ColdTrap
             {
                 //dispose task
                 myTask.Dispose();
-                MessageBox.Show("DaqException_2: " + exception.Message);
+                ShowMessageBox("DaqException_2: " + exception.Message);
             }
 
             catch (IndexOutOfRangeException exception)
             {
                 //dispose task
                 myTask.Dispose();
-                MessageBox.Show("Error: You must specify eight lines in the channel string (i.e., 0:7). " + exception.Message);
+                ShowMessageBox("Error: You must specify eight lines in the channel string (i.e., 0:7). " + exception.Message);
             }
             return false;
         }

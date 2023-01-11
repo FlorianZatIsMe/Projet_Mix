@@ -83,7 +83,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             if (!MyDatabase.IsConnected()) // while loop is better
             {
                 logger.Error(DatabaseSettings.Error01);
-                MessageBox.Show(DatabaseSettings.Error01);
+                General.ShowMessageBox(DatabaseSettings.Error01);
                 return; // ou exit carrément
             }*/
 
@@ -95,7 +95,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             if (recipeWeightInfo == null) // Si la commande a renvoyée une ligne
             {
                 logger.Error(Settings.Default.CycleWeight_Error_NoRecipe);
-                MessageBox.Show(Settings.Default.CycleWeight_Error_NoRecipe);
+                General.ShowMessageBox(Settings.Default.CycleWeight_Error_NoRecipe);
                 return; // ou exit carrément
             }
 
@@ -110,7 +110,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             // if setpoint, min, max are incorrect
             if (false)
             {
-                MessageBox.Show("Message d'erreur quelconque");
+                General.ShowMessageBox("Message d'erreur quelconque");
                 logger.Error("Message d'erreur quelconque");
                 General.EndSequence(recipeWeightInfo, frameMain: subCycle.frameMain, frameInfoCycle: subCycle.frameInfoCycle, idCycle: subCycle.idCycle, previousSeqType: this.cycleWeightInfo.SeqType, previousSeqId: idSubCycle.ToString(), isTest: subCycle.isTest, comment: Settings.Default.Report_Comment_CycleAborted);
                 Dispose(disposing: true); // Il va peut-être falloir sortir ça du "if"
@@ -148,7 +148,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             else
             {
                 logger.Error(Settings.Default.CycleWeight_Error_IncorrectValue + recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Id + " (" + recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Value + ")");
-                MessageBox.Show(Settings.Default.CycleWeight_Error_IncorrectValue + recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Id + " (" + recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Value + ")");
+                General.ShowMessageBox(Settings.Default.CycleWeight_Error_IncorrectValue + recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Id + " (" + recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Value + ")");
             }
 
             getWeightTimer.Start();
@@ -199,7 +199,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
                 if (isBalanceFree)
                 {
-                    //MessageBox.Show("2");
+                    //General.ShowMessageBox("2");
                     try
                     {
                         this.Dispatcher.Invoke(() =>
@@ -225,7 +225,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message);
+                        General.ShowMessageBox(ex.Message);
                     }
                 }
             }
@@ -265,7 +265,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
             if (!isWeightCorrect)
             {
-                MessageBox.Show(Settings.Default.CycleWeight_IncorrectWeight);
+                General.ShowMessageBox(Settings.Default.CycleWeight_IncorrectWeight);
             }
             else
             {
@@ -294,7 +294,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 /*
                 if (recipeWeightInfo.columns[1].value == "1") // Si la prochaine séquence est une séquence speedmixer
                 {
-                    MessageBox.Show("Mettez le produit dans le speedmixer et fermer le capot");
+                    General.ShowMessageBox("Mettez le produit dans le speedmixer et fermer le capot");
                 }
                 */
 
@@ -336,7 +336,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 else
                 {
                     textbox.Text = "";
-                    MessageBox.Show(Settings.Default.CycleWeigh_IncorrectBarcode + " " + recipeWeightInfo.Columns[recipeWeightInfo.Barcode].Value);
+                    General.ShowMessageBox(Settings.Default.CycleWeigh_IncorrectBarcode + " " + recipeWeightInfo.Columns[recipeWeightInfo.Barcode].Value);
                 }
             }
         }

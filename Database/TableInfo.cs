@@ -830,7 +830,7 @@ namespace Database
             if (recipe.GetType() != typeof(RecipeWeightInfo))
             {
                 logger.Error(Settings.Default.ICycleSeqInfo_Error_RecipeIncorrect + ": " + recipe.GetType().ToString());
-                MessageBox.Show(Settings.Default.ICycleSeqInfo_Error_RecipeIncorrect + ": " + recipe.GetType().ToString());
+                MyDatabase.ShowMessageBox(Settings.Default.ICycleSeqInfo_Error_RecipeIncorrect + ": " + recipe.GetType().ToString());
                 return;
             }
 
@@ -859,7 +859,7 @@ namespace Database
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                MessageBox.Show(ex.Message);
+                MyDatabase.ShowMessageBox(ex.Message);
                 return;
             }
 
@@ -869,7 +869,7 @@ namespace Database
             if (convRatio == 0)
             {
                 logger.Error(Settings.Default.ICycleSeqInfo_Error_convRatioIncorrect);
-                MessageBox.Show(Settings.Default.ICycleSeqInfo_Error_convRatioIncorrect);
+                MyDatabase.ShowMessageBox(Settings.Default.ICycleSeqInfo_Error_convRatioIncorrect);
                 return;
             }
 
@@ -888,7 +888,7 @@ namespace Database
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                MessageBox.Show(ex.Message);
+                MyDatabase.ShowMessageBox(ex.Message);
             }
         }
     }
@@ -1030,7 +1030,7 @@ namespace Database
             if (recipe.GetType() != typeof(RecipeSpeedMixerInfo))
             {
                 logger.Error(Settings.Default.ICycleSeqInfo_Error_RecipeIncorrect + ": " + recipe.GetType().ToString());
-                MessageBox.Show(Settings.Default.ICycleSeqInfo_Error_RecipeIncorrect + ": " + recipe.GetType().ToString());
+                MyDatabase.ShowMessageBox(Settings.Default.ICycleSeqInfo_Error_RecipeIncorrect + ": " + recipe.GetType().ToString());
                 return;
             }
 
@@ -1055,7 +1055,7 @@ namespace Database
                 catch (Exception ex)
                 {
                     logger.Error(ex.Message);
-                    MessageBox.Show(ex.Message);
+                    MyDatabase.ShowMessageBox(ex.Message);
                     return;
                 }
             }
@@ -1076,7 +1076,7 @@ namespace Database
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                MessageBox.Show(ex.Message);
+                MyDatabase.ShowMessageBox(ex.Message);
             }
         }
     }

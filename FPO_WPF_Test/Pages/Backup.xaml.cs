@@ -80,13 +80,13 @@ namespace FPO_WPF_Test.Pages
             if (task.Result)
             {
                 logger.Debug(Settings.Default.Backup_BackupSuccessfull);
-                MessageBox.Show(Settings.Default.Backup_BackupSuccessfull);
+                General.ShowMessageBox(Settings.Default.Backup_BackupSuccessfull);
                 lbBackups.Items.Insert(0, new ListBoxItem() { Content = lastBackupFileName });
             }
             else
             {
                 logger.Error(Settings.Default.Backup_BackupFailed);
-                MessageBox.Show(Settings.Default.Backup_BackupFailed);
+                General.ShowMessageBox(Settings.Default.Backup_BackupFailed);
             }
             lastBackupFileName = "";
         }
@@ -108,7 +108,7 @@ namespace FPO_WPF_Test.Pages
             string arg4 = DatabaseSettings.ConnectionInfo.Db;// dbName;
             string arg5 = backupPath + lastBackupFileName;
             string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5;
-            //MessageBox.Show(command);    
+            //General.ShowMessageBox(command);    
             var processInfo = new ProcessStartInfo("cmd.exe", "/c " + command)
             {
                 CreateNoWindow = true,
@@ -209,7 +209,7 @@ namespace FPO_WPF_Test.Pages
             }
             else
             {
-                MessageBox.Show(Settings.Default.ArchBack_Request_SelectFile);
+                General.ShowMessageBox(Settings.Default.ArchBack_Request_SelectFile);
             }
         }
         private void ExecuteRestore(string username, string restoreFileName)
@@ -225,7 +225,7 @@ namespace FPO_WPF_Test.Pages
                 string arg4 = DatabaseSettings.ConnectionInfo.Db;// dbName;
                 string arg5 = backupPath + restoreFileName;
                 string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5;
-                //MessageBox.Show(command);    
+                //General.ShowMessageBox(command);    
                 var processInfo = new ProcessStartInfo("cmd.exe", "/c " + command)
                 {
                     CreateNoWindow = true,
@@ -260,11 +260,11 @@ namespace FPO_WPF_Test.Pages
                     //MyDatabase.Disconnect();
 
                     General.count = nLines;
-                    MessageBox.Show(Settings.Default.ArchBack_restoreSuccessfull);
+                    General.ShowMessageBox(Settings.Default.ArchBack_restoreSuccessfull);
                 }
                 else
                 {
-                    MessageBox.Show(Settings.Default.ArchBack_restoreFailed);
+                    General.ShowMessageBox(Settings.Default.ArchBack_restoreFailed);
                 }
                 General.count = 0;
                 General.text = "";
@@ -273,7 +273,7 @@ namespace FPO_WPF_Test.Pages
             }
             else
             {
-                MessageBox.Show(Settings.Default.ArchBack_FileNotFound_1 + backupPath + restoreFileName + Settings.Default.ArchBack_FileNotFound_2);
+                General.ShowMessageBox(Settings.Default.ArchBack_FileNotFound_1 + backupPath + restoreFileName + Settings.Default.ArchBack_FileNotFound_2);
             }
         }
         private void progressBar_Loaded(object sender, RoutedEventArgs e)

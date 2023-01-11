@@ -1,5 +1,5 @@
 ﻿using Database;
-using Driver.ColdTrap;
+using Driver_ColdTrap;
 using Driver_MODBUS;
 using Driver_RS232_Pump;
 using System;
@@ -138,7 +138,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
 
             if (subCycleArg.prevSeqInfo.SeqType != cycleSpeedMixerInfo.SeqType) // Si la prochaine séquence est une séquence speedmixer
             {
-                MessageBox.Show(Settings.Default.CycleMix_Request_PutProduct);
+                General.ShowMessageBox(Settings.Default.CycleMix_Request_PutProduct);
             }
 
             InitializeComponent();
@@ -193,7 +193,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             if (recipeSpeedMixerInfo == null) // S'il n'y a pas eu d'erreur...
             {
                 logger.Error(Settings.Default.CycleMix_Erro01);
-                MessageBox.Show(Settings.Default.CycleMix_Erro01);
+                General.ShowMessageBox(Settings.Default.CycleMix_Erro01);
                 return;
             }
 
@@ -262,7 +262,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             logger.Debug("~CycleSpeedMixer");
 
             Dispose(disposing: false);
-            MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Disconnection done");
+            General.ShowMessageBox(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Disconnection done");
         }
         private async void SequenceController()
         {
@@ -290,7 +290,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 // Si on n'a pas encore démarré mais que le capot n'est pas fermé (Safety not OK)
                 if (!hasSequenceStarted && !status[SpeedMixerSettings.MixerStatusId_SafetyOK])
                 {
-                    MessageBox.Show(Settings.Default.CycleMix_Request_CloseLid);
+                    General.ShowMessageBox(Settings.Default.CycleMix_Request_CloseLid);
                 }
                 // Si on n'a pas encore démarré et que le capot est fermé alors on démarre le cycle
                 else if (!hasSequenceStarted && status[SpeedMixerSettings.MixerStatusId_SafetyOK] && !status[SpeedMixerSettings.MixerStatusId_MixerRunning])
@@ -301,7 +301,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                     {
                         if (!status[SpeedMixerSettings.MixerStatusId_MixerError])
                         {
-                            MessageBox.Show(Settings.Default.CycleMix_Request_StartMix); // Peut-être retirer ça s'il y a plusieurs cycle
+                            General.ShowMessageBox(Settings.Default.CycleMix_Request_StartMix); // Peut-être retirer ça s'il y a plusieurs cycle
                             SpeedMixerModbus.RunProgram();
 
                             this.Dispatcher.Invoke(() =>
@@ -333,7 +333,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                         pumpNotFreeTimer.Start();
 
                         // Il faut vite fermer cette message box sinon le cycle va s'arrêter, 
-                        MessageBox.Show("Démarrage du timer_2: LA POMPE N'EST PAS DISPO, VITE ! RENDS LA DISPONIBLE OU LE CYCLE VA S'ARRETER POUR TOUJOURS !!!");
+                        General.ShowMessageBox("Démarrage du timer_2: LA POMPE N'EST PAS DISPO, VITE ! RENDS LA DISPONIBLE OU LE CYCLE VA S'ARRETER POUR TOUJOURS !!!");
                     }
                     else if (pumpNotFreeSince != 0 && RS232Pump.IsOpen())
                     {
@@ -347,7 +347,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                 }
 
                 await Task.Delay(timeSeqController);
-                //MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - GO");
+                //General.ShowMessageBox(MethodBase.GetCurrentMethod().DeclaringType.Name + " - GO");
             }
 
             if (currentPhaseTime >= 0) // Si la séquence s'est pas arrêtée avant la fin, on arrête le cycle
@@ -369,7 +369,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             // Il faudrait montrer la valeur du timer et un message qui informe l'utilisateur de la déconnexion de la pompe
             // 
 
-            isTempOK = ColdTrap.IsTempOK();
+            isTempOK = Driver_ColdTrap.ColdTrap.IsTempOK();
 
             this.Dispatcher.Invoke(() =>
             {
@@ -393,7 +393,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                     {
                         tempControlTimer.Stop();
                         logger.Error(Settings.Default.CycleMix_Error_TempTooHot);
-                        MessageBox.Show(Settings.Default.CycleMix_Error_TempTooHot);
+                        General.ShowMessageBox(Settings.Default.CycleMix_Error_TempTooHot);
                         StopCycle();
                     }
                 }
@@ -404,7 +404,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
                         tempControlTimer.Stop();
 
                         logger.Error(Settings.Default.CycleMix_Error_TempTooHot);
-                        MessageBox.Show(Settings.Default.CycleMix_Error_TempTooHot);
+                        General.ShowMessageBox(Settings.Default.CycleMix_Error_TempTooHot);
                         StopCycle();
                     }
                 }
@@ -470,12 +470,12 @@ namespace FPO_WPF_Test.Pages.SubCycle
                     if (hasSequenceStarted)
                     {
                         logger.Error(Settings.Default.CycleMix_Error_PumpOutBefCyle);
-                        MessageBox.Show(Settings.Default.CycleMix_Error_PumpOutBefCyle);
+                        General.ShowMessageBox(Settings.Default.CycleMix_Error_PumpOutBefCyle);
                     }
                     else
                     {
                         logger.Error(Settings.Default.CycleMix_Error_PumpOutDurCyle);
-                        MessageBox.Show(Settings.Default.CycleMix_Error_PumpOutDurCyle);
+                        General.ShowMessageBox(Settings.Default.CycleMix_Error_PumpOutDurCyle);
                         StopCycle();
                     }
                 }
@@ -507,13 +507,13 @@ namespace FPO_WPF_Test.Pages.SubCycle
             else if (currentPhaseTime == -timeoutSequenceTooLong)
             {
                 logger.Error(Settings.Default.CycleMix_Error_MixTooLong);
-                MessageBox.Show(Settings.Default.CycleMix_Error_MixTooLong);
+                General.ShowMessageBox(Settings.Default.CycleMix_Error_MixTooLong);
                 StopCycle();
             }
             else if (currentPhaseTime == -timeoutSequenceBlocked)
             {
                 logger.Error(Settings.Default.CycleMix_Error_MixerBlocked);
-                MessageBox.Show(Settings.Default.CycleMix_Error_MixerBlocked);
+                General.ShowMessageBox(Settings.Default.CycleMix_Error_MixerBlocked);
                 isSequenceOver = true;
             }
 
@@ -575,7 +575,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             while (sequenceTimer.Enabled) ;
             while (tempControlTimer.Enabled) ;
             while (pumpNotFreeTimer.Enabled) ;
-            //MessageBox.Show("2");
+            //General.ShowMessageBox("2");
 
             General.CurrentCycleInfo.UpdateCurrentSpeedMixerInfo(new string[] { Settings.Default.CycleInfo_Mix_StatusEnded });
             //thisCycleInfo.Add(info);
@@ -642,7 +642,7 @@ namespace FPO_WPF_Test.Pages.SubCycle
             }
             else
             {
-                MessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Je ne sais pas, je ne sais plus, je suis perdu");
+                General.ShowMessageBox(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Je ne sais pas, je ne sais plus, je suis perdu");
             }
 
             if (isCycleStopped)

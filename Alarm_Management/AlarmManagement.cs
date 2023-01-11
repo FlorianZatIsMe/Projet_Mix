@@ -5,6 +5,7 @@ using Database;
 using System.Configuration;
 using Alarm_Management.Properties;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace Alarm_Management
 {
@@ -68,6 +69,7 @@ namespace Alarm_Management
     public struct IniInfo
     {
         public string AuditTrail_SystemUsername;
+        public Window Window;
     }
     public static class AlarmSettings
     {
@@ -87,13 +89,32 @@ namespace Alarm_Management
         public static Alarm[,] Alarms { get; }
 
         private static bool isInitialized = false;
-        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         // Future interface
-        private static string AuditTrail_SystemUsername;
+        //private static string AuditTrail_SystemUsername;
 
         public static event Action ActiveAlarmEvent = null;
         public static event Action InactiveAlarmEvent = null;
+
+        public static IniInfo info;
+
+        //private static Window mainWindow;
+
+        private static void ShowMessageBox(string message)
+        {
+            if (info.Window != null)
+            {
+                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    MessageBox.Show(info.Window, message);
+                }));
+            }
+            else
+            {
+                MessageBox.Show(message);
+            }
+        }
 
         static AlarmManagement()
         {
@@ -121,12 +142,14 @@ namespace Alarm_Management
         /// <summary>
         /// Initialize
         /// </summary>
-        /// <param name="info"></param>
-        public static void Initialize(IniInfo info)
+        /// <param name="info_arg"></param>
+        public static void Initialize(IniInfo info_arg)
         {
             logger.Debug("Initialize");
 
-            AuditTrail_SystemUsername = info.AuditTrail_SystemUsername;
+            info = info_arg;
+            //AuditTrail_SystemUsername = info_arg.AuditTrail_SystemUsername;
+            //mainWindow = info_arg.window;
 
             MyDatabase.Initialize(new Database.IniInfo() { 
                 AlarmType_Alarm = Settings.Default.AlarmType_Alarm,
@@ -141,7 +164,7 @@ namespace Alarm_Management
 
             if (!isInitialized) {
                 logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                ShowMessageBox(Settings.Default.Error01);
             }
 
             int n = -1;
@@ -152,7 +175,7 @@ namespace Alarm_Management
             // Si l'alarme est active, le programmeur est nul
             if (!isAlarmNotActive) {
                 logger.Error(Settings.Default.Error02);
-                MessageBox.Show(Settings.Default.Error02);
+                ShowMessageBox(Settings.Default.Error02);
                 return;
             }
 
@@ -166,7 +189,7 @@ namespace Alarm_Management
 
 
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-            auditTrailInfo.Columns[auditTrailInfo.Username].Value = AuditTrail_SystemUsername;
+            auditTrailInfo.Columns[auditTrailInfo.Username].Value = info.AuditTrail_SystemUsername;
             auditTrailInfo.Columns[auditTrailInfo.EventType].Value = GetAlarmType(Alarms[id1, id2].Type);
             auditTrailInfo.Columns[auditTrailInfo.Description].Value = GetAlarmDescription(id1, id2);
             auditTrailInfo.Columns[auditTrailInfo.ValueBefore].Value = statusBefore.ToString();
@@ -196,11 +219,11 @@ namespace Alarm_Management
                 if (n != -1) ActiveAlarms.RemoveAt(n);
                 else {
                     logger.Error(Settings.Default.Error03);
-                    MessageBox.Show(Settings.Default.Error03);
+                    ShowMessageBox(Settings.Default.Error03);
                 }
             }
 
-            MessageBox.Show(GetAlarmDescription(id1, id2)); // Peut-être afficher la liste des alarmes actives à la place
+            ShowMessageBox(GetAlarmDescription(id1, id2)); // Peut-être afficher la liste des alarmes actives à la place
 
             //MyDatabase.Disconnect(mutex: mutexID);
         }
@@ -208,7 +231,7 @@ namespace Alarm_Management
         {
             if (!isInitialized) {
                 logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                ShowMessageBox(Settings.Default.Error01);
             }
 
             int n = -1;
@@ -225,13 +248,13 @@ namespace Alarm_Management
 
             if (n == -1) {
                 logger.Error(Settings.Default.Error04);
-                MessageBox.Show(Settings.Default.Error04);
+                ShowMessageBox(Settings.Default.Error04);
                 return;
             }
 
             if (Alarms[id1, id2].Status == AlarmStatus.INACTIVE) {
                 logger.Error(Settings.Default.Error05);
-                MessageBox.Show(Settings.Default.Error05);
+                ShowMessageBox(Settings.Default.Error05);
                 return;
             }
 
@@ -254,7 +277,7 @@ namespace Alarm_Management
                 else
                 {
                     logger.Error(Settings.Default.Error06);
-                    MessageBox.Show(Settings.Default.Error06);
+                    ShowMessageBox(Settings.Default.Error06);
                     return;
                 }
             }
@@ -265,14 +288,14 @@ namespace Alarm_Management
             else
             {
                 logger.Error(Settings.Default.Error07);
-                MessageBox.Show(Settings.Default.Error07);
+                ShowMessageBox(Settings.Default.Error07);
                 return;
             }
 
             if (statusAfter != AlarmStatus.None)
             {
                 AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-                auditTrailInfo.Columns[auditTrailInfo.Username].Value = AuditTrail_SystemUsername;
+                auditTrailInfo.Columns[auditTrailInfo.Username].Value = info.AuditTrail_SystemUsername;
                 auditTrailInfo.Columns[auditTrailInfo.EventType].Value = GetAlarmType(Alarms[id1, id2].Type);
                 auditTrailInfo.Columns[auditTrailInfo.Description].Value = GetAlarmDescription(id1, id2);
                 auditTrailInfo.Columns[auditTrailInfo.ValueBefore].Value = statusBefore.ToString();
@@ -307,7 +330,7 @@ namespace Alarm_Management
 
             if (!isInitialized) {
                 logger.Error(Settings.Default.Error01);
-                MessageBox.Show(Settings.Default.Error01);
+                ShowMessageBox(Settings.Default.Error01);
             }
 
             int n = -1;
@@ -324,7 +347,7 @@ namespace Alarm_Management
 
             if (n == -1) {
                 logger.Error(Settings.Default.Error04);
-                MessageBox.Show(Settings.Default.Error04);
+                ShowMessageBox(Settings.Default.Error04);
                 return;
             }
 
@@ -333,7 +356,7 @@ namespace Alarm_Management
 
             if (statusBefore == statusAfter) {
                 logger.Error(Settings.Default.Error06);
-                MessageBox.Show(Settings.Default.Error06);
+                ShowMessageBox(Settings.Default.Error06);
                 return;
             }
 
@@ -341,7 +364,7 @@ namespace Alarm_Management
             mutexID = -1;
 
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-            auditTrailInfo.Columns[auditTrailInfo.Username].Value = AuditTrail_SystemUsername;
+            auditTrailInfo.Columns[auditTrailInfo.Username].Value = info.AuditTrail_SystemUsername;
             auditTrailInfo.Columns[auditTrailInfo.EventType].Value = GetAlarmType(Alarms[id1, id2].Type);
             auditTrailInfo.Columns[auditTrailInfo.Description].Value = GetAlarmDescription(id1, id2);
             auditTrailInfo.Columns[auditTrailInfo.ValueBefore].Value = statusBefore.ToString();
@@ -365,7 +388,7 @@ namespace Alarm_Management
             else
             {
                 logger.Error(Settings.Default.Error08);
-                MessageBox.Show(Settings.Default.Error08);
+                ShowMessageBox(Settings.Default.Error08);
             }
 
             ActiveAlarms.RemoveAt(n);
