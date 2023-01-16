@@ -1,0 +1,372 @@
+﻿<Page x:Class="Main.Pages.SubRecipe.SpeedMixer"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Main.Pages.SubRecipe"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="1300"
+      Title="SpeedMixer"
+      Background="Transparent"
+      Foreground="{StaticResource MyFont1_Foreground}"
+      FontFamily="{StaticResource MyFont1}"
+      FontSize="{StaticResource FontSize2}"
+    xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
+
+    <Border Background="#524E4F" BorderThickness="5" BorderBrush="Green" CornerRadius="15" Margin="5">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="400"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="55"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Column="0" Grid.RowSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock x:Name="tbSeqNumber"
+                       Grid.Column="0"
+                       Grid.RowSpan="2"
+                       Text="#" 
+                       Foreground="{StaticResource MyFont1_Foreground}"
+                       FontFamily="{StaticResource MyFont1}"
+                       FontSize="{StaticResource FontSize0}"
+                       HorizontalAlignment="Center"/>
+                <Button Grid.Column="0"
+                    Grid.RowSpan="2"
+                    Content="Supprimer"
+                    Margin="0,10,0,0"
+                    Height="20"
+                    Width="70" Click="Button_Click"/>
+            </StackPanel>
+
+            <WrapPanel Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0" Margin="0,10,0,0" VerticalAlignment="Top">
+                <RadioButton 
+                        Content="Pesée"
+                        Style="{DynamicResource SubSeqRadioButton}"
+                       
+                         HorizontalAlignment="Left" 
+                         VerticalAlignment="Top" 
+                         Click="RadioButton_Click_1"/>
+                <RadioButton 
+                        Content="SpeedMixer"
+                        Style="{DynamicResource SubSeqRadioButton}"         
+                       
+                         HorizontalAlignment="Left"
+                         Margin="10,0,0,0"
+                         VerticalAlignment="Top" 
+                         IsChecked="True"/>
+            </WrapPanel>
+
+            <Grid HorizontalAlignment="Left" Width="400" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Margin="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Nom du programme"
+                                   Margin="0,0,20,0"
+                                   Grid.Column="0"
+                                   FontFamily="{StaticResource MyFont1}" 
+                                   FontSize="{StaticResource FontSize1}"
+                                   VerticalAlignment="Center"/>
+                <TextBox x:Name="tbProgramName" 
+                             Grid.Column="1"
+                             Height="30" 
+                             VerticalContentAlignment="Center"
+                             LostFocus="TbProgramName_LostFocus"
+                             Style="{DynamicResource TextBoxStyle1}"/>
+            </Grid>
+
+            <StackPanel Grid.Column="1" Grid.Row="2">
+                <WrapPanel>
+                    <TextBlock Margin="0,10,0,0" Text="Accélération (rpm/s)"/>
+                    <TextBox x:Name="tbAcceleration" Margin="10,10,0,0" Width="200" LostFocus="TbAcceleration_LostFocus"/>
+                </WrapPanel>
+                <WrapPanel>
+                    <TextBlock Margin="0,10,0,0" Text="Décélération (rpm/s)"/>
+                    <TextBox x:Name="tbDeceleration" Margin="10,10,0,0" Width="200" LostFocus="TbDeceleration_LostFocus"/>
+                </WrapPanel>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+                    <ToggleButton x:Name="cbVacuum" Width="130" VerticalAlignment="Center" HorizontalAlignment="Left" Content="Contrôle du vide" Style="{StaticResource ToggleButtonStyle1}"/>
+                    <WrapPanel VerticalAlignment="Center" HorizontalAlignment="Right">
+                        <TextBlock Margin="0,10,0,0" Text="Unité de la pression"/>
+                        <ComboBox Style="{DynamicResource ComboBoxStyle1}" Margin="10,0,0,0" x:Name="cbxPressureUnit" SelectedIndex="2" Width="70">
+                            <ComboBoxItem Content="inHg"/>
+                            <ComboBoxItem Content="Torr"/>
+                            <ComboBoxItem Content="mBar"/>
+                            <ComboBoxItem Content="PSIA"/>
+                        </ComboBox>
+                    </WrapPanel>
+                </Grid>
+                <!--
+                        <CheckBox Margin="0,10,0,0" x:Name="cbVacuum_old" Content="Contrôle du vide"/>
+                        <WrapPanel>
+                            <TextBlock Margin="0,10,0,0" Text="Unité de la pression"/>
+                            <ComboBox Style="{DynamicResource ComboBoxStyle1}" Margin="10,10,0,0" x:Name="cbxPressureUnit_old" SelectedIndex="2" Width="70">
+                                <ComboBoxItem Content="inHg"/>
+                                <ComboBoxItem Content="Torr"/>
+                                <ComboBoxItem Content="mBar"/>
+                                <ComboBoxItem Content="PSIA"/>
+                            </ComboBox>
+                        </WrapPanel>
+                        <WrapPanel Margin="0,10,0,0">
+                            <TextBlock Text="Gaz d'évacuation"/>
+                            <RadioButton x:Name="rbAir" 
+                                 IsEnabled="False"
+                                 Margin="30,0,0,0" 
+                                 Content="Air"
+                                
+                                 HorizontalAlignment="Left" 
+                                 VerticalAlignment="Top" 
+                                 IsChecked="True"/>
+                            <RadioButton x:Name="rbNitrogen" 
+                                 IsEnabled="False"
+                                 Content="Azote"
+                                
+                                 HorizontalAlignment="Left"
+                                 Margin="10,0,0,0"
+                                 VerticalAlignment="Top" />
+                        </WrapPanel>
+                        <CheckBox Margin="0,10,0,0" x:Name="cbMonitorType" IsEnabled="False" Content="Type de moniteur"/>
+                        <WrapPanel>
+                            <TextBlock Margin="0,10,0,0" Text="Courbe S"/>
+                            <TextBox x:Name="tbSCurve" IsEnabled="False" Text="N/A" Margin="10,10,0,0" Width="200" LostFocus="TbSCurve_LostFocus"/>
+                        </WrapPanel>
+                        <CheckBox Margin="0,10,0,0" x:Name="cbColdTrap_old" Content="Utilisation du piège froid"/>
+                        -->
+                <ToggleButton x:Name="cbColdTrap" VerticalAlignment="Center" HorizontalAlignment="Left" Content="Utilisation du piège froid" Style="{StaticResource ToggleButtonStyle1}"/>
+                <WrapPanel>
+                    <TextBlock Margin="0,10,0,0" Text="Vitesse - Min (rpm)"/>
+                    <TextBox x:Name="tbSpeedMin" Margin="23,10,0,0" Width="50" LostFocus="TbSpeedMin_LostFocus"/>
+                    <TextBlock Margin="20,10,0,0" Text="Max (rpm)"/>
+                    <TextBox x:Name="tbSpeedMax" Margin="15,10,0,0" Width="50" LostFocus="TbSpeedMax_LostFocus"/>
+                </WrapPanel>
+                <WrapPanel>
+                    <TextBlock Margin="0,10,0,0">
+                        <Run Text="Pression - Min ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
+                    </TextBlock>
+                    <TextBox x:Name="tbPressureMin" Margin="10,10,0,0" Width="50" LostFocus="TbPressureMin_LostFocus"/>
+                    <TextBlock Margin="20,10,0,0">
+                        <Run Text="Max ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
+                    </TextBlock>
+                    <TextBox x:Name="tbPressureMax" Margin="10,10,0,0" Width="50" LostFocus="TbPressureMax_LostFocus"/>
+                </WrapPanel>
+            </StackPanel>
+
+            <Grid Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" LostFocus="tbPressure_LostFocus">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Phase" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Text="Vitesse (RPM)" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Text="Temps (s)" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Run Text="Pression ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
+                </TextBlock>
+
+                <ToggleButton x:Name="tgPhase00" Content="1" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible"/>
+                <ToggleButton x:Name="tgPhase01" Content="2" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="True" Visibility="Visible"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked"/>
+                <ToggleButton x:Name="tgPhase02" Content="3" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="True" Visibility="Visible"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked"/>
+                <ToggleButton x:Name="tgPhase03" Content="4" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="True" Visibility="Visible"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked"/>
+                <ToggleButton x:Name="tgPhase04" Content="5" Grid.Row="5" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="True" Visibility="Visible"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked"/>
+                <ToggleButton x:Name="tgPhase05" Content="6" Grid.Row="6" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="True" Visibility="Visible"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked"/>
+                <ToggleButton x:Name="tgPhase06" Content="7" Grid.Row="7" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="True" Visibility="Visible"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked"/>
+                <ToggleButton x:Name="tgPhase07" Content="8" Grid.Row="8" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="True" Visibility="Visible"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked"/>
+                <ToggleButton x:Name="tgPhase08" Content="9" Grid.Row="9" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="True" Visibility="Visible"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked"/>
+                <ToggleButton x:Name="tgPhase09" Content="10" Grid.Row="10" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="True" Visibility="Visible"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked"/>
+
+                <TextBox x:Name="tbSpeed00" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" LostFocus="TbSpeed_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbSpeed01" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbSpeed_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbSpeed02" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbSpeed_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbSpeed03" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbSpeed_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbSpeed04" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbSpeed_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbSpeed05" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbSpeed_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbSpeed06" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbSpeed_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbSpeed07" Grid.Row="8" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbSpeed_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbSpeed08" Grid.Row="9" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbSpeed_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbSpeed09" Grid.Row="10" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbSpeed_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+
+                <TextBox x:Name="tbTime00" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" LostFocus="TbTime_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbTime01" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbTime_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbTime02" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbTime_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbTime03" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbTime_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbTime04" Grid.Row="5" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbTime_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbTime05" Grid.Row="6" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbTime_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbTime06" Grid.Row="7" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbTime_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbTime07" Grid.Row="8" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbTime_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbTime08" Grid.Row="9" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbTime_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbTime09" Grid.Row="10" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbTime_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+
+                <TextBox x:Name="tbPressure00" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" LostFocus="tbPressure_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbPressure01" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50"  Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
+                <TextBox x:Name="tbPressure02" Grid.Row="3" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
+                <TextBox x:Name="tbPressure03" Grid.Row="4" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
+                <TextBox x:Name="tbPressure04" Grid.Row="5" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
+                <TextBox x:Name="tbPressure05" Grid.Row="6" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
+                <TextBox x:Name="tbPressure06" Grid.Row="7" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
+                <TextBox x:Name="tbPressure07" Grid.Row="8" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
+                <TextBox x:Name="tbPressure08" Grid.Row="9" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
+                <TextBox x:Name="tbPressure09" Grid.Row="10" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
+
+            </Grid>
+            <!--         
+            <StackPanel Margin="20,0,0,0" Grid.Column="2" Grid.Row="2">
+                <WrapPanel x:Name="Phase00">
+                    <TextBlock Margin="20,10,0,0" Text="Phase 1"/>
+                    <TextBlock Margin="37,10,0,0" Text="Vitesse (rpm)"/>
+                    <TextBox x:Name="tbSpeed00" Margin="10,10,0,0" Width="50" LostFocus="TbSpeed_LostFocus"/>
+                    <TextBlock Margin="30,10,0,0" Text="Temps (s)"/>
+                    <TextBox x:Name="tbTime00" Margin="10,10,0,0" Width="50" LostFocus="TbTime_LostFocus"/>
+                    <TextBlock Margin="30,10,0,0">
+                        <Run Text="Pression ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
+                    </TextBlock>
+                    <TextBox x:Name="tbPression00" Margin="10,10,0,0" Width="50" LostFocus="TbPression_LostFocus"/>
+                </WrapPanel>
+                <WrapPanel x:Name="Phase01">
+                    <CheckBox x:Name="cbPhase01"§IsChecked="false" Content="Phase 2" Unchecked="CbPhase_Unchecked" Checked="CbPhase_Checked"/>
+                    <TextBlock Margin="37,10,0,0" Text="Vitesse (rpm)"/>
+                    <TextBox x:Name="tbSpeed01" Margin="10,10,0,0" Width="50" IsEnabled="false" LostFocus="TbSpeed_LostFocus"/>
+                    <TextBlock Margin="30,10,0,0" Text="Temps (s)"/>
+                    <TextBox x:Name="tbTime01" Margin="10,10,0,0" Width="50" IsEnabled="false" LostFocus="TbTime_LostFocus"/>
+                    <TextBlock Margin="30,10,0,0">
+                        <Run Text="Pression ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
+                    </TextBlock>
+                    <TextBox x:Name="tbPression01" Margin="10,10,0,0" Width="50" IsEnabled="false" LostFocus="TbPression_LostFocus"/>
+                </WrapPanel>
+                <WrapPanel x:Name="Phase02" Visibility="Collapsed">
+                    <CheckBox x:Name="cbPhase02" Margin="0,10,0,0" IsChecked="false" Content="Phase 3" Unchecked="CbPhase_Unchecked" Checked="CbPhase_Checked"/>
+                    <TextBlock Margin="37,10,0,0" Text="Vitesse (rpm)"/>
+                    <TextBox x:Name="tbSpeed02" Margin="10,10,0,0" Width="50" LostFocus="TbSpeed_LostFocus"/>
+                    <TextBlock Margin="30,10,0,0" Text="Temps (s)"/>
+                    <TextBox x:Name="tbTime02" Margin="10,10,0,0" Width="50" LostFocus="TbTime_LostFocus"/>
+                    <TextBlock Margin="30,10,0,0">
+                        <Run Text="Pression ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
+                    </TextBlock>
+                    <TextBox x:Name="tbPression02" Margin="10,10,0,0" Width="50" LostFocus="TbPression_LostFocus"/>
+                </WrapPanel>
+                <WrapPanel x:Name="Phase03" Visibility="Collapsed">
+                    <CheckBox x:Name="cbPhase03" Margin="0,10,0,0" IsChecked="false" Content="Phase 4" Unchecked="CbPhase_Unchecked" Checked="CbPhase_Checked"/>
+                    <TextBlock Margin="37,10,0,0" Text="Vitesse (rpm)"/>
+                    <TextBox x:Name="tbSpeed03" Margin="10,10,0,0" Width="50" LostFocus="TbSpeed_LostFocus"/>
+                    <TextBlock Margin="30,10,0,0" Text="Temps (s)"/>
+                    <TextBox x:Name="tbTime03" Margin="10,10,0,0" Width="50" LostFocus="TbTime_LostFocus"/>
+                    <TextBlock Margin="30,10,0,0">
+                        <Run Text="Pression ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
+                    </TextBlock>
+                    <TextBox x:Name="tbPression03" Margin="10,10,0,0" Width="50" LostFocus="TbPression_LostFocus"/>
+                </WrapPanel>
+                <WrapPanel x:Name="Phase04" Visibility="Collapsed">
+                    <CheckBox x:Name="cbPhase04" Margin="0,10,0,0" IsChecked="false" Content="Phase 5" Unchecked="CbPhase_Unchecked" Checked="CbPhase_Checked"/>
+                    <TextBlock Margin="37,10,0,0" Text="Vitesse (rpm)"/>
+                    <TextBox x:Name="tbSpeed04" Margin="10,10,0,0" Width="50" LostFocus="TbSpeed_LostFocus"/>
+                    <TextBlock Margin="30,10,0,0" Text="Temps (s)"/>
+                    <TextBox x:Name="tbTime04" Margin="10,10,0,0" Width="50" LostFocus="TbTime_LostFocus"/>
+                    <TextBlock Margin="30,10,0,0">
+                        <Run Text="Pression ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
+                    </TextBlock>
+                    <TextBox x:Name="tbPression04" Margin="10,10,0,0" Width="50" LostFocus="TbPression_LostFocus"/>
+                </WrapPanel>
+                <WrapPanel x:Name="Phase05" Visibility="Collapsed">
+                    <CheckBox x:Name="cbPhase05" Margin="0,10,0,0" IsChecked="false" Content="Phase 6" Unchecked="CbPhase_Unchecked" Checked="CbPhase_Checked"/>
+                    <TextBlock Margin="37,10,0,0" Text="Vitesse (rpm)"/>
+                    <TextBox x:Name="tbSpeed05" Margin="10,10,0,0" Width="50" LostFocus="TbSpeed_LostFocus"/>
+                    <TextBlock Margin="30,10,0,0" Text="Temps (s)"/>
+                    <TextBox x:Name="tbTime05" Margin="10,10,0,0" Width="50" LostFocus="TbTime_LostFocus"/>
+                    <TextBlock Margin="30,10,0,0">
+                        <Run Text="Pression ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
+                    </TextBlock>
+                    <TextBox x:Name="tbPression05" Margin="10,10,0,0" Width="50" LostFocus="TbPression_LostFocus"/>
+                </WrapPanel>
+                <WrapPanel x:Name="Phase06" Visibility="Collapsed">
+                    <CheckBox x:Name="cbPhase06" Margin="0,10,0,0" IsChecked="false" Content="Phase 7" Unchecked="CbPhase_Unchecked" Checked="CbPhase_Checked"/>
+                    <TextBlock Margin="37,10,0,0" Text="Vitesse (rpm)"/>
+                    <TextBox x:Name="tbSpeed06" Margin="10,10,0,0" Width="50" LostFocus="TbSpeed_LostFocus"/>
+                    <TextBlock Margin="30,10,0,0" Text="Temps (s)"/>
+                    <TextBox x:Name="tbTime06" Margin="10,10,0,0" Width="50" LostFocus="TbTime_LostFocus"/>
+                    <TextBlock Margin="30,10,0,0">
+                        <Run Text="Pression ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
+                    </TextBlock>
+                    <TextBox x:Name="tbPression06" Margin="10,10,0,0" Width="50" LostFocus="TbPression_LostFocus"/>
+                </WrapPanel>
+                <WrapPanel x:Name="Phase07" Visibility="Collapsed">
+                    <CheckBox x:Name="cbPhase07" Margin="0,10,0,0" IsChecked="false" Content="Phase 8" Unchecked="CbPhase_Unchecked" Checked="CbPhase_Checked"/>
+                    <TextBlock Margin="37,10,0,0" Text="Vitesse (rpm)"/>
+                    <TextBox x:Name="tbSpeed07" Margin="10,10,0,0" Width="50" LostFocus="TbSpeed_LostFocus"/>
+                    <TextBlock Margin="30,10,0,0" Text="Temps (s)"/>
+                    <TextBox x:Name="tbTime07" Margin="10,10,0,0" Width="50" LostFocus="TbTime_LostFocus"/>
+                    <TextBlock Margin="30,10,0,0">
+                        <Run Text="Pression ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
+                    </TextBlock>
+                    <TextBox x:Name="tbPression07" Margin="10,10,0,0" Width="50" LostFocus="TbPression_LostFocus"/>
+                </WrapPanel>
+                <WrapPanel x:Name="Phase08" Visibility="Collapsed">
+                    <CheckBox x:Name="cbPhase08" Margin="0,10,0,0" IsChecked="false" Content="Phase 9" Unchecked="CbPhase_Unchecked" Checked="CbPhase_Checked"/>
+                    <TextBlock Margin="37,10,0,0" Text="Vitesse (rpm)"/>
+                    <TextBox x:Name="tbSpeed08" Margin="10,10,0,0" Width="50" LostFocus="TbSpeed_LostFocus"/>
+                    <TextBlock Margin="30,10,0,0" Text="Temps (s)"/>
+                    <TextBox x:Name="tbTime08" Margin="10,10,0,0" Width="50" LostFocus="TbTime_LostFocus"/>
+                    <TextBlock Margin="30,10,0,0">
+                        <Run Text="Pression ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
+                    </TextBlock>
+                    <TextBox x:Name="tbPression08" Margin="10,10,0,0" Width="50" LostFocus="TbPression_LostFocus"/>
+                </WrapPanel>
+                <WrapPanel x:Name="Phase09" Visibility="Collapsed">
+                    <CheckBox x:Name="cbPhase09" Margin="0,10,0,0" IsChecked="false" Content="Phase 10" Unchecked="CbPhase_Unchecked" Checked="CbPhase_Checked"/>
+                    <TextBlock Margin="30,10,0,0" Text="Vitesse (rpm)"/>
+                    <TextBox x:Name="tbSpeed09" Margin="10,10,0,0" Width="50" LostFocus="TbSpeed_LostFocus"/>
+                    <TextBlock Margin="30,10,0,0" Text="Temps (s)"/>
+                    <TextBox x:Name="tbTime09" Margin="10,10,0,0" Width="50" LostFocus="TbTime_LostFocus"/>
+                    <TextBlock Margin="30,10,0,0">
+                        <Run Text="Pression ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
+                    </TextBlock>
+                    <TextBox x:Name="tbPression09" Margin="10,10,0,0" Width="50" LostFocus="TbPression_LostFocus"/>
+                </WrapPanel>
+            </StackPanel>
+-->
+            <!--
+            <TextBlock x:Name="tbSeqNumber"
+                       Grid.Column="0"
+                       Text="#" 
+                      
+                       FontSize="20"
+                       VerticalAlignment="Center" 
+                       HorizontalAlignment="Center"/>
+            <Button Grid.Column="0"
+                    Content="Supprimer"
+                    Margin="0,80,0,20"
+                    Height="20"
+                    Width="70" Click="Button_Click"/>
+            -->
+            <!--
+                <WrapPanel>
+                    <TextBlock Margin="0,10,0,0" Text="Nom du programme"/>
+                    <TextBox x:Name="tbProgramName" Margin="10,10,0,0" Width="200" LostFocus="TbProgramName_LostFocus"/>
+                </WrapPanel>
+                -->
+        </Grid>
+    </Border>
+</Page>
