@@ -358,45 +358,6 @@
                     </MenuItem.Icon>
                 </MenuItem>
 
-                <!--// Services //-->
-                <MenuItem Header="GESTION UTILISATEUR"
-                          Style="{StaticResource Main_MenuItem_With_Dropdown}">
-                    <MenuItem.Icon>
-                        <Image Source="Resources/img_user_management_en.png"
-                               Stretch="Uniform" />
-                    </MenuItem.Icon>
-
-                    <MenuItem Header="Nouvel utilisateur"
-                              Height="35"
-                              Style="{StaticResource Sub_MenuItem}"
-                              Click = "FxUserNew">
-                        <MenuItem.Icon>
-                            <Image Source="Resources/img_new_en.png"
-                                   Stretch="Uniform" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-
-                    <MenuItem Header="Modifier utilisateur"
-                              Height="35"
-                              Style="{StaticResource Sub_MenuItem}"
-                              Click = "FxUserModify">
-                        <MenuItem.Icon>
-                            <Image Source="Resources/img_modify_en.png"
-                                   Stretch="Uniform" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-
-                    <MenuItem Header="Supprimer utilisateur"
-                              Height="35"
-                              Style="{StaticResource Sub_MenuItem}"
-                              Click = "FxUserDelete">
-                        <MenuItem.Icon>
-                            <Image Source="Resources/img_delete_en.png"
-                                   Stretch="Uniform" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                </MenuItem>
-
                 <!--// BACKUP AND ARCHIVING //-->
                 <MenuItem Header="BACKUP ET ARCHIVAGE"
                           Style="{StaticResource Main_MenuItem_With_Dropdown}">
@@ -424,15 +385,6 @@
                                    Stretch="Uniform" />
                         </MenuItem.Icon>
                     </MenuItem>
-                </MenuItem>
-
-                <!--// PARAMETERS //-->
-                <MenuItem Header="PARAMETRE"
-                          Style="{StaticResource Main_MenuItem}">
-                    <MenuItem.Icon>
-                        <Image Source="Resources/img_parameter_en.png"
-                               Stretch="Uniform" />
-                    </MenuItem.Icon>
                 </MenuItem>
 
                 <!--// CONNEXION //-->

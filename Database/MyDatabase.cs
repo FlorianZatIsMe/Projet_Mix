@@ -750,8 +750,20 @@ namespace Database
                 "(SELECT " + recipeInfo.Columns[recipeInfo.Name].Id +
                 ", MAX(" + recipeInfo.Columns[recipeInfo.Version].Id + ") " +
                 "FROM " + recipeInfo.TabName +
+                (status == RecipeStatus.OBSOLETE ? "" : " WHERE " + statusFilter) +
+                " GROUP BY " + recipeInfo.Columns[recipeInfo.Name].Id + "))" +
+                (status == RecipeStatus.OBSOLETE ? " AND " + statusFilter : "") +
+                " ORDER BY " + recipeInfo.Columns[recipeInfo.Name].Id + ";");
+
+            /*
+            SendCommand("SELECT * FROM " + recipeInfo.TabName +
+                " WHERE ((" + recipeInfo.Columns[recipeInfo.Name].Id + ", " +
+                recipeInfo.Columns[recipeInfo.Version].Id + ") IN " +
+                "(SELECT " + recipeInfo.Columns[recipeInfo.Name].Id +
+                ", MAX(" + recipeInfo.Columns[recipeInfo.Version].Id + ") " +
+                "FROM " + recipeInfo.TabName +
                 " GROUP BY " + recipeInfo.Columns[recipeInfo.Name].Id + ")) AND " +
-                statusFilter + " ORDER BY " + recipeInfo.Columns[recipeInfo.Name].Id + ";");
+                statusFilter + " ORDER BY " + recipeInfo.Columns[recipeInfo.Name].Id + ";");*/
 
             /*
             SendCommand("SELECT " +
@@ -1517,6 +1529,10 @@ namespace Database
 
             int n;
             string whereArg = " WHERE " + GetArg(tableInfo.Columns, " AND ");
+            if (whereArg == " WHERE ")
+            {
+                whereArg = "";
+            }
             SendCommand(@"SELECT MAX(" + column + ") FROM " + tableInfo.TabName + whereArg, tableInfo.Columns);
 
             try

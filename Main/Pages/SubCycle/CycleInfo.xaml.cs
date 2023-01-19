@@ -1,6 +1,6 @@
 ﻿using Alarm_Management;
 using Database;
-using Main.Properties;
+using MixingApplication.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +34,9 @@ namespace Main.Pages.SubCycle
         private readonly Frame frameCycleInfo;
         //private bool isCheckAlarms_onGoing = true;
 
-        private AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+        private AuditTrailInfo ATInfo = new AuditTrailInfo();
+        private readonly AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+        private int firstAlarmId;
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -43,6 +45,7 @@ namespace Main.Pages.SubCycle
             logger.Debug("Start");
 
             seqNumber = -1;
+            firstAlarmId = AlarmManagement.Alarms[AlarmManagement.ActiveAlarms[0].Item1, AlarmManagement.ActiveAlarms[0].Item2].id - 1;
 
             // Initialisation des timers
             checkAlarmsTimer = new System.Timers.Timer
@@ -86,13 +89,42 @@ namespace Main.Pages.SubCycle
             }
         }
 
+        private void ScanConnectTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            int lastAlarmId;
+            Task<object> t;
+            List<AuditTrailInfo> auditTrailInfos = new List<AuditTrailInfo>();
+
+            t = MyDatabase.TaskEnQueue(() => { return 
+                MyDatabase.GetMax(auditTrailInfo, auditTrailInfo.Columns[auditTrailInfo.Id].Id); });
+            lastAlarmId = (int)t.Result;
+
+            if (firstAlarmId != lastAlarmId)
+            {
+                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetAlarms(firstAlarmId + 1, lastAlarmId, true); });
+                auditTrailInfos = (List<AuditTrailInfo>)t.Result;
+                firstAlarmId = lastAlarmId;
+
+                foreach (AuditTrailInfo info in auditTrailInfos)
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        AddRow(info.Columns[info.DateTime].Value + " - " +
+                            info.Columns[info.Description].Value + " - " +
+                            info.Columns[info.ValueAfter].Value);
+                    });
+                }
+            }
+            checkAlarmsTimer.Enabled = true;
+        }
+
         /* checkAlarmsTimer_OnTimedEvent
          * 
          * Description: affiche dans le panneau d'informations tous les évènements d'alarmes (ACTIVE, ACK, INACTIVE et RAZ)
          * 
          * Version: 1.0
-         */
-        private void ScanConnectTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+         
+        private void ScanConnectTimer_OnTimedEvent_old(Object source, System.Timers.ElapsedEventArgs e)
         {
             //logger.Debug("ScanConnectTimer_OnTimedEvent");
             Task<object> t;
@@ -107,20 +139,20 @@ namespace Main.Pages.SubCycle
                     if (!activeAlarms.Contains(AlarmManagement.ActiveAlarms[i]))
                     {
                         // On met dans la variable array, l'enregistrement d'audit trail de l'alarme en question
-                        auditTrailInfo = new AuditTrailInfo();
+                        ATInfo = new AuditTrailInfo();
                         // A CORRIGER : IF RESULT IS FALSE
                         t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(AuditTrailInfo), AlarmManagement.Alarms[AlarmManagement.ActiveAlarms[i].Item1, AlarmManagement.ActiveAlarms[i].Item2].id.ToString()); });
-                        auditTrailInfo = (AuditTrailInfo)t.Result;
+                        ATInfo = (AuditTrailInfo)t.Result;
                         //auditTrailInfo = (AuditTrailInfo)MyDatabase.GetOneRow(typeof(AuditTrailInfo), AlarmManagement.Alarms[AlarmManagement.ActiveAlarms[i].Item1, AlarmManagement.ActiveAlarms[i].Item2].id.ToString());
 
                         // S'il n'y a pas eu d'erreur, on affiche les infos de l'alarme
-                        if (auditTrailInfo.Columns.Count() != 0)
+                        if (ATInfo.Columns.Count() != 0)
                         {
                             this.Dispatcher.Invoke(() =>
                             {
-                                AddRow(auditTrailInfo.Columns[auditTrailInfo.DateTime].Value + " - " +
-                                    auditTrailInfo.Columns[auditTrailInfo.Description].Value + " - " +
-                                    auditTrailInfo.Columns[auditTrailInfo.ValueAfter].Value);
+                                AddRow(ATInfo.Columns[ATInfo.DateTime].Value + " - " +
+                                    ATInfo.Columns[ATInfo.Description].Value + " - " +
+                                    ATInfo.Columns[ATInfo.ValueAfter].Value);
                             });
                         }
                         else
@@ -143,20 +175,20 @@ namespace Main.Pages.SubCycle
                 for (int i = 0; i < AlarmManagement.RAZalarms.Count; i++)
                 {
                     // On met dans la variable array l'enregistrement d'audit trail de l'alarme
-                    auditTrailInfo = new AuditTrailInfo();
+                    ATInfo = new AuditTrailInfo();
                     // A CORRIGER : IF RESULT IS FALSE
                     t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(AuditTrailInfo), AlarmManagement.RAZalarms[i].ToString()); });
-                    auditTrailInfo = (AuditTrailInfo)t.Result;
+                    ATInfo = (AuditTrailInfo)t.Result;
                     //auditTrailInfo = (AuditTrailInfo)MyDatabase.GetOneRow(typeof(AuditTrailInfo), AlarmManagement.RAZalarms[i].ToString());
 
                     // S'il n'y a pas eu d'erreur, on affiche les infos de l'alarme
-                    if (auditTrailInfo.Columns.Count() != 0)
+                    if (ATInfo.Columns.Count() != 0)
                     {
                         this.Dispatcher.Invoke(() =>
                         {
-                            AddRow(auditTrailInfo.Columns[auditTrailInfo.DateTime].Value + " - " +
-                                auditTrailInfo.Columns[auditTrailInfo.Description].Value + " - " +
-                                auditTrailInfo.Columns[auditTrailInfo.ValueAfter].Value);
+                            AddRow(ATInfo.Columns[ATInfo.DateTime].Value + " - " +
+                                ATInfo.Columns[ATInfo.Description].Value + " - " +
+                                ATInfo.Columns[ATInfo.ValueAfter].Value);
                         });
                     }
                     else
@@ -168,14 +200,14 @@ namespace Main.Pages.SubCycle
                 AlarmManagement.RAZalarms.Clear();
             }
             checkAlarmsTimer.Enabled = true;
-        }
-        public void NewInfo(ISeqTabInfo cycleSeqInfo)
+        }*/
+        public void NewInfo(ISeqTabInfo cycleSeqInfo, decimal finalWeight = -1)
         {
             logger.Debug("NewInfo(ISeqInfo cycleSeqInfo)");
 
             if (cycleSeqInfo.GetType().Equals(typeof(RecipeWeightInfo)))
             {
-                NewInfo(cycleSeqInfo as RecipeWeightInfo);
+                NewInfo(cycleSeqInfo as RecipeWeightInfo, finalWeight);
             }
             else if (cycleSeqInfo.GetType().Equals(typeof(RecipeSpeedMixerInfo)))
             {
@@ -187,9 +219,15 @@ namespace Main.Pages.SubCycle
                 General.ShowMessageBox(Settings.Default.CycleInfo_Error03);
             }
         }
-        public void NewInfo(RecipeWeightInfo recipeWeightInfo)
+        public void NewInfo(RecipeWeightInfo recipeWeightInfo, decimal finalWeight)
         {
             logger.Debug("NewInfo(RecipeWeightInfo recipeWeightInfo)");
+
+            if (finalWeight == -1)
+            {
+                logger.Error("Pas bien");
+                General.ShowMessageBox("Pas bien");
+            }
 
             CycleWeightInfo cycleWeightInfo = new CycleWeightInfo();
 
@@ -210,7 +248,7 @@ namespace Main.Pages.SubCycle
                 Foreground = Brushes.Wheat,
                 Margin = new Thickness(20, 0, 0, 0),
                 Text = cycleWeightInfo.Columns[cycleWeightInfo.Min].DisplayName + ": " + 
-                Math.Round(decimal.Parse(recipeWeightInfo.Columns[recipeWeightInfo.Min].Value), 
+                Math.Round(cycleWeightInfo.GetMin(recipeWeightInfo, finalWeight), 
                 int.Parse(recipeWeightInfo.Columns[recipeWeightInfo.DecimalNumber].Value))
                 .ToString("N" + recipeWeightInfo.Columns[recipeWeightInfo.DecimalNumber].Value).ToString()
             };
@@ -220,7 +258,7 @@ namespace Main.Pages.SubCycle
                 Foreground = Brushes.Wheat,
                 Margin = new Thickness(20, 0, 0, 0),
                 Text = cycleWeightInfo.Columns[cycleWeightInfo.Max].DisplayName + ": " +
-                Math.Round(decimal.Parse(recipeWeightInfo.Columns[recipeWeightInfo.Max].Value),
+                Math.Round(cycleWeightInfo.GetMax(recipeWeightInfo, finalWeight),
                 int.Parse(recipeWeightInfo.Columns[recipeWeightInfo.DecimalNumber].Value))
                 .ToString("N" + recipeWeightInfo.Columns[recipeWeightInfo.DecimalNumber].Value).ToString()
             };

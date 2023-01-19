@@ -27,7 +27,7 @@ using NLog;
 using NLog.Common;
 using System.Threading;
 using Driver_ColdTrap;
-using Main.Properties;
+using MixingApplication.Properties;
 
 namespace Main
 {
@@ -66,19 +66,38 @@ namespace Main
             LogManager.ReconfigExistingLoggers(); // Explicit refresh of Layouts and updates active Logger-objects
 
             /*
-
+            MessageBox.Show(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
             General.ShowMessageBox("Fini je crois");
             Environment.Exit(1);
             //*/
             General.Initialize(new IniInfo() { Window = this });
+
+            if (CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator != ".")
+            {
+                CultureInfo culture = new CultureInfo("fr-CH");
+                NumberFormatInfo numberformat = culture.NumberFormat;
+                numberformat.NumberDecimalSeparator = ".";
+                Thread.CurrentThread.CurrentCulture = culture;
+                Thread.CurrentThread.CurrentUICulture = culture;
+            }
 
             InitializeComponent();
 
             AlarmManagement.ActiveAlarmEvent += ActiveAlarmEvent;
             AlarmManagement.InactiveAlarmEvent += InactiveAlarmEvent;
 
-            UpdateUser(username: UserPrincipal.Current.DisplayName.ToLower(),
-                role: UserManagement.UpdateAccessTable(UserPrincipal.Current.DisplayName));
+            try
+            {
+                UpdateUser(username: UserPrincipal.Current.DisplayName.ToLower(),
+                    role: UserManagement.UpdateAccessTable(UserPrincipal.Current.DisplayName));
+            }
+            catch (Exception)
+            {
+                logger.Error("Problème de connexion avec l'active directory");
+                UpdateUser(username: "none",
+                    role: "none");
+            }
+
             labelSoftwareName.Text = General.application_name + " version " + General.application_version;
 
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
@@ -313,7 +332,7 @@ namespace Main
         private void FxUserLogInOut(object sender, RoutedEventArgs e)
         {
             LogIn w = new LogIn(this);
-            w.Show();
+            w.ShowDialog();
         }
         private void FxUserNew(object sender, RoutedEventArgs e)
         {

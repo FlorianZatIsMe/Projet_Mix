@@ -1,7 +1,7 @@
 ﻿using Alarm_Management;
 using Database;
 using Main.Pages;
-using Main.Properties;
+using MixingApplication.Properties;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using System;

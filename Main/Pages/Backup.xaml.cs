@@ -1,6 +1,6 @@
 ﻿using Alarm_Management;
 using Database;
-using Main.Properties;
+using MixingApplication.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -206,6 +206,7 @@ namespace Main.Pages
                     progressBar.Value = (double)(100 * General.count / nLines);
                     await Task.Delay(Settings.Default.ArchBack_progressBar_RefreshDelay);
                 }
+                AlarmManagement.UpdateAlarms();
             }
             else
             {

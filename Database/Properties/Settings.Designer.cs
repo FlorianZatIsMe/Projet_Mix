@@ -294,8 +294,7 @@ namespace Database.Properties {
   <string>unit</string>
   <string>decimal_number</string>
   <string>setpoint</string>
-  <string>min</string>
-  <string>max</string>
+  <string>criteria</string>
 </ArrayOfString>")]
         public global::System.Collections.Specialized.StringCollection RecipeWeight_ColIds {
             get {
@@ -417,12 +416,12 @@ namespace Database.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("9")]
-        public int RecipeWeight_ColN_min {
+        public int RecipeWeight_ColN_criteria {
             get {
-                return ((int)(this["RecipeWeight_ColN_min"]));
+                return ((int)(this["RecipeWeight_ColN_criteria"]));
             }
             set {
-                this["RecipeWeight_ColN_min"] = value;
+                this["RecipeWeight_ColN_criteria"] = value;
             }
         }
         
@@ -2273,6 +2272,18 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int Disconnect_WaitTime {
+            get {
+                return ((int)(this["Disconnect_WaitTime"]));
+            }
+            set {
+                this["Disconnect_WaitTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
 <ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
   <Server>localhost</Server>
@@ -2286,18 +2297,6 @@ namespace Database.Properties {
             }
             set {
                 this["ConnectionInfo"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("100")]
-        public int Disconnect_WaitTime {
-            get {
-                return ((int)(this["Disconnect_WaitTime"]));
-            }
-            set {
-                this["Disconnect_WaitTime"] = value;
             }
         }
     }

@@ -7,7 +7,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="600"
       Title="CycleInfo"
-      Background="Gray">
+      Background="#524E4F">
 
     <Grid>
         <StackPanel x:Name="StackMain" Margin="20">

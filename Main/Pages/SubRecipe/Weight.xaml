@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:p="clr-namespace:Main.Properties"
+      xmlns:p="clr-namespace:MixingApplication.Properties"
       xmlns:local="clr-namespace:Main.Pages.SubRecipe"
       mc:Ignorable="d" 
       d:DesignHeight="350" d:DesignWidth="1400"
@@ -206,25 +206,12 @@
                                                Foreground="{StaticResource MyFont1_Foreground}"
                                                FontFamily="{StaticResource MyFont1}"
                                                FontSize="{StaticResource FontSize2}"
-                                               Text="Minimum"
+                                               Text="Marge"
                                                VerticalAlignment="Center"/>
-                                    <TextBox x:Name="tbMin" 
+                                    <TextBox x:Name="tbRange" 
                                              Margin="10,0,0,0" 
                                              Width="100" 
-                                             LostFocus="TbMin_LostFocus"
-                                             Style="{DynamicResource TextBoxStyle1}"/>
-                                </WrapPanel>
-                                <WrapPanel Margin="0,10,0,0">
-                                    <TextBlock Margin="0,0,0,0" 
-                                               Foreground="{StaticResource MyFont1_Foreground}"
-                                               FontFamily="{StaticResource MyFont1}"
-                                               FontSize="{StaticResource FontSize2}"
-                                               Text="Maximum"
-                                               VerticalAlignment="Center"/>
-                                    <TextBox x:Name="tbMax" 
-                                             Margin="10,0,0,0" 
-                                             Width="100" 
-                                             LostFocus="TbMax_LostFocus"
+                                             LostFocus="TbRange_LostFocus"
                                              Style="{DynamicResource TextBoxStyle1}"/>
                                 </WrapPanel>
                             </StackPanel>

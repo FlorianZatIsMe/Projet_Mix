@@ -187,22 +187,21 @@ namespace Alarm_Management
             AlarmStatus statusBefore = Alarms[id1, id2].Status;
             AlarmStatus statusAfter = AlarmStatus.ACTIVE;
 
-
+            UpdateAlarm(id1, id2, statusBefore, statusAfter);
+            /*
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
             auditTrailInfo.Columns[auditTrailInfo.Username].Value = info.AuditTrail_SystemUsername;
             auditTrailInfo.Columns[auditTrailInfo.EventType].Value = GetAlarmType(Alarms[id1, id2].Type);
             auditTrailInfo.Columns[auditTrailInfo.Description].Value = GetAlarmDescription(id1, id2);
             auditTrailInfo.Columns[auditTrailInfo.ValueBefore].Value = statusBefore.ToString();
             auditTrailInfo.Columns[auditTrailInfo.ValueAfter].Value = statusAfter.ToString();
-
             MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTrailInfo); });
-            //MyDatabase.InsertRow(auditTrailInfo, mutexID);
-
 
             Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(auditTrailInfo.TabName, auditTrailInfo.Columns[auditTrailInfo.Id].Id); });
             Alarms[id1, id2].id = (int)t.Result;
-            //Alarms[id1, id2].id = MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id, mutex: mutexID);
             Alarms[id1, id2].Status = statusAfter;
+            */
+
             ActiveAlarms.Add(new Tuple<int, int>(id1, id2));
 
             if (statusBefore == AlarmStatus.INACTIVE)
@@ -294,6 +293,8 @@ namespace Alarm_Management
 
             if (statusAfter != AlarmStatus.None)
             {
+                UpdateAlarm(id1, id2, statusBefore, statusAfter);
+                /*
                 AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
                 auditTrailInfo.Columns[auditTrailInfo.Username].Value = info.AuditTrail_SystemUsername;
                 auditTrailInfo.Columns[auditTrailInfo.EventType].Value = GetAlarmType(Alarms[id1, id2].Type);
@@ -301,13 +302,11 @@ namespace Alarm_Management
                 auditTrailInfo.Columns[auditTrailInfo.ValueBefore].Value = statusBefore.ToString();
                 auditTrailInfo.Columns[auditTrailInfo.ValueAfter].Value = statusAfter.ToString();
                 MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTrailInfo); });
-                //MyDatabase.InsertRow(auditTrailInfo, mutexID);
-
 
                 Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(auditTrailInfo.TabName, auditTrailInfo.Columns[auditTrailInfo.Id].Id); });
                 Alarms[id1, id2].id = (int)t.Result;
-                //Alarms[id1, id2].id = MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id, mutex: mutexID);
                 Alarms[id1, id2].Status = statusAfter;
+                */
 
                 if (statusAfter == AlarmStatus.INACTIVE)
                 {
@@ -355,14 +354,14 @@ namespace Alarm_Management
             AlarmStatus statusAfter = (statusBefore == AlarmStatus.ACTIVE) ? AlarmStatus.ACK : (statusBefore == AlarmStatus.INACTIVE ? AlarmStatus.RAZACK : statusBefore);
 
             if (statusBefore == statusAfter) {
-                logger.Error(Settings.Default.Error06);
-                ShowMessageBox(Settings.Default.Error06);
                 return;
             }
 
             //mutexID = MyDatabase.Connect(false);
             mutexID = -1;
 
+            UpdateAlarm(id1, id2, statusBefore, statusAfter);
+            /*
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
             auditTrailInfo.Columns[auditTrailInfo.Username].Value = info.AuditTrail_SystemUsername;
             auditTrailInfo.Columns[auditTrailInfo.EventType].Value = GetAlarmType(Alarms[id1, id2].Type);
@@ -370,12 +369,11 @@ namespace Alarm_Management
             auditTrailInfo.Columns[auditTrailInfo.ValueBefore].Value = statusBefore.ToString();
             auditTrailInfo.Columns[auditTrailInfo.ValueAfter].Value = statusAfter.ToString();
             MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTrailInfo); });
-            //MyDatabase.InsertRow(auditTrailInfo, mutexID);
 
             Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(auditTrailInfo.TabName, auditTrailInfo.Columns[auditTrailInfo.Id].Id); });
             Alarms[id1, id2].id = (int)t.Result;
-            //Alarms[id1, id2].id = MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id, mutex: mutexID);
             Alarms[id1, id2].Status = statusAfter;
+            */
 
             if (statusAfter == AlarmStatus.ACK)
             {
@@ -393,8 +391,35 @@ namespace Alarm_Management
 
             ActiveAlarms.RemoveAt(n);
             if (ActiveAlarms.Count == 0) InactiveAlarmEvent();
+        }
+        private static void UpdateAlarm(int id1, int id2, AlarmStatus statusBefore, AlarmStatus statusAfter)
+        {
+            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+            auditTrailInfo.Columns[auditTrailInfo.Username].Value = info.AuditTrail_SystemUsername;
+            auditTrailInfo.Columns[auditTrailInfo.EventType].Value = GetAlarmType(Alarms[id1, id2].Type);
+            auditTrailInfo.Columns[auditTrailInfo.Description].Value = GetAlarmDescription(id1, id2);
+            auditTrailInfo.Columns[auditTrailInfo.ValueBefore].Value = statusBefore.ToString();
+            auditTrailInfo.Columns[auditTrailInfo.ValueAfter].Value = statusAfter.ToString();
 
-            //MyDatabase.Disconnect(mutex: mutexID);
+            MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTrailInfo); });
+
+            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(auditTrailInfo.TabName, auditTrailInfo.Columns[auditTrailInfo.Id].Id); });
+            Alarms[id1, id2].id = (int)t.Result;
+            Alarms[id1, id2].Status = statusAfter;
+        }
+        public static void UpdateAlarms()
+        {
+            List<Tuple<int, int>> listId = new List<Tuple<int, int>>();
+            foreach (Tuple<int, int> id in AlarmManagement.ActiveAlarms)
+            {
+                listId.Add(id);
+            }
+
+            foreach (Tuple<int, int> id in listId)
+            {
+                UpdateAlarm(id.Item1, id.Item2, AlarmStatus.RAZ, Alarms[id.Item1, id.Item2].Status);
+                ShowMessageBox(GetAlarmDescription(id.Item1, id.Item2));
+            }
         }
         public static string GetAlarmType(AlarmType type)
         {

@@ -2,7 +2,7 @@
 using Database;
 using Main.Pages;
 using Main.Pages.SubCycle;
-using Main.Properties;
+using MixingApplication.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -116,36 +116,25 @@ namespace Main
                 try
                 {
                     textBox.Text = Math.Round(decimal.Parse(textBox.Text), parameter).ToString("N" + parameter.ToString());
+                    result = false;
 
                     if (min != -1 && max != -1 && (decimal.Parse(textBox.Text) < min || decimal.Parse(textBox.Text) > max))
                     {
-                        //ShowMessageBox(Settings.Default.General_Info_FieldOutOfRange + " [" + min.ToString() + " ; " + max.ToString() + "]");
-
-                        if (decimal.Parse(textBox.Text) < min)
-                        {
-                            textBox.Text = min.ToString();
-                        }
-                        else if (decimal.Parse(textBox.Text) > max)
-                        {
-                            textBox.Text = max.ToString();
-                        }
-                        else
-                        {
-                            logger.Error("ça n'est pas possible OK");
-                            ShowMessageBox("ça n'est pas possible OK");
-                            result = false;
-                            goto End;
-                        }
+                        textBox.Text = "";
                     }
                     else if (min != -1 && decimal.Parse(textBox.Text) < min)
                     {
                         //ShowMessageBox(Settings.Default.General_Info_FieldBelowMin + min.ToString());
-                        textBox.Text = min.ToString();
+                        textBox.Text = "";
                     }
                     else if (max != -1 && decimal.Parse(textBox.Text) > max)
                     {
                         //ShowMessageBox(Settings.Default.General_Info_FieldAboveMax + max.ToString());
-                        textBox.Text = max.ToString();
+                        textBox.Text = "";
+                    }
+                    else
+                    {
+                        result = true;
                     }
                 }
                 catch (Exception)
@@ -322,7 +311,7 @@ namespace Main
 
                 if (recipeSeqInfo.Columns.Count() != 0 && recipeSeqInfo.Columns[recipeSeqInfo.Id].Value == nextSeqID)
                 {
-                    CurrentCycleInfo.NewInfo(recipeSeqInfo);
+                    CurrentCycleInfo.NewInfo(recipeSeqInfo, decimal.Parse(finalWeight));
 
                     nextSeqType = recipeSeqInfo.Columns[recipeSeqInfo.NextSeqType].Value;
                     nextSeqID = recipeSeqInfo.Columns[recipeSeqInfo.NextSeqId].Value;

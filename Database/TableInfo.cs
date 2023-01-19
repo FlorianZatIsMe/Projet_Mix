@@ -368,7 +368,7 @@ namespace Database
             Unit = Settings.Default.RecipeWeight_ColN_unit;
             DecimalNumber = Settings.Default.RecipeWeight_ColN_decimalNumber;
             Setpoint = Settings.Default.RecipeWeight_ColN_setpoint;
-            Min = Settings.Default.RecipeWeight_ColN_min;
+            Criteria = Settings.Default.RecipeWeight_ColN_criteria;
             Max = Settings.Default.RecipeWeight_ColN_max;
         }
 
@@ -408,7 +408,7 @@ namespace Database
         public int Setpoint { get; }
 
         /// <value>Index of the min column. This column contains the minimum acceptable weight by unit of final product</value>
-        public int Min { get; }
+        public int Criteria { get; }
 
         /// <value>Index of the max column. This column contains the maximum acceptable weight by unit of final product</value>
         public int Max { get; }
@@ -835,7 +835,7 @@ namespace Database
             }
 
             // Declaration of a weight recipe variable based on the recipe parameter
-            RecipeWeightInfo recipeWInfo = recipe as RecipeWeightInfo;
+            RecipeWeightInfo recipeWeighInfo = recipe as RecipeWeightInfo;
             // Declaration of a cycle variable containing the values of the row whose id is the id parameter
             CycleTableInfo cycleTableInfo = (CycleTableInfo)MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(CycleTableInfo), idCycle.ToString()); }).Result;
             // If the cycle variable is null, an error message is logged and the method is stopped
@@ -851,9 +851,13 @@ namespace Database
             {
                 // Calculation of the weight conversion ratio from the unit of the final weight and recipe values (setpoint, min and max). It allows the conversion of the final weight (e.g. in g) and recipe values (e.g. in mg/g)
                 // Note: the setpoint, min and max are calculated as follow: (recipe value) x (final weight) x (conversion ratio)
-                convRatio = (cycleTableInfo.Columns[cycleTableInfo.FinalWeightUnit].Value == MyDatabase.info.CycleFinalWeight_g_Unit ? (decimal)MyDatabase.info.CycleFinalWeight_g_Conversion : 0) *
-                    (recipeWInfo.Columns[recipeWInfo.Unit].Value == MyDatabase.info.RecipeWeight_gG_Unit ? (decimal)MyDatabase.info.RecipeWeight_gG_Conversion :
-                    recipeWInfo.Columns[recipeWInfo.Unit].Value == MyDatabase.info.RecipeWeight_mgG_Unit ? (decimal)MyDatabase.info.RecipeWeight_mgG_Conversion : 0);
+                //convRatio = (cycleTableInfo.Columns[cycleTableInfo.FinalWeightUnit].Value == MyDatabase.info.CycleFinalWeight_g_Unit ? (decimal)MyDatabase.info.CycleFinalWeight_g_Conversion : 0) *
+                    //(recipeWInfo.Columns[recipeWInfo.Unit].Value == MyDatabase.info.RecipeWeight_gG_Unit ? (decimal)MyDatabase.info.RecipeWeight_gG_Conversion :
+                    //recipeWInfo.Columns[recipeWInfo.Unit].Value == MyDatabase.info.RecipeWeight_mgG_Unit ? (decimal)MyDatabase.info.RecipeWeight_mgG_Conversion : 0);
+
+                convRatio = (decimal)0.01 * (recipeWeighInfo.Columns[recipeWeighInfo.Unit].Value == MyDatabase.info.RecipeWeight_gG_Unit ? (decimal)MyDatabase.info.RecipeWeight_gG_Conversion :
+                    recipeWeighInfo.Columns[recipeWeighInfo.Unit].Value == MyDatabase.info.RecipeWeight_mgG_Unit ? (decimal)MyDatabase.info.RecipeWeight_mgG_Conversion : 0);
+
             }
             // If the code above generated an error then an error message is displayed / logged and the method is stopped
             catch (Exception ex)
@@ -876,13 +880,18 @@ namespace Database
             // The program tries...
             try
             {
+                decimal setpoint = decimal.Parse(recipeWeighInfo.Columns[recipeWeighInfo.Setpoint].Value);
+                decimal criteria = decimal.Parse(recipeWeighInfo.Columns[recipeWeighInfo.Criteria].Value);
+                decimal finalWeight = decimal.Parse(cycleTableInfo.Columns[cycleTableInfo.FinalWeight].Value);
+                string decimalNumber = recipeWeighInfo.Columns[recipeWeighInfo.DecimalNumber].Value;
+
                 // Set of the values of the columns product, setpoint, min, max, unit and decimal number on the current weight cycle object from the recipe parameter
-                Columns[Product].Value = recipeWInfo.Columns[recipeWInfo.Name].Value;
-                Columns[Setpoint].Value = (convRatio * decimal.Parse(recipeWInfo.Columns[recipeWInfo.Setpoint].Value) * decimal.Parse(cycleTableInfo.Columns[cycleTableInfo.FinalWeight].Value)).ToString("N" + recipeWInfo.Columns[recipeWInfo.DecimalNumber].Value);
-                Columns[Min].Value = (convRatio * decimal.Parse(recipeWInfo.Columns[recipeWInfo.Min].Value) * decimal.Parse(cycleTableInfo.Columns[cycleTableInfo.FinalWeight].Value)).ToString("N" + recipeWInfo.Columns[recipeWInfo.DecimalNumber].Value);
-                Columns[Max].Value = (convRatio * decimal.Parse(recipeWInfo.Columns[recipeWInfo.Max].Value) * decimal.Parse(cycleTableInfo.Columns[cycleTableInfo.FinalWeight].Value)).ToString("N" + recipeWInfo.Columns[recipeWInfo.DecimalNumber].Value);
+                Columns[Product].Value = recipeWeighInfo.Columns[recipeWeighInfo.Name].Value;
+                Columns[Setpoint].Value = (convRatio * setpoint * finalWeight).ToString("N" + decimalNumber);
+                Columns[Min].Value = (convRatio * (setpoint - criteria) * finalWeight).ToString("N" + decimalNumber);
+                Columns[Max].Value = (convRatio * (setpoint + criteria) * finalWeight).ToString("N" + decimalNumber);
                 Columns[Unit].Value = cycleTableInfo.Columns[cycleTableInfo.FinalWeightUnit].Value;
-                Columns[DecimalNumber].Value = recipeWInfo.Columns[recipeWInfo.DecimalNumber].Value;
+                Columns[DecimalNumber].Value = recipeWeighInfo.Columns[recipeWeighInfo.DecimalNumber].Value;
             }
             // If the code above generated an error then an error message is displayed / logged
             catch (Exception ex)
@@ -890,6 +899,31 @@ namespace Database
                 logger.Error(ex.Message);
                 MyDatabase.ShowMessageBox(ex.Message);
             }
+        }
+
+        private decimal GetConvRatio(RecipeWeightInfo recipeWeighInfo)
+        {
+            return 1;
+            //return (decimal)0.01 * (recipeWeighInfo.Columns[recipeWeighInfo.Unit].Value == MyDatabase.info.RecipeWeight_gG_Unit ? (decimal)MyDatabase.info.RecipeWeight_gG_Conversion :
+            //        recipeWeighInfo.Columns[recipeWeighInfo.Unit].Value == MyDatabase.info.RecipeWeight_mgG_Unit ? (decimal)MyDatabase.info.RecipeWeight_mgG_Conversion : 0); ;
+        }
+
+        public decimal GetMin(RecipeWeightInfo recipeWeighInfo, decimal finalWeight)
+        {
+            decimal convRatio = GetConvRatio(recipeWeighInfo);
+            decimal setpoint = decimal.Parse(recipeWeighInfo.Columns[recipeWeighInfo.Setpoint].Value);
+            decimal criteria = decimal.Parse(recipeWeighInfo.Columns[recipeWeighInfo.Criteria].Value);
+
+            return convRatio * (setpoint - criteria) * finalWeight;
+        }
+
+        public decimal GetMax(RecipeWeightInfo recipeWeighInfo, decimal finalWeight)
+        {
+            decimal convRatio = GetConvRatio(recipeWeighInfo);
+            decimal setpoint = decimal.Parse(recipeWeighInfo.Columns[recipeWeighInfo.Setpoint].Value);
+            decimal criteria = decimal.Parse(recipeWeighInfo.Columns[recipeWeighInfo.Criteria].Value);
+
+            return convRatio * (setpoint + criteria) * finalWeight;
         }
     }
     /// <summary>

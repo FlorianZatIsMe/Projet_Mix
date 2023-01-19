@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 using System.Globalization;
 using static Main.Pages.Recipe;
 using Database;
-using Main.Properties;
+using MixingApplication.Properties;
 using System.Configuration;
 using System.Windows.Controls.Primitives;
 
@@ -545,7 +545,7 @@ namespace Main.Pages.SubRecipe
             {
                 x += (bool)toggleButtons[i].IsChecked ? 0 : 3; // Pour chaque checkbox décoché, on ajoutera 3 au score final
             }
-            General.ShowMessageBox(n.ToString() + " + " + x.ToString() + " = " + (n+x).ToString() + " / " + FormatControl.Length.ToString());
+            //General.ShowMessageBox(n.ToString() + " + " + x.ToString() + " = " + (n+x).ToString() + " / " + FormatControl.Length.ToString());
             return (n + x) == FormatControl.Length;
         }
     }

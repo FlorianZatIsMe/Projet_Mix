@@ -1,5 +1,5 @@
 ﻿using Database;
-using Main.Properties;
+using MixingApplication.Properties;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -100,6 +100,7 @@ namespace Main.Pages
     public partial class Recipe : Page
     {
         private readonly RecipeWeightInfo recipeWeightInfo = new RecipeWeightInfo();
+        private readonly RecipeInfo recipeInfo = new RecipeInfo();
         private int nRow;
         private readonly StringCollection status = Settings.Default.Recipe_Status_DescList;
         private bool isFrameLoaded;
@@ -598,7 +599,6 @@ namespace Main.Pages
             logger.Debug("ButtonModify_Click");
 
             int currentIndex = cbxPgmToModify.SelectedIndex;
-            RecipeInfo recipeInfo = new RecipeInfo();
             Task<object> t;
 
             //MyDatabase.Connect();
@@ -618,12 +618,12 @@ namespace Main.Pages
                 {
                     // Création d'une nouvelle recette, l'ancienne version sera obsolète
                     if (Create_NewRecipe(ProgramNames[currentIndex], int.Parse(labelVersion.Text) + 1, RecipeStatus.DRAFT, false))
-                    {
+                    {/*
                         recipeInfo.Columns[recipeInfo.Status].Value = MyDatabase.GetRecipeStatus(RecipeStatus.OBSOLETE).ToString();
                         //recipeInfo.columns[recipeInfo.status].value = MyDatabase.GetRecipeStatus(RecipeStatus.OBSOLETE).ToString();
 
                         // A CORRIGER : IF RESULT IS FALSE
-                        t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(recipeInfo, ProgramIDs[currentIndex]); });
+                        t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(recipeInfo, ProgramIDs[currentIndex]); });*/
                         //MyDatabase.Update_Row(recipeInfo, ProgramIDs[currentIndex]);
 
                         // A CORRIGER : IF RESULT IS FALSE
@@ -646,13 +646,31 @@ namespace Main.Pages
                     if (Create_NewRecipe(ProgramNames[currentIndex], int.Parse(labelVersion.Text), RecipeStatus.PROD, false))
                     {
                         Delete_Recipe(ProgramIDs[currentIndex]);
-                        logger.Error("HERE");
-                        General.ShowMessageBox("This is not happening");
 
                         // A CORRIGER : IF RESULT IS FALSE
                         t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(recipeInfo.TabName, recipeInfo.Columns[recipeInfo.Id].Id); });
                         ProgramIDs[currentIndex] = ((int)t.Result).ToString();
                         //ProgramIDs[currentIndex] = MyDatabase.GetMax(recipeInfo.name, recipeInfo.columns[recipeInfo.id].id).ToString();
+
+                        // Get the new recipe
+                        t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeInfo), ProgramIDs[currentIndex].ToString()); });
+                        RecipeInfo oldRecipe = (RecipeInfo)t.Result;
+
+                        // Get the previous version of the recipe (Create new recipe and set recipe name and version)
+                        string name = oldRecipe.Columns[oldRecipe.Name].Value;
+                        int version = int.Parse(oldRecipe.Columns[oldRecipe.Version].Value) - 1;
+                        oldRecipe = new RecipeInfo();
+                        oldRecipe.Columns[oldRecipe.Name].Value = name;
+                        oldRecipe.Columns[oldRecipe.Version].Value = version.ToString(); 
+                        t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(table: oldRecipe); });
+                        oldRecipe = (RecipeInfo)t.Result;
+
+                        // Update the status of the previous version of the recipe to Obsolete
+                        string id = oldRecipe.Columns[oldRecipe.Id].Value;
+                        oldRecipe = new RecipeInfo();
+                        oldRecipe.Columns[recipeInfo.Status].Value = MyDatabase.GetRecipeStatus(RecipeStatus.OBSOLETE).ToString();
+                        // A CORRIGER : IF RESULT IS FALSE
+                        t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(oldRecipe, id); });
 
                         labelStatus.Text = status[MyDatabase.GetRecipeStatus(RecipeStatus.PROD)];
                     }
@@ -685,7 +703,9 @@ namespace Main.Pages
             int currentIndex = cbxPgmToActDelete.SelectedIndex;
             RecipeInfo recipeInfo;
             RecipeInfo recipeToUpdate;
+            string recipeId = ProgramIDs[currentIndex];
             Task<object> t;
+
 
             //MyDatabase.Connect();
             /*
@@ -697,7 +717,7 @@ namespace Main.Pages
             }*/
 
             // A CORRIGER : IF RESULT IS FALSE
-            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeInfo), ProgramIDs[currentIndex]); });
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeInfo), recipeId); });
             recipeInfo = (RecipeInfo)t.Result;
             //recipeInfo = (RecipeInfo)MyDatabase.GetOneRow(typeof(RecipeInfo), ProgramIDs[currentIndex]);
 
@@ -712,7 +732,7 @@ namespace Main.Pages
             if ((bool)rbDelete.IsChecked)
             {
                 //if (recipeInfo.columns[recipeInfo.status].value == MyDatabase.GetRecipeStatus(RecipeStatus.PROD).ToString())
-                if (recipeInfo.Columns[recipeInfo.Status].Value == ((int)MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeInfo), ProgramIDs[currentIndex]); }).Result).ToString())
+                if (recipeInfo.Columns[recipeInfo.Status].Value == MyDatabase.GetRecipeStatus(RecipeStatus.PROD).ToString())
                 {
                     if (General.ShowMessageBox(Settings.Default.Recipe_Request_DelProdRecipe1 + 
                         recipeInfo.Columns[recipeInfo.Name].DisplayName + " " + recipeInfo.Columns[recipeInfo.Name].Value + " " + 
@@ -724,7 +744,7 @@ namespace Main.Pages
                         recipeToUpdate.Columns[recipeToUpdate.Status].Value = MyDatabase.GetRecipeStatus(RecipeStatus.OBSOLETE).ToString();
 
                         // A CORRIGER : IF RESULT IS FALSE
-                        t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(recipeToUpdate, ProgramIDs[currentIndex]); });
+                        t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(recipeToUpdate, recipeId); });
                         //MyDatabase.Update_Row(recipeToUpdate, ProgramIDs[currentIndex]);
 
                         ProgramIDs.RemoveAt(currentIndex);
@@ -742,7 +762,7 @@ namespace Main.Pages
                         Settings.Default.Recipe_Request_DelDraftRecipe2, Settings.Default.General_Request_ConfirmationTitle, 
                         MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
-                        Delete_Recipe(ProgramIDs[currentIndex]);
+                        Delete_Recipe(recipeId);
 
                         if (int.Parse(recipeInfo.Columns[recipeInfo.Version].Value) > 1)
                         {
@@ -752,13 +772,15 @@ namespace Main.Pages
                             // A CORRIGER : IF RESULT IS FALSE
                             t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(recipe, recipe.Columns[recipe.Id].Id); });
                             ProgramIDs[currentIndex] = ((int)t.Result).ToString();
+                            recipeId = ProgramIDs[currentIndex];
                             //ProgramIDs[currentIndex] = MyDatabase.GetMax(recipe, recipe.columns[recipe.id].id).ToString();
-
+                            /*
                             recipeToUpdate = new RecipeInfo();
                             recipeToUpdate.Columns[recipeToUpdate.Status].Value = MyDatabase.GetRecipeStatus(RecipeStatus.PROD).ToString();
 
                             // A CORRIGER : IF RESULT IS FALSE
-                            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(recipeToUpdate, ProgramIDs[currentIndex]); });
+                            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(recipeToUpdate, recipeId); });
+                            */
                             //MyDatabase.Update_Row(recipeToUpdate, ProgramIDs[currentIndex]);
                         }
                         else if (int.Parse(recipeInfo.Columns[recipeInfo.Version].Value) == 1)
@@ -794,7 +816,7 @@ namespace Main.Pages
                     recipeToUpdate.Columns[recipeToUpdate.Status].Value = MyDatabase.GetRecipeStatus(RecipeStatus.PROD).ToString();
 
                     // A CORRIGER : IF RESULT IS FALSE
-                    t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(recipeToUpdate, ProgramIDs[currentIndex]); });
+                    t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(recipeToUpdate, recipeId); });
                     //MyDatabase.Update_Row(recipeToUpdate, ProgramIDs[currentIndex]);
 
                     ProgramIDs.RemoveAt(currentIndex);

@@ -20,7 +20,7 @@ using System.Windows.Shapes;
 using System.Timers;
 using System.Reflection;
 using Alarm_Management;
-using Main.Properties;
+using MixingApplication.Properties;
 
 namespace Main.Pages.SubCycle
 {
@@ -44,9 +44,9 @@ namespace Main.Pages.SubCycle
         private bool isSequenceOver;
         private bool isCycleStopped;
 
-        private readonly Task taskSeqController;
+        private Task taskSeqController;
         private readonly int timeSeqController = Settings.Default.CycleMix_timeSeqController;
-        private readonly Task taskCheckAlarms;
+        private Task taskCheckAlarms;
         private readonly int timeCheckAlarms = Settings.Default.CycleMix_timeCheckAlarms_Interval;
 
         private readonly System.Timers.Timer sequenceTimer;
@@ -136,11 +136,6 @@ namespace Main.Pages.SubCycle
             // Mise à jour du numéro de séquence (seqNumber de la classe CycleInfo) + démarrage du scan des alarmes si on est sur la première séquence du cycle (voir checkAlarmsTimer_OnTimedEvent de la classe CycleInfo)
             General.CurrentCycleInfo.UpdateSequenceNumber();
 
-            if (subCycleArg.prevSeqInfo.SeqType != cycleSpeedMixerInfo.SeqType) // Si la prochaine séquence est une séquence speedmixer
-            {
-                General.ShowMessageBox(Settings.Default.CycleMix_Request_PutProduct);
-            }
-
             InitializeComponent();
 
             // On affiche sur le panneau d'information que la séquence est en cours
@@ -204,10 +199,17 @@ namespace Main.Pages.SubCycle
             if (recipeSpeedMixerInfo.Columns[recipeSpeedMixerInfo.Coldtrap].Value == DatabaseSettings.General_TrueValue_Read) tempControlTimer.Start(); // On lance le timer de contrôle de la température
               
             SpeedMixerModbus.SetProgram(recipeSpeedMixerInfo);
+
             //SpeedMixerModbus.SetProgram(this.currentPhaseParameters); // On met à jour tout les paramètres dans le speedmixer
             taskSeqController = Task.Factory.StartNew(() => SequenceController()); // On lance la tâche de vérification du status et d'autre choses sûrement
             taskCheckAlarms = Task.Factory.StartNew(() => CheckAlarms());
         }
+
+        private void Grid_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             logger.Debug("Dispose(bool disposing)");
@@ -266,6 +268,11 @@ namespace Main.Pages.SubCycle
         }
         private async void SequenceController()
         {
+            if (subCycle.prevSeqInfo.SeqType != cycleSpeedMixerInfo.SeqType) // Si la prochaine séquence est une séquence speedmixer
+            {
+                General.ShowMessageBox(Settings.Default.CycleMix_Request_PutProduct);
+            }
+
             while (!isSequenceOver) // tant que le cycle est en cours
             {
                 logger.Debug("SequenceController");

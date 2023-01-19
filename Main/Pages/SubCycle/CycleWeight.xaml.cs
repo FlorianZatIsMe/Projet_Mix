@@ -1,6 +1,6 @@
 ﻿using Database;
 using DRIVER_RS232_Weight;
-using Main.Properties;
+using MixingApplication.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -90,6 +90,8 @@ namespace Main.Pages.SubCycle
             // A CORRIGER : IF RESULT IS FALSE
             t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeWeightInfo), subCycle.id); });
             recipeWeightInfo = (RecipeWeightInfo)t.Result;
+
+
             //recipeWeightInfo = (RecipeWeightInfo)MyDatabase.GetOneRow(typeof(RecipeWeightInfo), subCycle.id);
 
             if (recipeWeightInfo == null) // Si la commande a renvoyée une ligne

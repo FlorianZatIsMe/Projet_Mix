@@ -1,4 +1,4 @@
-﻿using Main.Properties;
+﻿using MixingApplication.Properties;
 using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
@@ -37,22 +37,31 @@ namespace Main
         {
             logger.Debug("Click");
 
-            PrincipalContext pc = new PrincipalContext(ContextType.Domain);
-            bool isCredentialValid = pc.ValidateCredentials(username.Text, password.Password);
-
-            if (isCredentialValid)
+            try
             {
-                if (username.Text.ToLower() == "julien.aquilon") General.ShowMessageBox("Salut Chef");
+                PrincipalContext pc = new PrincipalContext(ContextType.Domain);
+                bool isCredentialValid = pc.ValidateCredentials(username.Text, password.Password);
 
-                string role = UserManagement.UpdateAccessTable(username.Text);
-                mainWindow.UpdateUser(username.Text, role);
+                if (isCredentialValid)
+                {
+                    if (username.Text.ToLower() == "julien.aquilon") MessageBox.Show("Salut Chef");
 
-                this.Close();
+                    string role = UserManagement.UpdateAccessTable(username.Text);
+                    mainWindow.UpdateUser(username.Text, role);
+
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show(Settings.Default.LogIn_Info_PswIncorrect);
+                }
             }
-            else
+            catch (Exception)
             {
-                General.ShowMessageBox(Settings.Default.LogIn_Info_PswIncorrect);
+                logger.Error("Problème de connexion avec l'active directory");
+                MessageBox.Show("Problème de connexion avec l'active directory");
             }
+
         }
         private void ButtonOk_Click(object sender, RoutedEventArgs e)
         {
