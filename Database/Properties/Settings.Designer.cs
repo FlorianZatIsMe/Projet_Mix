@@ -91,6 +91,8 @@ namespace Database.Properties {
   <string>name</string>
   <string>version</string>
   <string>status</string>
+  <string>finalweight_min</string>
+  <string>finalweight_max</string>
 </ArrayOfString>")]
         public global::System.Collections.Specialized.StringCollection Recipe_ColIds {
             get {
@@ -295,6 +297,7 @@ namespace Database.Properties {
   <string>decimal_number</string>
   <string>setpoint</string>
   <string>criteria</string>
+  <string>is_solvent</string>
 </ArrayOfString>")]
         public global::System.Collections.Specialized.StringCollection RecipeWeight_ColIds {
             get {
@@ -428,12 +431,12 @@ namespace Database.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public int RecipeWeight_ColN_max {
+        public int RecipeWeight_ColN_isSolvent {
             get {
-                return ((int)(this["RecipeWeight_ColN_max"]));
+                return ((int)(this["RecipeWeight_ColN_isSolvent"]));
             }
             set {
-                this["RecipeWeight_ColN_max"] = value;
+                this["RecipeWeight_ColN_isSolvent"] = value;
             }
         }
         
@@ -2104,6 +2107,8 @@ namespace Database.Properties {
   <string>recette</string>
   <string>version</string>
   <string>0</string>
+  <string>0</string>
+  <string>0</string>
 </ArrayOfString>")]
         public global::System.Collections.Specialized.StringCollection Recipe_ColDesc {
             get {
@@ -2279,6 +2284,30 @@ namespace Database.Properties {
             }
             set {
                 this["Disconnect_WaitTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("6")]
+        public int Recipe_ColN_FinalWeightMin {
+            get {
+                return ((int)(this["Recipe_ColN_FinalWeightMin"]));
+            }
+            set {
+                this["Recipe_ColN_FinalWeightMin"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("7")]
+        public int Recipe_ColN_FinalWeightMax {
+            get {
+                return ((int)(this["Recipe_ColN_FinalWeightMax"]));
+            }
+            set {
+                this["Recipe_ColN_FinalWeightMax"] = value;
             }
         }
         

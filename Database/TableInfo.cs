@@ -291,6 +291,8 @@ namespace Database
             Name = Settings.Default.Recipe_ColN_recipeName;
             Version = Settings.Default.Recipe_ColN_version;
             Status = Settings.Default.Recipe_ColN_status;
+            FinaleWeightMin = Settings.Default.Recipe_ColN_FinalWeightMin;
+            FinaleWeightMax = Settings.Default.Recipe_ColN_FinalWeightMax;
         }
 
         /// <value>Name of the database table. From IBasTabInfo interface</value>
@@ -319,6 +321,12 @@ namespace Database
 
         /// <value>Index of the status column. This column is the status of the recipe (e.g. draft, production, obsolete)</value>
         public int Status { get; }
+
+        /// <value>Index of the final weight min column. This column contains the minimum acceptable final weight of the product</value>
+        public int FinaleWeightMin { get; }
+
+        /// <value>Index of the final weight max column. This column contains the maximum acceptable final weight of the product</value>
+        public int FinaleWeightMax { get; }
     }
 
     /// <summary>
@@ -369,7 +377,7 @@ namespace Database
             DecimalNumber = Settings.Default.RecipeWeight_ColN_decimalNumber;
             Setpoint = Settings.Default.RecipeWeight_ColN_setpoint;
             Criteria = Settings.Default.RecipeWeight_ColN_criteria;
-            Max = Settings.Default.RecipeWeight_ColN_max;
+            IsSolvent = Settings.Default.RecipeWeight_ColN_isSolvent;
         }
 
         /// <value>Name of the database table. From IBasTabInfo interface</value>
@@ -410,8 +418,8 @@ namespace Database
         /// <value>Index of the min column. This column contains the minimum acceptable weight by unit of final product</value>
         public int Criteria { get; }
 
-        /// <value>Index of the max column. This column contains the maximum acceptable weight by unit of final product</value>
-        public int Max { get; }
+        /// <value>Index of the is solvent column. This column if the product is a solvent (if it must be evaporated at the end of the cycle)</value>
+        public int IsSolvent { get; }
     }
 
     /// <summary>
@@ -845,7 +853,8 @@ namespace Database
                 return;
             }
 
-            decimal convRatio; // Declaration of the conversion ratio variable
+            decimal convRatio = GetConvRatio(recipeWeighInfo); // Declaration of the conversion ratio variable
+            /*
             // The program tries...
             try
             {
@@ -865,7 +874,7 @@ namespace Database
                 logger.Error(ex.Message);
                 MyDatabase.ShowMessageBox(ex.Message);
                 return;
-            }
+            }*/
 
 
             // If the conversion ratio is incorrect (if the units of the final weight or of the recipe values weren't configured in the settings)

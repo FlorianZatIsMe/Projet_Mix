@@ -20,7 +20,10 @@
                     <TextBlock x:Name="labelWeightLimits" Text="#" Margin="10,0,0,0"/>
                 </WrapPanel>
             </StackPanel>
-            <Button Content="Suivant" IsEnabled="True" Width="60" Height="30" Margin="20" VerticalAlignment="Top" HorizontalAlignment="Right" Click="Button_Click"/>
+            <WrapPanel VerticalAlignment="Top" HorizontalAlignment="Right">
+                <Button Content="Suivant" IsEnabled="True" Width="60" Height="30" Margin="20" Click="Next_Click"/>
+                <Button Content="Stop" IsEnabled="True" Width="60" Height="30" Margin="20" Click="Stop_Click"/>
+            </WrapPanel>
         </Grid>
 
         <TextBlock x:Name="labelScan" Text="#" VerticalAlignment="Center" HorizontalAlignment="Center"/>

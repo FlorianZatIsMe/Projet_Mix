@@ -232,12 +232,14 @@ namespace Main.Pages
             }
              */
 
-            // pourquoi faire ça, à voir...
+            // pourquoi faire ça, je ne sais plus, à voir...
             //using (RecipeInfo recipeInfo = new RecipeInfo()) {}
 
             recipeInfo = new RecipeInfo();
             recipeInfo.Columns[recipeInfo.Name].Value = recipeName;
             recipeInfo.Columns[recipeInfo.Version].Value = new_version.ToString();
+            recipeInfo.Columns[recipeInfo.FinaleWeightMin].Value = "11";
+            recipeInfo.Columns[recipeInfo.FinaleWeightMax].Value = "22";
 
             recipeInfo.Columns[recipeInfo.Status].Value = MyDatabase.GetRecipeStatus(status).ToString();
             //recipeInfo.columns[recipeInfo.status].value = MyDatabase.GetRecipeStatus(status).ToString();

@@ -74,6 +74,13 @@
                              Style="{DynamicResource TextBoxStyle1}"/>
                     </Grid>
 
+                    <ToggleButton x:Name="cbIsSolvent" 
+                                  Content="Solvant" 
+                                  IsChecked="False" 
+                                  HorizontalAlignment="Left" 
+                                  Margin="20,0,0,0"
+                                  Style="{DynamicResource ToggleButtonStyle1}" />
+
                     <Grid Margin="25,0,0,0" HorizontalAlignment="Left" >
                         <TextBox x:Name="tbBarcode" 
                              HorizontalContentAlignment="Left" 
@@ -121,7 +128,7 @@
                                     <RowDefinition Height="50"/>
                                     <RowDefinition Height="50"/>
                                 </Grid.RowDefinitions>
-
+                                <!--
                                 <TextBlock Text="Unité"
                                            Grid.Column="0"
                                            Grid.Row="0"
@@ -149,13 +156,14 @@
                                            FontFamily="{StaticResource MyFont1}"
                                            FontSize="{StaticResource FontSize2}"
                                            Text="Nombre de chiffre après la virgule"/>
-                                <ComboBox x:Name="cbxDecimalNumbers"
+                                 <ComboBox x:Name="cbxDecimalNumbers"
                                           Style="{DynamicResource ComboBoxStyle1}"
                                            Grid.Column="1"
                                            Grid.Row="1"
                                           Height="30"
-                                          VerticalContentAlignment="Center">
+                                          VerticalContentAlignment="Center">                                
                                 </ComboBox>
+-->                                
                             </Grid>
                         </StackPanel>
                     </Border>

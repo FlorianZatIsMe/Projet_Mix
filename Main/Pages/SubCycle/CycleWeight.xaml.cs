@@ -91,7 +91,6 @@ namespace Main.Pages.SubCycle
             t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeWeightInfo), subCycle.id); });
             recipeWeightInfo = (RecipeWeightInfo)t.Result;
 
-
             //recipeWeightInfo = (RecipeWeightInfo)MyDatabase.GetOneRow(typeof(RecipeWeightInfo), subCycle.id);
 
             if (recipeWeightInfo == null) // Si la commande a renvoyée une ligne
@@ -242,9 +241,9 @@ namespace Main.Pages.SubCycle
                 }
             });
 
-            if(!isSequenceOver) getWeightTimer.Enabled = true;
+            if(!isSequenceOver && getWeightTimer != null) getWeightTimer.Enabled = true;
         }
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Next_Click(object sender, RoutedEventArgs e)
         {
             logger.Debug("Button_Click");
             Task<object> t;
@@ -307,6 +306,11 @@ namespace Main.Pages.SubCycle
 
             Dispose(disposing: true);
         }
+        private void Stop_Click(object sender, RoutedEventArgs e)
+        {
+            General.EndSequence(recipeWeightInfo, frameMain: subCycle.frameMain, frameInfoCycle: subCycle.frameInfoCycle, idCycle: subCycle.idCycle, previousSeqType: cycleWeightInfo.SeqType, previousSeqId: idSubCycle.ToString(), isTest: subCycle.isTest, comment: Settings.Default.Report_Comment_CycleAborted);
+            Dispose(disposing: true); // Il va peut-être falloir sortir ça du "if"
+        }
         private async void TbScan_LostFocusAsync(object sender, RoutedEventArgs e)
         {
             logger.Debug("TbScan_LostFocusAsync");
@@ -352,12 +356,13 @@ namespace Main.Pages.SubCycle
                 {
                     subCycle.frameMain.ContentRendered -= FrameMain_ContentRendered;
 
-                    General.EndSequence(recipeWeightInfo, frameMain: subCycle.frameMain, frameInfoCycle: subCycle.frameInfoCycle, idCycle: subCycle.idCycle, previousSeqType: cycleWeightInfo.SeqType, previousSeqId: idSubCycle.ToString(), isTest: subCycle.isTest, comment: Settings.Default.Report_Comment_CycleAborted);
+                    //General.EndSequence(recipeWeightInfo, frameMain: subCycle.frameMain, frameInfoCycle: subCycle.frameInfoCycle, idCycle: subCycle.idCycle, previousSeqType: cycleWeightInfo.SeqType, previousSeqId: idSubCycle.ToString(), isTest: subCycle.isTest, comment: Settings.Default.Report_Comment_CycleAborted);
 
                     Dispose(disposing: true); // Il va peut-être falloir sortir ça du "if"
                 }
             }
 
         }
+
     }
 }

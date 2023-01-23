@@ -2032,5 +2032,17 @@ namespace MixingApplication.Properties {
                 this["RecipeWeight_IdDBControls"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int RecipeWeight_NbDecimal {
+            get {
+                return ((int)(this["RecipeWeight_NbDecimal"]));
+            }
+            set {
+                this["RecipeWeight_NbDecimal"] = value;
+            }
+        }
     }
 }

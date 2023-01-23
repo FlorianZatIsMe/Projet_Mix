@@ -162,7 +162,7 @@ namespace Main
             RS232Pump.rs232.Initialize(new Driver_RS232.IniInfo() { Window = this });
             Driver_ColdTrap.ColdTrap.Initialize(new Driver_ColdTrap.IniInfo() { Window = this });
             UserManagement.Initialize(new User_Management.IniInfo() { Window = this });
-            SpeedMixerModbus.Initialize();
+            //SpeedMixerModbus.Initialize();
             if (RS232Pump.rs232.IsOpen())
             {
                 RS232Pump.rs232.BlockUse();

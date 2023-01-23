@@ -546,5 +546,8 @@
   &lt;/list&gt;
 &lt;/IdDBControls&gt;</Value>
     </Setting>
+    <Setting Name="RecipeWeight_NbDecimal" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

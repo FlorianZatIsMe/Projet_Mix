@@ -33,6 +33,8 @@
   &lt;string&gt;name&lt;/string&gt;
   &lt;string&gt;version&lt;/string&gt;
   &lt;string&gt;status&lt;/string&gt;
+  &lt;string&gt;finalweight_min&lt;/string&gt;
+  &lt;string&gt;finalweight_max&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
     <Setting Name="AuditTrail_ColN_id" Type="System.Int32" Scope="User">
@@ -93,6 +95,7 @@
   &lt;string&gt;decimal_number&lt;/string&gt;
   &lt;string&gt;setpoint&lt;/string&gt;
   &lt;string&gt;criteria&lt;/string&gt;
+  &lt;string&gt;is_solvent&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
     <Setting Name="RecipeWeight_ColN_id" Type="System.Int32" Scope="User">
@@ -125,7 +128,7 @@
     <Setting Name="RecipeWeight_ColN_criteria" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">9</Value>
     </Setting>
-    <Setting Name="RecipeWeight_ColN_max" Type="System.Int32" Scope="User">
+    <Setting Name="RecipeWeight_ColN_isSolvent" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
     <Setting Name="RecipeSpeedMixer_TableName" Type="System.String" Scope="User">
@@ -676,6 +679,8 @@
   &lt;string&gt;recette&lt;/string&gt;
   &lt;string&gt;version&lt;/string&gt;
   &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
     <Setting Name="MaxNumbRows" Type="System.Int32" Scope="User">
@@ -719,6 +724,12 @@
     </Setting>
     <Setting Name="Disconnect_WaitTime" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="Recipe_ColN_FinalWeightMin" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="Recipe_ColN_FinalWeightMax" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">7</Value>
     </Setting>
     <Setting Name="ConnectionInfo" Type="Database.ConnectionInfo" Scope="User">
       <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;

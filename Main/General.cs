@@ -402,16 +402,11 @@ namespace Main
                 nextRecipeSeqType = int.Parse(recipeParam.Columns[recipeParam.NextSeqType].Value);
 
                 // A CORRIGER : IF RESULT IS FALSE
-                Task<object> t2 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(ISeqTabInfo), recipeParam.Columns[recipeParam.Id].Value); });
+                Type nextRecipeType = Sequence.list[int.Parse(recipeParam.Columns[recipeParam.NextSeqType].Value)].subRecipeInfo.GetType();
+                Task<object> t2 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(nextRecipeType, recipeParam.Columns[recipeParam.NextSeqId].Value); });
+                //Task<object> t2 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(recipeParam.GetType(), recipeParam.Columns[recipeParam.NextSeqId].Value); });
                 recipeParam = (ISeqTabInfo)t2.Result;
                 //recipeParam = (ISeqInfo)MyDatabase.GetOneRow(typeof(ISeqInfo), recipeParam.columns[recipeParam.id].value);
-
-                row = "recipeParameters ";
-                for (int j = 0; j < recipeParam.Columns.Count(); j++)
-                {
-                    row = row + j.ToString() + "-" + recipeParam.Columns[j].Value + " ";
-                }
-                logger.Trace(row);
 
                 if (nextRecipeSeqType < 0 || nextRecipeSeqType >= Sequence.list.Count())
                 {
@@ -420,7 +415,8 @@ namespace Main
                     return;
                 }
 
-                cycleSeqInfo = Sequence.list[nextRecipeSeqType].subCycleInfo;
+                //cycleSeqInfo = Sequence.list[nextRecipeSeqType].subCycleInfo;
+                cycleSeqInfo = Activator.CreateInstance(Sequence.list[nextRecipeSeqType].subCycleInfo.GetType()) as ICycleSeqInfo;
                 cycleSeqInfo.SetRecipeParameters(recipeParam, idCycle);
 
                 row = cycleSeqInfo.GetType().ToString() + " ";
@@ -429,7 +425,6 @@ namespace Main
                     row = row + cycleSeqInfo.Columns[j].Id + ": " + cycleSeqInfo.Columns[j].Value + " ";
                 }
                 logger.Trace(row);
-
                 // On insert les infos de recettes dans la bonne table
                 // A CORRIGER : IF RESULT IS FALSE
                 Task<object> t3 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(cycleSeqInfo); });
@@ -442,14 +437,15 @@ namespace Main
                 nextSeqId = ((int)t4.Result).ToString();
                 //nextSeqId = MyDatabase.GetMax(cycleSeqInfo.name, cycleSeqInfo.columns[cycleSeqInfo.id].id).ToString();
 
-                prevCycleSeqInfo = Sequence.list[previousSeqType].subCycleInfo;
+                //prevCycleSeqInfo = Sequence.list[previousSeqType].subCycleInfo;
+                prevCycleSeqInfo = Activator.CreateInstance(Sequence.list[nextRecipeSeqType].subCycleInfo.GetType()) as ICycleSeqInfo;
                 prevCycleSeqInfo.Columns[prevCycleSeqInfo.NextSeqType].Value = nextRecipeSeqType.ToString();
                 prevCycleSeqInfo.Columns[prevCycleSeqInfo.NextSeqId].Value = nextSeqId;
 
                 // A CORRIGER : IF RESULT IS FALSE
                 Task<object> t5 = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(prevCycleSeqInfo, previousSeqId); });
                 //MyDatabase.Update_Row(prevCycleSeqInfo, previousSeqId);
-
+                t5.Wait();
                 // La dernière séquence devient l'ancienne
                 previousSeqType = nextRecipeSeqType;
                 previousSeqId = nextSeqId;
@@ -465,10 +461,12 @@ namespace Main
             //string lastAlarmId = MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id).ToString();
             cycleTableInfo.Columns[cycleTableInfo.DateTimeEndCycle].Value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             cycleTableInfo.Columns[cycleTableInfo.LastAlarmId].Value = lastAlarmId;
+            cycleTableInfo.Columns[cycleTableInfo.Comment].Value = comment;
 
             // A CORRIGER : IF RESULT IS FALSE
             Task<object> t7 = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(cycleTableInfo, idCycle.ToString()); });
             //MyDatabase.Update_Row(cycleTableInfo, idCycle.ToString());
+            t7.Wait();
 
             CurrentCycleInfo.StopSequence();
             Task t = Task.Factory.StartNew(() => PrintReport(idCycle));

@@ -53,7 +53,7 @@ namespace Main.Pages.SubCycle
                 Interval = Settings.Default.CycleInfo_checkAlarmsTimer_Interval,
                 AutoReset = false
             };
-            checkAlarmsTimer.Elapsed += ScanConnectTimer_OnTimedEvent;
+            //checkAlarmsTimer.Elapsed += ScanConnectTimer_OnTimedEvent;
 
             frameCycleInfo = frame;
 
