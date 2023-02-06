@@ -769,6 +769,7 @@ namespace Database.Properties {
   <string>last_alarm_id</string>
   <string>comment</string>
   <string>is_it_a_test</string>
+  <string>bowl_weight</string>
 </ArrayOfString>")]
         public global::System.Collections.Specialized.StringCollection Cycle_ColIds {
             get {
@@ -2326,6 +2327,18 @@ namespace Database.Properties {
             }
             set {
                 this["ConnectionInfo"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("18")]
+        public int Cycle_ColN_bowl_weight {
+            get {
+                return ((int)(this["Cycle_ColN_bowl_weight"]));
+            }
+            set {
+                this["Cycle_ColN_bowl_weight"] = value;
             }
         }
     }

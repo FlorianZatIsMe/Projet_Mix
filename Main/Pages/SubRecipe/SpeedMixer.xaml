@@ -4,8 +4,9 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Main.Pages.SubRecipe"
+      xmlns:p="clr-namespace:MixingApplication.Properties"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="1300"
+      d:DesignHeight="511.89" d:DesignWidth="1300"
       Title="SpeedMixer"
       Background="Transparent"
       Foreground="{StaticResource MyFont1_Foreground}"
@@ -13,6 +14,10 @@
       FontSize="{StaticResource FontSize2}"
     xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
 
+    <Page.DataContext>
+        <local:SpeedMixerViewModel/>
+    </Page.DataContext>
+    
     <Border Background="#524E4F" BorderThickness="5" BorderBrush="Green" CornerRadius="15" Margin="5">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -83,11 +88,11 @@
 
             <StackPanel Grid.Column="1" Grid.Row="2">
                 <WrapPanel>
-                    <TextBlock Margin="0,10,0,0" Text="Accélération (rpm/s)"/>
+                    <TextBlock Margin="0,10,0,0" Text="{Binding TextBlockAcceleration}"/>
                     <TextBox x:Name="tbAcceleration" Margin="10,10,0,0" Width="200" LostFocus="TbAcceleration_LostFocus"/>
                 </WrapPanel>
                 <WrapPanel>
-                    <TextBlock Margin="0,10,0,0" Text="Décélération (rpm/s)"/>
+                    <TextBlock Margin="0,10,0,0" Text="{Binding TextBlockDeceleration}"/>
                     <TextBox x:Name="tbDeceleration" Margin="10,10,0,0" Width="200" LostFocus="TbDeceleration_LostFocus"/>
                 </WrapPanel>
 
@@ -144,20 +149,32 @@
                         -->
                 <ToggleButton x:Name="cbColdTrap" VerticalAlignment="Center" HorizontalAlignment="Left" Content="Utilisation du piège froid" Style="{StaticResource ToggleButtonStyle1}"/>
                 <WrapPanel>
-                    <TextBlock Margin="0,10,0,0" Text="Vitesse - Min (rpm)"/>
-                    <TextBox x:Name="tbSpeedMin" Margin="23,10,0,0" Width="50" LostFocus="TbSpeedMin_LostFocus"/>
-                    <TextBlock Margin="20,10,0,0" Text="Max (rpm)"/>
-                    <TextBox x:Name="tbSpeedMax" Margin="15,10,0,0" Width="50" LostFocus="TbSpeedMax_LostFocus"/>
+                    <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" MaxWidth="130">
+                        <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_SpeedMin_Label}"/>
+                        <Run Text="{Binding TextBlockSpeedRange, Mode=OneWay}"/>
+                    </TextBlock>
+                    <TextBox x:Name="tbSpeedMin" Margin="23,10,0,0" Width="50" LostFocus="TbSpeedMin_LostFocus" MaxHeight="20"/>
+                    <TextBlock Margin="20,10,0,0" TextWrapping="Wrap" MaxWidth="130" VerticalAlignment="Center">
+                        <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_SpeedMax_Label}"/>
+                        <Run Text="{Binding TextBlockSpeedRange, Mode=OneWay}"/>
+                    </TextBlock>
+                    <TextBox x:Name="tbSpeedMax" Margin="15,10,0,0" Width="50" LostFocus="TbSpeedMax_LostFocus" MaxHeight="20"/>
                 </WrapPanel>
                 <WrapPanel>
-                    <TextBlock Margin="0,10,0,0">
-                        <Run Text="Pression - Min ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
+                    <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" MaxWidth="130">
+                        <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_PressureMin_Label}"/>
+                        <Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/>
+                        <Run Text=") "/>
+                        <Run Text="{Binding TextBlockPressure, Mode=OneWay}"/>
                     </TextBlock>
-                    <TextBox x:Name="tbPressureMin" Margin="10,10,0,0" Width="50" LostFocus="TbPressureMin_LostFocus"/>
-                    <TextBlock Margin="20,10,0,0">
-                        <Run Text="Max ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
+                    <TextBox x:Name="tbPressureMin" Margin="10,10,0,0" Width="50" LostFocus="TbPressureMin_LostFocus" Height="20"/>
+                    <TextBlock Margin="20,10,0,0" TextWrapping="Wrap" VerticalAlignment="Center">
+                        <Run Text="Max ("/>
+                        <Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/>
+                        <Run Text=") "/>
+                        <Run Text="{Binding TextBlockPressure, Mode=OneWay}"/>
                     </TextBlock>
-                    <TextBox x:Name="tbPressureMax" Margin="10,10,0,0" Width="50" LostFocus="TbPressureMax_LostFocus"/>
+                    <TextBox x:Name="tbPressureMax" Margin="10,10,0,0" Width="50" LostFocus="TbPressureMax_LostFocus" Height="20"/>
                 </WrapPanel>
             </StackPanel>
 
@@ -182,10 +199,19 @@
                     <RowDefinition Height="40"/>
                 </Grid.RowDefinitions>
                 <TextBlock Text="Phase" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <TextBlock Text="Vitesse (RPM)" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <TextBlock Text="Temps (s)" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Run Text="Vitesse (RPM)"/>
+                    <Run Text="{Binding TextBlockSpeedRange, Mode=OneWay}"/>
+                </TextBlock>
+                <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Run Text="Temps (s)"/>
+                    <Run Text="{Binding TextBlockTime, Mode=OneWay}"/>
+                </TextBlock>
                 <TextBlock Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Run Text="Pression ("/><Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/><Run Text=")"/>
+                    <Run Text="Pression ("/>
+                    <Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/>
+                    <Run Text=") "/>
+                    <Run Text="{Binding TextBlockPressure, Mode=OneWay}"/>
                 </TextBlock>
 
                 <ToggleButton x:Name="tgPhase00" Content="1" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible"/>

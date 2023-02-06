@@ -21,6 +21,15 @@ using System.Windows.Controls.Primitives;
 
 namespace Main.Pages.SubRecipe
 {
+    public class SpeedMixerViewModel
+    {
+        public string TextBlockAcceleration { get; } = Settings.Default.RecipeMix_Acceleration_Label + " " + "[" + Settings.Default.RecipeMix_Acceleration_Min + " ; " + Settings.Default.RecipeMix_Acceleration_Max + "]";
+        public string TextBlockDeceleration { get; } = Settings.Default.RecipeMix_Deceleration_Label + " " + "[" + Settings.Default.RecipeMix_Deceleration_Min + " ; " + Settings.Default.RecipeMix_Deceleration_Max + "]";
+        public string TextBlockSpeedRange { get; } = "[" + Settings.Default.RecipeMix_Speed_Min + " ; " + Settings.Default.RecipeMix_Speed_Max + "]";
+        //public string TextBlockSpeedMax { get; } = Settings.Default.RecipeMix_SpeedMax_Label + " " + "[" + Settings.Default.RecipeMix_Speed_Min + " ; " + Settings.Default.RecipeMix_Speed_Max + "]";
+        public string TextBlockPressure { get; } = "[" + Settings.Default.RecipeMix_Pressure_Min + " ; " + Settings.Default.RecipeMix_Pressure_Max + "]";
+        public string TextBlockTime { get; } = "[0 ; " + Settings.Default.RecipeMix_Time_Max + "]";
+    }
     public partial class SpeedMixer : Page, ISubRecipe
     {
         RecipeSpeedMixerInfo recipeSpeedMixerInfo = new RecipeSpeedMixerInfo();

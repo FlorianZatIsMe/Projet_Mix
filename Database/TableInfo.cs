@@ -660,6 +660,7 @@ namespace Database
             LastAlarmId = Settings.Default.Cycle_ColN_lastAlarmId;
             Comment = Settings.Default.Cycle_ColN_comment;
             IsItATest = Settings.Default.Cycle_ColN_isItATest;
+            bowl_weight = Settings.Default.Cycle_ColN_bowl_weight;
         }
 
         /// <value>Name of the database table. From IBasTabInfo interface</value>
@@ -723,6 +724,9 @@ namespace Database
 
         /// <value>Index of the is a test column. This column informs if the cycle was executed during production circumpstance or not</value>
         public int IsItATest { get; }
+
+        /// <value>Index of the bowl weight column. This column contains the weight of the empty bowl</value>
+        public int bowl_weight { get; }
     }
 
     /// <summary>

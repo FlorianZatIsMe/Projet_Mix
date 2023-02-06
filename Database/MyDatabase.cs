@@ -1119,7 +1119,7 @@ namespace Database
         {
             bool result = false;
 
-            logger.Debug("DeleteRow " + tableInfo.TabName + " " + id + GetMutexIDs());
+            logger.Debug("DeleteRow " + tableInfo.TabName + " " + id);
 
             if (!IsConnected())
             {

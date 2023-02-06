@@ -272,6 +272,7 @@
   &lt;string&gt;last_alarm_id&lt;/string&gt;
   &lt;string&gt;comment&lt;/string&gt;
   &lt;string&gt;is_it_a_test&lt;/string&gt;
+  &lt;string&gt;bowl_weight&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
     <Setting Name="Cycle_ColN_id" Type="System.Int32" Scope="User">
@@ -739,6 +740,9 @@
   &lt;Password&gt;Integra2022/&lt;/Password&gt;
   &lt;Db&gt;db1&lt;/Db&gt;
 &lt;/ConnectionInfo&gt;</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_bowl_weight" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">18</Value>
     </Setting>
   </Settings>
 </SettingsFile>

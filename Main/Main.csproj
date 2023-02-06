@@ -18,7 +18,7 @@
     </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -208,6 +208,7 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Speech" />
     <Reference Include="System.Text.Encoding.CodePages, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.Encoding.CodePages.6.0.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
     </Reference>
@@ -254,6 +255,9 @@
     </Compile>
     <Compile Include="Pages\Backup.xaml.cs">
       <DependentUpon>Backup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SubCycle\WeightBowl.xaml.cs">
+      <DependentUpon>WeightBowl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings1.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -310,6 +314,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\SubCycle\PreCycle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SubCycle\WeightBowl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -370,7 +378,7 @@
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings1.Designer.cs</LastGenOutput>
     </None>
     <Content Include="Resources\DB_backup.bat">
@@ -507,6 +515,14 @@
     <ProjectReference Include="..\DRIVER.Weight\DRIVER_RS232_Weight.csproj">
       <Project>{24D3295E-C288-495D-AA65-345A32FAFB60}</Project>
       <Name>DRIVER_RS232_Weight</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Driver_Ethernet\Driver_Ethernet.csproj">
+      <Project>{141D44F7-77DD-49B2-AA86-56CFF916F13F}</Project>
+      <Name>Driver_Ethernet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Driver_Ethernet_Weight\Driver_Ethernet_Balance.csproj">
+      <Project>{44088962-c48a-4623-9cf1-5c3864eaa2ef}</Project>
+      <Name>Driver_Ethernet_Balance</Name>
     </ProjectReference>
     <ProjectReference Include="..\Driver_MODBUS\Driver_MODBUS.csproj">
       <Project>{fffc191f-46a5-44d6-9208-831505a35c23}</Project>

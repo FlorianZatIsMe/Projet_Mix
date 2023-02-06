@@ -23,6 +23,17 @@ namespace Main
         public Window Window;
     }
 
+    public struct CycleStartInfo
+    {
+        public string recipeID;
+        public string OFnumber;
+        public string finalWeight;
+        public Frame frameMain;
+        public Frame frameInfoCycle;
+        public bool isTest;
+        public string bowlWeight;
+    }
+
     internal static class General
     {
         public static CycleInfo CurrentCycleInfo;
@@ -233,7 +244,8 @@ namespace Main
             //comboBox.SelectedIndex = 0;
             //ProgramNames.RemoveAt(0);
         }
-        public static void StartCycle(string recipeID, string OFnumber, string finalWeight, Frame frameMain, Frame frameInfoCycle, bool isTest = true)
+        //public static void StartCycle(string recipeID, string OFnumber, string finalWeight, Frame frameMain, Frame frameInfoCycle, bool isTest = true)
+        public static void StartCycle(CycleStartInfo info)
         {
             logger.Debug("StartCycle");
 
@@ -257,11 +269,11 @@ namespace Main
             }*/
 
             // A CORRIGER : IF RESULT IS FALSE
-            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeInfo), recipeID); });
+            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeInfo), info.recipeID); });
             recipeInfo = (RecipeInfo)t.Result;
             //recipeInfo = (RecipeInfo)MyDatabase.GetOneRow(typeof(RecipeInfo), recipeID);
 
-            if (recipeInfo == null || recipeInfo.Columns[recipeInfo.Id].Value != recipeID)
+            if (recipeInfo == null || recipeInfo.Columns[recipeInfo.Id].Value != info.recipeID)
             {
                 logger.Error(Settings.Default.Recipe_Error_RecipeNotFound);
                 ShowMessageBox(Settings.Default.Recipe_Error_RecipeNotFound);
@@ -279,22 +291,22 @@ namespace Main
             string recipe_version = recipeInfo.Columns[recipeInfo.Version].Value; // 4
 
             cycleTableInfo = new CycleTableInfo();
-            cycleTableInfo.Columns[cycleTableInfo.JobNumber].Value = OFnumber;
-            cycleTableInfo.Columns[cycleTableInfo.BatchNumber].Value = OFnumber;
-            cycleTableInfo.Columns[cycleTableInfo.FinalWeight].Value = finalWeight;
+            cycleTableInfo.Columns[cycleTableInfo.JobNumber].Value = info.OFnumber;
+            cycleTableInfo.Columns[cycleTableInfo.BatchNumber].Value = info.OFnumber;
+            cycleTableInfo.Columns[cycleTableInfo.FinalWeight].Value = info.finalWeight;
             cycleTableInfo.Columns[cycleTableInfo.FinalWeightUnit].Value = Settings.Default.CycleFinalWeight_g_Unit;
             cycleTableInfo.Columns[cycleTableInfo.ItemNumber].Value = recipe_name;
             cycleTableInfo.Columns[cycleTableInfo.RecipeName].Value = recipe_name;
             cycleTableInfo.Columns[cycleTableInfo.RecipeVersion].Value = recipe_version;
             cycleTableInfo.Columns[cycleTableInfo.EquipmentName].Value = equipement_name;
             cycleTableInfo.Columns[cycleTableInfo.Username].Value = General.loggedUsername;
-            cycleTableInfo.Columns[cycleTableInfo.IsItATest].Value = isTest ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+            cycleTableInfo.Columns[cycleTableInfo.IsItATest].Value = info.isTest ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
 
             // A CORRIGER : IF RESULT IS FALSE
             Task<object> t1 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(cycleTableInfo); });
             //MyDatabase.InsertRow(cycleTableInfo);
 
-            CurrentCycleInfo = new CycleInfo(cycleTableInfo, frameInfoCycle);
+            CurrentCycleInfo = new CycleInfo(cycleTableInfo, info.frameInfoCycle);
             // A CORRIGER : IF RESULT IS FALSE
             Task<object> t2 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(cycleTableInfo.TabName, cycleTableInfo.Columns[cycleTableInfo.Id].Id); });
             int idCycle = (int)t2.Result;
@@ -311,7 +323,7 @@ namespace Main
 
                 if (recipeSeqInfo.Columns.Count() != 0 && recipeSeqInfo.Columns[recipeSeqInfo.Id].Value == nextSeqID)
                 {
-                    CurrentCycleInfo.NewInfo(recipeSeqInfo, decimal.Parse(finalWeight));
+                    CurrentCycleInfo.NewInfo(recipeSeqInfo, decimal.Parse(info.finalWeight));
 
                     nextSeqType = recipeSeqInfo.Columns[recipeSeqInfo.NextSeqType].Value;
                     nextSeqID = recipeSeqInfo.Columns[recipeSeqInfo.NextSeqId].Value;
@@ -332,7 +344,7 @@ namespace Main
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
             auditTrailInfo.Columns[auditTrailInfo.Username].Value = loggedUsername;
             auditTrailInfo.Columns[auditTrailInfo.EventType].Value = Settings.Default.General_AuditTrailEvent_Event;
-            auditTrailInfo.Columns[auditTrailInfo.Description].Value = Settings.Default.General_AuditTrail_StartCycle1 + OFnumber + Settings.Default.General_AuditTrail_StartCycle2 + recipe_name + " version " + recipe_version;
+            auditTrailInfo.Columns[auditTrailInfo.Description].Value = Settings.Default.General_AuditTrail_StartCycle1 + info.OFnumber + Settings.Default.General_AuditTrail_StartCycle2 + recipe_name + " version " + recipe_version;
 
             // A CORRIGER : IF RESULT IS FALSE
             Task<object> t4 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTrailInfo); });
@@ -356,8 +368,8 @@ namespace Main
             Task<object> t6 = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(cycleTableInfo, idCycle.ToString()); });
             //MyDatabase.Update_Row(cycleTableInfo, idCycle.ToString());
 
-            SubCycleArg subCycleArg = new SubCycleArg(frameMain, frameInfoCycle, firstSeqID, idCycle, idCycle, cycleTableInfo.TabName, new CycleTableInfo(), isTest);
-            frameMain.Content = Activator.CreateInstance(Pages.Sequence.list[int.Parse(firstSeqType)].subCycPgType, new object[] { subCycleArg });
+            SubCycleArg subCycleArg = new SubCycleArg(info.frameMain, info.frameInfoCycle, firstSeqID, idCycle, idCycle, cycleTableInfo.TabName, new CycleTableInfo(), info.isTest);
+            info.frameMain.Content = Activator.CreateInstance(Pages.Sequence.list[int.Parse(firstSeqType)].subCycPgType, new object[] { subCycleArg });
 
             //MyDatabase.Close_reader(); // On ferme le reader de la db pour pouvoir lancer une autre requête
         }

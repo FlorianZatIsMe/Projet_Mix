@@ -288,7 +288,7 @@
                 </MenuItem>
 
                 <!--// Services //-->
-                <MenuItem Header="PROGRAMME"
+                <MenuItem Header="RECETTE"
                           Style="{StaticResource Main_MenuItem_With_Dropdown}">
                     <MenuItem.Icon>
                         <Image Source="Resources/img_programs_en.png"

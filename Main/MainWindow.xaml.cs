@@ -28,6 +28,9 @@ using NLog.Common;
 using System.Threading;
 using Driver_ColdTrap;
 using MixingApplication.Properties;
+using Driver_Ethernet;
+using Driver_Ethernet_Balance;
+using System.Speech.Synthesis;
 
 namespace Main
 {
@@ -64,12 +67,6 @@ namespace Main
             LogManager.Configuration.Variables["myLevel"] = "Error";
 #endif
             LogManager.ReconfigExistingLoggers(); // Explicit refresh of Layouts and updates active Logger-objects
-
-            /*
-            MessageBox.Show(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
-            General.ShowMessageBox("Fini je crois");
-            Environment.Exit(1);
-            //*/
             General.Initialize(new IniInfo() { Window = this });
 
             if (CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator != ".")
@@ -80,6 +77,30 @@ namespace Main
                 Thread.CurrentThread.CurrentCulture = culture;
                 Thread.CurrentThread.CurrentUICulture = culture;
             }
+
+            /*
+
+            SpeechSynthesizer synth = new SpeechSynthesizer();
+            MessageBox.Show("go");
+            //synth.SelectVoiceByHints(VoiceGender.Male, VoiceAge.Senior);
+            //synth.Speak("Oh... You're sweet, thank you. I don't love you, but it's nice to know that someone loves me. Who wouldn't anyway ?");
+            //Balance.eth.WriteData("S");
+            //MessageBox.Show("1");
+            //Balance.eth.ReadData();
+            //MessageBox.Show("1");
+
+            //Balance.eth.WriteData("SIR");
+
+            logger.Fatal(Balance.SendZeroCommand().ToString());
+            logger.Fatal(Balance.SendTareCommand().ToString());
+
+            General.ShowMessageBox("Fini je crois");
+            Environment.Exit(1);
+
+            Balance.StartContRead();
+            MessageBox.Show("1");
+            logger.Debug(Balance.StopContRead().ToString());
+            //*/
 
             InitializeComponent();
 

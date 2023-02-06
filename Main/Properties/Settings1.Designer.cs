@@ -13,7 +13,7 @@ namespace MixingApplication.Properties {
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.2.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+    public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
         
@@ -709,7 +709,7 @@ namespace MixingApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
         public int RecipeWeight_Setpoint_Max {
             get {
                 return ((int)(this["RecipeWeight_Setpoint_Max"]));
@@ -722,24 +722,24 @@ namespace MixingApplication.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int RecipeWeight_Min_Min {
+        public int RecipeWeight_Range_Min {
             get {
-                return ((int)(this["RecipeWeight_Min_Min"]));
+                return ((int)(this["RecipeWeight_Range_Min"]));
             }
             set {
-                this["RecipeWeight_Min_Min"] = value;
+                this["RecipeWeight_Range_Min"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
-        public int RecipeWeight_Min_Max {
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int RecipeWeight_Range_Max {
             get {
-                return ((int)(this["RecipeWeight_Min_Max"]));
+                return ((int)(this["RecipeWeight_Range_Max"]));
             }
             set {
-                this["RecipeWeight_Min_Max"] = value;
+                this["RecipeWeight_Range_Max"] = value;
             }
         }
         
@@ -1961,49 +1961,86 @@ namespace MixingApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-  <list>
-    <int>3</int>
-    <int>4</int>
-    <int>5</int>
-    <int>10</int>
-    <int>12</int>
-    <int>13</int>
-    <int>14</int>
-    <int>15</int>
-    <int>16</int>
-    <int>17</int>
-    <int>18</int>
-    <int>19</int>
-    <int>20</int>
-    <int>21</int>
-    <int>22</int>
-    <int>23</int>
-    <int>24</int>
-    <int>25</int>
-    <int>26</int>
-    <int>27</int>
-    <int>28</int>
-    <int>29</int>
-    <int>30</int>
-    <int>31</int>
-    <int>32</int>
-    <int>33</int>
-    <int>34</int>
-    <int>35</int>
-    <int>36</int>
-    <int>37</int>
-    <int>38</int>
-    <int>39</int>
-    <int>40</int>
-    <int>41</int>
-    <int>42</int>
-    <int>43</int>
-    <int>44</int>
-    <int>45</int>
-  </list>
-</IdDBControls>")]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int RecipeWeight_NbDecimal {
+            get {
+                return ((int)(this["RecipeWeight_NbDecimal"]));
+            }
+            set {
+                this["RecipeWeight_NbDecimal"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Cible (g/g)")]
+        public string RecipeWeight_Setpoint_Label {
+            get {
+                return ((string)(this["RecipeWeight_Setpoint_Label"]));
+            }
+            set {
+                this["RecipeWeight_Setpoint_Label"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Marge (g/g)")]
+        public string RecipeWeight_Range_Label {
+            get {
+                return ((string)(this["RecipeWeight_Range_Label"]));
+            }
+            set {
+                this["RecipeWeight_Range_Label"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"
+     <IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+      <list>
+       <int>3</int>
+       <int>4</int>
+       <int>5</int>
+       <int>10</int>
+       <int>12</int>
+       <int>13</int>
+       <int>14</int>
+       <int>15</int>
+       <int>16</int>
+       <int>17</int>
+       <int>18</int>
+       <int>19</int>
+       <int>20</int>
+       <int>21</int>
+       <int>22</int>
+       <int>23</int>
+       <int>24</int>
+       <int>25</int>
+       <int>26</int>
+       <int>27</int>
+       <int>28</int>
+       <int>29</int>
+       <int>30</int>
+       <int>31</int>
+       <int>32</int>
+       <int>33</int>
+       <int>34</int>
+       <int>35</int>
+       <int>36</int>
+       <int>37</int>
+       <int>38</int>
+       <int>39</int>
+       <int>40</int>
+       <int>41</int>
+       <int>42</int>
+       <int>43</int>
+       <int>44</int>
+       <int>45</int>
+      </list>
+     </IdDBControls>
+    ")]
         public global::Main.Pages.IdDBControls RecipeMix_IdDBControls {
             get {
                 return ((global::Main.Pages.IdDBControls)(this["RecipeMix_IdDBControls"]));
@@ -2015,15 +2052,16 @@ namespace MixingApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-  <list>
-    <int>3</int>
-    <int>5</int>
-    <int>8</int>
-    <int>9</int>
-  </list>
-</IdDBControls>")]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"
+     <IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+      <list>
+       <int>3</int>
+       <int>5</int>
+       <int>8</int>
+       <int>9</int>
+      </list>
+     </IdDBControls>
+    ")]
         public global::Main.Pages.IdDBControls RecipeWeight_IdDBControls {
             get {
                 return ((global::Main.Pages.IdDBControls)(this["RecipeWeight_IdDBControls"]));
@@ -2035,13 +2073,85 @@ namespace MixingApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("3")]
-        public int RecipeWeight_NbDecimal {
+        [global::System.Configuration.DefaultSettingValueAttribute("Êtes-vous vraiment sûr(e) de vouloir mettre en production cette reciette ?")]
+        public string Recipe_Request_UpdateDraftRecipe_YOU_SURE {
             get {
-                return ((int)(this["RecipeWeight_NbDecimal"]));
+                return ((string)(this["Recipe_Request_UpdateDraftRecipe_YOU_SURE"]));
             }
             set {
-                this["RecipeWeight_NbDecimal"] = value;
+                this["Recipe_Request_UpdateDraftRecipe_YOU_SURE"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Accélération (RPM/s)")]
+        public string RecipeMix_Acceleration_Label {
+            get {
+                return ((string)(this["RecipeMix_Acceleration_Label"]));
+            }
+            set {
+                this["RecipeMix_Acceleration_Label"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Décelération (RPM/s)")]
+        public string RecipeMix_Deceleration_Label {
+            get {
+                return ((string)(this["RecipeMix_Deceleration_Label"]));
+            }
+            set {
+                this["RecipeMix_Deceleration_Label"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Vitesse - Min (RPM)")]
+        public string RecipeMix_SpeedMin_Label {
+            get {
+                return ((string)(this["RecipeMix_SpeedMin_Label"]));
+            }
+            set {
+                this["RecipeMix_SpeedMin_Label"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Max (RPM)")]
+        public string RecipeMix_SpeedMax_Label {
+            get {
+                return ((string)(this["RecipeMix_SpeedMax_Label"]));
+            }
+            set {
+                this["RecipeMix_SpeedMax_Label"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Pression - Min (")]
+        public string RecipeMix_PressureMin_Label {
+            get {
+                return ((string)(this["RecipeMix_PressureMin_Label"]));
+            }
+            set {
+                this["RecipeMix_PressureMin_Label"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Max")]
+        public string RecipeMix_PressureMax_Label {
+            get {
+                return ((string)(this["RecipeMix_PressureMax_Label"]));
+            }
+            set {
+                this["RecipeMix_PressureMax_Label"] = value;
             }
         }
     }

@@ -18,6 +18,12 @@ using static Main.Pages.Recipe;
 
 namespace Main.Pages.SubRecipe
 {
+    public class WeightViewModel
+    {
+        public string TextBlockSetpoint { get; } = Settings.Default.RecipeWeight_Setpoint_Label + " " + "[" + Settings.Default.RecipeWeight_Setpoint_Min + " ; " + Settings.Default.RecipeWeight_Setpoint_Max + "]";
+        public string TextBlockRange { get; } = Settings.Default.RecipeWeight_Range_Label + " " + "[" + Settings.Default.RecipeWeight_Range_Min + " ; " + Settings.Default.RecipeWeight_Range_Max + "]";
+    }
+
     /// <summary>
     /// Logique d'interaction pour Weight.xaml
     /// </summary>
@@ -32,6 +38,7 @@ namespace Main.Pages.SubRecipe
         private bool CurrentFormatControl_tbBarcode;
 
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        
 
         public Weight(Frame frame, string seqNumber)
         {
@@ -245,7 +252,7 @@ namespace Main.Pages.SubRecipe
 
 
             if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: n, 
-                min: Settings.Default.RecipeWeight_Min_Min, max: Settings.Default.RecipeWeight_Min_Max))
+                min: Settings.Default.RecipeWeight_Range_Min, max: Settings.Default.RecipeWeight_Range_Max))
             {
                 FormatControl[i] = true;
             }

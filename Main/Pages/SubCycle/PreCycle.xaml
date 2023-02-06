@@ -17,9 +17,9 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height = "45" />
-            <RowDefinition Height = "45" />
-            <RowDefinition Height = "45" />
+            <RowDefinition Height = "55" />
+            <RowDefinition Height = "55" />
+            <RowDefinition Height = "55" />
             <RowDefinition Height = "*" />
             <RowDefinition Height = "40" />
             <RowDefinition Height = "40" />
@@ -29,9 +29,9 @@
         <TextBox x:Name="tbOFnumber" Grid.Row = "0" Grid.Column = "1" Margin = "10" KeyDown="TbOFnumber_KeyDown"/>
 
         <TextBlock Grid.Row = "1" Grid.Column = "0" Text = "Produit" Margin = "10" HorizontalAlignment = "Left" VerticalAlignment = "Center"/>
-        <ComboBox x:Name="cbxProgramName" Grid.Row = "1" Grid.Column = "1" Margin="10" Width="Auto" IsSynchronizedWithCurrentItem="True"/>
+        <ComboBox x:Name="cbxRecipeName" Style="{DynamicResource ComboBoxStyle1}" Grid.Row = "1" Grid.Column = "1" Margin="10" Width="Auto" IsSynchronizedWithCurrentItem="True" SelectionChanged="cbxProgramName_SelectionChanged"/>
 
-        <TextBlock Grid.Row = "2" Grid.Column = "0" Text = "Masse du produit fini (kg)" Margin = "10" HorizontalAlignment = "Left" VerticalAlignment = "Center"/>
+        <TextBlock x:Name="lbFinalWeight" Grid.Row = "2" Grid.Column = "0" Text = "Masse cible (g) [0 ; 0]" Margin = "10" HorizontalAlignment = "Left" VerticalAlignment = "Center"/>
         <TextBox x:Name="tbFinalWeight" Grid.Row = "2" Grid.Column = "1" Margin = "10" KeyDown="TbFinalWeight_KeyDown"/>
 
         <Button Grid.Row = "4" Grid.Column = "2" Content = "OK" Margin = "1" HorizontalAlignment = "Left" VerticalAlignment = "Center" Width = "80" Click="FxOK"/>

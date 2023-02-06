@@ -22,6 +22,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Globalization;
+using System.Diagnostics;
+using MixingApplication.Pages.SubCycle;
 
 namespace Main.Pages
 {
@@ -116,6 +119,9 @@ namespace Main.Pages
         private readonly Frame frameMain;
         private readonly Frame frameInfoCycle;
         private bool curMethodDoneOnGoing;
+        private string finalWeightMin = "";
+        private string finalWeightMax = "";
+        private Process keyBoardProcess;
 
         private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -204,6 +210,12 @@ namespace Main.Pages
                 return false;
             }
 
+            if (finalWeightMin == "" || finalWeightMax == "")
+            {
+                General.ShowMessageBox("Gamme de la masse final incorrecte");
+                return false;
+            }
+
             if (new_version <= 0)
             {
                 logger.Error(Settings.Default.Recipe_Error_IncorrectVersion);
@@ -238,8 +250,8 @@ namespace Main.Pages
             recipeInfo = new RecipeInfo();
             recipeInfo.Columns[recipeInfo.Name].Value = recipeName;
             recipeInfo.Columns[recipeInfo.Version].Value = new_version.ToString();
-            recipeInfo.Columns[recipeInfo.FinaleWeightMin].Value = "11";
-            recipeInfo.Columns[recipeInfo.FinaleWeightMax].Value = "22";
+            recipeInfo.Columns[recipeInfo.FinaleWeightMin].Value = int.Parse(finalWeightMin, NumberStyles.AllowThousands).ToString();
+            recipeInfo.Columns[recipeInfo.FinaleWeightMax].Value = int.Parse(finalWeightMax, NumberStyles.AllowThousands).ToString();
 
             recipeInfo.Columns[recipeInfo.Status].Value = MyDatabase.GetRecipeStatus(status).ToString();
             //recipeInfo.columns[recipeInfo.status].value = MyDatabase.GetRecipeStatus(status).ToString();
@@ -319,8 +331,11 @@ namespace Main.Pages
                         seqInfoList[i].Columns[seqInfoList[i].NextSeqId].Id + " " +
                         seqInfoList[i].Columns[seqInfoList[i].NextSeqId].Value);
 
+                    string id = seqInfoList[i].Columns[seqInfoList[i].NextSeqId].Value;
+                    ISeqTabInfo seqTabInfo = seqInfoList[i + 1];
+
                     // A CORRIGER : IF RESULT IS FALSE
-                    t = MyDatabase.TaskEnQueue(() => { return MyDatabase.DeleteRow(seqInfoList[i + 1], seqInfoList[i].Columns[seqInfoList[i].NextSeqId].Value); });
+                    t = MyDatabase.TaskEnQueue(() => { return MyDatabase.DeleteRow(seqTabInfo, id); });
                     //MyDatabase.DeleteRow(seqInfoList[i + 1], seqInfoList[i].columns[seqInfoList[i].nextSeqId].value);
 
                     i++;
@@ -365,6 +380,10 @@ namespace Main.Pages
             nextSeqID = recipeInfo.Columns[recipeInfo.NextSeqId].Value;
             currentRecipeVersion = recipeInfo.Columns[recipeInfo.Version].Value;
             currentRecipeStatus = status[int.Parse(recipeInfo.Columns[recipeInfo.Status].Value)];
+            tbWeightMinModif.Text = recipeInfo.Columns[recipeInfo.FinaleWeightMin].Value;
+            tbWeightMaxModif.Text = recipeInfo.Columns[recipeInfo.FinaleWeightMax].Value;
+            finalWeightMin = tbWeightMinModif.Text;
+            finalWeightMax = tbWeightMaxModif.Text;
 
             foreach (UIElement element in gridMain.Children) // Pour chaque element de la grille principale (gridMain)...
             {
@@ -593,6 +612,7 @@ namespace Main.Pages
                 while (curMethodDoneOnGoing) await Task.Delay(Settings.Default.Recipe_WaitRecipeDisplayedDelay); 
 
                 panelInfoRecipe.Visibility = Visibility.Visible;
+                panelTestRecipe.Visibility = Visibility.Visible;
                 //MyDatabase.Disconnect();
             }
         }
@@ -620,7 +640,8 @@ namespace Main.Pages
                 {
                     // Création d'une nouvelle recette, l'ancienne version sera obsolète
                     if (Create_NewRecipe(ProgramNames[currentIndex], int.Parse(labelVersion.Text) + 1, RecipeStatus.DRAFT, false))
-                    {/*
+                    {
+                        /*
                         recipeInfo.Columns[recipeInfo.Status].Value = MyDatabase.GetRecipeStatus(RecipeStatus.OBSOLETE).ToString();
                         //recipeInfo.columns[recipeInfo.status].value = MyDatabase.GetRecipeStatus(RecipeStatus.OBSOLETE).ToString();
 
@@ -642,42 +663,63 @@ namespace Main.Pages
             //else if (labelStatus.Text == status[MyDatabase.GetRecipeStatus(RecipeStatus.DRAFT)])
             else if (labelStatus.Text == status[MyDatabase.GetRecipeStatus(RecipeStatus.DRAFT)])
             {
+                bool isStillDraft = false;
+
                 if (General.ShowMessageBox(Settings.Default.Recipe_Request_UpdateDraftRecipe, Settings.Default.General_Request_ConfirmationTitle, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
-                    // Modification de la recette puis modification du status en draft
-                    if (Create_NewRecipe(ProgramNames[currentIndex], int.Parse(labelVersion.Text), RecipeStatus.PROD, false))
+                    if (General.ShowMessageBox(Settings.Default.Recipe_Request_UpdateDraftRecipe_YOU_SURE, Settings.Default.General_Request_ConfirmationTitle, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
-                        Delete_Recipe(ProgramIDs[currentIndex]);
+                        // Modification de la recette puis modification du status en draft
+                        if (Create_NewRecipe(ProgramNames[currentIndex], int.Parse(labelVersion.Text), RecipeStatus.PROD, false))
+                        {
+                            Delete_Recipe(ProgramIDs[currentIndex]);
 
-                        // A CORRIGER : IF RESULT IS FALSE
-                        t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(recipeInfo.TabName, recipeInfo.Columns[recipeInfo.Id].Id); });
-                        ProgramIDs[currentIndex] = ((int)t.Result).ToString();
-                        //ProgramIDs[currentIndex] = MyDatabase.GetMax(recipeInfo.name, recipeInfo.columns[recipeInfo.id].id).ToString();
+                            // A CORRIGER : IF RESULT IS FALSE
+                            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(recipeInfo.TabName, recipeInfo.Columns[recipeInfo.Id].Id); });
+                            ProgramIDs[currentIndex] = ((int)t.Result).ToString();
+                            //ProgramIDs[currentIndex] = MyDatabase.GetMax(recipeInfo.name, recipeInfo.columns[recipeInfo.id].id).ToString();
 
-                        // Get the new recipe
-                        t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeInfo), ProgramIDs[currentIndex].ToString()); });
-                        RecipeInfo oldRecipe = (RecipeInfo)t.Result;
+                            // Get the new recipe
+                            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeInfo), ProgramIDs[currentIndex].ToString()); });
+                            RecipeInfo oldRecipe = (RecipeInfo)t.Result;
 
-                        // Get the previous version of the recipe (Create new recipe and set recipe name and version)
-                        string name = oldRecipe.Columns[oldRecipe.Name].Value;
-                        int version = int.Parse(oldRecipe.Columns[oldRecipe.Version].Value) - 1;
-                        oldRecipe = new RecipeInfo();
-                        oldRecipe.Columns[oldRecipe.Name].Value = name;
-                        oldRecipe.Columns[oldRecipe.Version].Value = version.ToString(); 
-                        t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(table: oldRecipe); });
-                        oldRecipe = (RecipeInfo)t.Result;
+                            // Get the previous version of the recipe (Create new recipe and set recipe name and version)
+                            string name = oldRecipe.Columns[oldRecipe.Name].Value;
+                            int version = int.Parse(oldRecipe.Columns[oldRecipe.Version].Value) - 1;
+                            oldRecipe = new RecipeInfo();
+                            oldRecipe.Columns[oldRecipe.Name].Value = name;
+                            oldRecipe.Columns[oldRecipe.Version].Value = version.ToString();
+                            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(table: oldRecipe); });
+                            oldRecipe = (RecipeInfo)t.Result;
 
-                        // Update the status of the previous version of the recipe to Obsolete
-                        string id = oldRecipe.Columns[oldRecipe.Id].Value;
-                        oldRecipe = new RecipeInfo();
-                        oldRecipe.Columns[recipeInfo.Status].Value = MyDatabase.GetRecipeStatus(RecipeStatus.OBSOLETE).ToString();
-                        // A CORRIGER : IF RESULT IS FALSE
-                        t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(oldRecipe, id); });
+                            if (oldRecipe == null)
+                            {
+                                labelStatus.Text = "###";
+                                General.ShowMessageBox("Problème dans la création de la recette");
+                                return;
+                            }
 
-                        labelStatus.Text = status[MyDatabase.GetRecipeStatus(RecipeStatus.PROD)];
+                            // Update the status of the previous version of the recipe to Obsolete
+                            string id = oldRecipe.Columns[oldRecipe.Id].Value;
+                            oldRecipe = new RecipeInfo();
+                            oldRecipe.Columns[recipeInfo.Status].Value = MyDatabase.GetRecipeStatus(RecipeStatus.OBSOLETE).ToString();
+                            // A CORRIGER : IF RESULT IS FALSE
+                            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(oldRecipe, id); });
+
+                            labelStatus.Text = status[MyDatabase.GetRecipeStatus(RecipeStatus.PROD)];
+                        }
+                    }
+                    else
+                    {
+                        isStillDraft = true;
                     }
                 }
                 else
+                {
+                    isStillDraft = true;
+                }
+
+                if(isStillDraft)
                 {
                     // Modification de la recette draft en cours
                     if (Create_NewRecipe(ProgramNames[cbxPgmToModify.SelectedIndex], int.Parse(labelVersion.Text), RecipeStatus.DRAFT, false))
@@ -902,7 +944,18 @@ namespace Main.Pages
                 if (General.ShowMessageBox(Settings.Default.Recipe_Request_TestRecipe, Settings.Default.General_Request_ConfirmationTitle, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     string id = ProgramIDs[cbxPgmToModify.SelectedIndex];
-                    General.StartCycle(id, Settings.Default.General_na, finalWeight.ToString(), frameMain, frameInfoCycle, true);
+                    CycleStartInfo info;
+                    info.recipeID = id;
+                    info.OFnumber = Settings.Default.General_na;
+                    info.finalWeight = finalWeight.ToString();
+                    info.frameMain = frameMain;
+                    info.frameInfoCycle = frameInfoCycle;
+                    info.isTest = true;
+                    info.bowlWeight = "";
+                    info.frameMain.Content = new WeightBowl(info);
+                    //General.StartCycle(info);
+
+                    //General.StartCycle(id, Settings.Default.General_na, finalWeight.ToString(), frameMain, frameInfoCycle, true);
                 }
             }
             else
@@ -1028,8 +1081,53 @@ namespace Main.Pages
             //MyDatabase.Disconnect();
         }
 
-        // VERIFIE LA CONNECTION DE LA BASE DE DONNéES PARTOUT !!!!! MOTHER FUCKER ¨¨
-        // ...
-        // ou pas... ;-P
+        private void tbWeightMinNew_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0,
+                min: 0,
+                max: tbWeightMaxNew.Text == "" ? -1 : int.Parse(tbWeightMaxNew.Text, NumberStyles.AllowThousands));
+            finalWeightMin = tbWeightMinNew.Text;
+        }
+
+        private void tbWeightMaxNew_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
+                min: tbWeightMinNew.Text == "" ? 0 : int.Parse(tbWeightMinNew.Text, NumberStyles.AllowThousands), 
+                max: -1);
+            finalWeightMax = tbWeightMaxNew.Text;
+        }
+
+        private void tbWeightMinModif_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0,
+                min: 0,
+                max: tbWeightMaxModif.Text == "" ? -1 : int.Parse(tbWeightMaxModif.Text, NumberStyles.AllowThousands));
+            finalWeightMin = tbWeightMinModif.Text;
+        }
+
+        private void tbWeightMaxModif_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0,
+                min: tbWeightMinModif.Text == "" ? 0 : int.Parse(tbWeightMinModif.Text, NumberStyles.AllowThousands),
+                max: -1);
+            finalWeightMax = tbWeightMaxModif.Text;
+        }
+
+        private void tbRecipeNameNew_GotFocus(object sender, RoutedEventArgs e)
+        {
+            keyBoardProcess = Process.Start("osk.exe");
+        }
+
+        private void tbRecipeNameNew_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (keyBoardProcess != null)
+            {
+                keyBoardProcess.Kill();
+            }
+        }
     }
 }

@@ -21,6 +21,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User_Management", "User_Man
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Driver_RS232", "Driver_RS232\Driver_RS232.csproj", "{995498BD-68E4-4DAD-98C3-42563DBD79D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Driver_Ethernet", "Driver_Ethernet\Driver_Ethernet.csproj", "{141D44F7-77DD-49B2-AA86-56CFF916F13F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Driver_Ethernet_Balance", "Driver_Ethernet_Weight\Driver_Ethernet_Balance.csproj", "{44088962-C48A-4623-9CF1-5C3864EAA2EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -100,6 +104,22 @@ Global
 		{995498BD-68E4-4DAD-98C3-42563DBD79D8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{995498BD-68E4-4DAD-98C3-42563DBD79D8}.Release|x86.ActiveCfg = Release|Any CPU
 		{995498BD-68E4-4DAD-98C3-42563DBD79D8}.Release|x86.Build.0 = Release|Any CPU
+		{141D44F7-77DD-49B2-AA86-56CFF916F13F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{141D44F7-77DD-49B2-AA86-56CFF916F13F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{141D44F7-77DD-49B2-AA86-56CFF916F13F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{141D44F7-77DD-49B2-AA86-56CFF916F13F}.Debug|x86.Build.0 = Debug|Any CPU
+		{141D44F7-77DD-49B2-AA86-56CFF916F13F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{141D44F7-77DD-49B2-AA86-56CFF916F13F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{141D44F7-77DD-49B2-AA86-56CFF916F13F}.Release|x86.ActiveCfg = Release|Any CPU
+		{141D44F7-77DD-49B2-AA86-56CFF916F13F}.Release|x86.Build.0 = Release|Any CPU
+		{44088962-C48A-4623-9CF1-5C3864EAA2EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44088962-C48A-4623-9CF1-5C3864EAA2EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44088962-C48A-4623-9CF1-5C3864EAA2EF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{44088962-C48A-4623-9CF1-5C3864EAA2EF}.Debug|x86.Build.0 = Debug|Any CPU
+		{44088962-C48A-4623-9CF1-5C3864EAA2EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44088962-C48A-4623-9CF1-5C3864EAA2EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44088962-C48A-4623-9CF1-5C3864EAA2EF}.Release|x86.ActiveCfg = Release|Any CPU
+		{44088962-C48A-4623-9CF1-5C3864EAA2EF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
