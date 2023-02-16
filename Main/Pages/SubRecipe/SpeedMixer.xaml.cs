@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 using System.Globalization;
 using static Main.Pages.Recipe;
 using Database;
-using MixingApplication.Properties;
+using Main.Properties;
 using System.Configuration;
 using System.Windows.Controls.Primitives;
 

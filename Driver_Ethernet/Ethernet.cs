@@ -30,7 +30,7 @@ namespace Driver_Ethernet
             endLine = endLine_arg;
         }
 
-        private void Connect()
+        public void Connect()
         {
             logger.Debug("Connect");
             // Créez un objet socket pour la connexion
@@ -40,7 +40,7 @@ namespace Driver_Ethernet
             client.Connect(new IPEndPoint(IPAddress.Parse(ipAddress), port));
         }
 
-        private bool IsConnected()
+        public bool IsConnected()
         {
             return client != null && client.Connected;
         }
@@ -55,14 +55,15 @@ namespace Driver_Ethernet
             }
         }
 
-        public void WriteData(string dataToSend)
+        public bool WriteData(string dataToSend)
         {
             //logger.Debug("WriteData");
             if (!IsConnected()) Connect();
-            if (!IsConnected()) return;
+            if (!IsConnected()) return false;
 
             byte[] buffer = Encoding.ASCII.GetBytes(dataToSend + endLine);
             client.Send(buffer);
+            return true;
         }
 
         public string ReadData(int msWaitTime = 1000)
@@ -98,8 +99,11 @@ namespace Driver_Ethernet
 
         public string ReadData(string dataToSend, int msWaitTime = -1)
         {
-            WriteData(dataToSend);
-            return ReadData(msWaitTime);
+            if (WriteData(dataToSend))
+            {
+                return ReadData(msWaitTime);
+            }
+            return "";
         }
     }
 }

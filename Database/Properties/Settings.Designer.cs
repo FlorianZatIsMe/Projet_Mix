@@ -770,6 +770,8 @@ namespace Database.Properties {
   <string>comment</string>
   <string>is_it_a_test</string>
   <string>bowl_weight</string>
+  <string>last_weight_th</string>
+  <string>last_weight_eff</string>
 </ArrayOfString>")]
         public global::System.Collections.Specialized.StringCollection Cycle_ColIds {
             get {
@@ -1024,6 +1026,7 @@ namespace Database.Properties {
   <string>maximum</string>
   <string>unit</string>
   <string>decimal_number</string>
+  <string>is_solvent</string>
 </ArrayOfString>")]
         public global::System.Collections.Specialized.StringCollection CycleWeight_ColIds {
             get {
@@ -1717,8 +1720,12 @@ namespace Database.Properties {
   <string>id</string>
   <string>role</string>
   <string>cycle_start</string>
-  <string>recipe_create</string>
+  <string>recipe_update</string>
+  <string>backup</string>
+  <string>parameters</string>
+  <string>daily_test</string>
   <string>application_stop</string>
+  <string>ack_alarm</string>
 </ArrayOfString>")]
         public global::System.Collections.Specialized.StringCollection AccessTable_ColIds {
             get {
@@ -1791,7 +1798,7 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        [global::System.Configuration.DefaultSettingValueAttribute("7")]
         public int AccessTable_ColN_applicationStop {
             get {
                 return ((int)(this["AccessTable_ColN_applicationStop"]));
@@ -1803,7 +1810,7 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("operator")]
+        [global::System.Configuration.DefaultSettingValueAttribute("opérateur")]
         public string AccessTable_Role_operator {
             get {
                 return ((string)(this["AccessTable_Role_operator"]));
@@ -1815,7 +1822,7 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("supervisor")]
+        [global::System.Configuration.DefaultSettingValueAttribute("superviseur")]
         public string AccessTable_Role_supervisor {
             get {
                 return ((string)(this["AccessTable_Role_supervisor"]));
@@ -1827,7 +1834,7 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("administrator")]
+        [global::System.Configuration.DefaultSettingValueAttribute("administrateur")]
         public string AccessTable_Role_administrator {
             get {
                 return ((string)(this["AccessTable_Role_administrator"]));
@@ -1839,7 +1846,7 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("none")]
+        [global::System.Configuration.DefaultSettingValueAttribute("invité")]
         public string AccessTable_Role_none {
             get {
                 return ((string)(this["AccessTable_Role_none"]));
@@ -1865,6 +1872,7 @@ namespace Database.Properties {
   <string>Maximum</string>
   <string>0</string>
   <string>0</string>
+  <string>Solvant</string>
 </ArrayOfString>")]
         public global::System.Collections.Specialized.StringCollection CycleWeight_ColDesc {
             get {
@@ -2314,13 +2322,296 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("18")]
+        public int Cycle_ColN_bowlWeight {
+            get {
+                return ((int)(this["Cycle_ColN_bowlWeight"]));
+            }
+            set {
+                this["Cycle_ColN_bowlWeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("12")]
+        public int CycleWeight_ColN_isSolvent {
+            get {
+                return ((int)(this["CycleWeight_ColN_isSolvent"]));
+            }
+            set {
+                this["CycleWeight_ColN_isSolvent"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("19")]
+        public int Cycle_ColN_lastWeightTh {
+            get {
+                return ((int)(this["Cycle_ColN_lastWeightTh"]));
+            }
+            set {
+                this["Cycle_ColN_lastWeightTh"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        public int Cycle_ColN_lastWeightEff {
+            get {
+                return ((int)(this["Cycle_ColN_lastWeightEff"]));
+            }
+            set {
+                this["Cycle_ColN_lastWeightEff"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-  <Server>localhost</Server>
-  <UserID>root</UserID>
-  <Password>Integra2022/</Password>
-  <Db>db1</Db>
-</ConnectionInfo>")]
+<ArrayOfString xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <string>id</string>
+  <string>username</string>
+  <string>date_time</string>
+  <string>equipment_name</string>
+  <string>setpoint1</string>
+  <string>setpoint2</string>
+  <string>setpoint3</string>
+  <string>setpoint4</string>
+  <string>measure1</string>
+  <string>measure2</string>
+  <string>measure3</string>
+  <string>measure4</string>
+  <string>status</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection Sample_ColIds {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["Sample_ColIds"]));
+            }
+            set {
+                this["Sample_ColIds"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <string>0</string>
+  <string>Nom d'utilisateur</string>
+  <string>Date et heure de l'étalonnage</string>
+  <string>Nom de l'équipement</string>
+  <string>Poids étalon 1</string>
+  <string>Poids étalon 2</string>
+  <string>Poids étalon 3</string>
+  <string>Poids étalon 4</string>
+  <string>Masse mesurée</string>
+  <string>Masse mesurée</string>
+  <string>Masse mesurée</string>
+  <string>Masse mesurée</string>
+  <string>Statut</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection Sample_ColDesc {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["Sample_ColDesc"]));
+            }
+            set {
+                this["Sample_ColDesc"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("sampling")]
+        public string Sample_TableName {
+            get {
+                return ((string)(this["Sample_TableName"]));
+            }
+            set {
+                this["Sample_TableName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Sample_ColN_id {
+            get {
+                return ((int)(this["Sample_ColN_id"]));
+            }
+            set {
+                this["Sample_ColN_id"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int Sample_ColN_dateTime {
+            get {
+                return ((int)(this["Sample_ColN_dateTime"]));
+            }
+            set {
+                this["Sample_ColN_dateTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public int Sample_ColN_setpoint1 {
+            get {
+                return ((int)(this["Sample_ColN_setpoint1"]));
+            }
+            set {
+                this["Sample_ColN_setpoint1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int Sample_ColN_setpoint2 {
+            get {
+                return ((int)(this["Sample_ColN_setpoint2"]));
+            }
+            set {
+                this["Sample_ColN_setpoint2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("6")]
+        public int Sample_ColN_setpoint3 {
+            get {
+                return ((int)(this["Sample_ColN_setpoint3"]));
+            }
+            set {
+                this["Sample_ColN_setpoint3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("7")]
+        public int Sample_ColN_setpoint4 {
+            get {
+                return ((int)(this["Sample_ColN_setpoint4"]));
+            }
+            set {
+                this["Sample_ColN_setpoint4"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("8")]
+        public int Sample_ColN_measure1 {
+            get {
+                return ((int)(this["Sample_ColN_measure1"]));
+            }
+            set {
+                this["Sample_ColN_measure1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("9")]
+        public int Sample_ColN_measure2 {
+            get {
+                return ((int)(this["Sample_ColN_measure2"]));
+            }
+            set {
+                this["Sample_ColN_measure2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int Sample_ColN_measure3 {
+            get {
+                return ((int)(this["Sample_ColN_measure3"]));
+            }
+            set {
+                this["Sample_ColN_measure3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("11")]
+        public int Sample_ColN_measure4 {
+            get {
+                return ((int)(this["Sample_ColN_measure4"]));
+            }
+            set {
+                this["Sample_ColN_measure4"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("12")]
+        public int Sample_ColN_status {
+            get {
+                return ((int)(this["Sample_ColN_status"]));
+            }
+            set {
+                this["Sample_ColN_status"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int Sample_ColN_username {
+            get {
+                return ((int)(this["Sample_ColN_username"]));
+            }
+            set {
+                this["Sample_ColN_username"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("yyyy-MM-dd HH:mm:ss")]
+        public string Timestamp_Format {
+            get {
+                return ((string)(this["Timestamp_Format"]));
+            }
+            set {
+                this["Timestamp_Format"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int Sample_ColN_equipmentName {
+            get {
+                return ((int)(this["Sample_ColN_equipmentName"]));
+            }
+            set {
+                this["Sample_ColN_equipmentName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"
+          <ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+            <Server>localhost</Server>
+            <UserID>root</UserID>
+            <Password>Integra2022/</Password>
+            <Db>db1</Db>
+          </ConnectionInfo>
+        ")]
         public global::Database.ConnectionInfo ConnectionInfo {
             get {
                 return ((global::Database.ConnectionInfo)(this["ConnectionInfo"]));
@@ -2332,13 +2623,49 @@ namespace Database.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("18")]
-        public int Cycle_ColN_bowl_weight {
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public int AccessTable_ColN_Backup {
             get {
-                return ((int)(this["Cycle_ColN_bowl_weight"]));
+                return ((int)(this["AccessTable_ColN_Backup"]));
             }
             set {
-                this["Cycle_ColN_bowl_weight"] = value;
+                this["AccessTable_ColN_Backup"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int AccessTable_ColN_Parameters {
+            get {
+                return ((int)(this["AccessTable_ColN_Parameters"]));
+            }
+            set {
+                this["AccessTable_ColN_Parameters"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("6")]
+        public int AccessTable_ColN_DailyTest {
+            get {
+                return ((int)(this["AccessTable_ColN_DailyTest"]));
+            }
+            set {
+                this["AccessTable_ColN_DailyTest"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("8")]
+        public int AccessTable_ColN_AckAlarm {
+            get {
+                return ((int)(this["AccessTable_ColN_AckAlarm"]));
+            }
+            set {
+                this["AccessTable_ColN_AckAlarm"] = value;
             }
         }
     }

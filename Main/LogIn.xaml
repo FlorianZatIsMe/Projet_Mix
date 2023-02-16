@@ -16,7 +16,8 @@
             <PasswordBox x:Name="password" Width="100"/>
         </WrapPanel>
         <WrapPanel Margin="0,10,0,0" HorizontalAlignment="Right">
-            <Button Content="Ok" Width="40" Click="ButtonOk_Click"/>
+            <Button Content="Connexion" Width="Auto" Click="ButtonOk_Click"/>
+            <Button Content="Déconnexion" Width="Auto" Margin="10,0,0,0" Click="ButtonLogOff_Click"/>
             <Button Content="Annuler" Width="60" Margin="10,0,0,0" Click="ButtonCancel_Click"/>
         </WrapPanel>
     </StackPanel>

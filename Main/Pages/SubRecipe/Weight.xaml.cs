@@ -1,5 +1,5 @@
 ﻿using Database;
-using MixingApplication.Properties;
+using Main.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;

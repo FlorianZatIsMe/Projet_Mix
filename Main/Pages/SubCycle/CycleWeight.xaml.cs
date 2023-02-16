@@ -1,6 +1,7 @@
 ﻿using Database;
 using DRIVER_RS232_Weight;
-using MixingApplication.Properties;
+using Main.Pages.SubCycle;
+using Main.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace Main.Pages.SubCycle
         private readonly string tablePrevious;
         private ISeqInfo prevSeqInfo;
         */
-        private readonly int idSubCycle;
+        private readonly int previousSeqId;
         //private MyDatabase db = new MyDatabase();
         //private readonly string[] currentPhaseParameters;
         private readonly RecipeWeightInfo recipeWeightInfo = new RecipeWeightInfo();
@@ -108,26 +109,31 @@ namespace Main.Pages.SubCycle
             labelWeight.Text = Settings.Default.CycleWeight_WeightField + " (" + Settings.Default.CycleWeight_SetpointField + ": " + cycleWeightInfo.Columns[cycleWeightInfo.Setpoint].Value + Settings.Default.CycleFinalWeight_g_Unit + ")";
             labelWeightLimits.Text = "[ " + cycleWeightInfo.Columns[cycleWeightInfo.Min].Value + "; " + cycleWeightInfo.Columns[cycleWeightInfo.Max].Value + " ]";
 
+            /*
             // if setpoint, min, max are incorrect
             if (false)
             {
                 General.ShowMessageBox("Message d'erreur quelconque");
                 logger.Error("Message d'erreur quelconque");
-                General.EndSequence(recipeWeightInfo, frameMain: subCycle.frameMain, frameInfoCycle: subCycle.frameInfoCycle, idCycle: subCycle.idCycle, previousSeqType: this.cycleWeightInfo.SeqType, previousSeqId: idSubCycle.ToString(), isTest: subCycle.isTest, comment: Settings.Default.Report_Comment_CycleAborted);
+
+                General.LastThingToChange(recipeWeightInfo, frameMain: subCycle.frameMain, frameInfoCycle: subCycle.frameInfoCycle, idCycle: subCycle.idCycle, previousSeqType: this.cycleWeightInfo.SeqType, previousSeqId: previousSeqId.ToString(), isTest: subCycle.isTest, comment: Settings.Default.Report_Comment_CycleAborted);
+
                 Dispose(disposing: true); // Il va peut-être falloir sortir ça du "if"
                 return;
             }
+            */
 
+            logger.Error(cycleWeightInfo.IsSolvent.ToString() + " - " + cycleWeightInfo.Columns[cycleWeightInfo.IsSolvent].Id + " - " + cycleWeightInfo.Columns[cycleWeightInfo.IsSolvent].Value);
             // A CORRIGER : IF RESULT IS FALSE
             t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(cycleWeightInfo); });
             //MyDatabase.InsertRow(cycleWInfo);
             // A CORRIGER : IF RESULT IS FALSE
             t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(cycleWeightInfo.TabName, cycleWeightInfo.Columns[cycleWeightInfo.Id].Id); });
-            idSubCycle = (int)t.Result;
+            previousSeqId = (int)t.Result;
             //idSubCycle = MyDatabase.GetMax(cycleWInfo.name, cycleWInfo.columns[cycleWInfo.id].id);
 
             subCycle.prevSeqInfo.Columns[subCycle.prevSeqInfo.NextSeqType].Value = cycleWeightInfo.SeqType.ToString();
-            subCycle.prevSeqInfo.Columns[subCycle.prevSeqInfo.NextSeqId].Value = idSubCycle.ToString();
+            subCycle.prevSeqInfo.Columns[subCycle.prevSeqInfo.NextSeqId].Value = previousSeqId.ToString();
 
             // A CORRIGER : IF RESULT IS FALSE
             t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(subCycle.prevSeqInfo, subCycle.idPrevious.ToString()); });
@@ -287,10 +293,10 @@ namespace Main.Pages.SubCycle
                 CycleWeightInfo cycleWInfo = new CycleWeightInfo();
                 cycleWInfo.Columns[cycleWInfo.WasWeightManual].Value = isBalanceFree ? DatabaseSettings.General_FalseValue_Write : DatabaseSettings.General_TrueValue_Write;
                 cycleWInfo.Columns[cycleWInfo.DateTime].Value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                cycleWInfo.Columns[cycleWInfo.WeightedValue].Value = tbWeight.Text;
+                cycleWInfo.Columns[cycleWInfo.ActualValue].Value = tbWeight.Text;
 
                 // A CORRIGER : IF RESULT IS FALSE
-                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(cycleWInfo, idSubCycle.ToString()); });
+                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(cycleWInfo, previousSeqId.ToString()); });
                 //MyDatabase.Update_Row(cycleWeightInfo, idSubCycle.ToString());
                 /*
                 if (recipeWeightInfo.columns[1].value == "1") // Si la prochaine séquence est une séquence speedmixer
@@ -299,16 +305,35 @@ namespace Main.Pages.SubCycle
                 }
                 */
 
-                SubCycleArg sub= new SubCycleArg(subCycle.frameMain, subCycle.frameInfoCycle, recipeWeightInfo.Columns[recipeWeightInfo.NextSeqId].Value, subCycle.idCycle, idSubCycle, recipeWeightInfo.TabName, new CycleWeightInfo(), subCycle.isTest);
+                SubCycleArg sub= new SubCycleArg(subCycle.frameMain, subCycle.frameInfoCycle, recipeWeightInfo.Columns[recipeWeightInfo.NextSeqId].Value, subCycle.idCycle, previousSeqId, recipeWeightInfo.TabName, new CycleWeightInfo(), subCycle.isTest);
 
-                General.NextSequence(recipeWeightInfo, subCycle.frameMain, subCycle.frameInfoCycle, subCycle.idCycle, idSubCycle, 0, new CycleWeightInfo(), subCycle.isTest);
+                NextSeqInfo nextSeqInfo = new NextSeqInfo(
+                    recipeParam_arg: recipeWeightInfo,
+                    frameMain_arg: subCycle.frameMain,
+                    frameInfoCycle_arg: subCycle.frameInfoCycle,
+                    idCycle_arg: subCycle.idCycle,
+                    previousSeqType_arg: 0,
+                    previousSeqId_arg: previousSeqId.ToString(),
+                    isTest_arg: subCycle.isTest);
+                General.NextSequence(nextSeqInfo, new CycleWeightInfo());
             }
 
             Dispose(disposing: true);
         }
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
-            General.EndSequence(recipeWeightInfo, frameMain: subCycle.frameMain, frameInfoCycle: subCycle.frameInfoCycle, idCycle: subCycle.idCycle, previousSeqType: cycleWeightInfo.SeqType, previousSeqId: idSubCycle.ToString(), isTest: subCycle.isTest, comment: Settings.Default.Report_Comment_CycleAborted);
+            NextSeqInfo nextSeqInfo = new NextSeqInfo(
+                recipeParam_arg: recipeWeightInfo,
+                frameMain_arg: subCycle.frameMain,
+                frameInfoCycle_arg: subCycle.frameInfoCycle,
+                idCycle_arg: subCycle.idCycle,
+                previousSeqType_arg: recipeWeightInfo.SeqType,
+                previousSeqId_arg: previousSeqId.ToString(),
+                isTest_arg: subCycle.isTest,
+                comment_arg: Settings.Default.Report_Comment_CycleAborted);
+
+            nextSeqInfo.frameMain.Content = new WeightBowl(nextSeqInfo);
+            //General.LastThingToChange(recipeWeightInfo, frameMain: subCycle.frameMain, frameInfoCycle: subCycle.frameInfoCycle, idCycle: subCycle.idCycle, previousSeqType: cycleWeightInfo.SeqType, previousSeqId: previousSeqId.ToString(), isTest: subCycle.isTest, comment: Settings.Default.Report_Comment_CycleAborted);
             Dispose(disposing: true); // Il va peut-être falloir sortir ça du "if"
         }
         private async void TbScan_LostFocusAsync(object sender, RoutedEventArgs e)

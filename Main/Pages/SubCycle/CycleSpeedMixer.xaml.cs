@@ -20,7 +20,8 @@ using System.Windows.Shapes;
 using System.Timers;
 using System.Reflection;
 using Alarm_Management;
-using MixingApplication.Properties;
+using Main.Properties;
+using Main.Pages.SubCycle;
 
 namespace Main.Pages.SubCycle
 {
@@ -37,7 +38,7 @@ namespace Main.Pages.SubCycle
     public partial class CycleSpeedMixer : Page, IDisposable, ISubCycle
     {
         private readonly SubCycleArg subCycle;
-        private readonly int idSubCycle;
+        private readonly int previousSeqId;
         private readonly RecipeSpeedMixerInfo recipeSpeedMixerInfo = new RecipeSpeedMixerInfo();
 
         private bool hasSequenceStarted;
@@ -171,11 +172,11 @@ namespace Main.Pages.SubCycle
 
             // A CORRIGER : IF RESULT IS FALSE
             t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(cycleSMInfo.TabName, cycleSMInfo.Columns[cycleSMInfo.Id].Id); });
-            idSubCycle = (int)t.Result;
+            previousSeqId = (int)t.Result;
             //idSubCycle = MyDatabase.GetMax(cycleSMInfo.name, cycleSMInfo.columns[cycleSMInfo.id].id);
 
             subCycle.prevSeqInfo.Columns[subCycle.prevSeqInfo.NextSeqType].Value = cycleSMInfo.SeqType.ToString();
-            subCycle.prevSeqInfo.Columns[subCycle.prevSeqInfo.NextSeqId].Value = idSubCycle.ToString();
+            subCycle.prevSeqInfo.Columns[subCycle.prevSeqInfo.NextSeqId].Value = previousSeqId.ToString();
 
             // A CORRIGER : IF RESULT IS FALSE
             t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(subCycle.prevSeqInfo, subCycle.idPrevious.ToString()); });
@@ -605,7 +606,7 @@ namespace Main.Pages.SubCycle
             cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.SpeedStd].Value = tempResultInfo.Columns[tempResultInfo.SpeedStd].Value;
             cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.PressureStd].Value = tempResultInfo.Columns[tempResultInfo.PressureStd].Value;
             // A CORRIGER : IF RESULT IS FALSE
-            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(cycleSpeedMixerInfo, idSubCycle.ToString()); });
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(cycleSpeedMixerInfo, previousSeqId.ToString()); });
             //MyDatabase.Update_Row(cycleSpeedMixerInfo, idSubCycle.ToString());
 
 //            MyDatabase.Update_Row("cycle_speedmixer",
@@ -652,14 +653,34 @@ namespace Main.Pages.SubCycle
                 General.ShowMessageBox(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Je ne sais pas, je ne sais plus, je suis perdu");
             }
 
+            NextSeqInfo nextSeqInfo = new NextSeqInfo(
+                recipeParam_arg: recipeSpeedMixerInfo,
+                frameMain_arg: subCycle.frameMain,
+                frameInfoCycle_arg: subCycle.frameInfoCycle,
+                idCycle_arg: subCycle.idCycle,
+                previousSeqType_arg: recipeSpeedMixerInfo.SeqType,
+                previousSeqId_arg: previousSeqId.ToString(),
+                isTest_arg: subCycle.isTest,
+                comment_arg: comment);
+
             if (isCycleStopped)
             {
-                General.EndSequence(recipeSpeedMixerInfo, frameMain: subCycle.frameMain, frameInfoCycle: subCycle.frameInfoCycle, idCycle: subCycle.idCycle, previousSeqType: 1, previousSeqId: idSubCycle.ToString(), isTest: subCycle.isTest, comment: comment);
+                nextSeqInfo.frameMain.Content = new WeightBowl(nextSeqInfo);
+                //General.LastThingToChange(recipeSpeedMixerInfo, frameMain: subCycle.frameMain, frameInfoCycle: subCycle.frameInfoCycle, idCycle: subCycle.idCycle, previousSeqType: 1, previousSeqId: previousSeqId.ToString(), isTest: subCycle.isTest, comment: comment);
             }
             else
             {
-                General.NextSequence(recipeSpeedMixerInfo, subCycle.frameMain, subCycle.frameInfoCycle, subCycle.idCycle, idSubCycle, 1, new CycleSpeedMixerInfo(), subCycle.isTest, comment);
-
+                /*
+                NextSeqInfo nextSeqInfo = new NextSeqInfo(
+                    recipeParam_arg: recipeSpeedMixerInfo,
+                    frameMain_arg: subCycle.frameMain,
+                    frameInfoCycle_arg: subCycle.frameInfoCycle,
+                    idCycle_arg: subCycle.idCycle,
+                    previousSeqType_arg: recipeSpeedMixerInfo.SeqType,
+                    previousSeqId_arg: previousSeqId.ToString(),
+                    isTest_arg: subCycle.isTest,
+                    comment_arg: comment);*/
+                General.NextSequence(nextSeqInfo, new CycleSpeedMixerInfo());
             }
 
             Dispose();

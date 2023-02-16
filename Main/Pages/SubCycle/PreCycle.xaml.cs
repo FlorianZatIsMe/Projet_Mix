@@ -2,8 +2,8 @@
 using Database;
 using Driver_RS232_Pump;
 using DRIVER_RS232_Weight;
-using MixingApplication.Pages.SubCycle;
-using MixingApplication.Properties;
+using Main.Pages.SubCycle;
+using Main.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;

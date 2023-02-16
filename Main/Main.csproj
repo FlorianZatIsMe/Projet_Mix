@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{7E902CC0-FC1E-450B-AF26-4331A690555B}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>MixingApplication</RootNamespace>
+    <RootNamespace>Main</RootNamespace>
     <AssemblyName>MixingApplication</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -256,6 +256,12 @@
     <Compile Include="Pages\Backup.xaml.cs">
       <DependentUpon>Backup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Parameters.xaml.cs">
+      <DependentUpon>Parameters.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Sampling.xaml.cs">
+      <DependentUpon>Sampling.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\SubCycle\WeightBowl.xaml.cs">
       <DependentUpon>WeightBowl.xaml</DependentUpon>
     </Compile>
@@ -297,7 +303,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\Parameters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\Recipe.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Sampling.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -410,10 +424,22 @@
     <Content Include="Resources\img_audit_trail_en.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\img_backup_archive_dis.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\img_backup_archive_en.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\img_copy_dis.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\img_copy_en.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\img_daily_test_dis.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\img_daily_test_en.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\img_delete_dis.png">
@@ -449,10 +475,10 @@
     <Content Include="Resources\img_parameter_en.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\img_programs_dis.png">
+    <Content Include="Resources\img_recipes_dis.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\img_programs_en.png">
+    <Content Include="Resources\img_recipes_en.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\img_start_dis.png">

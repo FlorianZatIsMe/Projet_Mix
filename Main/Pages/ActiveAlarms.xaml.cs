@@ -1,6 +1,6 @@
 ﻿using Alarm_Management;
 using Database;
-using MixingApplication.Properties;
+using Main.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -18,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using User_Management;
 
 namespace Main.Pages
 {
@@ -51,7 +52,10 @@ namespace Main.Pages
 
             updateAlarmTimer.Elapsed += UpdateAlarmTimer_OnTimedEvent;
 
-            InitializeComponent(); 
+            InitializeComponent();
+
+            bool[] currentAccess = UserManagement.GetCurrentAccessTable();
+            btAck.Visibility = currentAccess[AccessTableInfo.AckAlarm] ? Visibility.Visible : Visibility.Hidden;
         }
         private void LoadAlarms()
         {

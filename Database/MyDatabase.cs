@@ -96,6 +96,8 @@ namespace Database
         public static ConnectionInfo ConnectionInfo { get; }
         ///<value>Folder of the application of the database</value>
         public static string DBAppFolder { get; }
+        ///<value>Format of timestamps</value>
+        public static string Timestamp_Format { get; }
 
         // Constructor: initialize each variable of the class
         static DatabaseSettings()
@@ -108,6 +110,7 @@ namespace Database
             General_FalseValue_Write = Settings.Default.General_FalseValue_Write;
             ConnectionInfo = Settings.Default.ConnectionInfo;
             DBAppFolder = Settings.Default.DBAppFolder;
+            Timestamp_Format = Settings.Default.Timestamp_Format;
         }
     }
 
@@ -566,12 +569,12 @@ namespace Database
 
             columns.Add(new Column()
             {
-                Value = dtBefore.ToString("yyyy-MM-dd HH:mm:ss")
+                Value = dtBefore.ToString(Settings.Default.Timestamp_Format)
             });
 
             columns.Add(new Column()
             {
-                Value = dtAfter.ToString("yyyy-MM-dd HH:mm:ss")
+                Value = dtAfter.ToString(Settings.Default.Timestamp_Format)
             });
 
             if (eventTypes != null)
@@ -906,12 +909,26 @@ namespace Database
             try
             {
                 if (reader.Read())
-                {
+                {/*
                     array = new bool[reader.FieldCount - 2];
 
                     for (int i = 0; i < reader.FieldCount - 2; i++)
                     {
                         array[i] = reader.GetBoolean(i + 2);
+                    }*/
+                    array = new bool[reader.FieldCount];
+
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        try
+                        {
+                            array[i] = reader.GetBoolean(i);
+                        }
+                        catch (Exception)
+                        {
+                            array[i] = false;
+                        }
+
                     }
                 }
             }
@@ -1511,6 +1528,54 @@ namespace Database
             }
 
             return tables;
+        }
+
+        public static DateTime? GetLastSamplingDate(SampleInfo sampleInfo, DateTime? lastSample = null)
+        {
+            logger.Debug("SendCommand_GetLastSampling");
+
+            DateTime? returnDate;
+
+            if (!IsConnected())
+            {
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                ShowMessageBox(Settings.Default.Error_connectToDbFailed);
+                return null;
+            }
+
+            string whereArg = " WHERE " + GetArg(sampleInfo.Columns, " AND ") + (lastSample == null ? "" : " AND " + sampleInfo.Columns[sampleInfo.DateTime].Id + " < '" + ((DateTime)lastSample).ToString(Settings.Default.Timestamp_Format)) + "'";                      
+
+            SendCommand(@"SELECT MAX(" + sampleInfo.Columns[sampleInfo.DateTime].Id + ") FROM " + sampleInfo.TabName + whereArg, sampleInfo.Columns);
+
+            if (IsReaderNotAvailable()) return null;
+
+            try
+            {
+                reader.Read();
+
+                if (!reader.IsDBNull(0))
+                {
+                    returnDate = reader.GetDateTime(0);
+                    reader.Read();
+
+                    if (reader.FieldCount == 0) // je crois que cette vérification ne sert à rien, il faut vérifier que la requête le renvoie plus de résultat
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+                Close_reader();
+                return returnDate;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+                ShowMessageBox(ex.Message);
+            }
+            return null;
         }
 
         public static int GetMax(IComTabInfo tableInfo, string column, int mutex = -1)

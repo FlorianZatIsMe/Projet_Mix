@@ -27,10 +27,11 @@ using NLog;
 using NLog.Common;
 using System.Threading;
 using Driver_ColdTrap;
-using MixingApplication.Properties;
+using Main.Properties;
 using Driver_Ethernet;
 using Driver_Ethernet_Balance;
 using System.Speech.Synthesis;
+using System.Windows.Media;
 
 namespace Main
 {
@@ -56,6 +57,7 @@ namespace Main
         private readonly System.Timers.Timer currentTimeTimer;
         private bool isWindowLoaded = false;
         private bool wasAutoBackupStarted = false;
+        private Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
         private readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public MainWindow()
@@ -81,25 +83,16 @@ namespace Main
             /*
 
             SpeechSynthesizer synth = new SpeechSynthesizer();
-            MessageBox.Show("go");
             //synth.SelectVoiceByHints(VoiceGender.Male, VoiceAge.Senior);
             //synth.Speak("Oh... You're sweet, thank you. I don't love you, but it's nice to know that someone loves me. Who wouldn't anyway ?");
-            //Balance.eth.WriteData("S");
-            //MessageBox.Show("1");
-            //Balance.eth.ReadData();
-            //MessageBox.Show("1");
 
-            //Balance.eth.WriteData("SIR");
+            //General.PrintReport(467);
 
-            logger.Fatal(Balance.SendZeroCommand().ToString());
-            logger.Fatal(Balance.SendTareCommand().ToString());
+            ReportGeneration report = new ReportGeneration();
+            report.GenerateSamplingReport("13");
 
             General.ShowMessageBox("Fini je crois");
             Environment.Exit(1);
-
-            Balance.StartContRead();
-            MessageBox.Show("1");
-            logger.Debug(Balance.StopContRead().ToString());
             //*/
 
             InitializeComponent();
@@ -117,6 +110,11 @@ namespace Main
                 logger.Error("Problème de connexion avec l'active directory");
                 UpdateUser(username: "none",
                     role: "none");
+                if(!UserManagement.SetNoneAccess())
+                {
+                    General.ShowMessageBox("On a un sérieux problème");
+                    logger.Error("On a un sérieux problème");
+                }
             }
 
             labelSoftwareName.Text = General.application_name + " version " + General.application_version;
@@ -278,12 +276,113 @@ namespace Main
                 logger.Debug("ExecuteBackupAuto on time");
                 if (ExecuteBackupAuto()) General.NextBackupTime = General.NextBackupTime.AddDays(1);
             }
+
+            ConfigurationManager.RefreshSection("appSettings");
+
+            try
+            {
+                DateTime nextCalibDate = Convert.ToDateTime(ConfigurationManager.AppSettings["NextCalibDate"]);
+                this.Dispatcher.Invoke(() => {
+                    if (nextCalibDate.CompareTo(DateTime.Now) < 0)
+                    {
+                        if (labelCalibration.Text != "Calibration de La balance expirée depuis le " + nextCalibDate.ToString("dd.MMM.yyyy"))
+                        {
+                            labelCalibration.Text = "Calibration de La balance expirée depuis le " + nextCalibDate.ToString("dd.MMM.yyyy");
+                            labelCalibration.Foreground = Brushes.Orange;
+                        }
+                    }
+                    else if (nextCalibDate.CompareTo(DateTime.Now.AddDays(15)) < 0)
+                    {
+                        if (labelCalibration.Text != "La balance devra être calibrée avant le " + nextCalibDate.ToString("dd.MMM.yyyy"))
+                        {
+                            labelCalibration.Text = "La balance devra être calibrée avant le " + nextCalibDate.ToString("dd.MMM.yyyy");
+                            labelCalibration.Foreground = Brushes.Yellow;
+                        }
+                    }
+                    else
+                    {
+                        if (labelCalibration.Text != "")
+                        {
+                            labelCalibration.Text = "";
+                        }
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+                logger.Fatal(ConfigurationManager.AppSettings["NextCalibDate"]);
+            }
         }
         public void UpdateUser(string username, string role)
         {
             General.loggedUsername = username;
             General.currentRole = role;
             labelUser.Text = username + ", " + role;
+
+            bool[] currentAccess = UserManagement.GetCurrentAccessTable();
+
+            menuItemStart.Visibility = currentAccess[AccessTableInfo.CycleStart] ? Visibility.Visible : Visibility.Collapsed;
+            /*
+            menuItemStart.IsEnabled = currentAccess[AccessTableInfo.CycleStart];
+            menuItemStart.Icon = new Image
+            {
+                Source = new BitmapImage(new Uri(
+                    currentAccess[AccessTableInfo.CycleStart] ?
+                    Settings.Default.Main_StartIconEn :
+                    Settings.Default.Main_StartIconDis,
+                    UriKind.Relative))
+            };*/
+
+            menuItemRecipes.Visibility = currentAccess[AccessTableInfo.RecipeUpdate] ? Visibility.Visible : Visibility.Collapsed;
+            /*
+            menuItemRecipes.IsEnabled = currentAccess[AccessTableInfo.RecipeUpdate];
+            menuItemRecipes.Icon = new Image
+            {
+                Source = new BitmapImage(new Uri(
+                    currentAccess[AccessTableInfo.RecipeUpdate] ?
+                    Settings.Default.Main_RecipeIconEn :
+                    Settings.Default.Main_RecipeIconDis,
+                    UriKind.Relative))
+            };*/
+
+            menuItemBackup.Visibility = currentAccess[AccessTableInfo.Backup] ? Visibility.Visible : Visibility.Collapsed;
+            /*
+            menuItemBackup.IsEnabled = currentAccess[AccessTableInfo.Backup];
+            menuItemBackup.Icon = new Image
+            {
+                Source = new BitmapImage(new Uri(
+                    currentAccess[AccessTableInfo.Backup] ?
+                    Settings.Default.Main_BackupArchiveIconEn :
+                    Settings.Default.Main_BackupArchiveIconDis,
+                    UriKind.Relative))
+            };*/
+
+            menuItemParameters.Visibility = currentAccess[AccessTableInfo.Parameters] ? Visibility.Visible : Visibility.Collapsed;
+            /*
+            menuItemParameters.IsEnabled = currentAccess[AccessTableInfo.Parameters];
+            menuItemParameters.Icon = new Image
+            {
+                Source = new BitmapImage(new Uri(
+                    currentAccess[AccessTableInfo.Parameters] ?
+                    Settings.Default.Main_ParametersIconEn :
+                    Settings.Default.Main_ParametersIconDis,
+                    UriKind.Relative))
+            };*/
+
+            menuItemDailyTest.Visibility = currentAccess[AccessTableInfo.DailyTest] ? Visibility.Visible : Visibility.Collapsed;
+            /*
+            menuItemDailyTest.IsEnabled = currentAccess[AccessTableInfo.DailyTest];
+            menuItemDailyTest.Icon = new Image
+            {
+                Source = new BitmapImage(new Uri(
+                    currentAccess[AccessTableInfo.DailyTest] ?
+                    Settings.Default.Main_DailyTestIconEn :
+                    Settings.Default.Main_DailyTestIconDis,
+                    UriKind.Relative))
+            };*/
+
+            Close_App.Visibility = currentAccess[AccessTableInfo.ApplicationStop] ? Visibility.Visible : Visibility.Collapsed;
         }
         private void ActiveAlarmEvent()
         {
@@ -307,6 +406,26 @@ namespace Main
         }
         private void FxCycleStart(object sender, RoutedEventArgs e)
         {
+            SampleInfo sampleInfo = new SampleInfo();
+            sampleInfo.Columns[sampleInfo.Status].Value = DatabaseSettings.General_TrueValue_Write;
+            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(sampleInfo, sampleInfo.Columns[sampleInfo.Id].Id); });
+            string id = ((int)t.Result).ToString();
+
+            sampleInfo = new SampleInfo();
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(SampleInfo), id); });
+            sampleInfo = (SampleInfo)t.Result;
+
+            DateTime lastSampling = Convert.ToDateTime(sampleInfo.Columns[sampleInfo.DateTime].Value);
+
+            if (lastSampling.CompareTo(DateTime.Now.AddDays(-1)) < 0)
+            {
+                if (General.ShowMessageBox("Le dernier test journalier de la balance a été fait le " + lastSampling.ToString("dd.MMM.yyyy") + " à " + lastSampling.ToString("HH:mm:ss") + ", voulez-vous faire le test journalier ?", "Test journalier", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    frameMain.Content = new Pages.SubCycle.WeightBowl(frameMain);
+                    return;
+                }
+            }
+
             //menuItemStart.IsEnabled = false;
 
             menuItemStart.Icon = new Image
@@ -383,6 +502,16 @@ namespace Main
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             isWindowLoaded = true;
+        }
+
+        private void FxParameters(object sender, RoutedEventArgs e)
+        {
+            frameMain.Content = new Pages.Parameters();
+        }
+
+        private void FxSampling(object sender, RoutedEventArgs e)
+        {
+            frameMain.Content = new Pages.SubCycle.WeightBowl(frameMain);
         }
     }
 }

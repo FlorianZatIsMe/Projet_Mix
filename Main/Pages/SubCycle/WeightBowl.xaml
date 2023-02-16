@@ -1,19 +1,21 @@
-﻿<Page x:Class="MixingApplication.Pages.SubCycle.WeightBowl"
+﻿<Page x:Class="Main.Pages.SubCycle.WeightBowl"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:MixingApplication.Pages.SubCycle"
+      xmlns:local="clr-namespace:Main.Pages.SubCycle"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="WeightBowl">
 
     <Grid>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-            <TextBlock x:Name="labelMessage" Text="" FontSize="30" Foreground="AliceBlue"/>
-            <TextBlock x:Name="labelWeight" Text="" Margin="0,10,0,0" FontSize="25" Foreground="AliceBlue"/>
+            <TextBlock x:Name="labelMessage" Text="" FontSize="30" Foreground="AliceBlue" TextWrapping="Wrap"/>
+            <TextBlock x:Name="labelSetpoint" Text="" Visibility="Collapsed"  Margin="0,10,0,0" FontSize="25" Foreground="AliceBlue"/>
+            <TextBlock x:Name="labelWeight" Text="" Margin="0,10,0,0" FontSize="25" Foreground="AliceBlue" Visibility="Collapsed"/>
+            <TextBox x:Name="tbWeight" Margin="0,10,0,0" Width="200" Style="{DynamicResource TextBoxStyle1}" TextAlignment="Center" Visibility="Collapsed"/>
         </StackPanel>
         
-        <Button Content="Go" Margin="20" Height="30" Width="50" HorizontalAlignment="Right" Click="Button_Click"/>
+        <Button Content="Ok" x:Name="btNext" Margin="20" Height="30" Width="50" HorizontalAlignment="Right" Visibility="Collapsed" Click="Button_Click"/>
     </Grid>
 </Page>

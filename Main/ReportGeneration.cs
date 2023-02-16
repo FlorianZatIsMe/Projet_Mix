@@ -1,11 +1,12 @@
 ﻿using Alarm_Management;
 using Database;
 using Main.Pages;
-using MixingApplication.Properties;
+using Main.Properties;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -19,8 +20,27 @@ namespace Main
 {
     internal class ReportGeneration
     {
-        private readonly string folderPath = Settings.Default.Report_Path;// @"C:\Temp\Reports\";
-        private readonly string templateNumber = "DHS-LTRMxxx Rev: 001";
+        private string templateNumber;
+
+        private readonly string cycleReportPath = Settings.Default.Report_Path;// @"C:\Temp\Reports\";
+        private readonly string cycleTemplateNumber = "DHS-LTRMxxx Rev: 001";
+
+        private readonly string samplingReportPath = Settings.Default.Sampling_Path;// @"C:\Temp\Balande_Daily_Test\";
+        private readonly string samplingTemplateNumber = "DHS-SMPxxx Rev: 001";
+
+        //
+        // Daily test report
+        //
+
+        private readonly string samplingDocTitle = "Rapport de test journalier";
+
+        private string dateTimeSampling;
+        private string samplingStatus;
+        private string[] samplingRefs;
+        private string[] samplingMeas;
+
+        string SamplingDateTimeField = "Date et heure du test: ";
+        string statusField = "Statut";
 
         //
         // Header / Footer
@@ -65,7 +85,7 @@ namespace Main
         private readonly double marginH_Title_SubT = 5;
         private readonly double marginL_SubT = 10;
 
-        private readonly string docTitle = "Rapport de cycle";
+        private readonly string cycleDocTitle = "Rapport de cycle";
 
         private readonly string jobNumberField = "JOB #";
         private readonly string batchNumberField = "LOT #";
@@ -84,6 +104,7 @@ namespace Main
         private readonly string dtEndCycleField = "Fin du cycle";
         private readonly string cycleTimeField = "Temps de cycle";
         private readonly string userField = "Utilisateur";
+        private readonly string lastSamplingField = "Date et heure du dernier étalonnage de la balance";
 
         // Info tables Séquences
         private readonly double marginL_Tables = 5;
@@ -106,6 +127,10 @@ namespace Main
         private int firstAlarmId;
         private int lastAlarmId;
         private string comment;
+        private bool isTest;
+        private string bowlWeight;
+        private string lastWeightTh;
+        private string lastWeightEff;
 
         //***************************************************
 
@@ -113,7 +138,6 @@ namespace Main
         private readonly List<XGraphics> gfxs = new List<XGraphics>();
         private readonly DateTime generationDateTime = DateTime.Now;
         private int pagesNumber = 1;
-        private bool isTest;
 
         // Colors
         private readonly XSolidBrush BrushGrey0 = new XSolidBrush(XColor.FromArgb(100, 100, 100));
@@ -192,6 +216,7 @@ namespace Main
             logger.Debug("GenerateFirstTitle");
 
             XRect rect;
+            double currentY;
             string[,] tableValues = new string[,] {
                 { jobNumberField + ": ", jobNumber },
                 { batchNumberField + ": ", batchNumber },
@@ -199,15 +224,13 @@ namespace Main
                 { itemNumberField + ": ", itemNumber } };
 
             // TITLE
-            rect = new XRect(x: margin, y: y, width: page.Width - 2 * margin, height: rectTitleHeight);
-            gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectTitleOutlineSize), rect);
-            gfxs[pagesNumber - 1].DrawString(docTitle, new XFont(fontTitleName, fontTitleSize), XBrushes.Black, rect, XStringFormats.Center);
+            currentY = DrawTitle(page, y, cycleDocTitle);
 
             // 
             // SUBTITLE
             // 
             // Draw Sub-Title rectangle
-            rect = new XRect(x: margin, y: y + rectTitleHeight + marginH_Title_SubT, width: page.Width - 2 * margin, height: rectTitleHeight);
+            rect = new XRect(x: margin, y: currentY + marginH_Title_SubT, width: page.Width - 2 * margin, height: rectTitleHeight);
             gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectSubTitleOutlineSize), rect);
 
             double xShift = (page.Width - 2 * (margin + marginL_SubT)) / tableValues.GetLength(0);
@@ -217,7 +240,7 @@ namespace Main
             for (int i = 0; i < tableValues.GetLength(0); i++)
             {
                 // On affiche la valeur xField
-                rect = new XRect(x: margin + marginL_SubT + i * xShift, y: y + rectTitleHeight + marginH_Title_SubT, width: xShift - marginL_SubT, height: rectTitleHeight);
+                rect = new XRect(x: margin + marginL_SubT + i * xShift, y: currentY + marginH_Title_SubT, width: xShift - marginL_SubT, height: rectTitleHeight);
                 gfxs[pagesNumber - 1].DrawString(tableValues[i, 0], new XFont(fontTitleName, fontSubTitleSize), XBrushes.Black, rect, XStringFormats.CenterLeft);
                 rectShift = gfxs[pagesNumber - 1].MeasureString(tableValues[i, 0], new XFont(fontTitleName, fontSubTitleSize)).Width;
                 rect.X += rectShift;
@@ -231,6 +254,10 @@ namespace Main
 
             return rect.Y + rect.Height;
         }
+
+
+        int statusId = 3;
+
         private double GenerateGeneralInfo(PdfPage page, double y)
         {
             logger.Debug("GenerateGeneralInfo");
@@ -239,13 +266,16 @@ namespace Main
 
             double textHeight = fontDoc_fontBodySize1_Height;
             double generalInfoHeight = marginH_GeneralInfoItems + textHeight;
+            double currentY;
+
+            DateTime? dtStartCycle_t = null;
 
             // Calcul du temps de cycle
             try
             {
-                DateTime dtStartCycle_t = Convert.ToDateTime(dtStartCycle);
+                dtStartCycle_t = Convert.ToDateTime(dtStartCycle);
                 DateTime dtEndCycle_t = Convert.ToDateTime(dtEndCycle);
-                TimeSpan cycleTime_t = dtEndCycle_t.Subtract(dtStartCycle_t);
+                TimeSpan cycleTime_t = dtEndCycle_t.Subtract((DateTime)dtStartCycle_t);
                 cycleTime = cycleTime_t.Hours.ToString("00") + ":" + cycleTime_t.Minutes.ToString("00") + ":" + cycleTime_t.Seconds.ToString("00");
             }
             catch (Exception)
@@ -253,20 +283,115 @@ namespace Main
                 cycleTime = na;
             }
 
-            string[] values = new string[] { 
+            string[] values = new string[] {
                 recipeNameVersionField + ": " + recipeNameVersion,
                 equipmentNameField + ": " + equipmentName,
                 dtStartCycleField + ": " + dtStartCycle,
                 dtEndCycleField + ": " + dtEndCycle,
                 cycleTimeField + ": " + cycleTime,
-                userField + ": " + user };
+                userField + ": " + user};
 
+            currentY = DrawStringColumns(page, y, values, 2);
+
+            SampleInfo sampleInfo = new SampleInfo();
+            sampleInfo.Columns[sampleInfo.Status].Value = DatabaseSettings.General_TrueValue_Write;
+
+            string lastSampling;
+            bool isSamplingGood = false;
+
+            try
+            {
+                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetLastSamplingDate(sampleInfo, Convert.ToDateTime(dtStartCycle)); });
+
+                DateTime? lastSamplingDate = (DateTime?)t.Result;
+
+                if (lastSamplingDate == null)
+                {
+                    lastSampling = "";
+                }
+                else
+                {
+                    lastSampling = ((DateTime)lastSamplingDate).ToString(Settings.Default.DateTime_Format_Read);
+                    if (dtStartCycle_t != null)
+                    {
+                        isSamplingGood = ((DateTime)lastSamplingDate).CompareTo(((DateTime)dtStartCycle_t).AddDays(-1)) > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+                lastSampling = "";
+            }
+
+            double fieldWidth = gfxs[pagesNumber - 1].MeasureString(lastSamplingField + ": ", new XFont(fontDoc, fontBodySize1)).Width;
+
+            gfxs[pagesNumber - 1].DrawString(lastSamplingField + ": ", new XFont(fontDoc, fontBodySize1), 
+                XBrushes.Black, 
+                x: margin, 
+                y: currentY, XStringFormats.TopLeft);
+
+            gfxs[pagesNumber - 1].DrawString(lastSampling, new XFont(fontDoc, fontBodySize1),
+                (isSamplingGood ? XBrushes.Black : XBrushes.Red),
+                x: margin + fieldWidth,
+                y: currentY, XStringFormats.TopLeft);
+
+            currentY += generalInfoHeight;
+
+
+
+            /*
             for (int i = 0; i < values.Length; i++)
             {
                 gfxs[pagesNumber - 1].DrawString(values[i], new XFont(fontDoc, fontBodySize1), XBrushes.Black, x: margin + (i % 2) * ((page.Width - 2 * margin) / 2), y: y + marginH_GeneralInfo + (int)(i / 2) * generalInfoHeight, XStringFormats.TopLeft);
             }
+            currentY = y + marginH_GeneralInfo + (int)((values.Length - 1) / 2) * generalInfoHeight + textHeight + smSeq_marginL_Cells;
+            */
 
-            return y + marginH_GeneralInfo + (int)((values.Length - 1) / 2) * generalInfoHeight + textHeight;
+            // Generate general weigth information
+
+            string status;
+            if (lastWeightTh == "" || lastWeightEff == "")
+            {
+                status = statusFAIL;
+            }
+            else
+            {
+                decimal eff = decimal.Parse(lastWeightEff, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign);
+                decimal th = decimal.Parse(lastWeightTh, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign);
+                status = (Math.Abs(eff - th) < th * Settings.Default.LastWeightRatio) ? statusPASS : statusFAIL;
+            }
+
+
+            string[,] tableValues = new string[,] {
+                { "Masse du bowl (g)", bowlWeight },
+                { "Masse final théorique (g)", lastWeightTh == "" ? na : lastWeightTh },
+                { "Masse final effective (g)", lastWeightEff == "" ? na : lastWeightEff },
+                { "Statut", status } };
+            double xShift = (page.Width - 2 * margin) / tableValues.GetLength(0);
+            XRect rect;
+
+            for (int i = 0; i < tableValues.GetLength(0); i++)
+            {
+                // Champs
+                rect = new XRect(x: margin + i * xShift, y: currentY, width: xShift, height: smSeq_RowHeight);
+                gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectTablesSize), BrushGrey2, rect);
+                gfxs[pagesNumber - 1].DrawString(tableValues[i, 0], new XFont(fontDoc, fontBodySize2), XBrushes.Black, rect, XStringFormats.Center);
+
+                // Valeurs
+                rect.Y += smSeq_RowHeight;
+                gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectTablesSize),
+                    (i == statusId ? (status == statusPASS ? BrushGreen2 : BrushRed2) :
+                    XBrushes.White),
+                    rect);
+                gfxs[pagesNumber - 1].DrawString(tableValues[i, 1], new XFont(fontDoc, fontBodySize2),
+                    (i == statusId ? (status == statusPASS ? BrushGreen1 : BrushRed1) :
+                    XBrushes.Black),
+                    rect, XStringFormats.Center);
+            }
+            currentY += 2 * smSeq_RowHeight;
+
+            return currentY;
         }
         private double GenerateSequence(int seqType, PdfPage page, int n, double y, ISeqTabInfo cycleSeqInfo)
         {
@@ -298,8 +423,8 @@ namespace Main
         private readonly string weightSeq_minimumField = "Minimum";
         private readonly string weightSeq_maximumField = "Maximum";
         private readonly string weightSeq_statusField = "Pass / Fail";
-        private readonly string weightSeq_statusPASS = "PASS";
-        private readonly string weightSeq_statusFAIL = "FAIL";
+        private readonly string statusPASS = "PASS";
+        private readonly string statusFAIL = "FAIL";
         private readonly int weightSeq_statusColumnNumber = 4;
 
         private double GenerateWeightSeq(PdfPage page, int n, double y, ISeqTabInfo cycleSeqInfo)
@@ -312,9 +437,9 @@ namespace Main
 
             string product = cycleWeightInfo.Columns[cycleWeightInfo.Product].Value;//3
             string wasWeightManual = cycleWeightInfo.Columns[cycleWeightInfo.WasWeightManual].Value;//4
-            string dateTime = (cycleWeightInfo.Columns[cycleWeightInfo.DateTime].Value == "" || 
-                cycleWeightInfo.Columns[cycleWeightInfo.DateTime] == null) ? na : 
-                cycleWeightInfo.Columns[cycleWeightInfo.DateTime].Value; //5
+            string dateTime = (cycleWeightInfo.Columns[cycleWeightInfo.DateTime].Value == "" ||
+                cycleWeightInfo.Columns[cycleWeightInfo.DateTime] == null) ? na :
+                Convert.ToDateTime(cycleWeightInfo.Columns[cycleWeightInfo.DateTime].Value).ToString(Settings.Default.DateTime_Format_Read); //5
             string actualValue;
             string setpoint;
             string minimum;
@@ -322,35 +447,43 @@ namespace Main
             string unit = cycleWeightInfo.Columns[cycleWeightInfo.Unit].Value;//10
             string decimalNumber = cycleWeightInfo.Columns[cycleWeightInfo.DecimalNumber].Value;//11
 
-            try {
-                actualValue = decimal.Parse(cycleWeightInfo.Columns[cycleWeightInfo.WeightedValue].Value).ToString("N" + decimalNumber); //6
+            try
+            {
+                actualValue = decimal.Parse(cycleWeightInfo.Columns[cycleWeightInfo.ActualValue].Value).ToString("N" + decimalNumber); //6
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 actualValue = na;
             }
 
-            try {
+            try
+            {
                 setpoint = decimal.Parse(cycleWeightInfo.Columns[cycleWeightInfo.Setpoint].Value).ToString("N" + decimalNumber);//7
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 setpoint = na;
             }
 
-            try {
+            try
+            {
                 minimum = decimal.Parse(cycleWeightInfo.Columns[cycleWeightInfo.Min].Value).ToString("N" + decimalNumber);//8
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 minimum = na;
             }
 
-            try {
+            try
+            {
                 maximum = decimal.Parse(cycleWeightInfo.Columns[cycleWeightInfo.Max].Value).ToString("N" + decimalNumber);
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 maximum = na;
             }
 
-            double returnValue = y +4 * weightSeq_RowHeight;
+            double returnValue = y + 4 * weightSeq_RowHeight;
 
             if (IsIndextoLow(page, returnValue)) return -1; //  if(returnValue > (page.Height - margin - heightFooter)
 
@@ -364,16 +497,16 @@ namespace Main
             {
                 try
                 {
-                    status = (double.Parse(actualValue) >= double.Parse(minimum) && 
-                        double.Parse(actualValue) <= double.Parse(maximum)) ? weightSeq_statusPASS : weightSeq_statusFAIL;
+                    status = (double.Parse(actualValue) >= double.Parse(minimum) &&
+                        double.Parse(actualValue) <= double.Parse(maximum)) ? statusPASS : statusFAIL;
                 }
                 catch (Exception)
                 {
-                    status = weightSeq_statusFAIL;
+                    status = statusFAIL;
                 }
             }
 
-            string weightTypeText = wasWeightManual == DatabaseSettings.General_TrueValue_Read ? " " + weightSeq_manualWeight : 
+            string weightTypeText = wasWeightManual == DatabaseSettings.General_TrueValue_Read ? " " + weightSeq_manualWeight :
                                    (wasWeightManual == DatabaseSettings.General_FalseValue_Read ? " " + weightSeq_autoWeight : "");
             string unitText = " (" + unit + ")";
 
@@ -429,14 +562,14 @@ namespace Main
 
                 // Valeurs
                 rect.Y += weightSeq_RowHeight;
-                gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectTablesSize), 
-                    (i == 0 ? XBrushes.White : 
-                    (i == weightSeq_statusColumnNumber ? 
-                    (status == weightSeq_statusPASS ? BrushGreen2 : 
-                    (status == weightSeq_statusFAIL ? BrushRed2 : BrushGrey1)) : BrushGrey3)), 
+                gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectTablesSize),
+                    (i == 0 ? XBrushes.White :
+                    (i == weightSeq_statusColumnNumber ?
+                    (status == statusPASS ? BrushGreen2 :
+                    (status == statusFAIL ? BrushRed2 : BrushGrey1)) : BrushGrey3)),
                     rect);
-                gfxs[pagesNumber - 1].DrawString(tableValues[i, 1], new XFont(fontDoc, fontBodySize2), 
-                    i == weightSeq_statusColumnNumber ? (status == weightSeq_statusPASS ? BrushGreen1 : (status == weightSeq_statusFAIL ? BrushRed1 : BrushGrey0)) : XBrushes.Black, rect, 
+                gfxs[pagesNumber - 1].DrawString(tableValues[i, 1], new XFont(fontDoc, fontBodySize2),
+                    i == weightSeq_statusColumnNumber ? (status == statusPASS ? BrushGreen1 : (status == statusFAIL ? BrushRed1 : BrushGrey0)) : XBrushes.Black, rect,
                     XStringFormats.Center);
             }
             return returnValue;
@@ -472,8 +605,8 @@ namespace Main
 
             CycleSpeedMixerInfo cycleSpeedMixerInfo = cycleSeqInfo as CycleSpeedMixerInfo;
 
-            string dtStartSpeedMixerSeq = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.DateTimeStart].Value == "" ? na : cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.DateTimeStart].Value;
-            string dtEndSpeedMixerSeq = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.DateTimeEnd].Value == "" ? na : cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.DateTimeEnd].Value;
+            string dtStartSpeedMixerSeq = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.DateTimeStart].Value == "" ? na : Convert.ToDateTime(cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.DateTimeStart].Value).ToString(Settings.Default.DateTime_Format_Read);
+            string dtEndSpeedMixerSeq = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.DateTimeEnd].Value == "" ? na : Convert.ToDateTime(cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.DateTimeEnd].Value).ToString(Settings.Default.DateTime_Format_Read);
             string timeMixTh = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.TimeSeqTh].Value;
             string timeMixEff = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.TimeSeqEff].Value == "" ? na : cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.TimeSeqEff].Value;
             string timeSpeedMixerSeq;
@@ -490,10 +623,10 @@ namespace Main
 
             string speedMean = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.SpeedAvg].Value == "" ? na : (double.Parse(cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.PressureAvg].Value).ToString("N0") + smSeq_speedUnit);
             string pressureMean = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.PressureAvg].Value == "" ? na : (double.Parse(cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.PressureAvg].Value).ToString("N2") + pressureUnit);
-            
+
             string speedSTD = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.SpeedStd].Value == "" ? na : (double.Parse(cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.SpeedStd].Value).ToString("N0") + smSeq_speedUnit);
             string pressureSTD = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.PressureStd].Value == "" ? na : (double.Parse(cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.PressureStd].Value).ToString("N2") + pressureUnit);
-            
+
             XRect rect;
             double currentShift = 0;
             double currentCellWidth;
@@ -551,7 +684,7 @@ namespace Main
             double xShift2 = (page.Width - 2 * margin) / (tableValues2.GetLength(0) + 1);
 
             if (IsIndextoLow(page, returnValue)) return -1;
-            
+
             // Séquence SpeedMixer
             rect = new XRect(x: margin, y: y, width: page.Width - 2 * margin, height: smSeq_RowHeight);
             gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectTablesSize), BrushGrey1, rect);
@@ -569,8 +702,8 @@ namespace Main
 
                 // Valeurs
                 rect.Y += smSeq_RowHeight;
-                gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectTablesSize), 
-                    (i == smSeq_timeMixThId ? BrushGrey3 : XBrushes.White), 
+                gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectTablesSize),
+                    (i == smSeq_timeMixThId ? BrushGrey3 : XBrushes.White),
                     rect);
                 gfxs[pagesNumber - 1].DrawString(tableValues1[i, 1], new XFont(fontDoc, fontBodySize2), XBrushes.Black, rect, XStringFormats.Center);
             }
@@ -592,20 +725,20 @@ namespace Main
 
                 // Rectangle ligne 5 - Vitesse
                 gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectTablesSize),
-                    (i == 0 ? BrushGrey3 : (i == smSeq_recipeParamId ? BrushGrey3 : 
-                    (i == smSeq_meanId ? 
-                    (tableValues2[i, 1] == na ? BrushGrey1 : (meanResultSpeed ? BrushGreen2 : BrushRed2)) : XBrushes.White))), 
+                    (i == 0 ? BrushGrey3 : (i == smSeq_recipeParamId ? BrushGrey3 :
+                    (i == smSeq_meanId ?
+                    (tableValues2[i, 1] == na ? BrushGrey1 : (meanResultSpeed ? BrushGreen2 : BrushRed2)) : XBrushes.White))),
                     rect);
                 rect.Y += smSeq_RowHeight;
 
                 // Rectangle ligne 6 - Pression
                 gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectTablesSize),
-                    (i == 0 ? BrushGrey3 : (i == smSeq_recipeParamId ? BrushGrey3 : 
+                    (i == 0 ? BrushGrey3 : (i == smSeq_recipeParamId ? BrushGrey3 :
                     (i == smSeq_meanId ?
                     (tableValues2[i, 2] == na ? BrushGrey1 : (meanResultPressure ? BrushGreen2 : BrushRed2)) : XBrushes.White))),
                     rect);
 
-                if ( i == 0)
+                if (i == 0)
                 {
                     rect.X += marginL_Tables;
                     rect.Width -= marginL_Tables;
@@ -622,9 +755,9 @@ namespace Main
 
                 // Vitesse
                 rect.Y += smSeq_RowHeight;
-                gfxs[pagesNumber - 1].DrawString(tableValues2[i, 1], new XFont(fontDoc, fontBodySize2), 
+                gfxs[pagesNumber - 1].DrawString(tableValues2[i, 1], new XFont(fontDoc, fontBodySize2),
                     i == smSeq_meanId ?
-                    (tableValues2[i, 1] == na ? BrushGrey0 : (meanResultSpeed ? BrushGreen1 : BrushRed1)) : XBrushes.Black, 
+                    (tableValues2[i, 1] == na ? BrushGrey0 : (meanResultSpeed ? BrushGreen1 : BrushRed1)) : XBrushes.Black,
                     rect, stringFormat);
 
                 // Pression
@@ -664,7 +797,7 @@ namespace Main
             string status;
             double totalHeight;
 
-            totalHeight = 2 * Alarm_marginB_Title + fontDoc_fontTitleSize_Height + Alarm_marginB_Title + 
+            totalHeight = 2 * Alarm_marginB_Title + fontDoc_fontTitleSize_Height + Alarm_marginB_Title +
                 (historicAlarms.Count == 0 ? 1 : historicAlarms.Count) * (heightAlarmText + Alarm_marginB_Alarms)
                 - Alarm_marginB_Alarms;
 
@@ -720,41 +853,6 @@ namespace Main
                         }
                     }
                 }
-                    /*
-                int mutexID = MyDatabase.SendCommand_ReadAlarms(firstAlarmId, lastAlarmId);
-                AuditTrailInfo auditTrailInfo;
-                do
-                {
-                    auditTrailInfo = (AuditTrailInfo)MyDatabase.ReadNext(typeof(AuditTrailInfo), mutexID);
-
-                    if (auditTrailInfo != null)
-                    {
-                        timestamp = auditTrailInfo.columns[auditTrailInfo.dateTime].value;
-                        description = auditTrailInfo.columns[auditTrailInfo.description].value;
-                        status = auditTrailInfo.columns[auditTrailInfo.valueAfter].value;
-                        alarm = timestamp + " - " + description + " - " + status;
-
-                        gfxs[pagesNumber - 1].DrawString(alarm,
-                            new XFont(fontDoc, fontBodySize1),
-                            status == AlarmStatus.ACTIVE.ToString() ? XBrushes.Red :
-                            ((status == AlarmStatus.ACK.ToString() || status == AlarmStatus.RAZACK.ToString()) ? XBrushes.Blue :
-                            ((status == AlarmStatus.INACTIVE.ToString() || status == AlarmStatus.RAZ.ToString()) ? XBrushes.Green : XBrushes.Black)),
-                            x: margin, y: currentY, XStringFormats.TopLeft);
-                        currentY += Alarm_marginB_Alarms + heightAlarmText;
-
-                        // Si on a atteint le bas de la page, on crée un nouvelle page
-                        if (IsIndextoLow(page, currentY + Alarm_marginB_Alarms + heightAlarmText))
-                        {
-                            currentY = NewPage(page);
-
-                            gfxs[pagesNumber - 1].DrawString(Alarm_Title + " " + Alarm_Continued,
-                                new XFont(fontDoc, fontTitleSize),
-                                XBrushes.Black, x: margin, y: currentY, XStringFormats.TopLeft);
-                            currentY += Alarm_marginB_Title + fontDoc_fontTitleSize_Height;
-                        }
-                    }
-                } while (auditTrailInfo != null);
-                MyDatabase.Signal(mutexID);//*/
             }
             else
             {
@@ -794,7 +892,7 @@ namespace Main
             double commentHeight;
             string[] arraySignature = new string[] { signatureUserName, "", signatureDate, "" };
 
-            if(CalculateCommentHeight(page, y) < minCommentHeight)
+            if (CalculateCommentHeight(page, y) < minCommentHeight)
             {
                 // New page
                 currentY = NewPage(page);
@@ -826,7 +924,7 @@ namespace Main
             // Signature: Nom opérateur et date
             for (int i = 0; i < arraySignature.Length; i++)
             {
-                rect = new XRect(x: margin + i%2 * (page.Width - 2 * margin) / 4, y: currentY + (int)(i / 2) * signatureRowHeight, width: (page.Width - 2 * margin) / 4, height: signatureRowHeight);
+                rect = new XRect(x: margin + i % 2 * (page.Width - 2 * margin) / 4, y: currentY + (int)(i / 2) * signatureRowHeight, width: (page.Width - 2 * margin) / 4, height: signatureRowHeight);
                 gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectCommentOutlineSize),
                     i % 2 == 0 ? BrushGrey2 : XBrushes.White,
                     rect);
@@ -841,7 +939,7 @@ namespace Main
             gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectCommentOutlineSize), rect);
 
             // Rectangles gras
-            rect = new XRect(x: margin, y: currentY, width: (page.Width - 2 * margin)/2, height: 2 * signatureRowHeight);
+            rect = new XRect(x: margin, y: currentY, width: (page.Width - 2 * margin) / 2, height: 2 * signatureRowHeight);
             gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectSignatureOutlineSize), rect);
             rect.X += rect.Width;
             gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectSignatureOutlineSize), rect);
@@ -956,7 +1054,7 @@ namespace Main
 
             return page.Height - y - marginB_TitleComment - fontDoc_fontTitleSize_Height - cycleResultRowHeight - 2 * signatureRowHeight - heightFooter - margin;
         }
-        public void PdfGenerator(string id)
+        public void GenerateCycleReport(string id)
         {
             logger.Debug("PdfGenerator");
 
@@ -984,13 +1082,18 @@ namespace Main
             itemNumber = cycleTableInfo.Columns[cycleTableInfo.ItemNumber].Value;
             recipeNameVersion = cycleTableInfo.Columns[cycleTableInfo.RecipeName].Value + " - Version " + cycleTableInfo.Columns[cycleTableInfo.RecipeVersion].Value;
             equipmentName = cycleTableInfo.Columns[cycleTableInfo.EquipmentName].Value;
-            dtStartCycle = cycleTableInfo.Columns[cycleTableInfo.DateTimeStartCycle].Value;
-            dtEndCycle = cycleTableInfo.Columns[cycleTableInfo.DateTimeEndCycle].Value;
+            dtStartCycle = Convert.ToDateTime(cycleTableInfo.Columns[cycleTableInfo.DateTimeStartCycle].Value).ToString(Settings.Default.DateTime_Format_Read);
+            dtEndCycle = Convert.ToDateTime(cycleTableInfo.Columns[cycleTableInfo.DateTimeEndCycle].Value).ToString(Settings.Default.DateTime_Format_Read);
             user = cycleTableInfo.Columns[cycleTableInfo.Username].Value;
             firstAlarmId = cycleTableInfo.Columns[cycleTableInfo.FirstAlarmId].Value == "" ? -1 : int.Parse(cycleTableInfo.Columns[cycleTableInfo.FirstAlarmId].Value);
             lastAlarmId = cycleTableInfo.Columns[cycleTableInfo.LastAlarmId].Value == "" ? -1 : int.Parse(cycleTableInfo.Columns[cycleTableInfo.LastAlarmId].Value);
             comment = cycleTableInfo.Columns[cycleTableInfo.Comment].Value;
             isTest = cycleTableInfo.Columns[cycleTableInfo.IsItATest].Value == DatabaseSettings.General_TrueValue_Read;
+            bowlWeight = cycleTableInfo.Columns[cycleTableInfo.bowlWeight].Value;
+            lastWeightTh = cycleTableInfo.Columns[cycleTableInfo.lastWeightTh].Value;
+            lastWeightEff = cycleTableInfo.Columns[cycleTableInfo.lastWeightEff].Value;
+
+            templateNumber = cycleTemplateNumber;
 
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             document = new PdfDocument();
@@ -1035,30 +1138,6 @@ namespace Main
                 }
                 if (currentY == -2) return;
 
-                /*
-                if (nextSeqType == recipeWeightInfo.seqType)
-                {
-                    currentY = GenerateWeightSeq(page, seqNumber, currentY + smSeq_marginL_Cells, cycleSeqInfo);
-                    if (currentY == -1)
-                    {
-                        currentY = NewPage(page);
-                        currentY = GenerateWeightSeq(page, seqNumber, currentY + smSeq_marginL_Cells, cycleSeqInfo);
-                    }
-                }
-                else if (nextSeqType == recipeSpeedMixerInfo.seqType)
-                {
-                    currentY = GenerateSpeedMixerSeq(page, seqNumber, currentY + smSeq_marginL_Cells, cycleSeqInfo);
-                    if (currentY == -1)
-                    {
-                        currentY = NewPage(page);
-                        currentY = GenerateSpeedMixerSeq(page, seqNumber, currentY + smSeq_marginL_Cells, cycleSeqInfo);
-                    }
-                }
-                else
-                {
-                    General.ShowMessageBox(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Et bah alors !");
-                }*/
-
                 seqNumber++;
             }
 
@@ -1069,10 +1148,161 @@ namespace Main
 
             for (int i = 0; i < document.Pages.Count; i++) UpdatePagination(document.Pages[i], gfxs[i], i + 1);
 
-            string fileName = folderPath + generationDateTime.ToString("yyyy.MM.dd_HH.mm.ss") + "_" +
+            string fileName = cycleReportPath + generationDateTime.ToString("yyyy.MM.dd_HH.mm.ss") + "_" +
                 jobNumber + "_" + batchNumber + "_" + itemNumber + ".pdf";
 
             if (!File.Exists(fileName)) document.Save(fileName);
+        }
+
+        public void GenerateSamplingReport(string id)
+        {
+
+            logger.Debug("GenerateSamplingReport");
+
+            Task<object> t;
+
+            // Initialize cycle information
+            // A CORRIGER : IF RESULT IS FALSE
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(SampleInfo), id); });
+            SampleInfo sampleInfo = (SampleInfo)t.Result;
+
+            if (sampleInfo == null)
+            {
+                logger.Error(Settings.Default.Report_Info_CycleInfoNotFound);
+                General.ShowMessageBox(Settings.Default.Report_Info_CycleInfoNotFound);
+                return;
+            }
+
+            user = sampleInfo.Columns[sampleInfo.Username].Value;
+            dateTimeSampling = Convert.ToDateTime(sampleInfo.Columns[sampleInfo.DateTime].Value).ToString(Settings.Default.DateTime_Format_Read);
+            equipmentName = sampleInfo.Columns[sampleInfo.EquipmentName].Value;
+            samplingStatus = sampleInfo.Columns[sampleInfo.Status].Value == DatabaseSettings.General_TrueValue_Read ? statusPASS : statusFAIL;
+
+            templateNumber = samplingTemplateNumber;
+
+            int nSamples = 0;
+
+            while (sampleInfo.Columns[sampleInfo.Measure1 + nSamples].Value != "" && nSamples < sampleInfo.SamplesNumber)
+            {
+                nSamples++;
+            }
+
+            samplingRefs = new string[nSamples];
+            samplingMeas = new string[nSamples];
+
+            for (int i = 0; i < nSamples; i++)
+            {
+                try
+                {
+                    samplingRefs[i] = decimal.Parse(sampleInfo.Columns[sampleInfo.Setpoint1 + i].Value).ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
+                    samplingMeas[i] = decimal.Parse(sampleInfo.Columns[sampleInfo.Measure1 + i].Value).ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex.Message);
+                    samplingRefs[i] = na;
+                    samplingMeas[i] = na;
+                    samplingStatus = statusFAIL;
+                }
+            }
+
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            document = new PdfDocument();
+
+            PdfPage page = document.AddPage();
+            gfxs.Add(XGraphics.FromPdfPage(page));
+
+            // Calcul des tailles de texte
+            fontDoc_fontTitleSize_Height = gfxs[pagesNumber - 1].MeasureString("X", new XFont(fontDoc, fontTitleSize)).Height;
+            fontDoc_fontBodySize1_Height = gfxs[pagesNumber - 1].MeasureString("X", new XFont(fontDoc, fontBodySize1)).Height;
+
+            // Calcul de la hauteur du footer
+            heightFooter = 2 * marginH_Footer;
+
+            double currentY;
+            currentY = GenerateHeader(page);
+            currentY = DrawTitle(page, currentY, samplingDocTitle);
+
+            string[] values = new string[] {
+                equipmentNameField + ": " + equipmentName,
+                SamplingDateTimeField + dateTimeSampling,
+                userField + ": " + user,
+                statusField + ": " + samplingStatus};
+
+            currentY = DrawStringColumns(page, currentY, values, 2);
+
+            string[,] tableValues = new string[4,3];
+
+            tableValues[0, 0] = "Masse étalon (g)";
+            tableValues[1, 0] = "Masse pesée (g)";
+            tableValues[2, 0] = "Ecart (g)";
+            tableValues[3, 0] = "Statut";
+
+            for (int i = 0; i < samplingRefs.Length; i++)
+            {
+                tableValues[0, 1 + i] = samplingRefs[i];
+                tableValues[1, 1 + i] = samplingMeas[i];
+                tableValues[2, 1 + i] = (decimal.Parse(samplingRefs[i]) - decimal.Parse(samplingMeas[i])).ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
+                tableValues[3, 1 + i] = Pages.SubCycle.WeightBowl.IsSampWeightCorrect(decimal.Parse(samplingMeas[i]), decimal.Parse(samplingRefs[i])) ? "PASS" : "FAIL";
+            }
+
+            double xShift = (page.Width - 2 * margin) / tableValues.GetLength(0);
+            XRect rect;
+
+            for (int i = 0; i < tableValues.GetLength(0); i++)
+            {
+                // Champs
+                rect = new XRect(x: margin + i * xShift, y: currentY, width: xShift, height: smSeq_RowHeight);
+                gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectTablesSize), BrushGrey2, rect);
+                gfxs[pagesNumber - 1].DrawString(tableValues[i, 0], new XFont(fontDoc, fontBodySize2), XBrushes.Black, rect, XStringFormats.Center);
+
+                // Valeurs
+                for (int j = 0; j < 2; j++)
+                {
+                    rect.Y += smSeq_RowHeight;
+                    gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectTablesSize),
+                        (i == statusId ? (tableValues[i, 1 + j] == statusPASS ? BrushGreen2 : BrushRed2) :
+                        XBrushes.White),
+                        rect);
+                    gfxs[pagesNumber - 1].DrawString(tableValues[i, 1 + j], new XFont(fontDoc, fontBodySize2),
+                        (i == statusId ? (tableValues[i, 1 + j] == statusPASS ? BrushGreen1 : BrushRed1) :
+                        XBrushes.Black),
+                        rect, XStringFormats.Center);
+                }
+            }
+            currentY += tableValues.GetLength(1) * smSeq_RowHeight;
+
+            GenerateCommentSignature(page, currentY + marginH_TitleComment);
+
+            for (int i = 0; i < document.Pages.Count; i++) UpdatePagination(document.Pages[i], gfxs[i], i + 1);
+
+            string fileName = samplingReportPath + generationDateTime.ToString("yyyy.MM.dd_HH.mm.ss") + ".pdf";
+
+            if (!File.Exists(fileName)) document.Save(fileName);
+        }
+
+        private double DrawTitle(PdfPage page, double y, string title)
+        {
+            logger.Debug("DrawTitle");
+            XRect rect = new XRect(x: margin, y: y, width: page.Width - 2 * margin, height: rectTitleHeight);
+            gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectTitleOutlineSize), rect);
+            gfxs[pagesNumber - 1].DrawString(title, new XFont(fontTitleName, fontTitleSize), XBrushes.Black, rect, XStringFormats.Center);
+
+            return y + rectTitleHeight;
+        }
+
+        private double DrawStringColumns(PdfPage page, double y, string[] values, int nColumns = 2)
+        {
+            logger.Debug("DrawStringColumns");
+            double textHeight = fontDoc_fontBodySize1_Height;
+            double generalInfoHeight = marginH_GeneralInfoItems + textHeight;
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                gfxs[pagesNumber - 1].DrawString(values[i], new XFont(fontDoc, fontBodySize1), XBrushes.Black, x: margin + (i % nColumns) * ((page.Width - 2 * margin) / nColumns), y: y + marginH_GeneralInfo + (int)(i / nColumns) * generalInfoHeight, XStringFormats.TopLeft);
+            }
+
+            return y + marginH_GeneralInfo + (int)((values.Length - 1) / nColumns) * generalInfoHeight + textHeight + smSeq_marginL_Cells;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Database;
-using MixingApplication.Properties;
+using Main.Properties;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -24,7 +24,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Globalization;
 using System.Diagnostics;
-using MixingApplication.Pages.SubCycle;
+using Main.Pages.SubCycle;
 
 namespace Main.Pages
 {
@@ -77,7 +77,8 @@ namespace Main.Pages
             {
                 subRcpPgType = typeof(Pages.SubRecipe.Weight),
                 subRecipeInfo = new RecipeWeightInfo(),
-                subCycPgType = typeof(Pages.SubCycle.CycleWeight),
+                subCycPgType = typeof(Pages.SubCycle.WeightBowl),
+                //subCycPgType = typeof(Pages.SubCycle.CycleWeight),
                 subCycleInfo = new CycleWeightInfo()
             },
 

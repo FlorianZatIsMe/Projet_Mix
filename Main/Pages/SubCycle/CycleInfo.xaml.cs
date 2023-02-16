@@ -1,6 +1,6 @@
 ﻿using Alarm_Management;
 using Database;
-using MixingApplication.Properties;
+using Main.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -267,7 +267,7 @@ namespace Main.Pages.SubCycle
             {
                 Foreground = Brushes.Wheat,
                 Margin = new Thickness(20, 0, 0, 0),
-                Text = cycleWeightInfo.Columns[cycleWeightInfo.WeightedValue].DisplayName + ": -"
+                Text = cycleWeightInfo.Columns[cycleWeightInfo.ActualValue].DisplayName + ": -"
             };
 
             wrapPanel.Children.Add(productName);
@@ -315,7 +315,7 @@ namespace Main.Pages.SubCycle
 
             CycleWeightInfo cycleWeightInfo = new CycleWeightInfo();
             (wrapPanels[seqNumber].Children[3] as TextBlock).Text = 
-                cycleWeightInfo.Columns[cycleWeightInfo.WeightedValue].DisplayName + ": " + 
+                cycleWeightInfo.Columns[cycleWeightInfo.ActualValue].DisplayName + ": " + 
                 info[0];
         }
         public void UpdateCurrentSpeedMixerInfo(string[] info)

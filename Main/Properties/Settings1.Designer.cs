@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MixingApplication.Properties {
+namespace Main.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -704,18 +704,6 @@ namespace MixingApplication.Properties {
             }
             set {
                 this["RecipeWeight_Setpoint_Min"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public int RecipeWeight_Setpoint_Max {
-            get {
-                return ((int)(this["RecipeWeight_Setpoint_Max"]));
-            }
-            set {
-                this["RecipeWeight_Setpoint_Max"] = value;
             }
         }
         
@@ -1997,82 +1985,6 @@ namespace MixingApplication.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"
-     <IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-      <list>
-       <int>3</int>
-       <int>4</int>
-       <int>5</int>
-       <int>10</int>
-       <int>12</int>
-       <int>13</int>
-       <int>14</int>
-       <int>15</int>
-       <int>16</int>
-       <int>17</int>
-       <int>18</int>
-       <int>19</int>
-       <int>20</int>
-       <int>21</int>
-       <int>22</int>
-       <int>23</int>
-       <int>24</int>
-       <int>25</int>
-       <int>26</int>
-       <int>27</int>
-       <int>28</int>
-       <int>29</int>
-       <int>30</int>
-       <int>31</int>
-       <int>32</int>
-       <int>33</int>
-       <int>34</int>
-       <int>35</int>
-       <int>36</int>
-       <int>37</int>
-       <int>38</int>
-       <int>39</int>
-       <int>40</int>
-       <int>41</int>
-       <int>42</int>
-       <int>43</int>
-       <int>44</int>
-       <int>45</int>
-      </list>
-     </IdDBControls>
-    ")]
-        public global::Main.Pages.IdDBControls RecipeMix_IdDBControls {
-            get {
-                return ((global::Main.Pages.IdDBControls)(this["RecipeMix_IdDBControls"]));
-            }
-            set {
-                this["RecipeMix_IdDBControls"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"
-     <IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-      <list>
-       <int>3</int>
-       <int>5</int>
-       <int>8</int>
-       <int>9</int>
-      </list>
-     </IdDBControls>
-    ")]
-        public global::Main.Pages.IdDBControls RecipeWeight_IdDBControls {
-            get {
-                return ((global::Main.Pages.IdDBControls)(this["RecipeWeight_IdDBControls"]));
-            }
-            set {
-                this["RecipeWeight_IdDBControls"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Êtes-vous vraiment sûr(e) de vouloir mettre en production cette reciette ?")]
         public string Recipe_Request_UpdateDraftRecipe_YOU_SURE {
             get {
@@ -2152,6 +2064,323 @@ namespace MixingApplication.Properties {
             }
             set {
                 this["RecipeMix_PressureMax_Label"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.1")]
+        public decimal LastWeightRatio {
+            get {
+                return ((decimal)(this["LastWeightRatio"]));
+            }
+            set {
+                this["LastWeightRatio"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2023-02-26")]
+        public global::System.DateTime Parameters_NextCalibDate {
+            get {
+                return ((global::System.DateTime)(this["Parameters_NextCalibDate"]));
+            }
+            set {
+                this["Parameters_NextCalibDate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.01")]
+        public decimal SamplingRatio {
+            get {
+                return ((decimal)(this["SamplingRatio"]));
+            }
+            set {
+                this["SamplingRatio"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Temp\\Balance_Daily_Test\\")]
+        public string Sampling_Path {
+            get {
+                return ((string)(this["Sampling_Path"]));
+            }
+            set {
+                this["Sampling_Path"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("dd.MMM.yyyy")]
+        public string Date_Format_Read {
+            get {
+                return ((string)(this["Date_Format_Read"]));
+            }
+            set {
+                this["Date_Format_Read"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("HH:mm:ss")]
+        public string Time_Format {
+            get {
+                return ((string)(this["Time_Format"]));
+            }
+            set {
+                this["Time_Format"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("dd.MMMyyyy HH:mm:ss")]
+        public string DateTime_Format_Read {
+            get {
+                return ((string)(this["DateTime_Format_Read"]));
+            }
+            set {
+                this["DateTime_Format_Read"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int RecipeWeight_Setpoint_Max {
+            get {
+                return ((int)(this["RecipeWeight_Setpoint_Max"]));
+            }
+            set {
+                this["RecipeWeight_Setpoint_Max"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public string RecipeWeight_Min_Min {
+            get {
+                return ((string)(this["RecipeWeight_Min_Min"]));
+            }
+            set {
+                this["RecipeWeight_Min_Min"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public string RecipeWeight_Min_Max {
+            get {
+                return ((string)(this["RecipeWeight_Min_Max"]));
+            }
+            set {
+                this["RecipeWeight_Min_Max"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"
+     <IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+      <list>
+       <int>3</int>
+       <int>4</int>
+       <int>5</int>
+       <int>10</int>
+       <int>12</int>
+       <int>13</int>
+       <int>14</int>
+       <int>15</int>
+       <int>16</int>
+       <int>17</int>
+       <int>18</int>
+       <int>19</int>
+       <int>20</int>
+       <int>21</int>
+       <int>22</int>
+       <int>23</int>
+       <int>24</int>
+       <int>25</int>
+       <int>26</int>
+       <int>27</int>
+       <int>28</int>
+       <int>29</int>
+       <int>30</int>
+       <int>31</int>
+       <int>32</int>
+       <int>33</int>
+       <int>34</int>
+       <int>35</int>
+       <int>36</int>
+       <int>37</int>
+       <int>38</int>
+       <int>39</int>
+       <int>40</int>
+       <int>41</int>
+       <int>42</int>
+       <int>43</int>
+       <int>44</int>
+       <int>45</int>
+      </list>
+     </IdDBControls>
+    ")]
+        public global::Main.Pages.IdDBControls RecipeMix_IdDBControls {
+            get {
+                return ((global::Main.Pages.IdDBControls)(this["RecipeMix_IdDBControls"]));
+            }
+            set {
+                this["RecipeMix_IdDBControls"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"
+     <IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+      <list>
+       <int>3</int>
+       <int>5</int>
+       <int>8</int>
+       <int>9</int>
+       <int>10</int>
+      </list>
+     </IdDBControls>
+    ")]
+        public global::Main.Pages.IdDBControls RecipeWeight_IdDBControls {
+            get {
+                return ((global::Main.Pages.IdDBControls)(this["RecipeWeight_IdDBControls"]));
+            }
+            set {
+                this["RecipeWeight_IdDBControls"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Resources/img_start_en.png")]
+        public string Main_StartIconEn {
+            get {
+                return ((string)(this["Main_StartIconEn"]));
+            }
+            set {
+                this["Main_StartIconEn"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Resources/img_recipes_en.png")]
+        public string Main_RecipeIconEn {
+            get {
+                return ((string)(this["Main_RecipeIconEn"]));
+            }
+            set {
+                this["Main_RecipeIconEn"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Resources/img_recipes_dis.png")]
+        public string Main_RecipeIconDis {
+            get {
+                return ((string)(this["Main_RecipeIconDis"]));
+            }
+            set {
+                this["Main_RecipeIconDis"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Resources/img_backup_archive_en.png")]
+        public string Main_BackupArchiveIconEn {
+            get {
+                return ((string)(this["Main_BackupArchiveIconEn"]));
+            }
+            set {
+                this["Main_BackupArchiveIconEn"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Resources/img_backup_archive_dis.png")]
+        public string Main_BackupArchiveIconDis {
+            get {
+                return ((string)(this["Main_BackupArchiveIconDis"]));
+            }
+            set {
+                this["Main_BackupArchiveIconDis"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Resources/img_parameter_en.png")]
+        public string Main_ParametersIconEn {
+            get {
+                return ((string)(this["Main_ParametersIconEn"]));
+            }
+            set {
+                this["Main_ParametersIconEn"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Resources/img_parameter_dis.png")]
+        public string Main_ParametersIconDis {
+            get {
+                return ((string)(this["Main_ParametersIconDis"]));
+            }
+            set {
+                this["Main_ParametersIconDis"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Resources/img_daily_test_en.png")]
+        public string Main_DailyTestIconEn {
+            get {
+                return ((string)(this["Main_DailyTestIconEn"]));
+            }
+            set {
+                this["Main_DailyTestIconEn"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Resources/img_daily_test_dis.png")]
+        public string Main_DailyTestIconDis {
+            get {
+                return ((string)(this["Main_DailyTestIconDis"]));
+            }
+            set {
+                this["Main_DailyTestIconDis"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("yyyy-MM-dd HH:mm:ss")]
+        public string DateTime_Format_Write {
+            get {
+                return ((string)(this["DateTime_Format_Write"]));
+            }
+            set {
+                this["DateTime_Format_Write"] = value;
             }
         }
     }

@@ -1,6 +1,6 @@
 ﻿using Alarm_Management;
 using Database;
-using MixingApplication.Properties;
+using Main.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

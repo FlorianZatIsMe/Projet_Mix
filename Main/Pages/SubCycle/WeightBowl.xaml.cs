@@ -1,5 +1,5 @@
 ﻿using Main;
-using MixingApplication.Properties;
+using Main.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,14 +19,30 @@ using Database;
 using Main.Pages;
 using System.Timers;
 
-namespace MixingApplication.Pages.SubCycle
+namespace Main.Pages.SubCycle
 {
     /// <summary>
     /// Logique d'interaction pour WeightBowl.xaml
     /// </summary>
     public partial class WeightBowl : Page
     {
+        private bool isBalanceFree = false;
+        private bool isManual = false;
+
+        private bool isPageActive = false;
+
         private CycleStartInfo info;
+
+        private NextSeqInfo nextSeqInfo;
+        private decimal currentSetpoint = -1;
+        private decimal currentRatio;
+        private string message1;
+
+        private Frame frameMain;
+
+        private bool isFinalWeigh = false;
+        private bool isBowlWeigh = false;
+
         private Timer getWeightTimer;
         //private Task getWeightTask;
         private bool isgetWeightTaskActive = false;
@@ -34,11 +50,262 @@ namespace MixingApplication.Pages.SubCycle
         private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         private string tareOnGoing = "Tare en cours...";
-        private int timerInterval = 50;
+        private string setpointText1 = "Masse cible: ";
+        private string setpointText2 = "g";
+        private string message1EmptyBowl = "Veuiller placer le contenant vide sur la balance puis appuyer sur le bouton";
+        private string message1FullBowl = "Veuiller placer le contenant sur la balance puis appuyer sur le bouton";
+        private string message1Sampling = "Veuiller placer le poids étalon sur la balance puis appuyer sur le bouton";
+        private string message1Cycle1 = "Veuiller le produit ";
+        private string message1Cycle2 = " sur la balance puis appuyer sur le bouton";
+        private int timerInterval = 100;
+
+        // Sampling variables
+        private bool isSampling = false;
+        private decimal[] referenceMasses = { (decimal)5.661, (decimal)12.764 };
+        private decimal[] measuredMasses;
+        private int sampleNumber;
+        private bool isSamplingPass = true;
+
+        // Cycle variables
+        private bool isCycle = false;
+        private readonly SubCycleArg subCycle;
+        private readonly int previousSeqId;
+        private readonly RecipeWeightInfo recipeWeightInfo = new RecipeWeightInfo();
+        private readonly decimal setpoint;
+        private readonly decimal min;
+        private readonly decimal max;
+        private bool isScanningStep;
+        private bool isSequenceOver;
+        //private readonly System.Timers.Timer getWeightTimer;
+        private bool wasBalanceFreeOnce;
+        private bool isWeightCorrect;
+        private bool disposedValue;
+        private decimal currentWeight;
+        private readonly CycleWeightInfo cycleWeightInfo = new CycleWeightInfo();
+
+
+        // Constructor to measure the mass of the empty bowl at the start of a cycle
         public WeightBowl(CycleStartInfo info_arg)
         {
+            isBowlWeigh = true;
             info = info_arg;
+            frameMain = info.frameMain;
+            message1 = message1EmptyBowl;
+
+
+            /*
             info.frameMain.ContentRendered += new EventHandler(FrameMain_ContentRendered);
+
+            getWeightTimer = new Timer
+            {
+                AutoReset = true,
+                Interval = timerInterval
+            };
+            getWeightTimer.Elapsed += GetWeightTimer_Elapsed;
+            //*/
+
+            InitializeComponent();
+            Initialize();
+            //labelMessage.Text = tareOnGoing;
+        }
+
+        // Constructor to measure the mass of the bowl at the end of a cycle
+        public WeightBowl(NextSeqInfo nextSeqInfo_arg)
+        {
+            isFinalWeigh = true;
+            nextSeqInfo = nextSeqInfo_arg;
+            frameMain = nextSeqInfo.frameMain;
+            currentRatio = Settings.Default.LastWeightRatio;
+            message1 = message1FullBowl;
+            /*
+            nextSeqInfo_arg.frameMain.ContentRendered += new EventHandler(FrameMain_ContentRendered);
+            getWeightTimer = new Timer
+            {
+                AutoReset = false,
+                Interval = timerInterval
+            };
+            getWeightTimer.Elapsed += GetWeightTimer_Elapsed;
+            */
+
+            //Calculation the theoritical total weight
+            CycleTableInfo currentCycle = new CycleTableInfo();
+            CycleWeightInfo currentWeigh = new CycleWeightInfo();
+            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(CycleTableInfo), nextSeqInfo.idCycle.ToString()); });
+            currentCycle = (CycleTableInfo)t.Result;
+
+            try
+            {
+                currentSetpoint = decimal.Parse(currentCycle.Columns[currentCycle.bowlWeight].Value);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+                General.ShowMessageBox(ex.Message);
+                currentSetpoint = -1;
+            }
+
+            ISeqTabInfo seqTabInfo = currentCycle;
+            string nextId = currentCycle.Columns[currentCycle.NextSeqId].Value;
+            string nextType = currentCycle.Columns[currentCycle.NextSeqType].Value;
+
+            if (currentSetpoint != -1)
+            {
+                while (nextId != "" && nextId != null)
+                {
+                    t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(Sequence.list[seqTabInfo.SeqType].subCycleInfo.GetType(), nextId); });
+                    seqTabInfo = (ISeqTabInfo)t.Result;
+                    nextId = seqTabInfo.Columns[seqTabInfo.NextSeqId].Value;
+                    nextType = seqTabInfo.Columns[seqTabInfo.NextSeqType].Value;
+
+                    if (seqTabInfo.SeqType == currentWeigh.SeqType)
+                    {
+                        currentWeigh = (CycleWeightInfo)seqTabInfo;
+
+                        if (currentWeigh.Columns[currentWeigh.IsSolvent].Value == DatabaseSettings.General_FalseValue_Read)
+                        {
+                            try
+                            {
+                                currentSetpoint += decimal.Parse(currentWeigh.Columns[currentWeigh.ActualValue].Value);
+                            }
+                            catch (Exception ex)
+                            {
+                                logger.Error(ex.Message);
+                                General.ShowMessageBox(ex.Message);
+                                currentSetpoint = -1;
+                                nextType = "";
+                            }
+                        }
+                    }
+                }
+            }
+
+            InitializeComponent();
+            labelMessage.MaxWidth = 500;
+            //labelMessage.Text = tareOnGoing;
+            Initialize();
+        }
+
+        // Constructor to perform the daily sampling
+        public WeightBowl(Frame frame)
+        {
+            frameMain = frame;
+            isSampling = true;
+            sampleNumber = 0;
+            currentSetpoint = referenceMasses[sampleNumber];
+            currentRatio = Settings.Default.SamplingRatio;
+            measuredMasses = new decimal[referenceMasses.Length];
+            message1 = message1Sampling;
+            InitializeComponent();
+            Initialize();
+        }
+
+        public WeightBowl(SubCycleArg subCycleArg)
+        {
+            logger.Debug("Start");
+            isCycle = true;
+            Task<object> t;
+
+            subCycle = subCycleArg;
+            frameMain = subCycle.frameMain;
+
+            //subCycle.frameMain.ContentRendered += new EventHandler(FrameMain_ContentRendered);
+
+            isSequenceOver = false;
+            isWeightCorrect = false;
+            wasBalanceFreeOnce = false;
+            General.CurrentCycleInfo.UpdateSequenceNumber();
+
+            /*
+            // Initialisation des timers
+            getWeightTimer = new System.Timers.Timer
+            {
+                Interval = Settings.Default.CycleWeight_getWeightTimer_Interval,
+                AutoReset = false
+            };
+            getWeightTimer.Elapsed += GetWeightTimer_OnTimedEvent;*/
+
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeWeightInfo), subCycle.id); });
+            recipeWeightInfo = (RecipeWeightInfo)t.Result;
+
+            if (recipeWeightInfo == null) // Si la commande a renvoyée une ligne
+            {
+                logger.Error(Settings.Default.CycleWeight_Error_NoRecipe);
+                General.ShowMessageBox(Settings.Default.CycleWeight_Error_NoRecipe);
+                return; // ou exit carrément
+            }
+
+            cycleWeightInfo.SetRecipeParameters(recipeWeightInfo, subCycle.idCycle);
+
+            message1 = message1Cycle1 + recipeWeightInfo.Columns[recipeWeightInfo.Name].Value + message1Cycle2;
+            currentSetpoint = decimal.Parse(cycleWeightInfo.Columns[cycleWeightInfo.Setpoint].Value);
+            setpointText2 = "g [ " + cycleWeightInfo.Columns[cycleWeightInfo.Min].Value + "; " + cycleWeightInfo.Columns[cycleWeightInfo.Max].Value + " ]";
+
+            /*
+            tbPhaseName.Text = recipeWeightInfo.Columns[recipeWeightInfo.Name].Value;
+            labelWeight.Text = Settings.Default.CycleWeight_WeightField + " (" + Settings.Default.CycleWeight_SetpointField + ": " + cycleWeightInfo.Columns[cycleWeightInfo.Setpoint].Value + Settings.Default.CycleFinalWeight_g_Unit + ")";
+            labelWeightLimits.Text = "[ " + cycleWeightInfo.Columns[cycleWeightInfo.Min].Value + "; " + cycleWeightInfo.Columns[cycleWeightInfo.Max].Value + " ]";
+            */
+
+            InitializeComponent();
+
+            logger.Error(cycleWeightInfo.IsSolvent.ToString() + " - " + cycleWeightInfo.Columns[cycleWeightInfo.IsSolvent].Id + " - " + cycleWeightInfo.Columns[cycleWeightInfo.IsSolvent].Value);
+            // A CORRIGER : IF RESULT IS FALSE
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(cycleWeightInfo); });
+            //MyDatabase.InsertRow(cycleWInfo);
+            // A CORRIGER : IF RESULT IS FALSE
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(cycleWeightInfo.TabName, cycleWeightInfo.Columns[cycleWeightInfo.Id].Id); });
+            previousSeqId = (int)t.Result;
+            //idSubCycle = MyDatabase.GetMax(cycleWInfo.name, cycleWInfo.columns[cycleWInfo.id].id);
+
+            subCycle.prevSeqInfo.Columns[subCycle.prevSeqInfo.NextSeqType].Value = cycleWeightInfo.SeqType.ToString();
+            subCycle.prevSeqInfo.Columns[subCycle.prevSeqInfo.NextSeqId].Value = previousSeqId.ToString();
+
+            // A CORRIGER : IF RESULT IS FALSE
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(subCycle.prevSeqInfo, subCycle.idPrevious.ToString()); });
+            //MyDatabase.Update_Row(subCycle.prevSeqInfo, subCycle.idPrevious.ToString());
+            
+            nextSeqInfo = new NextSeqInfo(
+                recipeParam_arg: recipeWeightInfo, // done
+                frameMain_arg: subCycle.frameMain,
+                frameInfoCycle_arg: subCycle.frameInfoCycle,
+                idCycle_arg: subCycle.idCycle,
+                previousSeqType_arg: recipeWeightInfo.SeqType, // done
+                previousSeqId_arg: previousSeqId.ToString(),
+                isTest_arg: subCycle.isTest);
+
+            /*
+             * 
+             * BARCODE OU PAS BARCODE ???
+             * 
+            if (recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Value == DatabaseSettings.General_TrueValue_Read) // Si le contrôle du code barre est activé, on affiche les bonnes infos
+            {
+                isScanningStep = true;
+                tbScan.Focus();
+                labelScan.Text = Settings.Default.CycleWeight_Request_ScanProduct + " " + recipeWeightInfo.Columns[3].Value;
+            }
+            else if (recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Value == DatabaseSettings.General_FalseValue_Read) // Si on ne contrôle pas le code barre, on affiche les bonnes infos
+            {
+                isScanningStep = false;
+                labelScan.Visibility = Visibility.Collapsed;
+                tbScan.Visibility = Visibility.Collapsed;
+                gridMain.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                logger.Error(Settings.Default.CycleWeight_Error_IncorrectValue + recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Id + " (" + recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Value + ")");
+                General.ShowMessageBox(Settings.Default.CycleWeight_Error_IncorrectValue + recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Id + " (" + recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Value + ")");
+            }*/
+
+            //getWeightTimer.Start();
+
+
+
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            frameMain.ContentRendered += new EventHandler(FrameMain_ContentRendered);
 
             //*
             getWeightTimer = new Timer
@@ -49,13 +316,19 @@ namespace MixingApplication.Pages.SubCycle
             getWeightTimer.Elapsed += GetWeightTimer_Elapsed;
             //*/
 
-            InitializeComponent();
             labelMessage.Text = tareOnGoing;
         }
-        /*
-        private async void GetWeight()
+
+        private void GetWeightTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            while(isgetWeightTaskActive)
+            isManual = !Balance.Connect();
+
+            this.Dispatcher.Invoke(() => {
+                labelWeight.Visibility = isManual ? Visibility.Collapsed : Visibility.Visible;
+                tbWeight.Visibility = isManual ? Visibility.Visible : Visibility.Collapsed;
+            });
+
+            if (!isManual)
             {
                 weight = Balance.GetOneWeight();
 
@@ -63,50 +336,130 @@ namespace MixingApplication.Pages.SubCycle
                     if (weight == null)
                     {
                         labelWeight.Text = "#";
+                        //logger.Error(labelWeight.Text + " #");
                     }
                     else
                     {
                         labelWeight.Text = weight.value + "g";
+                        //logger.Error(labelWeight.Text + weight.value);
+
+                        if (isFinalWeigh || isSampling)
+                        {
+                            labelWeight.Foreground = IsWeightCorrect(weight.value) ? Brushes.AliceBlue : Brushes.Red;
+                            //labelWeight.Foreground = (Math.Abs(weight.value - currentSetpoint) < currentSetpoint * currentRatio) ? Brushes.AliceBlue : Brushes.Red;
+                        }
+                        else if (isCycle)
+                        {
+                            labelWeight.Foreground = Math.Abs(weight.value - decimal.Parse(recipeWeightInfo.Columns[recipeWeightInfo.Setpoint].Value)) < decimal.Parse(recipeWeightInfo.Columns[recipeWeightInfo.Criteria].Value) ? Brushes.AliceBlue : Brushes.Red;
+                        }
                     }
                 });
-                await Task.Delay(200);
             }
-        }*/
-        
-        private void GetWeightTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            weight = Balance.GetOneWeight();
 
-            this.Dispatcher.Invoke(() => {
-                if (weight == null)
-                {
-                    labelWeight.Text = "#";
-                    logger.Error(labelWeight.Text + " #");
-                }
-                else
-                {
-                    labelWeight.Text = weight.value + "g";
-                    logger.Error(labelWeight.Text + weight.value);
-                }
-            });
+            getWeightTimer.Enabled = isgetWeightTaskActive;
         }
 
         private void FrameMain_ContentRendered(object sender, EventArgs e)
         {
-            if (info.frameMain.Content == this)
+            Frame frame = sender as Frame;
+
+            if (frame.Content == this)
             {
-                General.ShowMessageBox("Veuillez retirer tout object sur la balance. Cliquer sur le bouton une fois fait");
+                isPageActive = true;
                 bool exeTare = true;
+
+                // If the balance is free, we block it
+                if (Balance.IsFree())
+                {
+                    Balance.BlockUse();
+                    isBalanceFree = true;
+                }
+
+                // While the balance is not free
+                while (!isBalanceFree)
+                {
+                    // We ask the user if he wants to try to block the balance again
+                    if (General.ShowMessageBox("La balance n'est pas disponible, voulez-vous attendre ?", "Balance bloquée", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    {
+                        // If he wants to wait, we wait
+                        if (Balance.IsFree())
+                        {
+                            Balance.BlockUse();
+                            isBalanceFree = true;
+                        }
+                    }
+                    else
+                    {
+                        // Else we're out
+                        Stop();
+                        return;
+                    }
+                }
+
+                // Connect the balance
+                Balance.Connect();
+
+                // While the balance is not connected or user give up
+                while (!Balance.IsConnected())
+                {
+                    // We ask the user if he wants to try to connect to the balance again
+                    if (General.ShowMessageBox("La balance n'est pas connecté, voulez-vous attendre ?", "Balance déconnecté", MessageBoxButton.YesNo) == MessageBoxResult.OK)
+                    {
+                        // If he wants to wait, we connect to the balance
+                        Balance.Connect();
+                    }
+                    else
+                    {
+                        // If he gives up then
+                        // If manual weighting is allowed we set the manual weighting
+                        if (Settings.Default.CycleWeight_isManualAllowed)
+                        {
+                            isManual = true;
+                        }
+                        else
+                        {
+                            // Else stop of cycle
+                            Stop();
+                            return;
+                        }
+                    }
+                }
+
+                // if we are in manual mode, perform a manual tare
+                if (isManual)
+                {
+                    General.ShowMessageBox("Veuillez retirer tout object sur la balance puis faites une tare de la balance manuellement. Cliquer sur le ok une fois terminé");
+                }
+                else
+                {
+                    General.ShowMessageBox("Veuillez retirer tout object sur la balance. Cliquer sur le bouton une fois fait");
+                }
+
+                labelWeight.Visibility = isManual ? Visibility.Collapsed : Visibility.Visible;
+                tbWeight.Visibility = isManual ? Visibility.Visible : Visibility.Collapsed;
 
                 while (exeTare)
                 {
-                    int tare = Balance.TareBalance();
-                    logger.Fatal("salut toi : " + tare.ToString());
+                    int tare = isManual ? 0 : Balance.TareBalance();
                     if (tare == 0)
                     {
-                        labelMessage.Text = "Veuiller placer le contenant vide sur la balance puis appuyer sur le bonton";
+                        labelMessage.Text = message1;
+                        btNext.Visibility = Visibility.Visible;
+
+                        if (isFinalWeigh || isSampling || isCycle)
+                        {
+                            labelSetpoint.Visibility = Visibility.Visible;
+                            string setpoint = "#";
+                            if (currentSetpoint != -1)
+                            {
+                                setpoint = currentSetpoint.ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
+                            }
+                            labelSetpoint.Text = setpointText1 + setpoint + setpointText2;
+                        }
+
                         // démarrage du timer qui lit en continue la valeur du poids et l'affiche
-                        getWeightTimer.Start();
+                        StartTimer();
+
                         isgetWeightTaskActive = true;
                         //getWeightTask = Task.Factory.StartNew(() => GetWeight()); ;
                         exeTare = false;
@@ -117,12 +470,26 @@ namespace MixingApplication.Pages.SubCycle
                         {
                             exeTare = false;
                             Stop();
+                            return;
                         }
                         logger.Error("Tare de la balance échouée, tare: " + Balance.TareBalance().ToString());
                     }
                 }
-
-                info.frameMain.ContentRendered -= FrameMain_ContentRendered;
+            }
+            else if (isPageActive)
+            {
+                frame.ContentRendered -= FrameMain_ContentRendered;
+                StopTimer();
+                if (!Balance.IsFree()) Balance.FreeUse();
+                if (isFinalWeigh || isCycle)
+                {
+                    MessageBox.Show(frameMain.Content.GetType().ToString());
+                    if (frameMain.Content.GetType() == typeof(Pages.Status))
+                    {
+                        MessageBox.Show("Salut mon chou, tu nous quitte déjà ?");
+                        EndCycle();
+                    }
+                }
             }
         }
 
@@ -130,53 +497,224 @@ namespace MixingApplication.Pages.SubCycle
         {
             bool keepWaiting = true;
             int waitingCounter = 0;
-            // on attent que le poids se stabilise ou un timeout, on affiche le message "stabilisation en cours"
-            while (keepWaiting && (weight == null || !weight.isStable))
-            {
-                await Task.Delay(500);
-                waitingCounter++;
 
-                // Si le poids n'est pas stable de puis 5s alors...
-                if (waitingCounter > 10) // 5s
+            decimal validWeight;
+
+            if (!isManual)
+            {
+                // on attent que le poids se stabilise ou un timeout, on affiche le message "stabilisation en cours"
+                while (keepWaiting && (weight == null || !weight.isStable))
                 {
-                    // On demande à l'opérateur s'il veut continuer à attendre
-                    if (General.ShowMessageBox("Le poids n'est toujours pas stable, voulez-vous continuer à attendre ?", "Problème de stabilité", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    await Task.Delay(500);
+                    waitingCounter++;
+
+                    // Si le poids n'est pas stable de puis 5s alors...
+                    if (waitingCounter > 10) // 5s
                     {
-                        // S'il veut continuer à attendre, on continue à attendre
-                        waitingCounter = 0;
+                        // On demande à l'opérateur s'il veut continuer à attendre
+                        if (General.ShowMessageBox("Le poids n'est toujours pas stable, voulez-vous continuer à attendre ?", "Problème de stabilité", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                        {
+                            // S'il veut continuer à attendre, on continue à attendre
+                            waitingCounter = 0;
+                        }
+                        else
+                        {
+                            // Sinon on arrête d'attendre
+                            keepWaiting = false;
+                            Stop();
+                            return;
+                        }
                     }
-                    else
-                    {
-                        // Sinon on arrête d'attendre
-                        keepWaiting = false;
-                        Stop();
-                    }
+                }
+
+                StopTimer();
+
+                if (!keepWaiting) return;
+
+                // Le poids est stable, du coup on le stock dans info et on lance la séquence
+                validWeight = weight.value;
+            }
+            else
+            {
+                if (General.Verify_Format(textBox: tbWeight, isNotNull: true, isNumber: true, parameter: Settings.Default.RecipeWeight_NbDecimal, min: 0))
+                {
+                    validWeight = decimal.Parse(tbWeight.Text);
+                }
+                else
+                {
+                    General.ShowMessageBox("Format de la masse incorrect");
+                    return;
                 }
             }
 
-            getWeightTimer.Stop();
-
-            //isgetWeightTaskActive = false;
-            //getWeightTask.Wait(1000);
-            /*
-            if(!getWeightTask.IsCompleted)
+            if (isFinalWeigh)
             {
-                General.ShowMessageBox("La balance ne répond plus");
-                logger.Error("La balance ne répond plus");
-                return;
-            }*/
-            if (!keepWaiting) return;
+                if (!IsFinalWeightCorrect(validWeight, currentSetpoint))  //if (!IsWeightCorrect(validWeight))
+                {
+                    if (General.ShowMessageBox("La masse du produit est incorrecte, voulez-vous continuer ?", "Masse incorrect", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                    {
+                        StartTimer();
+                        return;
+                    }
+                }
 
-            // Le poids est stable, du coup on le stock dans info et on lance la séquence
-            decimal bowlWeight = weight.value;
+                StopTimer();
+                if (!Balance.IsFree()) Balance.FreeUse();
+                EndCycle(validWeight);
+            }
+            else if (isSampling)
+            {
+                // On contrôle la mesure
+                // Si c'est bon, on continue
+                // Sinon, message d'erreur qui propose de recommencer ou pas
+                if(!IsSampWeightCorrect(validWeight, currentSetpoint)) //if (!IsWeightCorrect(validWeight))
+                {
+                    if (General.ShowMessageBox("La masse du poids étalon est incorrecte, voulez-vous continuer ?", "Masse incorrect", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                    {
+                        StartTimer();
+                        return;
+                    }
+                    else
+                    {
+                        // Si on ne recommence pas, le statut est fail mais on continue
+                        isSamplingPass = false;
+                    }
+                }
 
-            info.bowlWeight = bowlWeight.ToString();
-            General.StartCycle(info);
+                if (sampleNumber < referenceMasses.Length)
+                {
+                    // On stocke la measure du poids
+                    measuredMasses[sampleNumber] = validWeight;
+                    sampleNumber++;
+                }
+
+                if (sampleNumber < referenceMasses.Length)
+                {
+                    // On met à jour la cible
+                    currentSetpoint = referenceMasses[sampleNumber];
+                    labelSetpoint.Text = setpointText1 + currentSetpoint.ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
+
+                    tbWeight.Text = "";
+                    tbWeight.Background = Brushes.White;
+                    tbWeight.Foreground = Brushes.Black;
+
+                    // On relance le timer
+                    StartTimer();
+                }
+                else
+                {
+                    // Fin de l'étalonnage
+                    StopTimer();
+                    if (!Balance.IsFree()) Balance.FreeUse();
+
+                    // On met dans la base de données toutes les mesures (cible et valeur) avec le status
+                    SampleInfo sampleInfo = new SampleInfo();
+                    sampleInfo.Columns[sampleInfo.Username].Value = General.loggedUsername;
+                    sampleInfo.Columns[sampleInfo.EquipmentName].Value = General.equipement_name;
+                    for (int i = 0; i < referenceMasses.Length; i++)
+                    {
+                        sampleInfo.Columns[sampleInfo.Setpoint1 + i].Value = referenceMasses[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
+                        sampleInfo.Columns[sampleInfo.Measure1 + i].Value = measuredMasses[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
+                    }
+                    sampleInfo.Columns[sampleInfo.Status].Value = isSamplingPass ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+                    Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(sampleInfo); });
+                    bool isSamplingRecorded = (bool)t.Result;
+
+                    // Même chose dans l'audit trail
+                    string description = "Test journalier " + (isSamplingPass ? "réussi" : "échoué");
+                    for (int i = 0; i < referenceMasses.Length; i++)
+                    {
+                        description += "\n" + sampleInfo.Columns[sampleInfo.Setpoint1 + i].DisplayName + ": " + referenceMasses[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal) + "g - ";
+                        description += sampleInfo.Columns[sampleInfo.Measure1 + i].DisplayName + ": " + measuredMasses[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal) + "g";
+                    }
+
+                    AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+                    auditTrailInfo.Columns[auditTrailInfo.Username].Value = General.loggedUsername;
+                    auditTrailInfo.Columns[auditTrailInfo.EventType].Value = Settings.Default.General_AuditTrailEvent_Event;
+                    auditTrailInfo.Columns[auditTrailInfo.Description].Value = description;
+                    t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTrailInfo); });
+
+                    // On génère le rapport d'étalonnage
+                    if (isSamplingRecorded)
+                    {
+                        t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(new SampleInfo(), sampleInfo.Columns[sampleInfo.Id].Id); });
+                        ReportGeneration report = new ReportGeneration();
+                        string id = ((int)t.Result).ToString();
+                        General.ShowMessageBox("Test journalier " + (isSamplingPass ? "réussi" : "échoué"));
+                        Task printReportTask = Task.Factory.StartNew(() => report.GenerateSamplingReport(id));
+                        printReportTask.Wait();
+                        General.ShowMessageBox("Rapport généré");
+                    }
+                    else
+                    {
+                        General.ShowMessageBox("L'étalonnage n'a pas être enregistrer");
+                    }
+                    frameMain.Content = new Pages.Status();
+                }
+            }
+            else if(isCycle)
+            {
+                Task<object> t;
+
+                isWeightCorrect =
+                    validWeight >= decimal.Parse(cycleWeightInfo.Columns[cycleWeightInfo.Min].Value) &&
+                    validWeight <= decimal.Parse(cycleWeightInfo.Columns[cycleWeightInfo.Max].Value);
+
+                if (!isWeightCorrect)
+                {
+                    General.ShowMessageBox(Settings.Default.CycleWeight_IncorrectWeight);
+                    return;
+                }
+                else
+                {
+                    if (!Balance.IsFree()) Balance.FreeUse();
+                    //isSequenceOver = true;
+
+                    General.CurrentCycleInfo.UpdateCurrentWeightInfo(new string[] { validWeight.ToString() });
+
+                    CycleWeightInfo cycleWInfo = new CycleWeightInfo();
+                    cycleWInfo.Columns[cycleWInfo.WasWeightManual].Value = isManual ? DatabaseSettings.General_FalseValue_Write : DatabaseSettings.General_TrueValue_Write;
+                    cycleWInfo.Columns[cycleWInfo.DateTime].Value = DateTime.Now.ToString(Settings.Default.DateTime_Format_Write);
+                    cycleWInfo.Columns[cycleWInfo.ActualValue].Value = validWeight.ToString();
+
+                    // A CORRIGER : IF RESULT IS FALSE
+                    t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(cycleWInfo, previousSeqId.ToString()); });
+                    //MyDatabase.Update_Row(cycleWeightInfo, idSubCycle.ToString());
+                    /*
+                    if (recipeWeightInfo.columns[1].value == "1") // Si la prochaine séquence est une séquence speedmixer
+                    {
+                        General.ShowMessageBox("Mettez le produit dans le speedmixer et fermer le capot");
+                    }
+                    */
+                //*
+                    SubCycleArg sub = new SubCycleArg(subCycle.frameMain, subCycle.frameInfoCycle, recipeWeightInfo.Columns[recipeWeightInfo.NextSeqId].Value, subCycle.idCycle, previousSeqId, recipeWeightInfo.TabName, new CycleWeightInfo(), subCycle.isTest);
+
+                    NextSeqInfo nextSeqInfo = new NextSeqInfo(
+                        recipeParam_arg: recipeWeightInfo,
+                        frameMain_arg: subCycle.frameMain,
+                        frameInfoCycle_arg: subCycle.frameInfoCycle,
+                        idCycle_arg: subCycle.idCycle,
+                        previousSeqType_arg: 0,
+                        previousSeqId_arg: previousSeqId.ToString(),
+                        isTest_arg: subCycle.isTest);
+                    General.NextSequence(nextSeqInfo, new CycleWeightInfo());
+                }
+            }
+            else
+            {
+                info.bowlWeight = validWeight.ToString("N" + Settings.Default.RecipeWeight_NbDecimal.ToString());
+                General.StartCycle(info);
+            }
+
         }
 
         private void Stop()
         {
-            if (info.isTest)
+            StopTimer();
+
+            if (!Balance.IsFree()) Balance.FreeUse();
+
+            if (!isSampling && info.isTest)
             {
                 // A CORRIGER : IF RESULT IS FALSE
                 Task<object> task = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeInfo), info.recipeID); });
@@ -185,8 +723,158 @@ namespace MixingApplication.Pages.SubCycle
             }
             else
             {
-                info.frameMain.Content = new Status();
+                frameMain.Content = new Status();
             }
+        }
+        private void StopTimer()
+        {
+            isgetWeightTaskActive = false;
+            getWeightTimer.Stop();
+        }
+        private void StartTimer()
+        {
+            isgetWeightTaskActive = true;
+            getWeightTimer.Start();
+        }
+
+        private void EndCycle(decimal bowlWeight = 0)
+        {
+            logger.Debug("EndCycle");
+
+            string nextSeqId;
+            int nextRecipeSeqType;
+
+            ICycleSeqInfo cycleSeqInfo;
+            ICycleSeqInfo prevCycleSeqInfo;
+            string row;
+
+            if (nextSeqInfo.previousSeqType < 0 || nextSeqInfo.previousSeqType >= Sequence.list.Count())
+            {
+                logger.Error(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + nextSeqInfo.previousSeqType.ToString());
+                General.ShowMessageBox(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + nextSeqInfo.previousSeqType.ToString());
+                return;
+            }
+
+            ISeqTabInfo recipeParam = nextSeqInfo.recipeParam;
+            int previousSeqType = nextSeqInfo.previousSeqType;
+            string previousSeqId = nextSeqInfo.previousSeqId;
+            
+
+            // On boucle tant qu'on est pas arrivé au bout de la recette
+            while (
+                recipeParam.Columns[recipeParam.NextSeqType].Value != "" &&
+                recipeParam.Columns[recipeParam.NextSeqType].Value != null)
+            {
+                // Note pour plus tard: ce serait bien de retirer les "1" et de les remplacer par un truc comme recipeWeightInfo.nextSeqType
+                nextRecipeSeqType = int.Parse(recipeParam.Columns[recipeParam.NextSeqType].Value);
+
+                // A CORRIGER : IF RESULT IS FALSE
+                Type nextRecipeType = Sequence.list[int.Parse(recipeParam.Columns[recipeParam.NextSeqType].Value)].subRecipeInfo.GetType();
+                Task<object> t2 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(nextRecipeType, recipeParam.Columns[recipeParam.NextSeqId].Value); });
+                //Task<object> t2 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(recipeParam.GetType(), recipeParam.Columns[recipeParam.NextSeqId].Value); });
+                recipeParam = (ISeqTabInfo)t2.Result;
+                //recipeParam = (ISeqInfo)MyDatabase.GetOneRow(typeof(ISeqInfo), recipeParam.columns[recipeParam.id].value);
+
+                if (nextRecipeSeqType < 0 || nextRecipeSeqType >= Sequence.list.Count())
+                {
+                    logger.Error(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + nextRecipeSeqType.ToString());
+                    General.ShowMessageBox(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + nextRecipeSeqType.ToString());
+                    return;
+                }
+
+                //cycleSeqInfo = Sequence.list[nextRecipeSeqType].subCycleInfo;
+                cycleSeqInfo = Activator.CreateInstance(Sequence.list[nextRecipeSeqType].subCycleInfo.GetType()) as ICycleSeqInfo;
+                cycleSeqInfo.SetRecipeParameters(recipeParam, nextSeqInfo.idCycle);
+
+                row = cycleSeqInfo.GetType().ToString() + " ";
+                for (int j = 0; j < cycleSeqInfo.Columns.Count(); j++)
+                {
+                    row = row + cycleSeqInfo.Columns[j].Id + ": " + cycleSeqInfo.Columns[j].Value + " ";
+                }
+                logger.Trace(row);
+                // On insert les infos de recettes dans la bonne table
+                // A CORRIGER : IF RESULT IS FALSE
+                Task<object> t3 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(cycleSeqInfo); });
+                //MyDatabase.InsertRow(cycleSeqInfo);
+
+                // On met à jour les infos "type" et "id" de la séquence qu'on vient de renseigner dans la précédente séquence
+
+                // A CORRIGER : IF RESULT IS FALSE
+                Task<object> t4 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(cycleSeqInfo.TabName, cycleSeqInfo.Columns[cycleSeqInfo.Id].Id); });
+                nextSeqId = ((int)t4.Result).ToString();
+                //nextSeqId = MyDatabase.GetMax(cycleSeqInfo.name, cycleSeqInfo.columns[cycleSeqInfo.id].id).ToString();
+
+                //prevCycleSeqInfo = Sequence.list[previousSeqType].subCycleInfo;
+                prevCycleSeqInfo = Activator.CreateInstance(Sequence.list[nextRecipeSeqType].subCycleInfo.GetType()) as ICycleSeqInfo;
+                prevCycleSeqInfo.Columns[prevCycleSeqInfo.NextSeqType].Value = nextRecipeSeqType.ToString();
+                prevCycleSeqInfo.Columns[prevCycleSeqInfo.NextSeqId].Value = nextSeqId;
+
+                // A CORRIGER : IF RESULT IS FALSE
+                Task<object> t5 = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(prevCycleSeqInfo, nextSeqInfo.previousSeqId); });
+                //MyDatabase.Update_Row(prevCycleSeqInfo, previousSeqId);
+                t5.Wait();
+                // La dernière séquence devient l'ancienne
+                previousSeqType = nextRecipeSeqType;
+                previousSeqId = nextSeqId;
+
+            }
+
+            CycleTableInfo cycleTableInfo = new CycleTableInfo();
+            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+
+            // A CORRIGER : IF RESULT IS FALSE
+            Task<object> t6 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(auditTrailInfo.TabName, auditTrailInfo.Columns[auditTrailInfo.Id].Id); });
+            string lastAlarmId = ((int)t6.Result).ToString();
+            //string lastAlarmId = MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id).ToString();
+            cycleTableInfo.Columns[cycleTableInfo.DateTimeEndCycle].Value = DateTime.Now.ToString(Settings.Default.DateTime_Format_Write);
+            cycleTableInfo.Columns[cycleTableInfo.LastAlarmId].Value = lastAlarmId;
+            cycleTableInfo.Columns[cycleTableInfo.lastWeightTh].Value = currentSetpoint.ToString("N" + Settings.Default.RecipeWeight_NbDecimal.ToString());
+            cycleTableInfo.Columns[cycleTableInfo.lastWeightEff].Value = bowlWeight.ToString("N" + Settings.Default.RecipeWeight_NbDecimal.ToString());
+            cycleTableInfo.Columns[cycleTableInfo.Comment].Value = nextSeqInfo.comment;
+
+            // A CORRIGER : IF RESULT IS FALSE
+            Task<object> t7 = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(cycleTableInfo, nextSeqInfo.idCycle.ToString()); });
+            //MyDatabase.Update_Row(cycleTableInfo, idCycle.ToString());
+            t7.Wait();
+
+            General.CurrentCycleInfo.StopSequence();
+            Task printReportTask = Task.Factory.StartNew(() => General.PrintReport(nextSeqInfo.idCycle));
+
+            General.ShowMessageBox(Settings.Default.Cycle_Info_CycleOver);
+            printReportTask.Wait();
+            General.ShowMessageBox(Settings.Default.Cycle_Info_ReportGenerated);
+
+            // On cache le panneau d'information
+            General.CurrentCycleInfo.SetVisibility(false);
+
+            if (nextSeqInfo.isTest)
+            {
+                // A CORRIGER : IF RESULT IS FALSE
+                Task<object> t8 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(CycleTableInfo), nextSeqInfo.idCycle.ToString()); });
+                cycleTableInfo = (CycleTableInfo)t8.Result;
+                //cycleTableInfo = (CycleTableInfo)MyDatabase.GetOneRow(typeof(CycleTableInfo), idCycle.ToString());
+                nextSeqInfo.frameMain.Content = new Recipe(RcpAction.Modify, nextSeqInfo.frameMain, nextSeqInfo.frameInfoCycle, cycleTableInfo.Columns.Count == 0 ? "" : cycleTableInfo.Columns[cycleTableInfo.RecipeName].Value);
+            }
+            else
+            {
+                nextSeqInfo.frameMain.Content = new Status();
+                //MyDatabase.Disconnect();
+            }
+        }
+
+        private bool IsWeightCorrect(decimal weightValue)
+        {
+            return Math.Abs(weightValue - currentSetpoint) < currentSetpoint * currentRatio;
+        }
+
+        public static bool IsFinalWeightCorrect(decimal weightValue, decimal setpoint)
+        {
+            return Math.Abs(weightValue - setpoint) < setpoint * Settings.Default.LastWeightRatio;
+        }
+
+        public static bool IsSampWeightCorrect(decimal weightValue, decimal setpoint)
+        {
+            return Math.Abs(weightValue - setpoint) < setpoint * Settings.Default.SamplingRatio;
         }
     }
 }

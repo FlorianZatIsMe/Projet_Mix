@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="MixingApplication.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Main.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="CycleInfo_Error01" Type="System.String" Scope="User">
@@ -172,9 +172,6 @@
     </Setting>
     <Setting Name="RecipeWeight_Setpoint_Min" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="RecipeWeight_Setpoint_Max" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">10</Value>
     </Setting>
     <Setting Name="RecipeWeight_Range_Min" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
@@ -499,6 +496,57 @@
     <Setting Name="RecipeWeight_Range_Label" Type="System.String" Scope="User">
       <Value Profile="(Default)">Marge (g/g)</Value>
     </Setting>
+    <Setting Name="Recipe_Request_UpdateDraftRecipe_YOU_SURE" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Êtes-vous vraiment sûr(e) de vouloir mettre en production cette reciette ?</Value>
+    </Setting>
+    <Setting Name="RecipeMix_Acceleration_Label" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Accélération (RPM/s)</Value>
+    </Setting>
+    <Setting Name="RecipeMix_Deceleration_Label" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Décelération (RPM/s)</Value>
+    </Setting>
+    <Setting Name="RecipeMix_SpeedMin_Label" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Vitesse - Min (RPM)</Value>
+    </Setting>
+    <Setting Name="RecipeMix_SpeedMax_Label" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Max (RPM)</Value>
+    </Setting>
+    <Setting Name="RecipeMix_PressureMin_Label" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Pression - Min (</Value>
+    </Setting>
+    <Setting Name="RecipeMix_PressureMax_Label" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Max</Value>
+    </Setting>
+    <Setting Name="LastWeightRatio" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">0.1</Value>
+    </Setting>
+    <Setting Name="Parameters_NextCalibDate" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">2023-02-26</Value>
+    </Setting>
+    <Setting Name="SamplingRatio" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">0.01</Value>
+    </Setting>
+    <Setting Name="Sampling_Path" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Temp\Balance_Daily_Test\</Value>
+    </Setting>
+    <Setting Name="Date_Format_Read" Type="System.String" Scope="User">
+      <Value Profile="(Default)">dd.MMM.yyyy</Value>
+    </Setting>
+    <Setting Name="Time_Format" Type="System.String" Scope="User">
+      <Value Profile="(Default)">HH:mm:ss</Value>
+    </Setting>
+    <Setting Name="DateTime_Format_Read" Type="System.String" Scope="User">
+      <Value Profile="(Default)">dd.MMMyyyy HH:mm:ss</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_Setpoint_Max" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_Min_Min" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_Min_Max" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
     <Setting Name="RecipeMix_IdDBControls" Type="Main.Pages.IdDBControls" Scope="User">
       <Value Profile="(Default)">
      &lt;IdDBControls xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
@@ -553,30 +601,40 @@
        &lt;int&gt;5&lt;/int&gt;
        &lt;int&gt;8&lt;/int&gt;
        &lt;int&gt;9&lt;/int&gt;
+       &lt;int&gt;10&lt;/int&gt;
       &lt;/list&gt;
      &lt;/IdDBControls&gt;
     </Value>
     </Setting>
-    <Setting Name="Recipe_Request_UpdateDraftRecipe_YOU_SURE" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Êtes-vous vraiment sûr(e) de vouloir mettre en production cette reciette ?</Value>
+    <Setting Name="Main_StartIconEn" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Resources/img_start_en.png</Value>
     </Setting>
-    <Setting Name="RecipeMix_Acceleration_Label" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Accélération (RPM/s)</Value>
+    <Setting Name="Main_RecipeIconEn" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Resources/img_recipes_en.png</Value>
     </Setting>
-    <Setting Name="RecipeMix_Deceleration_Label" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Décelération (RPM/s)</Value>
+    <Setting Name="Main_RecipeIconDis" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Resources/img_recipes_dis.png</Value>
     </Setting>
-    <Setting Name="RecipeMix_SpeedMin_Label" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Vitesse - Min (RPM)</Value>
+    <Setting Name="Main_BackupArchiveIconEn" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Resources/img_backup_archive_en.png</Value>
     </Setting>
-    <Setting Name="RecipeMix_SpeedMax_Label" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Max (RPM)</Value>
+    <Setting Name="Main_BackupArchiveIconDis" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Resources/img_backup_archive_dis.png</Value>
     </Setting>
-    <Setting Name="RecipeMix_PressureMin_Label" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Pression - Min (</Value>
+    <Setting Name="Main_ParametersIconEn" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Resources/img_parameter_en.png</Value>
     </Setting>
-    <Setting Name="RecipeMix_PressureMax_Label" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Max</Value>
+    <Setting Name="Main_ParametersIconDis" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Resources/img_parameter_dis.png</Value>
+    </Setting>
+    <Setting Name="Main_DailyTestIconEn" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Resources/img_daily_test_en.png</Value>
+    </Setting>
+    <Setting Name="Main_DailyTestIconDis" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Resources/img_daily_test_dis.png</Value>
+    </Setting>
+    <Setting Name="DateTime_Format_Write" Type="System.String" Scope="User">
+      <Value Profile="(Default)">yyyy-MM-dd HH:mm:ss</Value>
     </Setting>
   </Settings>
 </SettingsFile>

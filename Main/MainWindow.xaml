@@ -85,7 +85,8 @@
                                                   Margin="10,0,0,0" />
 
                                 <!--// Text //-->
-                                <ContentPresenter ContentSource="Header"
+                                <ContentPresenter x:Name="header" 
+                                                  ContentSource="Header"
                                                   TextBlock.Foreground="#D3D7DC"
                                                   TextBlock.FontFamily="Rubik Medium"
                                                   TextBlock.FontSize="15"
@@ -94,7 +95,7 @@
                                                   Margin="10,0,0,0"/>
 
                                 <!--// Dropdown Icon //-->
-                                <Image Source="Resources/img_services_dropdown.png"
+                                <Image x:Name="dropdownIcon" Source="Resources/img_services_dropdown.png"
                                        Stretch="None"
                                        VerticalAlignment="Center"
                                        DockPanel.Dock = "Right"
@@ -124,6 +125,16 @@
                                 <Setter Property="Background"
                                         TargetName="border"
                                         Value="#524E4F" />
+                            </Trigger>
+                            
+                            <Trigger Property="IsEnabled"
+                                     Value="False">
+                                <Setter Property="TextBlock.Foreground"
+                                        TargetName="header"
+                                        Value="#6D6769" />
+                                <Setter Property="Visibility"
+                                        TargetName="dropdownIcon"
+                                        Value="Hidden"/>
                             </Trigger>
 
                         </ControlTemplate.Triggers>
@@ -288,10 +299,10 @@
                 </MenuItem>
 
                 <!--// Services //-->
-                <MenuItem Header="RECETTE"
+                <MenuItem x:Name="menuItemRecipes" Header="RECETTE"
                           Style="{StaticResource Main_MenuItem_With_Dropdown}">
                     <MenuItem.Icon>
-                        <Image Source="Resources/img_programs_en.png"
+                        <Image Source="Resources/img_recipes_en.png"
                                Stretch="Uniform" />
                     </MenuItem.Icon>
 
@@ -359,10 +370,10 @@
                 </MenuItem>
 
                 <!--// BACKUP AND ARCHIVING //-->
-                <MenuItem Header="BACKUP ET ARCHIVAGE"
+                <MenuItem x:Name="menuItemBackup" Header="BACKUP ET ARCHIVAGE"
                           Style="{StaticResource Main_MenuItem_With_Dropdown}">
                     <MenuItem.Icon>
-                        <Image Source="Resources/img_user_management_en.png"
+                        <Image Source="Resources/img_backup_archive_en.png"
                                Stretch="Uniform" />
                     </MenuItem.Icon>
 
@@ -385,6 +396,26 @@
                                    Stretch="Uniform" />
                         </MenuItem.Icon>
                     </MenuItem>
+                </MenuItem>
+
+                <!--// PARAMETERS //-->
+                <MenuItem x:Name="menuItemParameters" Header="PARAMETRE"
+                          Style="{StaticResource Main_MenuItem}"
+                          Click = "FxParameters">
+                    <MenuItem.Icon>
+                        <Image Source="Resources/img_parameter_en.png"
+                               Stretch="Uniform" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <!--// ETALONNAGE //-->
+                <MenuItem x:Name="menuItemDailyTest" Header="ETALONNAGE"
+                          Style="{StaticResource Main_MenuItem}"
+                          Click = "FxSampling">
+                    <MenuItem.Icon>
+                        <Image Source="Resources/img_daily_test_en.png"
+                               Stretch="Uniform" />
+                    </MenuItem.Icon>
                 </MenuItem>
 
                 <!--// CONNEXION //-->
@@ -442,6 +473,13 @@
                            VerticalAlignment="Center"
                            HorizontalAlignment="Left"
                            Margin="20,0,0,5" />
+            <TextBlock x:Name="labelCalibration"
+                       Text=""
+                       Foreground="Orange"
+                       FontFamily="Rubik"
+                       FontSize="13"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
             <TextBlock x:Name="labelDateTime" 
                            Text="Date and time"
                            Foreground="#D3D7DC"

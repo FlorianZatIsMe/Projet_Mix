@@ -1,4 +1,5 @@
-﻿using MixingApplication.Properties;
+﻿using Database;
+using Main.Properties;
 using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
@@ -29,7 +30,6 @@ namespace Main
         public LogIn(MainWindow window)
         {
             logger.Debug("Start");
-
             mainWindow = window;
             InitializeComponent();
         }
@@ -50,6 +50,7 @@ namespace Main
                     mainWindow.UpdateUser(username.Text, role);
 
                     this.Close();
+                    mainWindow.frameMain.Content = new Pages.Status();
                 }
                 else
                 {
@@ -87,6 +88,19 @@ namespace Main
             {
                 this.Close();
             }
+        }
+
+        private void ButtonLogOff_Click(object sender, RoutedEventArgs e)
+        {
+            if (!UserManagement.SetNoneAccess())
+            {
+                General.ShowMessageBox("C'est pas bien ça");
+                logger.Error("C'est pas bien ça");
+            }
+
+            mainWindow.UpdateUser("Aucun utilisateur", AccessTableInfo.NoneRole);
+            this.Close();
+            mainWindow.frameMain.Content = new Pages.Status();
         }
     }
 }

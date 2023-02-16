@@ -84,9 +84,9 @@ namespace User_Management
             // [x, 0] windows groups names
             // [x, 1] application (and database) group names 
             string[,] appGroups = new string[,] {
-                { Settings.Default.Group_operator, accessTableInfo.OperatorRole },
-                { Settings.Default.Group_supervisor, accessTableInfo.SupervisorRole },
-                { Settings.Default.Group_administrator, accessTableInfo.AdministratorRole }};
+                { Settings.Default.Group_operator, AccessTableInfo.OperatorRole },
+                { Settings.Default.Group_supervisor, AccessTableInfo.SupervisorRole },
+                { Settings.Default.Group_administrator, AccessTableInfo.AdministratorRole }};
             // Variable to be returned
             string role = null;
 
@@ -109,12 +109,12 @@ namespace User_Management
                         // If role wasn't updated then role = applicable application group name
                         if (role == null) role = appGroups[i, 1];
                         // If role was already updated then role = guest application group name
-                        else role = accessTableInfo.NoneRole;
+                        else role = AccessTableInfo.NoneRole;
                     }
                 }
             }
             // If role wasn't updated at the end of the loop, role = guest application group name
-            if (role == null) role = accessTableInfo.NoneRole;
+            if (role == null) role = AccessTableInfo.NoneRole;
 
             // Update of access table variable...
             // accessTable contains the information of the database table access_table
@@ -134,6 +134,20 @@ namespace User_Management
         {
             logger.Debug("GetCurrentAccessTable");  //  Log a debug message
             return CurrentAccessTable;              // Return the access table variable
+        }
+        public static bool SetNoneAccess()
+        {
+            // Update of access table variable...
+            // accessTable contains the information of the database table access_table
+            AccessTableInfo accessTable = new AccessTableInfo();
+            // Set the value of the role column to the none role
+            accessTable.Columns[accessTable.Role].Value = AccessTableInfo.NoneRole;
+            // Start database task: get the row of the database table access_table for the applicable role (returns bool array)
+            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneBoolRow(accessTable); });
+            // Storage of the database result in the variable CurrentAccessTable
+            CurrentAccessTable = (bool[])t.Result;
+
+            return !(CurrentAccessTable == null);
         }
     }
 }

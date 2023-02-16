@@ -15,7 +15,7 @@
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
 
-        <Button Content="Tout aquitter" Width="90" Height="30" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20" Click="ButtonAckAll_Click" />
+        <Button x:Name="btAck" Content="Tout aquitter" Width="90" Height="30" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20" Click="ButtonAckAll_Click" />
 
         <DataGrid Grid.Row="1" Name="dataGridAlarms"
                   Loaded="dataGridAlarms_Loaded"/>

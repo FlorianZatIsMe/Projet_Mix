@@ -208,9 +208,17 @@ namespace Database
             // Import the value of the indexes of the applicable variable from the settings
             Id = Settings.Default.AccessTable_ColN_id;
             Role = Settings.Default.AccessTable_ColN_role;
+        }
+
+        static AccessTableInfo()
+        {
             CycleStart = Settings.Default.AccessTable_ColN_cycleStart;
-            RecipeCreate = Settings.Default.AccessTable_ColN_recipeCreate;
+            RecipeUpdate = Settings.Default.AccessTable_ColN_recipeCreate;
+            Backup = Settings.Default.AccessTable_ColN_Backup;
+            Parameters = Settings.Default.AccessTable_ColN_Parameters;
+            DailyTest = Settings.Default.AccessTable_ColN_DailyTest;
             ApplicationStop = Settings.Default.AccessTable_ColN_applicationStop;
+            AckAlarm = Settings.Default.AccessTable_ColN_AckAlarm;
 
             // Import the name of the following access role from the settings: operator, supervisor, administrator and guest
             OperatorRole = Settings.Default.AccessTable_Role_operator;
@@ -232,25 +240,37 @@ namespace Database
         public int Role { get; }
 
         /// <value>Index of the cycle start column. This column is the access right of the action start a cycle for the applicable access role</value>
-        public int CycleStart { get; }
+        public static int CycleStart { get; }
 
         /// <value>Index of the create recipe column. This column is the access the right of the action create a recipe for the applicable access role</value>
-        public int RecipeCreate { get; }
+        public static int RecipeUpdate { get; }
+
+        /// <value>Index of the backup column. This column is the access the right of the backup and archiving actions</value>
+        public static int Backup { get; }
+
+        /// <value>Index of the parameters column. This column is the access the right of the parameters screen</value>
+        public static int Parameters { get; }
+
+        /// <value>Index of the daily test column. This column is the access the right of the daily test</value>
+        public static int DailyTest { get; }
+
+        /// <value>Index of the ackowledgment of alarm column. This column is the access the right of the ackowledgment of alarm</value>
+        public static int AckAlarm { get; }
 
         /// <value>Index of the application stop column. This column is the access the right of the action stop the application for the applicable access role</value>
-        public int ApplicationStop { get; }
+        public static int ApplicationStop { get; }
 
         /// <value>Name of the operator access role</value>
-        public string OperatorRole { get; }
+        public static string OperatorRole { get; }
 
         /// <value>Name of the supervisor access role</value>
-        public string SupervisorRole { get; }
+        public static string SupervisorRole { get; }
 
         /// <value>Name of the administrator access role</value>
-        public string AdministratorRole { get; }
+        public static string AdministratorRole { get; }
 
         /// <value>Name of the guest access role (role without access)</value>
-        public string NoneRole { get; }
+        public static string NoneRole { get; }
     }
 
     /// <summary>
@@ -660,7 +680,9 @@ namespace Database
             LastAlarmId = Settings.Default.Cycle_ColN_lastAlarmId;
             Comment = Settings.Default.Cycle_ColN_comment;
             IsItATest = Settings.Default.Cycle_ColN_isItATest;
-            bowl_weight = Settings.Default.Cycle_ColN_bowl_weight;
+            bowlWeight = Settings.Default.Cycle_ColN_bowlWeight;
+            lastWeightTh = Settings.Default.Cycle_ColN_lastWeightTh;
+            lastWeightEff = Settings.Default.Cycle_ColN_lastWeightEff;
         }
 
         /// <value>Name of the database table. From IBasTabInfo interface</value>
@@ -726,7 +748,13 @@ namespace Database
         public int IsItATest { get; }
 
         /// <value>Index of the bowl weight column. This column contains the weight of the empty bowl</value>
-        public int bowl_weight { get; }
+        public int bowlWeight { get; }
+
+        /// <value>Index of the theoritical last weight column. This column contains the expected weight the empty bowl and product at the end of the mix</value>
+        public int lastWeightTh { get; }
+
+        /// <value>Index of the actual last weighcolumn. This column contains the actual weight the empty bowl and product at the end of the mix</value>
+        public int lastWeightEff { get; }
     }
 
     /// <summary>
@@ -776,12 +804,13 @@ namespace Database
             Product = Settings.Default.CycleWeight_ColN_product;
             WasWeightManual = Settings.Default.CycleWeight_ColN_wasWeightManual;
             DateTime = Settings.Default.CycleWeight_ColN_dateTime;
-            WeightedValue = Settings.Default.CycleWeight_ColN_actualValue;
+            ActualValue = Settings.Default.CycleWeight_ColN_actualValue;
             Setpoint = Settings.Default.CycleWeight_ColN_setpoint;
             Min = Settings.Default.CycleWeight_ColN_min;
             Max = Settings.Default.CycleWeight_ColN_max;
             Unit = Settings.Default.CycleWeight_ColN_unit;
             DecimalNumber = Settings.Default.CycleWeight_ColN_decimalNumber;
+            IsSolvent = Settings.Default.CycleWeight_ColN_isSolvent;
         }
 
         /// <value>Name of the database table. From IBasTabInfo interface</value>
@@ -811,7 +840,7 @@ namespace Database
         public int DateTime { get; }
 
         /// <value>Index of the weighted value column. This column contains weighted value of the product</value>
-        public int WeightedValue { get; }
+        public int ActualValue { get; }
 
         /// <value>Index of the setpoint column. This column contains the target weight (equals basically the setpoint from the weight recipe multiplied by the final weight)</value>
         public int Setpoint { get; }
@@ -827,6 +856,9 @@ namespace Database
 
         /// <value>Index of the decimal number column. This column contains number of decimal places to be displayed (from the weight recipe)</value>
         public int DecimalNumber { get; }
+
+        /// <value>Index of the is solvent column. This column informs if the product is a solvent (from the weight recipe)</value>
+        public int IsSolvent { get; }
 
         /// <summary>
         /// Method which sets the recipe information related to the weight recipe table 
@@ -905,6 +937,7 @@ namespace Database
                 Columns[Max].Value = (convRatio * (setpoint + criteria) * finalWeight).ToString("N" + decimalNumber);
                 Columns[Unit].Value = cycleTableInfo.Columns[cycleTableInfo.FinalWeightUnit].Value;
                 Columns[DecimalNumber].Value = recipeWeighInfo.Columns[recipeWeighInfo.DecimalNumber].Value;
+                Columns[IsSolvent].Value = recipeWeighInfo.Columns[recipeWeighInfo.IsSolvent].Value == Settings.Default.General_TrueValue_Read ? Settings.Default.General_TrueValue_Write : Settings.Default.General_FalseValue_Write;
             }
             // If the code above generated an error then an error message is displayed / logged
             catch (Exception ex)
@@ -1216,5 +1249,102 @@ namespace Database
 
         /// <value>Index of the standard deviation pressure column. This column contains standard deviation pressure calculated at the end of the speedmixer's sequence</value>
         public int PressureStd { get; }
+    }
+
+    /// <summary>
+    /// Class containing the infomration of the sample database table. The table must contain at least the following colummns: 
+    /// Id (UNIQUE INTEGER)
+    /// DateTime, 
+    /// setpoints (from 1 to 4), 
+    /// measures (from 1 to 4), 
+    /// status
+    /// <para>Creation revision: 001</para>
+    /// </summary>
+    public class SampleInfo : IComTabInfo, IDtTabInfo
+    {
+        /// <summary>
+        /// Sets all the variables of the class except the values of the variable Columns
+        /// </summary>
+        public SampleInfo()
+        {
+            // Import the list of names of the columns of the database table from the settings
+            StringCollection colId = Settings.Default.Sample_ColIds;
+            // Import the list of names to be displayed of the columns from the settings
+            StringCollection colDesc = Settings.Default.Sample_ColDesc;
+            // Import the name of the database table from the settings
+            TabName = Settings.Default.Sample_TableName;
+
+            // Initialization of the variable Columns
+            Columns = new List<Column>();
+            // For each element of the list of names of the columns, add a new column to the variable Columns.
+            // This new column contains the name of the column of the databse table and the name of the columns to be displayed
+            for (int i = 0; i < colId.Count; i++) Columns.Add(new Column(colId[i], colDesc[i]));
+
+            // Import the value of the indexes of the applicable variable from the settings
+            Id = Settings.Default.Sample_ColN_id;
+            Username = Settings.Default.Sample_ColN_username;
+            DateTime = Settings.Default.Sample_ColN_dateTime;
+            EquipmentName = Settings.Default.Sample_ColN_equipmentName;
+            Setpoint1 = Settings.Default.Sample_ColN_setpoint1;
+            Setpoint2 = Settings.Default.Sample_ColN_setpoint1 + 1;
+            Setpoint3 = Settings.Default.Sample_ColN_setpoint1 + 2;
+            Setpoint4 = Settings.Default.Sample_ColN_setpoint1 + 3;
+            Measure1 = Settings.Default.Sample_ColN_measure1;
+            Measure2 = Settings.Default.Sample_ColN_measure1 + 1;
+            Measure3 = Settings.Default.Sample_ColN_measure1 + 2;
+            Measure4 = Settings.Default.Sample_ColN_measure1 + 3;
+            Status = Settings.Default.Sample_ColN_status;
+
+            // Set of the number of samples possible
+            SamplesNumber = 4;
+        }
+
+        /// <value>Name of the database table. From IBasTabInfo interface</value>
+        public string TabName { get; }
+
+        /// <value>Columns of the database table. From IBasTabInfo interface</value>
+        public List<Column> Columns { get; set; }
+
+        /// <value>Index of the id column (usually the first one: 0). This column <c>must be</c> an integer, usually automatically incremented. From IComTabInfo interface</value>
+        public int Id { get; }
+
+        /// <value>Index of the usernmae column. This column contains the name of the user who performed the sampling</value>
+        public int Username { get; }
+
+        /// <value>Index of the date and time column. This column contains the date and time of the insertion the rows. From IDtTabInfo</value>
+        public int DateTime { get; }
+
+        /// <value>Index of the equipment name column. This column contains the name of the equipment used for the sampling</value>
+        public int EquipmentName { get; }
+
+        /// <value>Index of the setpoint 1 column. This column contains the value of the first weight sample</value>
+        public int Setpoint1 { get; }
+
+        /// <value>Index of the setpoint 2 column. This column contains the value of the second weight sample</value>
+        public int Setpoint2 { get; }
+
+        /// <value>Index of the setpoint 3 column. This column contains the value of the third weight sample</value>
+        public int Setpoint3 { get; }
+
+        /// <value>Index of the setpoint 4 column. This column contains the value of the fourth weight sample</value>
+        public int Setpoint4 { get; }
+
+        /// <value>Index of the measure 1 column. This column contains the measure weight of the setpoint 1</value>
+        public int Measure1 { get; }
+
+        /// <value>Index of the measure 2 column. This column contains the measure weight of the setpoint 2</value>
+        public int Measure2 { get; }
+
+        /// <value>Index of the measure 3 column. This column contains the measure weight of the setpoint 3</value>
+        public int Measure3 { get; }
+
+        /// <value>Index of the measure 4 column. This column contains the measure weight of the setpoint 4</value>
+        public int Measure4 { get; }
+
+        /// <value>Index of the status column. This column contains the status of the sample</value>
+        public int Status { get; }
+
+        /// <value>Index of the sample number column. This column contains the number of samples which can be measured</value>
+        public int SamplesNumber { get; }
     }
 }

@@ -25,6 +25,8 @@ namespace Driver_Ethernet_Balance
         private static Weight currentWeight;
         private static readonly System.Timers.Timer getCurrentWeightTimer;
         private static bool isGetCurWeightTimerOn;
+        private static bool sendingCommand = false;
+        private static bool isFree = true;
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         static Balance()
         {
@@ -40,19 +42,54 @@ namespace Driver_Ethernet_Balance
             getCurrentWeightTimer.Elapsed += GetCurrentWeightTimer_Elapsed; ;
         }
 
+        public static bool Connect()
+        {
+            if (!IsConnected()) eth.Connect();
+            return IsConnected();
+        }
+
         public static void Disconnect()
         {
             eth.Disconnect();
+        }
+
+        public static bool IsConnected()
+        {
+            return eth.IsConnected();
         }
 
         private static bool Initialize()
         {
             return eth.ReadData("@") != standbyMessage;
         }
+        public static void BlockUse() { isFree = false; }
+        public static void FreeUse() { isFree = true; }
+        public static bool IsFree() { return isFree; }
 
         private static string SendCommand(string dataToSend, int msWaitTime = 500)
         {
+            if (isFree)
+            {
+                logger.Error("La balance n'est pas réservé");
+                return "";
+            }
+
+            if (sendingCommand) return "";
+            sendingCommand = true;
+
+            logger.Trace("dataToSend - " + dataToSend);
             string receivedData = eth.ReadData(dataToSend, msWaitTime);
+
+            /*
+            if (dataToSend == "ZI")
+            {
+                logger.Trace("Alors !!!!!!");
+                logger.Trace((receivedData == ("ZI S" + eth.endLine).ToString()));
+                sendingCommand = false;
+                return receivedData;
+                //return "ZI S" + eth.endLine;
+            }*/
+
             /*
             if (receivedData == null)
             {
@@ -63,16 +100,25 @@ namespace Driver_Ethernet_Balance
 
             if (receivedData == standbyMessage)
             {
-                if (!Initialize()) return null;
+                if (!Initialize())
+                {
+                    sendingCommand = false;
+                    return null; 
+                }
                 //MessageBox.Show("");
                 receivedData = eth.ReadData(dataToSend, msWaitTime);
             }
+
+            string test = receivedData;
+            logger.Error("receivedData - " + test);
+
+            sendingCommand = false;
             return receivedData;
         }
 
         public static int SendZeroCommand()
         {
-            string receivedData = SendCommand("ZI", 20000);
+            string receivedData = SendCommand("ZI", 20);
             if (receivedData == null) return -1;                    // Erreur commande (impossible en théorie)
             else if (receivedData == "ZI D" + eth.endLine) return 0; // Zéro réussi instable
             else if (receivedData == "ZI S" + eth.endLine) return 1; // Zéro réussi stabl
@@ -97,6 +143,7 @@ namespace Driver_Ethernet_Balance
         public static int TareBalance()
         {
             int zeroResult = SendZeroCommand();
+            logger.Debug("Bonjour vous");
             if (zeroResult == 0 || zeroResult == 1)
             {
                 return SendTareCommand();
@@ -108,8 +155,14 @@ namespace Driver_Ethernet_Balance
 
         public static Weight GetOneWeight()
         {
+            //logger.Debug("GetOneWeight Start");
             string receivedData = SendCommand("SI");
-            if (receivedData == null) return null;
+            if (receivedData == null)
+            {
+                logger.Fatal("C'est NULL");
+                return null;
+            }
+            //logger.Debug("GetOneWeight End");
             return GetWeightFromData(receivedData);
         }
 

@@ -273,6 +273,8 @@
   &lt;string&gt;comment&lt;/string&gt;
   &lt;string&gt;is_it_a_test&lt;/string&gt;
   &lt;string&gt;bowl_weight&lt;/string&gt;
+  &lt;string&gt;last_weight_th&lt;/string&gt;
+  &lt;string&gt;last_weight_eff&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
     <Setting Name="Cycle_ColN_id" Type="System.Int32" Scope="User">
@@ -347,6 +349,7 @@
   &lt;string&gt;maximum&lt;/string&gt;
   &lt;string&gt;unit&lt;/string&gt;
   &lt;string&gt;decimal_number&lt;/string&gt;
+  &lt;string&gt;is_solvent&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
     <Setting Name="CycleWeight_ColN_id" Type="System.Int32" Scope="User">
@@ -539,8 +542,12 @@
   &lt;string&gt;id&lt;/string&gt;
   &lt;string&gt;role&lt;/string&gt;
   &lt;string&gt;cycle_start&lt;/string&gt;
-  &lt;string&gt;recipe_create&lt;/string&gt;
+  &lt;string&gt;recipe_update&lt;/string&gt;
+  &lt;string&gt;backup&lt;/string&gt;
+  &lt;string&gt;parameters&lt;/string&gt;
+  &lt;string&gt;daily_test&lt;/string&gt;
   &lt;string&gt;application_stop&lt;/string&gt;
+  &lt;string&gt;ack_alarm&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
     <Setting Name="AccessTable_TableName" Type="System.String" Scope="User">
@@ -559,19 +566,19 @@
       <Value Profile="(Default)">3</Value>
     </Setting>
     <Setting Name="AccessTable_ColN_applicationStop" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">4</Value>
+      <Value Profile="(Default)">7</Value>
     </Setting>
     <Setting Name="AccessTable_Role_operator" Type="System.String" Scope="User">
-      <Value Profile="(Default)">operator</Value>
+      <Value Profile="(Default)">opérateur</Value>
     </Setting>
     <Setting Name="AccessTable_Role_supervisor" Type="System.String" Scope="User">
-      <Value Profile="(Default)">supervisor</Value>
+      <Value Profile="(Default)">superviseur</Value>
     </Setting>
     <Setting Name="AccessTable_Role_administrator" Type="System.String" Scope="User">
-      <Value Profile="(Default)">administrator</Value>
+      <Value Profile="(Default)">administrateur</Value>
     </Setting>
     <Setting Name="AccessTable_Role_none" Type="System.String" Scope="User">
-      <Value Profile="(Default)">none</Value>
+      <Value Profile="(Default)">invité</Value>
     </Setting>
     <Setting Name="CycleWeight_ColDesc" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
@@ -588,6 +595,7 @@
   &lt;string&gt;Maximum&lt;/string&gt;
   &lt;string&gt;0&lt;/string&gt;
   &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;Solvant&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
     <Setting Name="CycleSpeedMixer_ColN_mixName" Type="System.Int32" Scope="User">
@@ -732,17 +740,120 @@
     <Setting Name="Recipe_ColN_FinalWeightMax" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">7</Value>
     </Setting>
-    <Setting Name="ConnectionInfo" Type="Database.ConnectionInfo" Scope="User">
-      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;ConnectionInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
-  &lt;Server&gt;localhost&lt;/Server&gt;
-  &lt;UserID&gt;root&lt;/UserID&gt;
-  &lt;Password&gt;Integra2022/&lt;/Password&gt;
-  &lt;Db&gt;db1&lt;/Db&gt;
-&lt;/ConnectionInfo&gt;</Value>
-    </Setting>
-    <Setting Name="Cycle_ColN_bowl_weight" Type="System.Int32" Scope="User">
+    <Setting Name="Cycle_ColN_bowlWeight" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">18</Value>
+    </Setting>
+    <Setting Name="CycleWeight_ColN_isSolvent" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">12</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_lastWeightTh" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">19</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_lastWeightEff" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">20</Value>
+    </Setting>
+    <Setting Name="Sample_ColIds" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;id&lt;/string&gt;
+  &lt;string&gt;username&lt;/string&gt;
+  &lt;string&gt;date_time&lt;/string&gt;
+  &lt;string&gt;equipment_name&lt;/string&gt;
+  &lt;string&gt;setpoint1&lt;/string&gt;
+  &lt;string&gt;setpoint2&lt;/string&gt;
+  &lt;string&gt;setpoint3&lt;/string&gt;
+  &lt;string&gt;setpoint4&lt;/string&gt;
+  &lt;string&gt;measure1&lt;/string&gt;
+  &lt;string&gt;measure2&lt;/string&gt;
+  &lt;string&gt;measure3&lt;/string&gt;
+  &lt;string&gt;measure4&lt;/string&gt;
+  &lt;string&gt;status&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="Sample_ColDesc" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;Nom d'utilisateur&lt;/string&gt;
+  &lt;string&gt;Date et heure de l'étalonnage&lt;/string&gt;
+  &lt;string&gt;Nom de l'équipement&lt;/string&gt;
+  &lt;string&gt;Poids étalon 1&lt;/string&gt;
+  &lt;string&gt;Poids étalon 2&lt;/string&gt;
+  &lt;string&gt;Poids étalon 3&lt;/string&gt;
+  &lt;string&gt;Poids étalon 4&lt;/string&gt;
+  &lt;string&gt;Masse mesurée&lt;/string&gt;
+  &lt;string&gt;Masse mesurée&lt;/string&gt;
+  &lt;string&gt;Masse mesurée&lt;/string&gt;
+  &lt;string&gt;Masse mesurée&lt;/string&gt;
+  &lt;string&gt;Statut&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="Sample_TableName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">sampling</Value>
+    </Setting>
+    <Setting Name="Sample_ColN_id" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Sample_ColN_dateTime" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="Sample_ColN_setpoint1" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="Sample_ColN_setpoint2" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="Sample_ColN_setpoint3" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="Sample_ColN_setpoint4" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="Sample_ColN_measure1" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="Sample_ColN_measure2" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">9</Value>
+    </Setting>
+    <Setting Name="Sample_ColN_measure3" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="Sample_ColN_measure4" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">11</Value>
+    </Setting>
+    <Setting Name="Sample_ColN_status" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">12</Value>
+    </Setting>
+    <Setting Name="Sample_ColN_username" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="Timestamp_Format" Type="System.String" Scope="User">
+      <Value Profile="(Default)">yyyy-MM-dd HH:mm:ss</Value>
+    </Setting>
+    <Setting Name="Sample_ColN_equipmentName" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="ConnectionInfo" Type="Database.ConnectionInfo" Scope="User">
+      <Value Profile="(Default)">
+          &lt;ConnectionInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+            &lt;Server&gt;localhost&lt;/Server&gt;
+            &lt;UserID&gt;root&lt;/UserID&gt;
+            &lt;Password&gt;Integra2022/&lt;/Password&gt;
+            &lt;Db&gt;db1&lt;/Db&gt;
+          &lt;/ConnectionInfo&gt;
+        </Value>
+    </Setting>
+    <Setting Name="AccessTable_ColN_Backup" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="AccessTable_ColN_Parameters" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="AccessTable_ColN_DailyTest" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="AccessTable_ColN_AckAlarm" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">8</Value>
     </Setting>
   </Settings>
 </SettingsFile>
