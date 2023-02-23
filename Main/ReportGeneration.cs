@@ -14,7 +14,13 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Drawing.Printing;
+using System.Diagnostics;
 using static Alarm_Management.AlarmManagement;
+using System.Collections;
+using System.Threading;
+using System.Net.Sockets;
+using System.Net;
 
 namespace Main
 {
@@ -357,8 +363,8 @@ namespace Main
             }
             else
             {
-                decimal eff = decimal.Parse(lastWeightEff, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign);
-                decimal th = decimal.Parse(lastWeightTh, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign);
+                decimal eff = decimal.Parse(lastWeightEff, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowThousands);
+                decimal th = decimal.Parse(lastWeightTh, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowThousands);
                 status = (Math.Abs(eff - th) < th * Settings.Default.LastWeightRatio) ? statusPASS : statusFAIL;
             }
 
@@ -1279,6 +1285,33 @@ namespace Main
             string fileName = samplingReportPath + generationDateTime.ToString("yyyy.MM.dd_HH.mm.ss") + ".pdf";
 
             if (!File.Exists(fileName)) document.Save(fileName);
+            /*
+            ProcessStartInfo info = new ProcessStartInfo();
+            info.Verb = "print";
+            info.FileName = fileName;
+            info.CreateNoWindow = true;
+            info.WindowStyle = ProcessWindowStyle.Hidden;
+
+            Process p = new Process
+            {
+                StartInfo = info
+            };
+            p.Start();
+
+            p.WaitForInputIdle();
+            MessageBox.Show("Alors ?");
+            p.WaitForExit();
+            MessageBox.Show("STOP");*/
+            //System.Threading.Thread.Sleep(30000);
+            /*if (false == p.CloseMainWindow())
+            {
+                MessageBox.Show("Voilà, c'est fini");
+                p.Kill();
+            }*/
+
+
+
+            BatchPrint.PrintBinaryFile(fileName, "CHLOCPRN001", "Queue Name", General.loggedUsername);
         }
 
         private double DrawTitle(PdfPage page, double y, string title)
@@ -1304,5 +1337,153 @@ namespace Main
 
             return y + marginH_GeneralInfo + (int)((values.Length - 1) / nColumns) * generalInfoHeight + textHeight + smSeq_marginL_Cells;
         }
+    }
+    public class BatchPrint
+    {
+
+        private const int cPort = 515;
+        private const char cLineFeed = '\n';
+        private const int cDefaultByteSize = 4;
+        public static string ErrorMessage = string.Empty;
+        private static string mHost;
+        private static string mQueue;
+        private static string mUser;
+        private static readonly Queue mPrintQueue = new Queue();
+        private static readonly Dictionary<string, int> mLastPrintId = new Dictionary<string, int>();
+
+        public static bool PrintBinaryFile(string filePath, string printerName, string queueName, string userName)
+        {
+            try
+            {
+                mHost = printerName;
+                mQueue = queueName;
+                mUser = userName;
+                BeginPrint(filePath);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage += ex.Message + cLineFeed + ex.StackTrace;
+            }
+            return ErrorMessage.Length <= 0;
+        }
+
+        private static void BeginPrint(string filePath)
+        {
+            mPrintQueue.Enqueue(filePath);
+            ThreadStart myThreadDelegate = SendFileToPrinter;
+            var myThread = new Thread(myThreadDelegate);
+            myThread.Start();
+        }
+
+        private static void SendFileToPrinter()
+        {
+            ErrorMessage = string.Empty;
+            var fileFromQueue = (string)mPrintQueue.Dequeue();
+            var tcpClient = new TcpClient();
+            tcpClient.Connect(mHost, cPort);
+            const char space = ' ';
+            using (var networkStream = tcpClient.GetStream())
+            {
+                if (!networkStream.CanWrite)
+                {
+                    ErrorMessage = "NetworkStream.CanWrite failed";
+                    networkStream.Close();
+                    tcpClient.Close();
+                    return;
+                }
+                var thisPc = Dns.GetHostName();
+                var printId = GetPrintId();
+                var dfA = string.Format("dfA{0}{1}", printId, thisPc);
+                var cfA = string.Format("cfA{0}{1}", printId, thisPc);
+                var controlFile = string.Format("H{0}\nP{1}\n{5}{2}\nU{3}\nN{4}\n", thisPc, mUser, dfA, dfA, Path.GetFileName(fileFromQueue), true);
+                const int bufferSize = (cDefaultByteSize * 1024);
+                var buffer = new byte[bufferSize];
+                var acknowledgement = new byte[cDefaultByteSize];
+                var position = 0;
+                buffer[position++] = 2;
+                ProcessBuffer(mQueue, ref buffer, ref position, (byte)cLineFeed);
+                if (!IsAcknowledgementValid(buffer, position, acknowledgement, networkStream, tcpClient, "No response from printer"))
+                    return;
+                position = 0;
+                buffer[position++] = 2;
+                var cFileLength = controlFile.Length.ToString();
+                ProcessBuffer(cFileLength, ref buffer, ref position, (byte)space);
+                ProcessBuffer(cfA, ref buffer, ref position, (byte)cLineFeed);
+                if (!IsAcknowledgementValid(buffer, position, acknowledgement, networkStream, tcpClient, "Error on control file len"))
+                    return;
+                position = 0;
+                ProcessBuffer(controlFile, ref buffer, ref position, 0);
+                if (!IsAcknowledgementValid(buffer, position, acknowledgement, networkStream, tcpClient, "Error on control file"))
+                    return;
+                position = 0;
+                buffer[position++] = 3;
+                var dataFileInfo = new FileInfo(fileFromQueue);
+                cFileLength = dataFileInfo.Length.ToString();
+                ProcessBuffer(cFileLength, ref buffer, ref position, (byte)space);
+                ProcessBuffer(dfA, ref buffer, ref position, (byte)cLineFeed);
+                if (!IsAcknowledgementValid(buffer, position, acknowledgement, networkStream, tcpClient, "Error on dfA"))
+                    return;
+                long totalbytes = 0;
+                using (var fileStream = new FileStream(fileFromQueue, FileMode.Open))
+                {
+                    int bytesRead;
+                    while ((bytesRead = fileStream.Read(buffer, 0, bufferSize)) > 0)
+                    {
+                        totalbytes += bytesRead;
+                        networkStream.Write(buffer, 0, bytesRead);
+                        networkStream.Flush();
+                    }
+                    fileStream.Close();
+                }
+                if (dataFileInfo.Length != totalbytes)
+                    ErrorMessage = fileFromQueue + "File length error";
+                position = 0;
+                buffer[position++] = 0;
+                if (!IsAcknowledgementValid(buffer, position, acknowledgement, networkStream, tcpClient, "Error on file"))
+                    return;
+                networkStream.Close();
+                tcpClient.Close();
+            }
+        }
+
+        private static int GetPrintId()
+        {
+            var count = 0;
+            lock (mLastPrintId)
+            {
+                if (mLastPrintId.ContainsKey(mUser))
+                    count = mLastPrintId[mUser];
+                count++;
+                count %= 1000;
+                if (mLastPrintId.ContainsKey(mUser))
+                    mLastPrintId[mUser] = count;
+                else
+                    mLastPrintId.Add(mUser, count);
+            }
+            return count;
+        }
+
+        private static void ProcessBuffer(string item, ref byte[] buffer, ref int position, byte nextPosition)
+        {
+            foreach (var t in item)
+            {
+                buffer[position++] = (byte)t;
+            }
+            buffer[position++] = nextPosition;
+        }
+
+        private static bool IsAcknowledgementValid(byte[] buffer, int position, byte[] acknowledgement, NetworkStream networkStream, TcpClient tcpClient, string errorMsg)
+        {
+            networkStream.Write(buffer, 0, position);
+            networkStream.Flush();
+            networkStream.Read(acknowledgement, 0, cDefaultByteSize);
+            if (acknowledgement[0] == 0)
+                return true;
+            ErrorMessage = errorMsg;
+            networkStream.Close();
+            tcpClient.Close();
+            return false;
+        }
+
     }
 }

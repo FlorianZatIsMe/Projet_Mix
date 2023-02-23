@@ -26,13 +26,13 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row = "0" Grid.Column = "0" Text = "Numéro de lot" Margin = "10" HorizontalAlignment = "Left" VerticalAlignment = "Center"/>
-        <TextBox x:Name="tbOFnumber" Grid.Row = "0" Grid.Column = "1" Margin = "10" KeyDown="TbOFnumber_KeyDown"/>
+        <TextBox x:Name="tbOFnumber" Grid.Row = "0" Grid.Column = "1" Margin = "10"/>
 
         <TextBlock Grid.Row = "1" Grid.Column = "0" Text = "Produit" Margin = "10" HorizontalAlignment = "Left" VerticalAlignment = "Center"/>
         <ComboBox x:Name="cbxRecipeName" Style="{DynamicResource ComboBoxStyle1}" Grid.Row = "1" Grid.Column = "1" Margin="10" Width="Auto" IsSynchronizedWithCurrentItem="True" SelectionChanged="cbxProgramName_SelectionChanged"/>
 
         <TextBlock x:Name="lbFinalWeight" Grid.Row = "2" Grid.Column = "0" Text = "Masse cible (g) [0 ; 0]" Margin = "10" HorizontalAlignment = "Left" VerticalAlignment = "Center"/>
-        <TextBox x:Name="tbFinalWeight" Grid.Row = "2" Grid.Column = "1" Margin = "10" KeyDown="TbFinalWeight_KeyDown"/>
+        <TextBox x:Name="tbFinalWeight" Grid.Row = "2" Grid.Column = "1" Margin = "10"/>
 
         <Button Grid.Row = "4" Grid.Column = "2" Content = "OK" Margin = "1" HorizontalAlignment = "Left" VerticalAlignment = "Center" Width = "80" Click="FxOK"/>
         <Button Grid.Row = "5" Grid.Column = "2" Content = "Annuler" Margin = "1" HorizontalAlignment = "Left" VerticalAlignment = "Center" Width = "80" Click="FxAnnuler"/>

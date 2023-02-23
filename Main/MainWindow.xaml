@@ -19,7 +19,7 @@
         <!--// Menu Style Templates //-->
 
         <Style x:Key="Main_MenuItem"
-               TargetType="MenuItem">
+               TargetType="MenuItem">            
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type MenuItem}">
@@ -279,17 +279,17 @@
                   Margin="5">
 
                 <!--// Home //-->
-                <MenuItem Header="GENERAL"
+                <MenuItem x:Name="menuItemHome" Header="GENERAL"
                           Style="{StaticResource Main_MenuItem}"
                           Click = "FxSystemStatus">
                     <MenuItem.Icon>
-                        <Image Source="Resources/img_home.png"
+                        <Image Source="Resources/img_home_en.png"
                                Stretch="Uniform" />
                     </MenuItem.Icon>
                 </MenuItem>
 
                 <!--// About Us //-->
-                <MenuItem x:Name="menuItemStart" Header="DEMARRER"
+                <MenuItem x:Name="menuItemStart" Header="DEMARRER" Width="129"
                           Style="{StaticResource Main_MenuItem}"
                           Click = "FxCycleStart">
                     <MenuItem.Icon>
@@ -349,7 +349,7 @@
 
 
                 <!--// AUDIT TRAIL //-->
-                <MenuItem Header="AUDIT TRAIL"
+                <MenuItem x:Name="menuItemAuditTrail" Header="AUDIT TRAIL"
                           Style="{StaticResource Main_MenuItem}" 
                           Click="FxAuditTrail">
                     <MenuItem.Icon>
@@ -458,7 +458,7 @@
 
                 <DockPanel LastChildFill = "True">
                     <Frame DockPanel.Dock = "Left" x:Name="frameInfoCycle" NavigationUIVisibility="Hidden" Margin="5" Visibility="Collapsed" Width="600"/>
-                    <Frame x:Name="frameMain" NavigationUIVisibility="Hidden" Margin="5"/>
+                    <Frame x:Name="frameMain" NavigationUIVisibility="Hidden" Margin="5" ContentRendered="frameMain_ContentRendered"/>
                 </DockPanel>
             </Border>
         </Grid>

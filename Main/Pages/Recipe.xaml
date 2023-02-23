@@ -19,15 +19,15 @@
         <Grid Grid.Row="0" x:Name="gridNewRecipe" Visibility="Collapsed">
             <WrapPanel Margin="10, 10, 0, 0">
                 <TextBlock Foreground="Wheat" Text="Nom de la recette"/>
-                <TextBox x:Name="tbRecipeNameNew" Margin="20, 0, 0, 0" Width="120" GotFocus="tbRecipeNameNew_GotFocus" LostFocus="tbRecipeNameNew_LostFocus"/>
+                <TextBox x:Name="tbRecipeNameNew" Margin="20, 0, 0, 0" Width="120" GotFocus="ShowKeyBoard" LostFocus="HideKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
                 
                 <Button Content="Nouvelle séquence" Width="120" Margin="20, 0, 0, 0"  HorizontalAlignment="Left" VerticalAlignment="center" Click="New_Sequence_Click"/>
 
                 <TextBlock Foreground="Wheat" Text="Masse cible min (g)" Margin="40, 0, 0, 0"/>
-                <TextBox x:Name="tbWeightMinNew" Margin="20, 0, 0, 0" Width="120" LostFocus="tbWeightMinNew_LostFocus"/>
+                <TextBox x:Name="tbWeightMinNew" Margin="20, 0, 0, 0" Width="120" LostFocus="tbWeightMinNew_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
 
                 <TextBlock Foreground="Wheat" Text="Masse cible max (g)" Margin="40, 0, 0, 0"/>
-                <TextBox x:Name="tbWeightMaxNew" Margin="20, 0, 0, 0" Width="120" LostFocus="tbWeightMaxNew_LostFocus"/>
+                <TextBox x:Name="tbWeightMaxNew" Margin="20, 0, 0, 0" Width="120" LostFocus="tbWeightMaxNew_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
             </WrapPanel>
             <Button Content="Créer recette" Width="Auto" Margin="0, 0, 10, 0" HorizontalAlignment="Right" VerticalAlignment="center" Click="ButtonCreate_Click"/>
         </Grid>
@@ -54,17 +54,17 @@
                         <Button Content="Nouvelle séquence" Width="120" Margin="20, 0, 0, 0"  HorizontalAlignment="Left" VerticalAlignment="center" Click="New_Sequence_Click"/>
 
                         <TextBlock Foreground="Wheat" Text="Masse cible min (g)" Margin="40, 0, 0, 0"/>
-                        <TextBox x:Name="tbWeightMinModif" Margin="20, 0, 0, 0" Width="120" LostFocus="tbWeightMinModif_LostFocus"/>
+                        <TextBox x:Name="tbWeightMinModif" Margin="20, 0, 0, 0" Width="120" LostFocus="tbWeightMinModif_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
 
                         <TextBlock Foreground="Wheat" Text="Masse cible max (g)" Margin="40, 0, 0, 0"/>
-                        <TextBox x:Name="tbWeightMaxModif" Margin="20, 0, 0, 0" Width="120" LostFocus="tbWeightMaxModif_LostFocus"/>
+                        <TextBox x:Name="tbWeightMaxModif" Margin="20, 0, 0, 0" Width="120" LostFocus="tbWeightMaxModif_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
 
                     </WrapPanel>
                 </WrapPanel>
                         <WrapPanel x:Name="panelTestRecipe" Visibility="Collapsed" Margin="0,10,0,0">
                             <TextBlock Foreground="Wheat" Margin="10, 4, 0, 0" Text="Tester recette"/>
                             <TextBlock Foreground="Wheat" Margin="20, 4, 0, 0" Text="Masse produit final (g)"/>
-                            <TextBox x:Name="tbFinaleWeight" Margin="10, 4, 0, 0" Width="50"/>
+                    <TextBox x:Name="tbFinaleWeight" Margin="10, 4, 0, 0" Width="50" LostFocus="HideKeyBoard" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
                             <Button Content="Tester" Width="50" Margin="20, 0, 0, 0"  HorizontalAlignment="Left" VerticalAlignment="center" Click="Test_Sequence_Click"/>
                         </WrapPanel>
                         
@@ -75,7 +75,7 @@
         <Grid Grid.Row="0" x:Name="gridCopy_Recipe" Visibility="Collapsed">
             <WrapPanel Margin="10, 10, 0, 0">
                 <TextBlock Foreground="Wheat" Margin="0,4,0,0" Text="Nom de la nouvelle recette"/>
-                <TextBox x:Name="tbRecipeNameCpy" Margin="10, 4, 0, 0" Width="100"/>
+                <TextBox x:Name="tbRecipeNameCpy" Margin="10, 4, 0, 0" Width="100" LostFocus="HideKeyBoard" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
 
                 <TextBlock Foreground="Wheat" Margin="20,4,0,0" Text="Nom de la recette à copier"/>
                 <ComboBox Style="{DynamicResource ComboBoxStyle1}"

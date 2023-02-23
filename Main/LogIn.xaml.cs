@@ -33,42 +33,66 @@ namespace Main
             mainWindow = window;
             InitializeComponent();
         }
-        private void Click()
+        private void Click(string user = null)
         {
             logger.Debug("Click");
 
-            try
+            if (user == null)
             {
-                PrincipalContext pc = new PrincipalContext(ContextType.Domain);
-                bool isCredentialValid = pc.ValidateCredentials(username.Text, password.Password);
-
-                if (isCredentialValid)
+                if (!UserManagement.SetNoneAccess())
                 {
-                    if (username.Text.ToLower() == "julien.aquilon") MessageBox.Show("Salut Chef");
-
-                    string role = UserManagement.UpdateAccessTable(username.Text);
-                    mainWindow.UpdateUser(username.Text, role);
-
-                    this.Close();
-                    mainWindow.frameMain.Content = new Pages.Status();
+                    General.ShowMessageBox("C'est pas bien ça");
+                    logger.Error("C'est pas bien ça");
                 }
-                else
+
+                mainWindow.UpdateUser("aucun utilisateur", AccessTableInfo.NoneRole);
+            }
+            else
+            {
+                try
                 {
-                    MessageBox.Show(Settings.Default.LogIn_Info_PswIncorrect);
+                    PrincipalContext pc = new PrincipalContext(ContextType.Domain);
+                    bool isCredentialValid = pc.ValidateCredentials(user, password.Password);
+
+                    if (isCredentialValid)
+                    {
+                        if (user.ToLower() == "julien.aquilon") MessageBox.Show("Salut Chef");
+
+                        string role = UserManagement.UpdateAccessTable(user);
+                        mainWindow.UpdateUser(user, role);
+                    }
+                    else
+                    {
+                        MessageBox.Show(Settings.Default.LogIn_Info_PswIncorrect);
+                        return;
+                    }
+                }
+                catch (Exception)
+                {
+                    logger.Error("Problème de connexion avec l'active directory");
+                    MessageBox.Show("Problème de connexion avec l'active directory");
+                    return;
                 }
             }
-            catch (Exception)
+
+            if (mainWindow.frameMain.Content.GetType().GetInterface(typeof(Pages.ISubCycle).Name) != null)
             {
-                logger.Error("Problème de connexion avec l'active directory");
-                MessageBox.Show("Problème de connexion avec l'active directory");
+                Pages.ISubCycle subCycle = mainWindow.frameMain.Content as Pages.ISubCycle;
+                bool[] accessTable = UserManagement.GetCurrentAccessTable();
+                subCycle.EnablePage(accessTable[AccessTableInfo.CycleStart]);
+            }
+            else
+            {
+                mainWindow.frameMain.Content = new Pages.Status();
             }
 
+            this.Close();
         }
         private void ButtonOk_Click(object sender, RoutedEventArgs e)
         {
             logger.Debug("ButtonOk_Click");
 
-            Click();
+            Click(username.Text);
         }
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)
         {
@@ -82,7 +106,7 @@ namespace Main
 
             if (e.Key == Key.Enter)
             {
-                Click();
+                Click(username.Text);
             }
             else if (e.Key == Key.Escape)
             {
@@ -92,15 +116,17 @@ namespace Main
 
         private void ButtonLogOff_Click(object sender, RoutedEventArgs e)
         {
+            Click();
+            /*
             if (!UserManagement.SetNoneAccess())
             {
                 General.ShowMessageBox("C'est pas bien ça");
                 logger.Error("C'est pas bien ça");
             }
 
-            mainWindow.UpdateUser("Aucun utilisateur", AccessTableInfo.NoneRole);
-            this.Close();
-            mainWindow.frameMain.Content = new Pages.Status();
+            mainWindow.UpdateUser("aucun utilisateur", AccessTableInfo.NoneRole);
+            this.Close();*/
+            //mainWindow.frameMain.Content = new Pages.Status();
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Main.Pages.SubCycle
     /// <summary>
     /// Logique d'interaction pour CycleWeight.xaml
     /// </summary>
-    public partial class CycleWeight : Page, IDisposable, ISubCycle
+    public partial class CycleWeight : Page, IDisposable//, ISubCycle
     {
         private readonly SubCycleArg subCycle;
         /*

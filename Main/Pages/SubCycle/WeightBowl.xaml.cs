@@ -24,7 +24,7 @@ namespace Main.Pages.SubCycle
     /// <summary>
     /// Logique d'interaction pour WeightBowl.xaml
     /// </summary>
-    public partial class WeightBowl : Page
+    public partial class WeightBowl : Page, ISubCycle
     {
         private bool isBalanceFree = false;
         private bool isManual = false;
@@ -40,8 +40,9 @@ namespace Main.Pages.SubCycle
 
         private Frame frameMain;
 
-        private bool isFinalWeigh = false;
-        private bool isBowlWeigh = false;
+        private bool isFinalWeight = false;
+        private bool isBowlWeight = false;
+        private decimal finalWeight = 0;
 
         private Timer getWeightTimer;
         //private Task getWeightTask;
@@ -52,10 +53,10 @@ namespace Main.Pages.SubCycle
         private string tareOnGoing = "Tare en cours...";
         private string setpointText1 = "Masse cible: ";
         private string setpointText2 = "g";
-        private string message1EmptyBowl = "Veuiller placer le contenant vide sur la balance puis appuyer sur le bouton";
-        private string message1FullBowl = "Veuiller placer le contenant sur la balance puis appuyer sur le bouton";
-        private string message1Sampling = "Veuiller placer le poids étalon sur la balance puis appuyer sur le bouton";
-        private string message1Cycle1 = "Veuiller le produit ";
+        private string message1EmptyBowl = "Veuillez placer le contenant vide sur la balance puis appuyer sur le bouton";
+        private string message1FullBowl = "Veuillez placer le contenant sur la balance puis appuyer sur le bouton";
+        private string message1Sampling = "Veuillez placer le poids étalon sur la balance puis appuyer sur le bouton";
+        private string message1Cycle1 = "Veuillez peser le produit ";
         private string message1Cycle2 = " sur la balance puis appuyer sur le bouton";
         private int timerInterval = 100;
 
@@ -68,26 +69,27 @@ namespace Main.Pages.SubCycle
 
         // Cycle variables
         private bool isCycle = false;
+        private bool isCycleEnded = false;
         private readonly SubCycleArg subCycle;
         private readonly int previousSeqId;
         private readonly RecipeWeightInfo recipeWeightInfo = new RecipeWeightInfo();
-        private readonly decimal setpoint;
-        private readonly decimal min;
-        private readonly decimal max;
-        private bool isScanningStep;
-        private bool isSequenceOver;
+        //private readonly decimal setpoint;
+        //private readonly decimal min;
+        //private readonly decimal max;
+        //private bool isScanningStep;
+        //private bool isSequenceOver;
         //private readonly System.Timers.Timer getWeightTimer;
-        private bool wasBalanceFreeOnce;
+        //private bool wasBalanceFreeOnce;
         private bool isWeightCorrect;
-        private bool disposedValue;
-        private decimal currentWeight;
+        //private bool disposedValue;
+        //private decimal currentWeight;
         private readonly CycleWeightInfo cycleWeightInfo = new CycleWeightInfo();
 
 
         // Constructor to measure the mass of the empty bowl at the start of a cycle
         public WeightBowl(CycleStartInfo info_arg)
         {
-            isBowlWeigh = true;
+            isBowlWeight = true;
             info = info_arg;
             frameMain = info.frameMain;
             message1 = message1EmptyBowl;
@@ -112,20 +114,11 @@ namespace Main.Pages.SubCycle
         // Constructor to measure the mass of the bowl at the end of a cycle
         public WeightBowl(NextSeqInfo nextSeqInfo_arg)
         {
-            isFinalWeigh = true;
+            isFinalWeight = true;
             nextSeqInfo = nextSeqInfo_arg;
             frameMain = nextSeqInfo.frameMain;
             currentRatio = Settings.Default.LastWeightRatio;
             message1 = message1FullBowl;
-            /*
-            nextSeqInfo_arg.frameMain.ContentRendered += new EventHandler(FrameMain_ContentRendered);
-            getWeightTimer = new Timer
-            {
-                AutoReset = false,
-                Interval = timerInterval
-            };
-            getWeightTimer.Elapsed += GetWeightTimer_Elapsed;
-            */
 
             //Calculation the theoritical total weight
             CycleTableInfo currentCycle = new CycleTableInfo();
@@ -152,7 +145,7 @@ namespace Main.Pages.SubCycle
             {
                 while (nextId != "" && nextId != null)
                 {
-                    t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(Sequence.list[seqTabInfo.SeqType].subCycleInfo.GetType(), nextId); });
+                    t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(Sequence.list[int.Parse(nextType)].subCycleInfo.GetType(), nextId); });
                     seqTabInfo = (ISeqTabInfo)t.Result;
                     nextId = seqTabInfo.Columns[seqTabInfo.NextSeqId].Value;
                     nextType = seqTabInfo.Columns[seqTabInfo.NextSeqType].Value;
@@ -178,6 +171,8 @@ namespace Main.Pages.SubCycle
                     }
                 }
             }
+
+            finalWeight = currentSetpoint;
 
             InitializeComponent();
             labelMessage.MaxWidth = 500;
@@ -210,9 +205,9 @@ namespace Main.Pages.SubCycle
 
             //subCycle.frameMain.ContentRendered += new EventHandler(FrameMain_ContentRendered);
 
-            isSequenceOver = false;
+            //isSequenceOver = false;
             isWeightCorrect = false;
-            wasBalanceFreeOnce = false;
+            //wasBalanceFreeOnce = false;
             General.CurrentCycleInfo.UpdateSequenceNumber();
 
             /*
@@ -321,7 +316,8 @@ namespace Main.Pages.SubCycle
 
         private void GetWeightTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            isManual = !Balance.Connect();
+            isManual = !Balance.IsConnected();
+            //isManual = true;
 
             this.Dispatcher.Invoke(() => {
                 labelWeight.Visibility = isManual ? Visibility.Collapsed : Visibility.Visible;
@@ -343,15 +339,16 @@ namespace Main.Pages.SubCycle
                         labelWeight.Text = weight.value + "g";
                         //logger.Error(labelWeight.Text + weight.value);
 
-                        if (isFinalWeigh || isSampling)
+                        if (isFinalWeight || isSampling)
                         {
                             labelWeight.Foreground = IsWeightCorrect(weight.value) ? Brushes.AliceBlue : Brushes.Red;
                             //labelWeight.Foreground = (Math.Abs(weight.value - currentSetpoint) < currentSetpoint * currentRatio) ? Brushes.AliceBlue : Brushes.Red;
                         }
                         else if (isCycle)
                         {
-                            labelWeight.Foreground = Math.Abs(weight.value - decimal.Parse(recipeWeightInfo.Columns[recipeWeightInfo.Setpoint].Value)) < decimal.Parse(recipeWeightInfo.Columns[recipeWeightInfo.Criteria].Value) ? Brushes.AliceBlue : Brushes.Red;
-                        }
+                            labelWeight.Foreground = Math.Abs(weight.value - decimal.Parse(recipeWeightInfo.Columns[recipeWeightInfo.Setpoint].Value)) <= decimal.Parse(recipeWeightInfo.Columns[recipeWeightInfo.Criteria].Value) ? Brushes.AliceBlue : Brushes.Red;
+                            logger.Error((Math.Abs(weight.value - decimal.Parse(recipeWeightInfo.Columns[recipeWeightInfo.Setpoint].Value)) <= decimal.Parse(recipeWeightInfo.Columns[recipeWeightInfo.Criteria].Value)).ToString() + weight.value.ToString() + recipeWeightInfo.Columns[recipeWeightInfo.Setpoint].Value + Math.Abs(weight.value - decimal.Parse(recipeWeightInfo.Columns[recipeWeightInfo.Setpoint].Value)).ToString() + recipeWeightInfo.Columns[recipeWeightInfo.Criteria].Value);
+            }
                     }
                 });
             }
@@ -400,10 +397,10 @@ namespace Main.Pages.SubCycle
                 Balance.Connect();
 
                 // While the balance is not connected or user give up
-                while (!Balance.IsConnected())
+                while (!Balance.IsConnected() && !isManual)
                 {
                     // We ask the user if he wants to try to connect to the balance again
-                    if (General.ShowMessageBox("La balance n'est pas connecté, voulez-vous attendre ?", "Balance déconnecté", MessageBoxButton.YesNo) == MessageBoxResult.OK)
+                    if (General.ShowMessageBox("La balance n'est pas connecté, voulez-vous attendre ?", "Balance déconnecté", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
                         // If he wants to wait, we connect to the balance
                         Balance.Connect();
@@ -424,7 +421,7 @@ namespace Main.Pages.SubCycle
                         }
                     }
                 }
-
+                //isManual = true;
                 // if we are in manual mode, perform a manual tare
                 if (isManual)
                 {
@@ -446,7 +443,7 @@ namespace Main.Pages.SubCycle
                         labelMessage.Text = message1;
                         btNext.Visibility = Visibility.Visible;
 
-                        if (isFinalWeigh || isSampling || isCycle)
+                        if (isFinalWeight || isSampling || isCycle)
                         {
                             labelSetpoint.Visibility = Visibility.Visible;
                             string setpoint = "#";
@@ -481,12 +478,10 @@ namespace Main.Pages.SubCycle
                 frame.ContentRendered -= FrameMain_ContentRendered;
                 StopTimer();
                 if (!Balance.IsFree()) Balance.FreeUse();
-                if (isFinalWeigh || isCycle)
+                if (!isCycleEnded && (isFinalWeight || isCycle))
                 {
-                    MessageBox.Show(frameMain.Content.GetType().ToString());
-                    if (frameMain.Content.GetType() == typeof(Pages.Status))
+                    if (frameMain.Content.GetType() == typeof(Pages.Status) || frameMain.Content.GetType() == typeof(Pages.Recipe))
                     {
-                        MessageBox.Show("Salut mon chou, tu nous quitte déjà ?");
                         EndCycle();
                     }
                 }
@@ -547,7 +542,7 @@ namespace Main.Pages.SubCycle
                 }
             }
 
-            if (isFinalWeigh)
+            if (isFinalWeight)
             {
                 if (!IsFinalWeightCorrect(validWeight, currentSetpoint))  //if (!IsWeightCorrect(validWeight))
                 {
@@ -668,25 +663,17 @@ namespace Main.Pages.SubCycle
                 else
                 {
                     if (!Balance.IsFree()) Balance.FreeUse();
-                    //isSequenceOver = true;
 
                     General.CurrentCycleInfo.UpdateCurrentWeightInfo(new string[] { validWeight.ToString() });
 
                     CycleWeightInfo cycleWInfo = new CycleWeightInfo();
-                    cycleWInfo.Columns[cycleWInfo.WasWeightManual].Value = isManual ? DatabaseSettings.General_FalseValue_Write : DatabaseSettings.General_TrueValue_Write;
+                    cycleWInfo.Columns[cycleWInfo.WasWeightManual].Value = isManual ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
                     cycleWInfo.Columns[cycleWInfo.DateTime].Value = DateTime.Now.ToString(Settings.Default.DateTime_Format_Write);
                     cycleWInfo.Columns[cycleWInfo.ActualValue].Value = validWeight.ToString();
 
                     // A CORRIGER : IF RESULT IS FALSE
                     t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(cycleWInfo, previousSeqId.ToString()); });
-                    //MyDatabase.Update_Row(cycleWeightInfo, idSubCycle.ToString());
-                    /*
-                    if (recipeWeightInfo.columns[1].value == "1") // Si la prochaine séquence est une séquence speedmixer
-                    {
-                        General.ShowMessageBox("Mettez le produit dans le speedmixer et fermer le capot");
-                    }
-                    */
-                //*
+
                     SubCycleArg sub = new SubCycleArg(subCycle.frameMain, subCycle.frameInfoCycle, recipeWeightInfo.Columns[recipeWeightInfo.NextSeqId].Value, subCycle.idCycle, previousSeqId, recipeWeightInfo.TabName, new CycleWeightInfo(), subCycle.isTest);
 
                     NextSeqInfo nextSeqInfo = new NextSeqInfo(
@@ -737,144 +724,58 @@ namespace Main.Pages.SubCycle
             getWeightTimer.Start();
         }
 
-        private void EndCycle(decimal bowlWeight = 0)
+        private void EndCycle(decimal bowlWeight = -1)
         {
-            logger.Debug("EndCycle");
-
-            string nextSeqId;
-            int nextRecipeSeqType;
-
-            ICycleSeqInfo cycleSeqInfo;
-            ICycleSeqInfo prevCycleSeqInfo;
-            string row;
-
-            if (nextSeqInfo.previousSeqType < 0 || nextSeqInfo.previousSeqType >= Sequence.list.Count())
+            if (isCycle || isFinalWeight)
             {
-                logger.Error(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + nextSeqInfo.previousSeqType.ToString());
-                General.ShowMessageBox(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + nextSeqInfo.previousSeqType.ToString());
-                return;
+                logger.Debug("EndCycle");
+                isCycleEnded = true;
+
+                General.EndCycle(nextSeqInfo, bowlWeight, finalWeight);
             }
-
-            ISeqTabInfo recipeParam = nextSeqInfo.recipeParam;
-            int previousSeqType = nextSeqInfo.previousSeqType;
-            string previousSeqId = nextSeqInfo.previousSeqId;
-            
-
-            // On boucle tant qu'on est pas arrivé au bout de la recette
-            while (
-                recipeParam.Columns[recipeParam.NextSeqType].Value != "" &&
-                recipeParam.Columns[recipeParam.NextSeqType].Value != null)
+            else if (isBowlWeight && info.isTest)
             {
-                // Note pour plus tard: ce serait bien de retirer les "1" et de les remplacer par un truc comme recipeWeightInfo.nextSeqType
-                nextRecipeSeqType = int.Parse(recipeParam.Columns[recipeParam.NextSeqType].Value);
-
-                // A CORRIGER : IF RESULT IS FALSE
-                Type nextRecipeType = Sequence.list[int.Parse(recipeParam.Columns[recipeParam.NextSeqType].Value)].subRecipeInfo.GetType();
-                Task<object> t2 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(nextRecipeType, recipeParam.Columns[recipeParam.NextSeqId].Value); });
-                //Task<object> t2 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(recipeParam.GetType(), recipeParam.Columns[recipeParam.NextSeqId].Value); });
-                recipeParam = (ISeqTabInfo)t2.Result;
-                //recipeParam = (ISeqInfo)MyDatabase.GetOneRow(typeof(ISeqInfo), recipeParam.columns[recipeParam.id].value);
-
-                if (nextRecipeSeqType < 0 || nextRecipeSeqType >= Sequence.list.Count())
-                {
-                    logger.Error(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + nextRecipeSeqType.ToString());
-                    General.ShowMessageBox(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + nextRecipeSeqType.ToString());
-                    return;
-                }
-
-                //cycleSeqInfo = Sequence.list[nextRecipeSeqType].subCycleInfo;
-                cycleSeqInfo = Activator.CreateInstance(Sequence.list[nextRecipeSeqType].subCycleInfo.GetType()) as ICycleSeqInfo;
-                cycleSeqInfo.SetRecipeParameters(recipeParam, nextSeqInfo.idCycle);
-
-                row = cycleSeqInfo.GetType().ToString() + " ";
-                for (int j = 0; j < cycleSeqInfo.Columns.Count(); j++)
-                {
-                    row = row + cycleSeqInfo.Columns[j].Id + ": " + cycleSeqInfo.Columns[j].Value + " ";
-                }
-                logger.Trace(row);
-                // On insert les infos de recettes dans la bonne table
-                // A CORRIGER : IF RESULT IS FALSE
-                Task<object> t3 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(cycleSeqInfo); });
-                //MyDatabase.InsertRow(cycleSeqInfo);
-
-                // On met à jour les infos "type" et "id" de la séquence qu'on vient de renseigner dans la précédente séquence
-
-                // A CORRIGER : IF RESULT IS FALSE
-                Task<object> t4 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(cycleSeqInfo.TabName, cycleSeqInfo.Columns[cycleSeqInfo.Id].Id); });
-                nextSeqId = ((int)t4.Result).ToString();
-                //nextSeqId = MyDatabase.GetMax(cycleSeqInfo.name, cycleSeqInfo.columns[cycleSeqInfo.id].id).ToString();
-
-                //prevCycleSeqInfo = Sequence.list[previousSeqType].subCycleInfo;
-                prevCycleSeqInfo = Activator.CreateInstance(Sequence.list[nextRecipeSeqType].subCycleInfo.GetType()) as ICycleSeqInfo;
-                prevCycleSeqInfo.Columns[prevCycleSeqInfo.NextSeqType].Value = nextRecipeSeqType.ToString();
-                prevCycleSeqInfo.Columns[prevCycleSeqInfo.NextSeqId].Value = nextSeqId;
-
-                // A CORRIGER : IF RESULT IS FALSE
-                Task<object> t5 = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(prevCycleSeqInfo, nextSeqInfo.previousSeqId); });
-                //MyDatabase.Update_Row(prevCycleSeqInfo, previousSeqId);
-                t5.Wait();
-                // La dernière séquence devient l'ancienne
-                previousSeqType = nextRecipeSeqType;
-                previousSeqId = nextSeqId;
-
-            }
-
-            CycleTableInfo cycleTableInfo = new CycleTableInfo();
-            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-
-            // A CORRIGER : IF RESULT IS FALSE
-            Task<object> t6 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(auditTrailInfo.TabName, auditTrailInfo.Columns[auditTrailInfo.Id].Id); });
-            string lastAlarmId = ((int)t6.Result).ToString();
-            //string lastAlarmId = MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id).ToString();
-            cycleTableInfo.Columns[cycleTableInfo.DateTimeEndCycle].Value = DateTime.Now.ToString(Settings.Default.DateTime_Format_Write);
-            cycleTableInfo.Columns[cycleTableInfo.LastAlarmId].Value = lastAlarmId;
-            cycleTableInfo.Columns[cycleTableInfo.lastWeightTh].Value = currentSetpoint.ToString("N" + Settings.Default.RecipeWeight_NbDecimal.ToString());
-            cycleTableInfo.Columns[cycleTableInfo.lastWeightEff].Value = bowlWeight.ToString("N" + Settings.Default.RecipeWeight_NbDecimal.ToString());
-            cycleTableInfo.Columns[cycleTableInfo.Comment].Value = nextSeqInfo.comment;
-
-            // A CORRIGER : IF RESULT IS FALSE
-            Task<object> t7 = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(cycleTableInfo, nextSeqInfo.idCycle.ToString()); });
-            //MyDatabase.Update_Row(cycleTableInfo, idCycle.ToString());
-            t7.Wait();
-
-            General.CurrentCycleInfo.StopSequence();
-            Task printReportTask = Task.Factory.StartNew(() => General.PrintReport(nextSeqInfo.idCycle));
-
-            General.ShowMessageBox(Settings.Default.Cycle_Info_CycleOver);
-            printReportTask.Wait();
-            General.ShowMessageBox(Settings.Default.Cycle_Info_ReportGenerated);
-
-            // On cache le panneau d'information
-            General.CurrentCycleInfo.SetVisibility(false);
-
-            if (nextSeqInfo.isTest)
-            {
-                // A CORRIGER : IF RESULT IS FALSE
-                Task<object> t8 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(CycleTableInfo), nextSeqInfo.idCycle.ToString()); });
-                cycleTableInfo = (CycleTableInfo)t8.Result;
-                //cycleTableInfo = (CycleTableInfo)MyDatabase.GetOneRow(typeof(CycleTableInfo), idCycle.ToString());
-                nextSeqInfo.frameMain.Content = new Recipe(RcpAction.Modify, nextSeqInfo.frameMain, nextSeqInfo.frameInfoCycle, cycleTableInfo.Columns.Count == 0 ? "" : cycleTableInfo.Columns[cycleTableInfo.RecipeName].Value);
+                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeInfo), info.recipeID.ToString()); });
+                RecipeInfo recipeInfo = (RecipeInfo)t.Result;
+                info.frameMain.Content = new Recipe(RcpAction.Modify, info.frameMain, info.frameInfoCycle, recipeInfo.Columns.Count == 0 ? "" : recipeInfo.Columns[recipeInfo.Name].Value, General.info.Window);
             }
             else
             {
-                nextSeqInfo.frameMain.Content = new Status();
-                //MyDatabase.Disconnect();
+                frameMain.Content = new Pages.Status();
             }
         }
 
         private bool IsWeightCorrect(decimal weightValue)
         {
-            return Math.Abs(weightValue - currentSetpoint) < currentSetpoint * currentRatio;
+            return Math.Abs(weightValue - currentSetpoint) <= currentSetpoint * currentRatio;
         }
 
         public static bool IsFinalWeightCorrect(decimal weightValue, decimal setpoint)
         {
-            return Math.Abs(weightValue - setpoint) < setpoint * Settings.Default.LastWeightRatio;
+            return Math.Abs(weightValue - setpoint) <= setpoint * Settings.Default.LastWeightRatio;
         }
 
         public static bool IsSampWeightCorrect(decimal weightValue, decimal setpoint)
         {
-            return Math.Abs(weightValue - setpoint) < setpoint * Settings.Default.SamplingRatio;
+            return Math.Abs(weightValue - setpoint) <= setpoint * Settings.Default.SamplingRatio;
+        }
+
+        public void EnablePage(bool enable)
+        {
+            if (isCycle || isFinalWeight || isBowlWeight)
+            {
+                tbWeight.IsEnabled = enable;
+                btNext.IsEnabled = enable;
+            }
+            else
+            {
+                Stop();
+            }
+        }
+
+        public void StopCycle()
+        {
+            EndCycle();
         }
     }
 }

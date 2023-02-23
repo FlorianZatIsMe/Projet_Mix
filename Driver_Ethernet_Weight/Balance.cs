@@ -15,6 +15,11 @@ namespace Driver_Ethernet_Balance
         public bool isStable { get; set; }
     }
 
+    public struct IniInfo
+    {
+        public Window Window;
+    }
+
     public static class Balance
     {
         // Prévoir date de calibration
@@ -30,7 +35,7 @@ namespace Driver_Ethernet_Balance
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         static Balance()
         {
-            eth = new Ethernet("10.10.1.3", 8001, "\r\n");
+            eth = new Ethernet("10.10.1.3", 8001, "\r\n",0, 0);
             standbyMessage = "EL" + eth.endLine;
 
             // Initialisation des timers
@@ -44,7 +49,8 @@ namespace Driver_Ethernet_Balance
 
         public static bool Connect()
         {
-            if (!IsConnected()) eth.Connect();
+            eth.Connect();
+            //if (!IsConnected()) eth.Connect();
             return IsConnected();
         }
 
@@ -58,7 +64,7 @@ namespace Driver_Ethernet_Balance
             return eth.IsConnected();
         }
 
-        private static bool Initialize()
+        private static bool ResetBalance()
         {
             return eth.ReadData("@") != standbyMessage;
         }
@@ -80,32 +86,13 @@ namespace Driver_Ethernet_Balance
             logger.Trace("dataToSend - " + dataToSend);
             string receivedData = eth.ReadData(dataToSend, msWaitTime);
 
-            /*
-            if (dataToSend == "ZI")
-            {
-                logger.Trace("Alors !!!!!!");
-                logger.Trace((receivedData == ("ZI S" + eth.endLine).ToString()));
-                sendingCommand = false;
-                return receivedData;
-                //return "ZI S" + eth.endLine;
-            }*/
-
-            /*
-            if (receivedData == null)
-            {
-                //eth.WriteData(dataToSend);
-                //eth.WriteData(dataToSend);
-                receivedData = eth.ReadData(dataToSend, msWaitTime);
-            }*/
-
             if (receivedData == standbyMessage)
             {
-                if (!Initialize())
+                if (!ResetBalance())
                 {
                     sendingCommand = false;
                     return null; 
                 }
-                //MessageBox.Show("");
                 receivedData = eth.ReadData(dataToSend, msWaitTime);
             }
 
@@ -155,14 +142,12 @@ namespace Driver_Ethernet_Balance
 
         public static Weight GetOneWeight()
         {
-            //logger.Debug("GetOneWeight Start");
             string receivedData = SendCommand("SI");
             if (receivedData == null)
             {
                 logger.Fatal("C'est NULL");
                 return null;
             }
-            //logger.Debug("GetOneWeight End");
             return GetWeightFromData(receivedData);
         }
 
@@ -212,16 +197,7 @@ namespace Driver_Ethernet_Balance
             isGetCurWeightTimerOn = false;
             getCurrentWeightTimer.Stop();
             string temp = "-";
-            //eth.WriteData("@");
             eth.ReadData("@", 500);
-            /*
-            while(temp != null)
-            {
-                temp = eth.ReadData(500);
-                logger.Fatal(temp);
-            }*/
-
-            //eth.WriteData("@");
 
             return temp == null;
         }

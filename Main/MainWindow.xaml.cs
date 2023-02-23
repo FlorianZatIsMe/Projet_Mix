@@ -41,16 +41,7 @@ namespace Main
         Modify,
         Copy,
         Delete
-    }    /*
-    public static class GeneralSettings
-    {
-        public static string General_SystemUsername { get; }
-
-        static GeneralSettings()
-        {
-            General_SystemUsername = Settings.Default.General_SystemUsername;
-        }
-    }*/
+    }
 
     public partial class MainWindow : Window
     {
@@ -58,6 +49,8 @@ namespace Main
         private bool isWindowLoaded = false;
         private bool wasAutoBackupStarted = false;
         private Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        private bool isCycleStarted = false;
+        private bool isAlarmActive = false;
         private readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public MainWindow()
@@ -81,15 +74,23 @@ namespace Main
             }
 
             /*
+            AlarmManagement.Initialize(new Alarm_Management.IniInfo() { AuditTrail_SystemUsername = Settings.Default.General_SystemUsername, Window = this });
+            InitializeComponent();
+            AlarmManagement.ActiveAlarmEvent += ActiveAlarmEvent;
+            AlarmManagement.InactiveAlarmEvent += InactiveAlarmEvent;
+
 
             SpeechSynthesizer synth = new SpeechSynthesizer();
             //synth.SelectVoiceByHints(VoiceGender.Male, VoiceAge.Senior);
             //synth.Speak("Oh... You're sweet, thank you. I don't love you, but it's nice to know that someone loves me. Who wouldn't anyway ?");
 
-            //General.PrintReport(467);
-
-            ReportGeneration report = new ReportGeneration();
-            report.GenerateSamplingReport("13");
+            while (true)
+            {
+                if (MessageBox.Show("on continue ?", "GO", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    Balance.Connect();
+                }
+            }
 
             General.ShowMessageBox("Fini je crois");
             Environment.Exit(1);
@@ -169,26 +170,17 @@ namespace Main
 
             AlarmManagement.Initialize(new Alarm_Management.IniInfo() { AuditTrail_SystemUsername = Settings.Default.General_SystemUsername, Window = this });
 
-            // 
-            //
-            //
-            // ICI : PENSER A INITIALISER LA BALANCE ET LA POMPE ET PEUT-ÊTRE LE COLD TRAP
-            //
-            //
-            //
-            //*
-            RS232Weight.rs232.Initialize(new Driver_RS232.IniInfo() { Window = this });
+            Balance.Connect();
             RS232Pump.rs232.Initialize(new Driver_RS232.IniInfo() { Window = this });
             Driver_ColdTrap.ColdTrap.Initialize(new Driver_ColdTrap.IniInfo() { Window = this });
             UserManagement.Initialize(new User_Management.IniInfo() { Window = this });
-            //SpeedMixerModbus.Initialize();
+            SpeedMixerModbus.Initialize();
             if (RS232Pump.rs232.IsOpen())
             {
                 RS232Pump.rs232.BlockUse();
                 RS232Pump.rs232.SetCommand("!C802 0");
                 RS232Pump.rs232.FreeUse();
             }
-            //*/
 
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
             auditTrailInfo.Columns[auditTrailInfo.Description].Value = General.auditTrail_BackupDesc;
@@ -277,41 +269,44 @@ namespace Main
                 if (ExecuteBackupAuto()) General.NextBackupTime = General.NextBackupTime.AddDays(1);
             }
 
-            ConfigurationManager.RefreshSection("appSettings");
+            if (Settings.Default.Main_IsCalibMonitored)
+            {
+                ConfigurationManager.RefreshSection("appSettings");
 
-            try
-            {
-                DateTime nextCalibDate = Convert.ToDateTime(ConfigurationManager.AppSettings["NextCalibDate"]);
-                this.Dispatcher.Invoke(() => {
-                    if (nextCalibDate.CompareTo(DateTime.Now) < 0)
-                    {
-                        if (labelCalibration.Text != "Calibration de La balance expirée depuis le " + nextCalibDate.ToString("dd.MMM.yyyy"))
+                try
+                {
+                    DateTime nextCalibDate = Convert.ToDateTime(ConfigurationManager.AppSettings["NextCalibDate"]);
+                    this.Dispatcher.Invoke(() => {
+                        if (nextCalibDate.CompareTo(DateTime.Now) < 0)
                         {
-                            labelCalibration.Text = "Calibration de La balance expirée depuis le " + nextCalibDate.ToString("dd.MMM.yyyy");
-                            labelCalibration.Foreground = Brushes.Orange;
+                            if (labelCalibration.Text != "Calibration de La balance expirée depuis le " + nextCalibDate.ToString(Settings.Default.Date_Format_Read))
+                            {
+                                labelCalibration.Text = "Calibration de La balance expirée depuis le " + nextCalibDate.ToString(Settings.Default.Date_Format_Read);
+                                labelCalibration.Foreground = Brushes.Orange;
+                            }
                         }
-                    }
-                    else if (nextCalibDate.CompareTo(DateTime.Now.AddDays(15)) < 0)
-                    {
-                        if (labelCalibration.Text != "La balance devra être calibrée avant le " + nextCalibDate.ToString("dd.MMM.yyyy"))
+                        else if (nextCalibDate.CompareTo(DateTime.Now.AddDays(15)) < 0)
                         {
-                            labelCalibration.Text = "La balance devra être calibrée avant le " + nextCalibDate.ToString("dd.MMM.yyyy");
-                            labelCalibration.Foreground = Brushes.Yellow;
+                            if (labelCalibration.Text != "La balance devra être calibrée avant le " + nextCalibDate.ToString(Settings.Default.Date_Format_Read))
+                            {
+                                labelCalibration.Text = "La balance devra être calibrée avant le " + nextCalibDate.ToString(Settings.Default.Date_Format_Read);
+                                labelCalibration.Foreground = Brushes.Yellow;
+                            }
                         }
-                    }
-                    else
-                    {
-                        if (labelCalibration.Text != "")
+                        else
                         {
-                            labelCalibration.Text = "";
+                            if (labelCalibration.Text != "")
+                            {
+                                labelCalibration.Text = "";
+                            }
                         }
-                    }
-                });
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex.Message);
-                logger.Fatal(ConfigurationManager.AppSettings["NextCalibDate"]);
+                    });
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex.Message);
+                    logger.Fatal(ConfigurationManager.AppSettings["NextCalibDate"]);
+                }
             }
         }
         public void UpdateUser(string username, string role)
@@ -323,123 +318,150 @@ namespace Main
             bool[] currentAccess = UserManagement.GetCurrentAccessTable();
 
             menuItemStart.Visibility = currentAccess[AccessTableInfo.CycleStart] ? Visibility.Visible : Visibility.Collapsed;
-            /*
-            menuItemStart.IsEnabled = currentAccess[AccessTableInfo.CycleStart];
-            menuItemStart.Icon = new Image
-            {
-                Source = new BitmapImage(new Uri(
-                    currentAccess[AccessTableInfo.CycleStart] ?
-                    Settings.Default.Main_StartIconEn :
-                    Settings.Default.Main_StartIconDis,
-                    UriKind.Relative))
-            };*/
-
             menuItemRecipes.Visibility = currentAccess[AccessTableInfo.RecipeUpdate] ? Visibility.Visible : Visibility.Collapsed;
-            /*
-            menuItemRecipes.IsEnabled = currentAccess[AccessTableInfo.RecipeUpdate];
-            menuItemRecipes.Icon = new Image
-            {
-                Source = new BitmapImage(new Uri(
-                    currentAccess[AccessTableInfo.RecipeUpdate] ?
-                    Settings.Default.Main_RecipeIconEn :
-                    Settings.Default.Main_RecipeIconDis,
-                    UriKind.Relative))
-            };*/
-
             menuItemBackup.Visibility = currentAccess[AccessTableInfo.Backup] ? Visibility.Visible : Visibility.Collapsed;
-            /*
-            menuItemBackup.IsEnabled = currentAccess[AccessTableInfo.Backup];
-            menuItemBackup.Icon = new Image
-            {
-                Source = new BitmapImage(new Uri(
-                    currentAccess[AccessTableInfo.Backup] ?
-                    Settings.Default.Main_BackupArchiveIconEn :
-                    Settings.Default.Main_BackupArchiveIconDis,
-                    UriKind.Relative))
-            };*/
-
             menuItemParameters.Visibility = currentAccess[AccessTableInfo.Parameters] ? Visibility.Visible : Visibility.Collapsed;
-            /*
-            menuItemParameters.IsEnabled = currentAccess[AccessTableInfo.Parameters];
-            menuItemParameters.Icon = new Image
-            {
-                Source = new BitmapImage(new Uri(
-                    currentAccess[AccessTableInfo.Parameters] ?
-                    Settings.Default.Main_ParametersIconEn :
-                    Settings.Default.Main_ParametersIconDis,
-                    UriKind.Relative))
-            };*/
-
             menuItemDailyTest.Visibility = currentAccess[AccessTableInfo.DailyTest] ? Visibility.Visible : Visibility.Collapsed;
-            /*
-            menuItemDailyTest.IsEnabled = currentAccess[AccessTableInfo.DailyTest];
-            menuItemDailyTest.Icon = new Image
-            {
-                Source = new BitmapImage(new Uri(
-                    currentAccess[AccessTableInfo.DailyTest] ?
-                    Settings.Default.Main_DailyTestIconEn :
-                    Settings.Default.Main_DailyTestIconDis,
-                    UriKind.Relative))
-            };*/
-
             Close_App.Visibility = currentAccess[AccessTableInfo.ApplicationStop] ? Visibility.Visible : Visibility.Collapsed;
         }
         private void ActiveAlarmEvent()
         {
+            isAlarmActive = true;
             this.Dispatcher.Invoke(() =>
             {
                 menuItemAlarm.Icon = new Image
                 {
-                    Source = new BitmapImage(new Uri(@".\Resources\img_alarm_act.png", UriKind.Relative))
+                    Source = new BitmapImage(new Uri(Settings.Default.Main_AlarmIconAct, UriKind.Relative))
                 };
             });
         }
         private void InactiveAlarmEvent()
         {
+            isAlarmActive = false;
             this.Dispatcher.Invoke(() =>
             {
                 menuItemAlarm.Icon = new Image
                 {
-                    Source = new BitmapImage(new Uri(@".\Resources\img_alarm_en.png", UriKind.Relative))
+                    Source = new BitmapImage(new Uri(isCycleStarted ? Settings.Default.Main_AlarmIconDis : Settings.Default.Main_AlarmIconEn, UriKind.Relative))
                 };
             });
         }
+        public void ActivateWindow()
+        {
+            this.Activate();
+        }
         private void FxCycleStart(object sender, RoutedEventArgs e)
         {
-            SampleInfo sampleInfo = new SampleInfo();
-            sampleInfo.Columns[sampleInfo.Status].Value = DatabaseSettings.General_TrueValue_Write;
-            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(sampleInfo, sampleInfo.Columns[sampleInfo.Id].Id); });
-            string id = ((int)t.Result).ToString();
-
-            sampleInfo = new SampleInfo();
-            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(SampleInfo), id); });
-            sampleInfo = (SampleInfo)t.Result;
-
-            DateTime lastSampling = Convert.ToDateTime(sampleInfo.Columns[sampleInfo.DateTime].Value);
-
-            if (lastSampling.CompareTo(DateTime.Now.AddDays(-1)) < 0)
+            if (!isCycleStarted)
             {
-                if (General.ShowMessageBox("Le dernier test journalier de la balance a été fait le " + lastSampling.ToString("dd.MMM.yyyy") + " à " + lastSampling.ToString("HH:mm:ss") + ", voulez-vous faire le test journalier ?", "Test journalier", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    frameMain.Content = new Pages.SubCycle.WeightBowl(frameMain);
-                    return;
-                }
-            }
+                SampleInfo sampleInfo = new SampleInfo();
+                sampleInfo.Columns[sampleInfo.Status].Value = DatabaseSettings.General_TrueValue_Write;
+                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(sampleInfo, sampleInfo.Columns[sampleInfo.Id].Id); });
+                string id = ((int)t.Result).ToString();
 
-            //menuItemStart.IsEnabled = false;
+                sampleInfo = new SampleInfo();
+                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(SampleInfo), id); });
+                sampleInfo = (SampleInfo)t.Result;
+
+                DateTime lastSampling = Convert.ToDateTime(sampleInfo.Columns[sampleInfo.DateTime].Value);
+
+                if (lastSampling.CompareTo(DateTime.Now.AddDays(-1)) < 0)
+                {
+                    bool[] accessTable = UserManagement.GetCurrentAccessTable();
+                    if (accessTable[AccessTableInfo.DailyTest])
+                    {
+                        if (General.ShowMessageBox("Le dernier test journalier de la balance a été fait le " + lastSampling.ToString(Settings.Default.Date_Format_Read) + " à " + lastSampling.ToString(Settings.Default.Time_Format) + ", voulez-vous faire le test journalier ?", "Test journalier", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                        {
+                            frameMain.Content = new Pages.SubCycle.WeightBowl(frameMain);
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        General.ShowMessageBox("Le dernier test journalier de la balance a été fait le " + lastSampling.ToString(Settings.Default.Date_Format_Read) + " à " + lastSampling.ToString(Settings.Default.Time_Format) + " veuillez contacter une personne compétente pour faire le test journalier");
+                        return;
+                    }
+
+                }
+
+                frameMain.Content = new Pages.SubCycle.PreCycle(frameMain, frameInfoCycle);
+                UpdateMenuStartCycle(false);
+            }
+            else
+            {
+                if (frameMain.Content.GetType().GetInterface(typeof(Pages.ISubCycle).Name) != null)
+                {
+                    Pages.ISubCycle subCycle = frameMain.Content as Pages.ISubCycle;
+                    subCycle.StopCycle();
+                }
+                else
+                {
+                    frameMain.Content = new Pages.Status();
+                }
+
+                UpdateMenuStartCycle(true);
+            }
+        }
+
+        public void UpdateMenuStartCycle(bool start)
+        {
+            isCycleStarted = !start;
 
             menuItemStart.Icon = new Image
             {
-                Source = new BitmapImage(new Uri(Settings.Default.Main_StartIconDis, UriKind.Relative))
+                Source = new BitmapImage(new Uri(
+                    start ? Settings.Default.Main_StartIconEn : Settings.Default.Main_StopIconEn, UriKind.Relative))
+            };
+            menuItemStart.Header = start ? "DEMARRER" : "STOP";
+
+            menuItemHome.IsEnabled = start;
+            menuItemHome.Icon = new Image
+            {
+                Source = new BitmapImage(new Uri(
+                    start ? Settings.Default.Main_HomeIconEn : Settings.Default.Main_HomeIconDis, UriKind.Relative))
             };
 
-            frameMain.Content = new Pages.SubCycle.PreCycle(frameMain, frameInfoCycle);
+            menuItemRecipes.IsEnabled = start;
+            menuItemRecipes.Icon = new Image
+            {
+                Source = new BitmapImage(new Uri(
+                    start ? Settings.Default.Main_RecipeIconEn : Settings.Default.Main_RecipeIconDis, UriKind.Relative))
+            };
 
-            //Il faudra penser à bloquer ce qu'il faut
-        }
-        private void FxCycleStop(object sender, RoutedEventArgs e)
-        {
+            menuItemAuditTrail.IsEnabled = start;
+            menuItemAuditTrail.Icon = new Image
+            {
+                Source = new BitmapImage(new Uri(
+                    start ? Settings.Default.Main_AuditTrailIconEn : Settings.Default.Main_AuditTrailIconDis, UriKind.Relative))
+            };
 
+            menuItemAlarm.IsEnabled = start;
+            menuItemAlarm.Icon = new Image
+            {
+                Source = new BitmapImage(new Uri(
+                    isAlarmActive ? Settings.Default.Main_AlarmIconAct : (start ? Settings.Default.Main_AlarmIconEn : Settings.Default.Main_AlarmIconDis), UriKind.Relative))
+            };
+
+            menuItemBackup.IsEnabled = start;
+            menuItemBackup.Icon = new Image
+            {
+                Source = new BitmapImage(new Uri(
+                    start ? Settings.Default.Main_BackupArchiveIconEn : Settings.Default.Main_BackupArchiveIconDis, UriKind.Relative))
+            };
+
+            menuItemParameters.IsEnabled = start;
+            menuItemParameters.Icon = new Image
+            {
+                Source = new BitmapImage(new Uri(
+                    start ? Settings.Default.Main_ParametersIconEn : Settings.Default.Main_ParametersIconDis, UriKind.Relative))
+            };
+
+            menuItemDailyTest.IsEnabled = start;
+            menuItemDailyTest.Icon = new Image
+            {
+                Source = new BitmapImage(new Uri(
+                    start ? Settings.Default.Main_DailyTestIconEn : Settings.Default.Main_DailyTestIconDis, UriKind.Relative))
+            };
         }
         private void FxSystemStatus(object sender, RoutedEventArgs e)
         {
@@ -451,7 +473,7 @@ namespace Main
         }
         private void FxProgramModify(object sender, RoutedEventArgs e)
         {
-            frameMain.Content = new Pages.Recipe(RcpAction.Modify, frameMain, frameInfoCycle);
+            frameMain.Content = new Pages.Recipe(RcpAction.Modify, frameMain, frameInfoCycle, window: this);
         }
         private void FxProgramCopy(object sender, RoutedEventArgs e)
         {
@@ -473,18 +495,6 @@ namespace Main
         {
             LogIn w = new LogIn(this);
             w.ShowDialog();
-        }
-        private void FxUserNew(object sender, RoutedEventArgs e)
-        {
-
-        }
-        private void FxUserModify(object sender, RoutedEventArgs e)
-        {
-
-        }
-        private void FxUserDelete(object sender, RoutedEventArgs e)
-        {
-
         }
         private void Close_App_Click(object sender, RoutedEventArgs e)
         {
@@ -512,6 +522,13 @@ namespace Main
         private void FxSampling(object sender, RoutedEventArgs e)
         {
             frameMain.Content = new Pages.SubCycle.WeightBowl(frameMain);
+        }
+
+        private void frameMain_ContentRendered(object sender, EventArgs e)
+        {
+            if (frameMain.Content.GetType() == typeof(Pages.Status))
+            {
+            }
         }
     }
 }

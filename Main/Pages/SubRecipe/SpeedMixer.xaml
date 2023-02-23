@@ -150,19 +150,19 @@
                 <ToggleButton x:Name="cbColdTrap" VerticalAlignment="Center" HorizontalAlignment="Left" Content="Utilisation du piège froid" Style="{StaticResource ToggleButtonStyle1}"/>
                 <WrapPanel>
                     <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" MaxWidth="130">
-                        <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_SpeedMin_Label}"/>
+                        <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_SpeedMin_Label, Mode=OneWay}"/>
                         <Run Text="{Binding TextBlockSpeedRange, Mode=OneWay}"/>
                     </TextBlock>
                     <TextBox x:Name="tbSpeedMin" Margin="23,10,0,0" Width="50" LostFocus="TbSpeedMin_LostFocus" MaxHeight="20"/>
                     <TextBlock Margin="20,10,0,0" TextWrapping="Wrap" MaxWidth="130" VerticalAlignment="Center">
-                        <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_SpeedMax_Label}"/>
+                        <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_SpeedMax_Label, Mode=OneWay}"/>
                         <Run Text="{Binding TextBlockSpeedRange, Mode=OneWay}"/>
                     </TextBlock>
                     <TextBox x:Name="tbSpeedMax" Margin="15,10,0,0" Width="50" LostFocus="TbSpeedMax_LostFocus" MaxHeight="20"/>
                 </WrapPanel>
                 <WrapPanel>
                     <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" MaxWidth="130">
-                        <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_PressureMin_Label}"/>
+                        <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_PressureMin_Label, Mode=OneWay}"/>
                         <Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/>
                         <Run Text=") "/>
                         <Run Text="{Binding TextBlockPressure, Mode=OneWay}"/>

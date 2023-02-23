@@ -188,9 +188,9 @@
                             <Trigger Property="IsChecked" Value="true">
                                 <Setter Property="Background" TargetName="border" Value="{StaticResource Color_SubS_rbOn}"/>
                             </Trigger>
-                            <Trigger Property="IsMouseOver" Value="true">
-                                <Setter Property="Background" TargetName="border" Value="{StaticResource Color_MouseOver}"/>
-                            </Trigger>
+                            <!--  <Trigger Property="IsMouseOver" Value="true">
+                              <Setter Property="Background" TargetName="border" Value="{StaticResource Color_MouseOver}"/> 
+                            </Trigger> -->
                             <Trigger Property="IsEnabled" Value="false">
                                 <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
                                 <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>

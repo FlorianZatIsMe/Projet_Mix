@@ -665,7 +665,8 @@ namespace Main.Pages.SubCycle
 
             if (isCycleStopped)
             {
-                nextSeqInfo.frameMain.Content = new WeightBowl(nextSeqInfo);
+                General.EndCycle(nextSeqInfo);
+                //nextSeqInfo.frameMain.Content = new WeightBowl(nextSeqInfo);
                 //General.LastThingToChange(recipeSpeedMixerInfo, frameMain: subCycle.frameMain, frameInfoCycle: subCycle.frameInfoCycle, idCycle: subCycle.idCycle, previousSeqType: 1, previousSeqId: previousSeqId.ToString(), isTest: subCycle.isTest, comment: comment);
             }
             else
@@ -702,7 +703,7 @@ namespace Main.Pages.SubCycle
             }
 
         } 
-        private void StopCycle()
+        public void StopCycle()
         {
             logger.Debug("StopCycle");
 
@@ -714,6 +715,11 @@ namespace Main.Pages.SubCycle
             isCycleStopped = true;
             if (!hasSequenceStarted) isSequenceOver = true; // Si la séquence n'a pas démarré on l'arrête
             // On attend que le cycle se termine, plutôt que de faire ça: isSequenceOver = true; // ou directement EndSequence(), à voir
+        }
+
+        public void EnablePage(bool enable)
+        {
+            btNext.IsEnabled = enable;
         }
     }
 }

@@ -33,6 +33,6 @@
             <TextBlock Name="tbPressure" Text="#"/>
             <TextBlock Name="tbSpeed" Text="#"/>
         </StackPanel>
-        <Button Content="Suivant" Width="60" Height="30" Margin="20" VerticalAlignment="Top" HorizontalAlignment="Right" Click="Button_Click"/>
+        <Button x:Name="btNext" Content="Suivant" Width="60" Height="30" Margin="20" VerticalAlignment="Top" HorizontalAlignment="Right" Click="Button_Click"/>
     </Grid>
 </Page>

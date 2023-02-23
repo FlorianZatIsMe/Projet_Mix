@@ -38,6 +38,8 @@ namespace Main.Pages
     }
     public interface ISubCycle
     {
+        void StopCycle();
+        void EnablePage(bool enable);
     }
     public class SubCycleArg
     {
@@ -123,16 +125,17 @@ namespace Main.Pages
         private string finalWeightMin = "";
         private string finalWeightMax = "";
         private Process keyBoardProcess;
-
+        private MainWindow mainWindow;
         private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public Recipe(RcpAction action, Frame frameMain_arg = null, Frame frameInfoCycle_arg = null, string recipeName = "")
+        public Recipe(RcpAction action, Frame frameMain_arg = null, Frame frameInfoCycle_arg = null, string recipeName = "", MainWindow window = null)
         {
             logger.Debug("Start");
 
             nRow = 1;
             frameMain = frameMain_arg;
             isFrameLoaded = false;
+            mainWindow = window;
 
             InitializeComponent();
 
@@ -144,6 +147,12 @@ namespace Main.Pages
                     break;
                 case RcpAction.Modify: // pour ça je pense qu'une comboBox est suffisant, on puet imaginer une fenêtre intermédiaire avec une liste et une champ pour filtrer mais ça me semble pas applicable à notre besoin
                     frameInfoCycle = frameInfoCycle_arg;
+                    if(mainWindow == null)
+                    {
+                        General.ShowMessageBox("La fenêtre principale n'a pas été définie");
+                        logger.Error("La fenêtre principale n'a pas été définie");
+                        return;
+                    }
                     gridModify_Recipe.Visibility = Visibility.Visible;
                     General.Update_RecipeNames(cbxPgmToModify, ProgramNames, ProgramIDs, Database.RecipeStatus.PRODnDRAFT);
                  
@@ -954,9 +963,7 @@ namespace Main.Pages
                     info.isTest = true;
                     info.bowlWeight = "";
                     info.frameMain.Content = new WeightBowl(info);
-                    //General.StartCycle(info);
-
-                    //General.StartCycle(id, Settings.Default.General_na, finalWeight.ToString(), frameMain, frameInfoCycle, true);
+                    mainWindow.UpdateMenuStartCycle(false);
                 }
             }
             else
@@ -1089,6 +1096,8 @@ namespace Main.Pages
                 min: 0,
                 max: tbWeightMaxNew.Text == "" ? -1 : int.Parse(tbWeightMaxNew.Text, NumberStyles.AllowThousands));
             finalWeightMin = tbWeightMinNew.Text;
+
+            General.HideKeyBoard();
         }
 
         private void tbWeightMaxNew_LostFocus(object sender, RoutedEventArgs e)
@@ -1098,6 +1107,8 @@ namespace Main.Pages
                 min: tbWeightMinNew.Text == "" ? 0 : int.Parse(tbWeightMinNew.Text, NumberStyles.AllowThousands), 
                 max: -1);
             finalWeightMax = tbWeightMaxNew.Text;
+
+            General.HideKeyBoard();
         }
 
         private void tbWeightMinModif_LostFocus(object sender, RoutedEventArgs e)
@@ -1107,6 +1118,8 @@ namespace Main.Pages
                 min: 0,
                 max: tbWeightMaxModif.Text == "" ? -1 : int.Parse(tbWeightMaxModif.Text, NumberStyles.AllowThousands));
             finalWeightMin = tbWeightMinModif.Text;
+
+            General.HideKeyBoard();
         }
 
         private void tbWeightMaxModif_LostFocus(object sender, RoutedEventArgs e)
@@ -1116,18 +1129,25 @@ namespace Main.Pages
                 min: tbWeightMinModif.Text == "" ? 0 : int.Parse(tbWeightMinModif.Text, NumberStyles.AllowThousands),
                 max: -1);
             finalWeightMax = tbWeightMaxModif.Text;
+
+            General.HideKeyBoard();
         }
 
-        private void tbRecipeNameNew_GotFocus(object sender, RoutedEventArgs e)
+        private void ShowKeyBoard(object sender, RoutedEventArgs e)
         {
-            keyBoardProcess = Process.Start("osk.exe");
+            General.ShowKeyBoard();
         }
 
-        private void tbRecipeNameNew_LostFocus(object sender, RoutedEventArgs e)
+        private void HideKeyBoard(object sender, RoutedEventArgs e)
         {
-            if (keyBoardProcess != null)
+            General.HideKeyBoard();
+        }
+
+        private void HideKeyBoardIfEnter(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter || e.Key == Key.Escape)
             {
-                keyBoardProcess.Kill();
+                General.HideKeyBoard();
             }
         }
     }

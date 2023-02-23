@@ -448,6 +448,12 @@
     <Content Include="Resources\img_delete_en.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\img_home_dis.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\img_home_en.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\img_journaux_dis.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -492,7 +498,6 @@
     <Resource Include="Resources\img_app.png" />
     <Resource Include="Resources\img_contact.png" />
     <Resource Include="Resources\img_graphic_design.png" />
-    <Resource Include="Resources\img_home.png" />
     <Resource Include="Resources\img_mobile_app.png" />
     <Resource Include="Resources\img_mobile_app_dropdown.png" />
     <Resource Include="Resources\img_portfolio.png" />
@@ -501,6 +506,12 @@
     <Resource Include="Resources\img_shutdown_def.png" />
     <Resource Include="Resources\img_shutdown_mo.png" />
     <Resource Include="Resources\img_ui_ux_design.png" />
+    <Content Include="Resources\img_stop_dis.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\img_stop_en.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\img_web_design.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -45,7 +45,22 @@ namespace Main.Pages.SubCycle
             logger.Debug("Start");
 
             seqNumber = -1;
-            firstAlarmId = AlarmManagement.Alarms[AlarmManagement.ActiveAlarms[0].Item1, AlarmManagement.ActiveAlarms[0].Item2].id - 1;
+
+            if (AlarmManagement.ActiveAlarms.Count != 0)
+            {
+                firstAlarmId = AlarmManagement.Alarms[AlarmManagement.ActiveAlarms[0].Item1, AlarmManagement.ActiveAlarms[0].Item2].id - 1;
+            }
+            else
+            {
+                Task<object> t;
+
+                t = MyDatabase.TaskEnQueue(() => {
+                    return
+                    MyDatabase.GetMax(auditTrailInfo, auditTrailInfo.Columns[auditTrailInfo.Id].Id);
+                });
+                firstAlarmId = (int)t.Result;             
+            }
+
 
             // Initialisation des timers
             checkAlarmsTimer = new System.Timers.Timer

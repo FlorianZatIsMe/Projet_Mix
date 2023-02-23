@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Security.Principal;
@@ -21,7 +22,7 @@ namespace Main
 {
     public struct IniInfo
     {
-        public Window Window;
+        public MainWindow Window;
     }
 
     public struct CycleStartInfo
@@ -75,8 +76,9 @@ namespace Main
         public static int count = 0;
         public static string text;
         public static DateTime NextBackupTime;
+        private static Process keyBoardProcess;
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        private static IniInfo info;
+        public static IniInfo info;
 
         public static void Initialize(IniInfo info_arg)
         {
@@ -229,30 +231,6 @@ namespace Main
                     ProgramNames.Add(tables[i].Columns[tables[i].Name].Value);
                     ProgramIDs.Add(tables[i].Columns[tables[i].Id].Value);
                 }
-
-                /*
-                MyDatabase.SendCommand_GetLastRecipes(recipeStatus);
-                //string[] array;
-                RecipeInfo recipeInfo;
-
-                if (!MyDatabase.IsReaderNotAvailable())
-                {
-                    recipeInfo = (RecipeInfo)MyDatabase.ReadNext(typeof(RecipeInfo));
-
-                    while (recipeInfo != null)
-                    {
-                        ProgramNames.Add(recipeInfo.columns[recipeInfo.recipeName].value);
-                        ProgramIDs.Add(recipeInfo.columns[recipeInfo.id].value);
-
-                        recipeInfo = (RecipeInfo)MyDatabase.ReadNext(typeof(RecipeInfo));
-                    }
-                }
-                else
-                {
-                    logger.Error(DatabaseSettings.ReaderUnavailable);
-                    ShowMessageBox(DatabaseSettings.ReaderUnavailable);
-                }*/
-                //MyDatabase.Disconnect();
             }
             else
             {
@@ -425,6 +403,7 @@ namespace Main
                 nextSeqInfo.frameMain.Content = Activator.CreateInstance(Pages.Sequence.list[int.Parse(nextSeqInfo.recipeParam.Columns[nextSeqInfo.recipeParam.NextSeqType].Value)].subCycPgType, new object[] { subCycleArg });
             }
         }
+        /*
         public static void LastThingToChange(ISeqTabInfo recipeParam, Frame frameMain, Frame frameInfoCycle, int idCycle, int previousSeqType, string previousSeqId, bool isTest, string comment = "")
         {
             logger.Debug("WeightFinalBowl");
@@ -595,8 +574,9 @@ namespace Main
                 //MyDatabase.Disconnect();
             }
         }
+        */
         //public static void EndCycle(ISeqTabInfo recipeParam, Frame frameMain, Frame frameInfoCycle, int idCycle, int previousSeqType, string previousSeqId, bool isTest, string comment = "")
-        public static void EndCycle(NextSeqInfo nextSeqInfo)
+        /*public static void EndCycle_old(NextSeqInfo nextSeqInfo)
         {
             logger.Debug("EndCycle");
 
@@ -710,20 +690,170 @@ namespace Main
                 Task<object> t8 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(CycleTableInfo), nextSeqInfo.idCycle.ToString()); });
                 cycleTableInfo = (CycleTableInfo)t8.Result;
                 //cycleTableInfo = (CycleTableInfo)MyDatabase.GetOneRow(typeof(CycleTableInfo), idCycle.ToString());
-                nextSeqInfo.frameMain.Content = new Recipe(RcpAction.Modify, nextSeqInfo.frameMain, nextSeqInfo.frameInfoCycle, cycleTableInfo.Columns.Count == 0 ? "" : cycleTableInfo.Columns[cycleTableInfo.RecipeName].Value);
+                MainWindow w = nextSeqInfo.frameMain.Parent as MainWindow;
+                nextSeqInfo.frameMain.Content = new Recipe(RcpAction.Modify, nextSeqInfo.frameMain, nextSeqInfo.frameInfoCycle, cycleTableInfo.Columns.Count == 0 ? "" : cycleTableInfo.Columns[cycleTableInfo.RecipeName].Value, window: w);
             }
             else
             {
                 nextSeqInfo.frameMain.Content = new Status();
                 //MyDatabase.Disconnect();
             }
+        }*/
+
+        public static void EndCycle(NextSeqInfo nextSeqInfo, decimal bowlWeight = -1, decimal finalWeight = -1)
+        {
+            logger.Debug("EndCycle");
+            //isCycleEnded = true;
+
+            string nextSeqId;
+            int nextRecipeSeqType;
+
+            ICycleSeqInfo cycleSeqInfo;
+            ICycleSeqInfo prevCycleSeqInfo;
+            string row;
+
+            CycleTableInfo cycleTableInfo = new CycleTableInfo();
+            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+
+            if (nextSeqInfo.previousSeqType < 0 || nextSeqInfo.previousSeqType >= Sequence.list.Count())
+            {
+                logger.Error(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + nextSeqInfo.previousSeqType.ToString());
+                General.ShowMessageBox(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + nextSeqInfo.previousSeqType.ToString());
+                return;
+            }
+
+            ISeqTabInfo recipeParam = nextSeqInfo.recipeParam;
+            int previousSeqType = nextSeqInfo.previousSeqType;
+            string previousSeqId = nextSeqInfo.previousSeqId;
+
+
+            // On boucle tant qu'on est pas arrivé au bout de la recette
+            while (
+                recipeParam.Columns[recipeParam.NextSeqType].Value != "" &&
+                recipeParam.Columns[recipeParam.NextSeqType].Value != null)
+            {
+                // Note pour plus tard: ce serait bien de retirer les "1" et de les remplacer par un truc comme recipeWeightInfo.nextSeqType
+                nextRecipeSeqType = int.Parse(recipeParam.Columns[recipeParam.NextSeqType].Value);
+
+                // A CORRIGER : IF RESULT IS FALSE
+                Type nextRecipeType = Sequence.list[int.Parse(recipeParam.Columns[recipeParam.NextSeqType].Value)].subRecipeInfo.GetType();
+                Task<object> t2 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(nextRecipeType, recipeParam.Columns[recipeParam.NextSeqId].Value); });
+                //Task<object> t2 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(recipeParam.GetType(), recipeParam.Columns[recipeParam.NextSeqId].Value); });
+                recipeParam = (ISeqTabInfo)t2.Result;
+                //recipeParam = (ISeqInfo)MyDatabase.GetOneRow(typeof(ISeqInfo), recipeParam.columns[recipeParam.id].value);
+
+                if (nextRecipeSeqType < 0 || nextRecipeSeqType >= Sequence.list.Count())
+                {
+                    logger.Error(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + nextRecipeSeqType.ToString());
+                    General.ShowMessageBox(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + nextRecipeSeqType.ToString());
+                    return;
+                }
+
+                //cycleSeqInfo = Sequence.list[nextRecipeSeqType].subCycleInfo;
+                cycleSeqInfo = Activator.CreateInstance(Sequence.list[nextRecipeSeqType].subCycleInfo.GetType()) as ICycleSeqInfo;
+                cycleSeqInfo.SetRecipeParameters(recipeParam, nextSeqInfo.idCycle);
+
+                row = cycleSeqInfo.GetType().ToString() + " ";
+                for (int j = 0; j < cycleSeqInfo.Columns.Count(); j++)
+                {
+                    row = row + cycleSeqInfo.Columns[j].Id + ": " + cycleSeqInfo.Columns[j].Value + " ";
+                }
+                logger.Trace(row);
+                // On insert les infos de recettes dans la bonne table
+                // A CORRIGER : IF RESULT IS FALSE
+                Task<object> t3 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(cycleSeqInfo); });
+                //MyDatabase.InsertRow(cycleSeqInfo);
+
+                // On met à jour les infos "type" et "id" de la séquence qu'on vient de renseigner dans la précédente séquence
+
+                // A CORRIGER : IF RESULT IS FALSE
+                Task<object> t4 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(cycleSeqInfo.TabName, cycleSeqInfo.Columns[cycleSeqInfo.Id].Id); });
+                nextSeqId = ((int)t4.Result).ToString();
+                //nextSeqId = MyDatabase.GetMax(cycleSeqInfo.name, cycleSeqInfo.columns[cycleSeqInfo.id].id).ToString();
+
+                //prevCycleSeqInfo = Sequence.list[previousSeqType].subCycleInfo;
+                prevCycleSeqInfo = Activator.CreateInstance(Sequence.list[nextRecipeSeqType].subCycleInfo.GetType()) as ICycleSeqInfo;
+                prevCycleSeqInfo.Columns[prevCycleSeqInfo.NextSeqType].Value = nextRecipeSeqType.ToString();
+                prevCycleSeqInfo.Columns[prevCycleSeqInfo.NextSeqId].Value = nextSeqId;
+
+                // A CORRIGER : IF RESULT IS FALSE
+                Task<object> t5 = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(prevCycleSeqInfo, nextSeqInfo.previousSeqId); });
+                //MyDatabase.Update_Row(prevCycleSeqInfo, previousSeqId);
+                t5.Wait();
+                // La dernière séquence devient l'ancienne
+                previousSeqType = nextRecipeSeqType;
+                previousSeqId = nextSeqId;
+
+            }
+
+            // A CORRIGER : IF RESULT IS FALSE
+            Task<object> t6 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(auditTrailInfo.TabName, auditTrailInfo.Columns[auditTrailInfo.Id].Id); });
+            string lastAlarmId = ((int)t6.Result).ToString();
+            //string lastAlarmId = MyDatabase.GetMax(auditTrailInfo.name, auditTrailInfo.columns[auditTrailInfo.id].id).ToString();
+            cycleTableInfo.Columns[cycleTableInfo.DateTimeEndCycle].Value = DateTime.Now.ToString(Settings.Default.DateTime_Format_Write);
+            cycleTableInfo.Columns[cycleTableInfo.LastAlarmId].Value = lastAlarmId;
+            cycleTableInfo.Columns[cycleTableInfo.lastWeightTh].Value = finalWeight.ToString("N" + Settings.Default.RecipeWeight_NbDecimal.ToString());
+            cycleTableInfo.Columns[cycleTableInfo.lastWeightEff].Value = bowlWeight.ToString("N" + Settings.Default.RecipeWeight_NbDecimal.ToString());
+            cycleTableInfo.Columns[cycleTableInfo.Comment].Value = nextSeqInfo.comment;
+
+            // A CORRIGER : IF RESULT IS FALSE
+            Task<object> t7 = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(cycleTableInfo, nextSeqInfo.idCycle.ToString()); });
+            //MyDatabase.Update_Row(cycleTableInfo, idCycle.ToString());
+            t7.Wait();
+
+            General.CurrentCycleInfo.StopSequence();
+            Task printReportTask = Task.Factory.StartNew(() => General.PrintReport(nextSeqInfo.idCycle));
+
+            General.ShowMessageBox(Settings.Default.Cycle_Info_CycleOver);
+            printReportTask.Wait();
+            General.ShowMessageBox(Settings.Default.Cycle_Info_ReportGenerated);
+
+            // On cache le panneau d'information
+            General.CurrentCycleInfo.SetVisibility(false);
+
+            if (nextSeqInfo.isTest)
+            {
+                // A CORRIGER : IF RESULT IS FALSE
+                Task<object> t8 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(CycleTableInfo), nextSeqInfo.idCycle.ToString()); });
+                cycleTableInfo = (CycleTableInfo)t8.Result;
+                nextSeqInfo.frameMain.Content = new Recipe(RcpAction.Modify, nextSeqInfo.frameMain, nextSeqInfo.frameInfoCycle, cycleTableInfo.Columns.Count == 0 ? "" : cycleTableInfo.Columns[cycleTableInfo.RecipeName].Value, info.Window);
+            }
+            else
+            {
+                nextSeqInfo.frameMain.Content = new Status();
+                //MyDatabase.Disconnect();
+            }
+            info.Window.UpdateMenuStartCycle(true);
         }
+
         public static void PrintReport(int id)
         {
             logger.Debug("PrintReport");
 
             ReportGeneration report = new ReportGeneration();
             report.GenerateCycleReport(id.ToString());
+        }
+
+        public static void ShowKeyBoard()
+        {
+            keyBoardProcess = Process.Start("osk.exe");
+        }
+
+        public static void HideKeyBoard()
+        {
+            try
+            {
+                if (keyBoardProcess != null)
+                {
+                    info.Window.Activate();
+                    //keyBoardProcess.Kill();
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
         }
     }
 }

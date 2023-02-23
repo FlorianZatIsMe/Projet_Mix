@@ -2,13 +2,13 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="User_Management.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="Group_operator" Type="System.String" Scope="User">
+    <Setting Name="Group_operator" Type="System.String" Scope="Application">
       <Value Profile="(Default)">MixingApplication_Operator</Value>
     </Setting>
-    <Setting Name="Group_supervisor" Type="System.String" Scope="User">
+    <Setting Name="Group_supervisor" Type="System.String" Scope="Application">
       <Value Profile="(Default)">MixingApplication_Supervisor</Value>
     </Setting>
-    <Setting Name="Group_administrator" Type="System.String" Scope="User">
+    <Setting Name="Group_administrator" Type="System.String" Scope="Application">
       <Value Profile="(Default)">MixingApplication_Administrator</Value>
     </Setting>
   </Settings>

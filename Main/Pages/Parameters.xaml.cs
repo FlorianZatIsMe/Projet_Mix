@@ -50,11 +50,34 @@ namespace Main.Pages
         {
             if (dpNextCalDateToUpdt)
             {
-                config.AppSettings.Settings["NextCalibDate"].Value = dpNextCalibDate.SelectedDate.ToString();
+                UpdateNextCalibDate();
+            }
+        }
+        private void UpdateNextCalibDate()
+        {
+            try
+            {
+                Convert.ToDateTime(dpNextCalibDate.Text);
+                config.AppSettings.Settings["NextCalibDate"].Value = dpNextCalibDate.Text;
                 config.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection("appSettings");
-                logger.Trace(config.AppSettings.Settings["NextCalibDate"].Value + " - " + dpNextCalibDate.SelectedDate.ToString());
-                dpNextCalDateToUpdt = false;
+                logger.Trace(config.AppSettings.Settings["NextCalibDate"].Value + " - " + dpNextCalibDate.Text);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+                General.ShowMessageBox(ex.Message);
+            }
+            dpNextCalDateToUpdt = false;
+        }
+
+        private void dpNextCalibDate_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            logger.Debug("dpNextCalibDate_KeyDown " + (e.Key == Key.Enter).ToString());
+
+            if (e.Key == Key.Enter)
+            {
+                UpdateNextCalibDate();
             }
         }
     }

@@ -34,7 +34,6 @@ namespace Main.Pages.SubCycle
         private int finalWeightMin = 0;
         private int finalWeightMax = 0;
 
-
         private readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public PreCycle(Frame frameMain_arg, Frame inputInfoCycleFrame)
@@ -81,21 +80,6 @@ namespace Main.Pages.SubCycle
             {
                 info.frameMain.Content = new WeightBowl(info);
             }
-            
-            /*
-            if (General.ShowMessageBox(Settings.Default.PreCycle_Request_StartCycle, Settings.Default.PreCycle_Request_StartCycle_Title, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            {
-                CycleStartInfo info;
-                info.recipeID = ProgramIDs[cbxRecipeName.SelectedIndex];
-                info.OFnumber = tbOFnumber.Text;
-                info.finalWeight = tbFinalWeight.Text;
-                info.frameMain = frameMain;
-                info.frameInfoCycle = frameInfoCycle;
-                info.isTest = false;
-                info.bowlWeight = "";
-                General.StartCycle(info);
-                //General.StartCycle(ProgramIDs[cbxRecipeName.SelectedIndex], tbOFnumber.Text, tbFinalWeight.Text, frameMain, frameInfoCycle, false);
-            }//*/
         }
         private void FxAnnuler(object sender, RoutedEventArgs e)
         {
@@ -104,35 +88,6 @@ namespace Main.Pages.SubCycle
             //MyDatabase.Disconnect();
             frameMain.Content = new Status();
         }
-        private void TbOFnumber_KeyDown(object sender, KeyEventArgs e)
-        {
-            logger.Debug("TbOFnumber_KeyDown");
-
-            TextBox textbox = sender as TextBox;   
-
-            if (e.Key == Key.Enter)
-            {
-                General.ShowMessageBox(RS232Weight.GetData());
-
-                if (RS232Weight.rs232.IsFree())
-                {
-                    RS232Weight.rs232.BlockUse();
-                    RS232Weight.rs232.SetCommand(textbox.Text);
-                }
-            }
-        }
-        private void TbFinalWeight_KeyDown(object sender, KeyEventArgs e)
-        {
-            logger.Debug("TbFinalWeight_KeyDown");
-
-            TextBox textbox = sender as TextBox;
-
-            if (e.Key == Key.Enter)
-            {
-                RS232Pump.rs232.SetCommand(textbox.Text);
-            }
-        }
-
         private void cbxProgramName_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             logger.Debug("cbxProgramName_SelectionChanged" + cbxRecipeName.SelectedIndex.ToString());
