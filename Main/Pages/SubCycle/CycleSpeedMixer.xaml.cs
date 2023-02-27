@@ -721,5 +721,10 @@ namespace Main.Pages.SubCycle
         {
             btNext.IsEnabled = enable;
         }
+
+        public bool IsItATest()
+        {
+            return subCycle.isTest;
+        }
     }
 }

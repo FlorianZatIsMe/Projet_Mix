@@ -68,6 +68,7 @@ namespace Main
         public readonly static string equipement_name = Settings.Default.General_equipement_name;
         public static string loggedUsername = WindowsIdentity.GetCurrent().Name;
         public static string currentRole = "";
+        public static DateTime lastActTime;
 
         public static readonly string auditTrail_BackupDesc = Settings.Default.General_auditTrail_BackupDesc;
         public static readonly string auditTrail_RestoreDesc = Settings.Default.General_auditTrail_RestoreDesc;
@@ -80,9 +81,15 @@ namespace Main
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         public static IniInfo info;
 
+        public static void ResetLastActTime()
+        {
+            lastActTime = DateTime.Now;
+        }
+
         public static void Initialize(IniInfo info_arg)
         {
             logger.Debug("Initialize");
+            ResetLastActTime();
             info = info_arg;
         }
 
@@ -177,7 +184,7 @@ namespace Main
                 }
                 catch (Exception)
                 {
-                    ShowMessageBox(Settings.Default.General_Info_FieldNotANumber);
+                    logger.Error(Settings.Default.General_Info_FieldNotANumber);
                     textBox.Text = "";
                     result = false;
                     goto End;

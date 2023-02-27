@@ -40,6 +40,7 @@ namespace Main.Pages
     {
         void StopCycle();
         void EnablePage(bool enable);
+        bool IsItATest();
     }
     public class SubCycleArg
     {
@@ -633,15 +634,6 @@ namespace Main.Pages
             int currentIndex = cbxPgmToModify.SelectedIndex;
             Task<object> t;
 
-            //MyDatabase.Connect();
-            /*
-            if (!MyDatabase.IsConnected())
-            {
-                logger.Error(DatabaseSettings.Error01);
-                General.ShowMessageBox(DatabaseSettings.Error01);
-                return;
-            }*/
-
             // A CORRIGER : IF RESULT IS FALSE
             //if (labelStatus.Text == status[MyDatabase.GetRecipeStatus(RecipeStatus.PROD)])
             if (labelStatus.Text == status[MyDatabase.GetRecipeStatus(RecipeStatus.PROD)])
@@ -651,14 +643,6 @@ namespace Main.Pages
                     // Création d'une nouvelle recette, l'ancienne version sera obsolète
                     if (Create_NewRecipe(ProgramNames[currentIndex], int.Parse(labelVersion.Text) + 1, RecipeStatus.DRAFT, false))
                     {
-                        /*
-                        recipeInfo.Columns[recipeInfo.Status].Value = MyDatabase.GetRecipeStatus(RecipeStatus.OBSOLETE).ToString();
-                        //recipeInfo.columns[recipeInfo.status].value = MyDatabase.GetRecipeStatus(RecipeStatus.OBSOLETE).ToString();
-
-                        // A CORRIGER : IF RESULT IS FALSE
-                        t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(recipeInfo, ProgramIDs[currentIndex]); });*/
-                        //MyDatabase.Update_Row(recipeInfo, ProgramIDs[currentIndex]);
-
                         // A CORRIGER : IF RESULT IS FALSE
                         t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(recipeInfo.TabName, recipeInfo.Columns[recipeInfo.Id].Id); });
                         ProgramIDs[currentIndex] = ((int)t.Result).ToString();
@@ -695,7 +679,7 @@ namespace Main.Pages
 
                             // Get the previous version of the recipe (Create new recipe and set recipe name and version)
                             string name = oldRecipe.Columns[oldRecipe.Name].Value;
-                            int version = int.Parse(oldRecipe.Columns[oldRecipe.Version].Value) - 1;
+                            int version = int.Parse(oldRecipe.Columns[oldRecipe.Version].Value);
                             oldRecipe = new RecipeInfo();
                             oldRecipe.Columns[oldRecipe.Name].Value = name;
                             oldRecipe.Columns[oldRecipe.Version].Value = version.ToString();
@@ -739,7 +723,6 @@ namespace Main.Pages
                         // A CORRIGER : IF RESULT IS FALSE
                         t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(recipeInfo.TabName, recipeInfo.Columns[recipeInfo.Id].Id); });
                         ProgramIDs[currentIndex] = ((int)t.Result).ToString();
-                        //ProgramIDs[currentIndex] = MyDatabase.GetMax(recipeInfo.name, recipeInfo.columns[recipeInfo.id].id).ToString();
                     }
                 }
             }
@@ -747,8 +730,6 @@ namespace Main.Pages
             {
                 General.ShowMessageBox(Settings.Default.Recipe_Error_IncorrectStatus);
             }
-
-            //MyDatabase.Disconnect();
         }
         private void ButtonActDel_Click(object sender, RoutedEventArgs e)
         {
@@ -938,37 +919,45 @@ namespace Main.Pages
         {
             logger.Debug("Test_Sequence_Click");
 
-            float finalWeight;
+            int finalWeight;
+            int min;
+            int max;
 
             try
             {
-                finalWeight = float.Parse(tbFinaleWeight.Text);
+                finalWeight = int.Parse(tbFinaleWeight.Text);
+                min = int.Parse(tbWeightMinModif.Text);
+                max = int.Parse(tbWeightMaxModif.Text);
+
+                if (finalWeight < min || finalWeight > max)
+                {
+                    finalWeight = -1;
+                }
             }
             catch (Exception)
             {
                 finalWeight = -1;
             }
 
-            if (finalWeight > 0)
-            {
-                if (General.ShowMessageBox(Settings.Default.Recipe_Request_TestRecipe, Settings.Default.General_Request_ConfirmationTitle, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    string id = ProgramIDs[cbxPgmToModify.SelectedIndex];
-                    CycleStartInfo info;
-                    info.recipeID = id;
-                    info.OFnumber = Settings.Default.General_na;
-                    info.finalWeight = finalWeight.ToString();
-                    info.frameMain = frameMain;
-                    info.frameInfoCycle = frameInfoCycle;
-                    info.isTest = true;
-                    info.bowlWeight = "";
-                    info.frameMain.Content = new WeightBowl(info);
-                    mainWindow.UpdateMenuStartCycle(false);
-                }
-            }
-            else
+            if (finalWeight == -1)
             {
                 General.ShowMessageBox(Settings.Default.Cycle_Info_FinalWeightIncorrect);
+                return;
+            }
+
+            if (General.ShowMessageBox(Settings.Default.Recipe_Request_TestRecipe, Settings.Default.General_Request_ConfirmationTitle, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                string id = ProgramIDs[cbxPgmToModify.SelectedIndex];
+                CycleStartInfo info;
+                info.recipeID = id;
+                info.OFnumber = Settings.Default.General_na;
+                info.finalWeight = finalWeight.ToString();
+                info.frameMain = frameMain;
+                info.frameInfoCycle = frameInfoCycle;
+                info.isTest = true;
+                info.bowlWeight = "";
+                info.frameMain.Content = new WeightBowl(info);
+                mainWindow.UpdateMenuStartCycle(false);
             }
         }
         private async void CbxPgmToCopy_SelectionChanged(object sender, SelectionChangedEventArgs e)

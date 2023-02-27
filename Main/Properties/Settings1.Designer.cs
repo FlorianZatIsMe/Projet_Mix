@@ -1888,5 +1888,17 @@ namespace Main.Properties {
                 return ((global::Main.Pages.IdDBControls)(this["RecipeWeight_IdDBControls"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Resources/img_stop_dis.png")]
+        public string Main_StopIconDis {
+            get {
+                return ((string)(this["Main_StopIconDis"]));
+            }
+            set {
+                this["Main_StopIconDis"] = value;
+            }
+        }
     }
 }

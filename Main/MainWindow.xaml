@@ -11,7 +11,7 @@
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         AllowsTransparency="True"
-        Background="#524E4F" Loaded="Window_Loaded">
+        Background="#524E4F" Loaded="Window_Loaded" MouseMove="Window_MouseMove">
 
 
     <Window.Resources>

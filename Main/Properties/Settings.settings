@@ -660,5 +660,8 @@
   &lt;/list&gt;
 &lt;/IdDBControls&gt;</Value>
     </Setting>
+    <Setting Name="Main_StopIconDis" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Resources/img_stop_dis.png</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -51,6 +51,7 @@ namespace Main
         private Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
         private bool isCycleStarted = false;
         private bool isAlarmActive = false;
+        private bool wasActTimeUpdated = false;
         private readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public MainWindow()
@@ -174,7 +175,7 @@ namespace Main
             RS232Pump.rs232.Initialize(new Driver_RS232.IniInfo() { Window = this });
             Driver_ColdTrap.ColdTrap.Initialize(new Driver_ColdTrap.IniInfo() { Window = this });
             UserManagement.Initialize(new User_Management.IniInfo() { Window = this });
-            SpeedMixerModbus.Initialize();
+            //SpeedMixerModbus.Initialize();
             if (RS232Pump.rs232.IsOpen())
             {
                 RS232Pump.rs232.BlockUse();
@@ -269,6 +270,20 @@ namespace Main
                 if (ExecuteBackupAuto()) General.NextBackupTime = General.NextBackupTime.AddDays(1);
             }
 
+            if (General.currentRole != AccessTableInfo.NoneRole && DateTime.Now.AddMinutes(-1).CompareTo(General.lastActTime) > 0)
+            {
+                if (!UserManagement.SetNoneAccess())
+                {
+                    General.ShowMessageBox("C'est pas bien ça");
+                    logger.Error("C'est pas bien ça");
+                }
+                logger.Debug("Auto log off at " + DateTime.Now.ToString());
+
+                this.Dispatcher.Invoke(() => {
+                    UpdateUser("aucun utilisateur", AccessTableInfo.NoneRole);
+                });
+            }
+
             if (Settings.Default.Main_IsCalibMonitored)
             {
                 ConfigurationManager.RefreshSection("appSettings");
@@ -317,12 +332,133 @@ namespace Main
 
             bool[] currentAccess = UserManagement.GetCurrentAccessTable();
 
-            menuItemStart.Visibility = currentAccess[AccessTableInfo.CycleStart] ? Visibility.Visible : Visibility.Collapsed;
+            bool isATest;
+
+            // Si le cycle à démarrer et que la frame principale est un sous cycle alors on rend le bouton STOP enable si le test en cours est un test
+            if (isCycleStarted && frameMain.Content.GetType().GetInterface(typeof(Pages.ISubCycle).Name) != null)
+            {
+                Pages.ISubCycle subCycle = frameMain.Content as Pages.ISubCycle;
+                isATest = subCycle.IsItATest();
+            }
+            else
+            {
+                isATest = false;
+            }
+
+            menuItemStart.Visibility = 
+                currentAccess[AccessTableInfo.CycleStart] ? Visibility.Visible : 
+                currentAccess[AccessTableInfo.RecipeUpdate] ? Visibility.Visible : Visibility.Collapsed;
+
+            // Si le nouvel utilisateur peut modifier les recettes mais ne peut pas démarrer un cycle
+            if (!currentAccess[AccessTableInfo.CycleStart] && currentAccess[AccessTableInfo.RecipeUpdate])
+            {
+                menuItemStart.Icon = new Image
+                {
+                    Source = new BitmapImage(new Uri(isATest ? Settings.Default.Main_StopIconEn : Settings.Default.Main_StopIconDis, UriKind.Relative))
+                };
+                menuItemStart.Header = "STOP";
+                menuItemStart.IsEnabled = isATest;
+            }
+            // Sinon si le nouvel utilisateur peut démarrer un cycle
+            else if ((!isATest && currentAccess[AccessTableInfo.CycleStart]) || (isATest && currentAccess[AccessTableInfo.RecipeUpdate]))
+            {
+                menuItemStart.Icon = new Image
+                {
+                    Source = new BitmapImage(new Uri(isCycleStarted ? Settings.Default.Main_StopIconEn : Settings.Default.Main_StartIconEn, UriKind.Relative))
+                };
+                menuItemStart.Header = isCycleStarted ? "STOP" : "DEMARRER";
+                menuItemStart.IsEnabled = true;
+            }
+            else
+            {
+                menuItemStart.Icon = new Image
+                {
+                    Source = new BitmapImage(new Uri(isCycleStarted ? Settings.Default.Main_StopIconDis : Settings.Default.Main_StartIconDis, UriKind.Relative))
+                };
+                menuItemStart.Header = isCycleStarted ? "STOP" : "DEMARRER";
+                menuItemStart.IsEnabled = false;
+            }
+
             menuItemRecipes.Visibility = currentAccess[AccessTableInfo.RecipeUpdate] ? Visibility.Visible : Visibility.Collapsed;
             menuItemBackup.Visibility = currentAccess[AccessTableInfo.Backup] ? Visibility.Visible : Visibility.Collapsed;
             menuItemParameters.Visibility = currentAccess[AccessTableInfo.Parameters] ? Visibility.Visible : Visibility.Collapsed;
             menuItemDailyTest.Visibility = currentAccess[AccessTableInfo.DailyTest] ? Visibility.Visible : Visibility.Collapsed;
             Close_App.Visibility = currentAccess[AccessTableInfo.ApplicationStop] ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public void UpdateMenuStartCycle(bool start)
+        {
+            isCycleStarted = !start;
+            bool[] currentAccess = UserManagement.GetCurrentAccessTable();
+
+
+            if (!currentAccess[AccessTableInfo.CycleStart] && currentAccess[AccessTableInfo.RecipeUpdate])
+            {
+                menuItemStart.IsEnabled = !start;
+                menuItemStart.Icon = new Image
+                {
+                    Source = new BitmapImage(new Uri(
+                        start ? Settings.Default.Main_StopIconDis : Settings.Default.Main_StopIconEn, UriKind.Relative))
+                };
+            }
+            else
+            {
+                menuItemStart.Header = start ? "DEMARRER" : "STOP";
+                menuItemStart.Icon = new Image
+                {
+                    Source = new BitmapImage(new Uri(
+                        start ? (currentAccess[AccessTableInfo.CycleStart] ? Settings.Default.Main_StartIconEn : Settings.Default.Main_StartIconDis) : Settings.Default.Main_StopIconEn, UriKind.Relative))
+                };
+            }
+
+            menuItemHome.IsEnabled = start;
+            menuItemHome.Icon = new Image
+            {
+                Source = new BitmapImage(new Uri(
+                    start ? Settings.Default.Main_HomeIconEn : Settings.Default.Main_HomeIconDis, UriKind.Relative))
+            };
+
+            menuItemRecipes.IsEnabled = start;
+            menuItemRecipes.Icon = new Image
+            {
+                Source = new BitmapImage(new Uri(
+                    start ? Settings.Default.Main_RecipeIconEn : Settings.Default.Main_RecipeIconDis, UriKind.Relative))
+            };
+
+            menuItemAuditTrail.IsEnabled = start;
+            menuItemAuditTrail.Icon = new Image
+            {
+                Source = new BitmapImage(new Uri(
+                    start ? Settings.Default.Main_AuditTrailIconEn : Settings.Default.Main_AuditTrailIconDis, UriKind.Relative))
+            };
+
+            menuItemAlarm.IsEnabled = start;
+            menuItemAlarm.Icon = new Image
+            {
+                Source = new BitmapImage(new Uri(
+                    isAlarmActive ? Settings.Default.Main_AlarmIconAct : (start ? Settings.Default.Main_AlarmIconEn : Settings.Default.Main_AlarmIconDis), UriKind.Relative))
+            };
+
+            menuItemBackup.IsEnabled = start;
+            menuItemBackup.Icon = new Image
+            {
+                Source = new BitmapImage(new Uri(
+                    start ? Settings.Default.Main_BackupArchiveIconEn : Settings.Default.Main_BackupArchiveIconDis, UriKind.Relative))
+            };
+
+            menuItemParameters.IsEnabled = start;
+            menuItemParameters.Icon = new Image
+            {
+                Source = new BitmapImage(new Uri(
+                    start ? Settings.Default.Main_ParametersIconEn : Settings.Default.Main_ParametersIconDis, UriKind.Relative))
+            };
+
+            menuItemDailyTest.IsEnabled = start;
+            menuItemDailyTest.Icon = new Image
+            {
+                Source = new BitmapImage(new Uri(
+                    start ? Settings.Default.Main_DailyTestIconEn : Settings.Default.Main_DailyTestIconDis, UriKind.Relative))
+            };
         }
         private void ActiveAlarmEvent()
         {
@@ -384,7 +520,7 @@ namespace Main
 
                 }
 
-                frameMain.Content = new Pages.SubCycle.PreCycle(frameMain, frameInfoCycle);
+                frameMain.Content = new Pages.SubCycle.PreCycle(frameMain, frameInfoCycle, this);
                 UpdateMenuStartCycle(false);
             }
             else
@@ -403,66 +539,6 @@ namespace Main
             }
         }
 
-        public void UpdateMenuStartCycle(bool start)
-        {
-            isCycleStarted = !start;
-
-            menuItemStart.Icon = new Image
-            {
-                Source = new BitmapImage(new Uri(
-                    start ? Settings.Default.Main_StartIconEn : Settings.Default.Main_StopIconEn, UriKind.Relative))
-            };
-            menuItemStart.Header = start ? "DEMARRER" : "STOP";
-
-            menuItemHome.IsEnabled = start;
-            menuItemHome.Icon = new Image
-            {
-                Source = new BitmapImage(new Uri(
-                    start ? Settings.Default.Main_HomeIconEn : Settings.Default.Main_HomeIconDis, UriKind.Relative))
-            };
-
-            menuItemRecipes.IsEnabled = start;
-            menuItemRecipes.Icon = new Image
-            {
-                Source = new BitmapImage(new Uri(
-                    start ? Settings.Default.Main_RecipeIconEn : Settings.Default.Main_RecipeIconDis, UriKind.Relative))
-            };
-
-            menuItemAuditTrail.IsEnabled = start;
-            menuItemAuditTrail.Icon = new Image
-            {
-                Source = new BitmapImage(new Uri(
-                    start ? Settings.Default.Main_AuditTrailIconEn : Settings.Default.Main_AuditTrailIconDis, UriKind.Relative))
-            };
-
-            menuItemAlarm.IsEnabled = start;
-            menuItemAlarm.Icon = new Image
-            {
-                Source = new BitmapImage(new Uri(
-                    isAlarmActive ? Settings.Default.Main_AlarmIconAct : (start ? Settings.Default.Main_AlarmIconEn : Settings.Default.Main_AlarmIconDis), UriKind.Relative))
-            };
-
-            menuItemBackup.IsEnabled = start;
-            menuItemBackup.Icon = new Image
-            {
-                Source = new BitmapImage(new Uri(
-                    start ? Settings.Default.Main_BackupArchiveIconEn : Settings.Default.Main_BackupArchiveIconDis, UriKind.Relative))
-            };
-
-            menuItemParameters.IsEnabled = start;
-            menuItemParameters.Icon = new Image
-            {
-                Source = new BitmapImage(new Uri(
-                    start ? Settings.Default.Main_ParametersIconEn : Settings.Default.Main_ParametersIconDis, UriKind.Relative))
-            };
-
-            menuItemDailyTest.IsEnabled = start;
-            menuItemDailyTest.Icon = new Image
-            {
-                Source = new BitmapImage(new Uri(
-                    start ? Settings.Default.Main_DailyTestIconEn : Settings.Default.Main_DailyTestIconDis, UriKind.Relative))
-            };
-        }
         private void FxSystemStatus(object sender, RoutedEventArgs e)
         {
             frameMain.Content = new Pages.Status();
@@ -528,6 +604,17 @@ namespace Main
         {
             if (frameMain.Content.GetType() == typeof(Pages.Status))
             {
+            }
+        }
+
+        private async void Window_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (!wasActTimeUpdated)
+            {
+                wasActTimeUpdated = true;
+                General.ResetLastActTime();
+                await Task.Delay(2000);
+                wasActTimeUpdated = false;
             }
         }
     }

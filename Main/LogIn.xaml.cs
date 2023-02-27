@@ -79,10 +79,11 @@ namespace Main
             {
                 Pages.ISubCycle subCycle = mainWindow.frameMain.Content as Pages.ISubCycle;
                 bool[] accessTable = UserManagement.GetCurrentAccessTable();
-                subCycle.EnablePage(accessTable[AccessTableInfo.CycleStart]);
+                subCycle.EnablePage(accessTable[subCycle.IsItATest() ? AccessTableInfo.RecipeUpdate : AccessTableInfo.CycleStart]);
             }
             else
             {
+                mainWindow.UpdateMenuStartCycle(true);
                 mainWindow.frameMain.Content = new Pages.Status();
             }
 
@@ -117,16 +118,6 @@ namespace Main
         private void ButtonLogOff_Click(object sender, RoutedEventArgs e)
         {
             Click();
-            /*
-            if (!UserManagement.SetNoneAccess())
-            {
-                General.ShowMessageBox("C'est pas bien ça");
-                logger.Error("C'est pas bien ça");
-            }
-
-            mainWindow.UpdateUser("aucun utilisateur", AccessTableInfo.NoneRole);
-            this.Close();*/
-            //mainWindow.frameMain.Content = new Pages.Status();
         }
     }
 }

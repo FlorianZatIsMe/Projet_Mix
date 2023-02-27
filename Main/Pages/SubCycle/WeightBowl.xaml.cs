@@ -76,7 +76,7 @@ namespace Main.Pages.SubCycle
         //private readonly decimal setpoint;
         //private readonly decimal min;
         //private readonly decimal max;
-        //private bool isScanningStep;
+        private bool isScanningStep;
         //private bool isSequenceOver;
         //private readonly System.Timers.Timer getWeightTimer;
         //private bool wasBalanceFreeOnce;
@@ -268,33 +268,6 @@ namespace Main.Pages.SubCycle
                 previousSeqId_arg: previousSeqId.ToString(),
                 isTest_arg: subCycle.isTest);
 
-            /*
-             * 
-             * BARCODE OU PAS BARCODE ???
-             * 
-            if (recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Value == DatabaseSettings.General_TrueValue_Read) // Si le contrôle du code barre est activé, on affiche les bonnes infos
-            {
-                isScanningStep = true;
-                tbScan.Focus();
-                labelScan.Text = Settings.Default.CycleWeight_Request_ScanProduct + " " + recipeWeightInfo.Columns[3].Value;
-            }
-            else if (recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Value == DatabaseSettings.General_FalseValue_Read) // Si on ne contrôle pas le code barre, on affiche les bonnes infos
-            {
-                isScanningStep = false;
-                labelScan.Visibility = Visibility.Collapsed;
-                tbScan.Visibility = Visibility.Collapsed;
-                gridMain.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                logger.Error(Settings.Default.CycleWeight_Error_IncorrectValue + recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Id + " (" + recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Value + ")");
-                General.ShowMessageBox(Settings.Default.CycleWeight_Error_IncorrectValue + recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Id + " (" + recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Value + ")");
-            }*/
-
-            //getWeightTimer.Start();
-
-
-
             Initialize();
         }
 
@@ -356,7 +329,7 @@ namespace Main.Pages.SubCycle
             getWeightTimer.Enabled = isgetWeightTaskActive;
         }
 
-        private void FrameMain_ContentRendered(object sender, EventArgs e)
+        private async void FrameMain_ContentRendered(object sender, EventArgs e)
         {
             Frame frame = sender as Frame;
 
@@ -421,6 +394,24 @@ namespace Main.Pages.SubCycle
                         }
                     }
                 }
+
+                // On vérifie le scan du produit, si on est en train de peser un produit et que la recette demande de contrôler le code barre
+                if (isCycle && recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Value == DatabaseSettings.General_TrueValue_Read)
+                {
+                    tbScan.Focus();
+                    labelMessage.Text = Settings.Default.CycleWeight_Request_ScanProduct + " " + recipeWeightInfo.Columns[recipeWeightInfo.Name].Value;
+                    tbScan.Visibility = Visibility.Visible;
+                    isScanningStep = true;
+
+                    while (isScanningStep)
+                    {
+                        await Task.Delay(500);
+                    }
+
+                    labelMessage.Text = tareOnGoing;
+                }
+
+
                 //isManual = true;
                 // if we are in manual mode, perform a manual tare
                 if (isManual)
@@ -701,7 +692,16 @@ namespace Main.Pages.SubCycle
 
             if (!Balance.IsFree()) Balance.FreeUse();
 
-            if (!isSampling && info.isTest)
+            if (isSampling)
+            {
+                frameMain.Content = new Status();
+            }
+            else
+            {
+                StopCycle();
+            }
+
+/*            if (!isSampling && info.isTest)
             {
                 // A CORRIGER : IF RESULT IS FALSE
                 Task<object> task = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeInfo), info.recipeID); });
@@ -711,7 +711,7 @@ namespace Main.Pages.SubCycle
             else
             {
                 frameMain.Content = new Status();
-            }
+            }*/
         }
         private void StopTimer()
         {
@@ -766,6 +766,7 @@ namespace Main.Pages.SubCycle
             {
                 tbWeight.IsEnabled = enable;
                 btNext.IsEnabled = enable;
+                tbScan.IsEnabled = enable;
             }
             else
             {
@@ -773,9 +774,55 @@ namespace Main.Pages.SubCycle
             }
         }
 
+        public bool IsItATest()
+        {
+            return (isBowlWeight && info.isTest) || (isCycle && subCycle.isTest);
+        }
+
         public void StopCycle()
         {
+            StopTimer();
+            if (!Balance.IsFree()) Balance.FreeUse();
             EndCycle();
+        }
+
+        private async void tbScan_LostFocus(object sender, RoutedEventArgs e)
+        {
+            logger.Debug("TbScan_LostFocusAsync");
+
+            if (isScanningStep)
+            {
+                TextBox textbox = sender as TextBox;
+
+                await Task.Delay(500);
+                textbox.Text = "";
+                textbox.Focus();
+            }
+        }
+
+        private void tbScan_KeyDown(object sender, KeyEventArgs e)
+        {
+            logger.Debug("TbScan_KeyDown");
+
+            TextBox textbox = sender as TextBox;
+
+            if (e.Key == Key.Enter)
+            {
+                if (recipeWeightInfo.Columns[recipeWeightInfo.Barcode].Value == textbox.Text)
+                {
+                    isScanningStep = false;
+                    tbScan.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    textbox.Text = "";
+                    for (int i = 0; i < recipeWeightInfo.Columns.Count; i++)
+                    {
+                        logger.Trace(recipeWeightInfo.Columns[i].Value);
+                    }
+                    General.ShowMessageBox(Settings.Default.CycleWeigh_IncorrectBarcode + " " + recipeWeightInfo.Columns[recipeWeightInfo.Barcode].Value);
+                }
+            }
         }
     }
 }

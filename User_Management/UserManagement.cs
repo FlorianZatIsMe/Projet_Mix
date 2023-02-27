@@ -135,6 +135,11 @@ namespace User_Management
             logger.Debug("GetCurrentAccessTable");  //  Log a debug message
             return CurrentAccessTable;              // Return the access table variable
         }
+
+        /// <summary>
+        /// Update the current access table with the guest rights
+        /// </summary>
+        /// <returns>True if the table was updated, false otherwirse</returns>
         public static bool SetNoneAccess()
         {
             // Update of access table variable...

@@ -372,7 +372,7 @@ namespace Main
             string[,] tableValues = new string[,] {
                 { "Masse du bowl (g)", bowlWeight },
                 { "Masse final théorique (g)", lastWeightTh == "" ? na : lastWeightTh },
-                { "Masse final effective (g)", lastWeightEff == "" ? na : lastWeightEff },
+                { "Masse final effective (g)", decimal.Parse(lastWeightEff) == -1 ? na : lastWeightEff },
                 { "Statut", status } };
             double xShift = (page.Width - 2 * margin) / tableValues.GetLength(0);
             XRect rect;

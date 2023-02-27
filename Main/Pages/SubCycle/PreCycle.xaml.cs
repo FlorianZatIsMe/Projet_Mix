@@ -33,15 +33,17 @@ namespace Main.Pages.SubCycle
         private bool isCbxRecipeAvailable = false;
         private int finalWeightMin = 0;
         private int finalWeightMax = 0;
+        private MainWindow mainWindow;
 
         private readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public PreCycle(Frame frameMain_arg, Frame inputInfoCycleFrame)
+        public PreCycle(Frame frameMain_arg, Frame inputInfoCycleFrame, MainWindow mainWindow_arg)
         {
             logger.Debug("Start");
 
             frameMain = frameMain_arg;
             frameInfoCycle = inputInfoCycleFrame;
+            mainWindow = mainWindow_arg;
             //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
             InitializeComponent();
             
@@ -86,6 +88,7 @@ namespace Main.Pages.SubCycle
             logger.Debug("FxAnnuler");
 
             //MyDatabase.Disconnect();
+            mainWindow.UpdateMenuStartCycle(true);
             frameMain.Content = new Status();
         }
         private void cbxProgramName_SelectionChanged(object sender, SelectionChangedEventArgs e)
