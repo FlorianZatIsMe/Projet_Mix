@@ -6,12 +6,13 @@
         mc:Ignorable="d"
         Title="MainWindow"
         WindowState= "Maximized"
+        ResizeMode="NoResize"
         Height="650"
         Width="1500"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         AllowsTransparency="True"
-        Background="#524E4F" Loaded="Window_Loaded" MouseMove="Window_MouseMove">
+        Background="#524E4F" Loaded="Window_Loaded" MouseMove="Window_MouseMove" Deactivated="Window_Deactivated" Closing="Window_Closing">
 
 
     <Window.Resources>

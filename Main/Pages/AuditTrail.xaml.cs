@@ -67,95 +67,51 @@ namespace Main.Pages
 
             DataTable dt = new DataTable();
             DataRow row;
-            string[] array;
             //string[] columnNames = MySettings["Columns"].Split(',');
             DateTime dtBefore = Convert.ToDateTime(((DateTime)dpDateBefore.SelectedDate).ToString("dd.MM.yyyy") + " " + tbTimeBefore.Text);
             DateTime dtAfter = Convert.ToDateTime(((DateTime)dpDateAfter.SelectedDate).ToString("dd.MM.yyyy") + " " + tbTimeAfter.Text);
             List<string> eventTypes = new List<string>();
-            int mutexID = -1;
             // change mutex by a read all (penser à limiter le nombre de ligne max)
             if ((bool)cbEvent.IsChecked) eventTypes.Add(Settings.Default.General_AuditTrailEvent_Event);
             if ((bool)cbAlarm.IsChecked) eventTypes.Add(AlarmSettings.AlarmType_Alarm);
             if ((bool)cbWarning.IsChecked) eventTypes.Add(AlarmSettings.AlarmType_Warning);
 
-            //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
+            ReadInfo readInfo = new ReadInfo(
+                _dtBefore: dtBefore,
+                _dtAfter: dtAfter,
+                _eventTypes: eventTypes.ToArray(),
+                _orderBy: auditTrailInfo.Columns[auditTrailInfo.Id].Id,
+                _isOrderAsc: false);
 
-            //if (!MyDatabase.IsConnected()) // while loop is better
-            if(false)
+            // A CORRIGER : IF RESULT IS FALSE
+            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetAuditTrailRows(readInfo); });
+            List<string[]> tables = (List<string[]>)t.Result;
+
+            //Création des colonnes
+            foreach (Column column in auditTrailInfo.Columns)
             {
-                dt.Columns.Add(new DataColumn(Settings.Default.AuditTrail_ErrorTitle));
+                dt.Columns.Add(new DataColumn(column.DisplayName));
+            }
+
+            for (int i = 0; i < tables.Count; i++)
+            {
+                try
+                {
+                    tables[i][auditTrailInfo.DateTime] = Convert.ToDateTime(tables[i][auditTrailInfo.DateTime]).ToString("dd.MMMyyyy HH:mm:ss");
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex.Message);
+                }
+
                 row = dt.NewRow();
-                row.ItemArray = new string[] { DatabaseSettings.Error_connectToDbFailed };
+                row.ItemArray = tables[i];
                 dt.Rows.Add(row);
-                dataGridAuditTrail.ItemsSource = dt.DefaultView;
-            }
-            else
-            {
-                ReadInfo readInfo = new ReadInfo(
-                    _dtBefore: dtBefore,
-                    _dtAfter: dtAfter, 
-                    _eventTypes: eventTypes.ToArray(),
-                    _orderBy: auditTrailInfo.Columns[auditTrailInfo.Id].Id,
-                    _isOrderAsc: false);
-
-                // A CORRIGER : IF RESULT IS FALSE
-                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetAuditTrailRows(readInfo); });
-                List<string[]> tables = (List<string[]>)t.Result;
-                //List<string[]> tables = MyDatabase.GetAuditTrailRows(readInfo);
-
-                //mutexID = MyDatabase.SendCommand_ReadAuditTrail(dtBefore: dtBefore, dtAfter: dtAfter, eventTypes: eventTypes.ToArray(), orderBy: auditTrailInfo.columns[auditTrailInfo.id].id, isOrderAsc: false, isMutexReleased: false);
-
-                //Création des colonnes
-                foreach (Column column in auditTrailInfo.Columns)
-                {
-                    dt.Columns.Add(new DataColumn(column.DisplayName));
-                }
-
-                for (int i = 0; i < tables.Count; i++)
-                {
-                    try
-                    {
-                        tables[i][auditTrailInfo.DateTime] = Convert.ToDateTime(tables[i][auditTrailInfo.DateTime]).ToString("dd.MMMyyyy HH:mm:ss");
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.Error(ex.Message);
-                    }
-
-                    row = dt.NewRow();
-                    row.ItemArray = tables[i];
-                    dt.Rows.Add(row);
-                }
-                /*
-                //Ajout des lignes
-                do
-                {
-                    array = MyDatabase.ReadNext(mutexID);
-
-                    if (array != null)
-                    {
-                        try
-                        {
-                            array[auditTrailInfo.dateTime] = Convert.ToDateTime(array[auditTrailInfo.dateTime]).ToString("dd.MMMyyyy HH:mm:ss");
-                        }
-                        catch (Exception ex)
-                        {
-                            logger.Error(ex.Message);
-                        }
-
-                        row = dt.NewRow();
-                        row.ItemArray = array;
-                        dt.Rows.Add(row);
-                    }
-                } while (array != null);
-                */
-                //Implémentation dans la DataGrid dataGridAuditTrail
-                dataGridAuditTrail.ItemsSource = dt.DefaultView;
-                dataGridAuditTrail.Columns[auditTrailInfo.Id].Visibility = Visibility.Collapsed;
             }
 
-            //MyDatabase.Disconnect();
-            //MyDatabase.Disconnect(mutexID);
+            //Implémentation dans la DataGrid dataGridAuditTrail
+            dataGridAuditTrail.ItemsSource = dt.DefaultView;
+            dataGridAuditTrail.Columns[auditTrailInfo.Id].Visibility = Visibility.Collapsed;
         }
         private void ButtonFilter_Click(object sender, RoutedEventArgs e)
         {

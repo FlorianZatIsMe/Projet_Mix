@@ -299,15 +299,15 @@ namespace Main
 
             currentY = DrawStringColumns(page, y, values, 2);
 
-            SampleInfo sampleInfo = new SampleInfo();
-            sampleInfo.Columns[sampleInfo.Status].Value = DatabaseSettings.General_TrueValue_Write;
+            DailyTestInfo dailyTestInfo = new DailyTestInfo();
+            dailyTestInfo.Columns[dailyTestInfo.Status].Value = DatabaseSettings.General_TrueValue_Write;
 
             string lastSampling;
             bool isSamplingGood = false;
 
             try
             {
-                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetLastSamplingDate(sampleInfo, Convert.ToDateTime(dtStartCycle)); });
+                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetLastDailyTestDate(dailyTestInfo, Convert.ToDateTime(dtStartCycle)); });
 
                 DateTime? lastSamplingDate = (DateTime?)t.Result;
 
@@ -1169,26 +1169,26 @@ namespace Main
 
             // Initialize cycle information
             // A CORRIGER : IF RESULT IS FALSE
-            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(SampleInfo), id); });
-            SampleInfo sampleInfo = (SampleInfo)t.Result;
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(DailyTestInfo), id); });
+            DailyTestInfo dailyTestInfo = (DailyTestInfo)t.Result;
 
-            if (sampleInfo == null)
+            if (dailyTestInfo == null)
             {
                 logger.Error(Settings.Default.Report_Info_CycleInfoNotFound);
                 General.ShowMessageBox(Settings.Default.Report_Info_CycleInfoNotFound);
                 return;
             }
 
-            user = sampleInfo.Columns[sampleInfo.Username].Value;
-            dateTimeSampling = Convert.ToDateTime(sampleInfo.Columns[sampleInfo.DateTime].Value).ToString(Settings.Default.DateTime_Format_Read);
-            equipmentName = sampleInfo.Columns[sampleInfo.EquipmentName].Value;
-            samplingStatus = sampleInfo.Columns[sampleInfo.Status].Value == DatabaseSettings.General_TrueValue_Read ? statusPASS : statusFAIL;
+            user = dailyTestInfo.Columns[dailyTestInfo.Username].Value;
+            dateTimeSampling = Convert.ToDateTime(dailyTestInfo.Columns[dailyTestInfo.DateTime].Value).ToString(Settings.Default.DateTime_Format_Read);
+            equipmentName = dailyTestInfo.Columns[dailyTestInfo.EquipmentName].Value;
+            samplingStatus = dailyTestInfo.Columns[dailyTestInfo.Status].Value == DatabaseSettings.General_TrueValue_Read ? statusPASS : statusFAIL;
 
             templateNumber = samplingTemplateNumber;
 
             int nSamples = 0;
 
-            while (sampleInfo.Columns[sampleInfo.Measure1 + nSamples].Value != "" && nSamples < sampleInfo.SamplesNumber)
+            while (dailyTestInfo.Columns[dailyTestInfo.Measure1 + nSamples].Value != "" && nSamples < dailyTestInfo.SamplesNumber)
             {
                 nSamples++;
             }
@@ -1200,8 +1200,8 @@ namespace Main
             {
                 try
                 {
-                    samplingRefs[i] = decimal.Parse(sampleInfo.Columns[sampleInfo.Setpoint1 + i].Value).ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
-                    samplingMeas[i] = decimal.Parse(sampleInfo.Columns[sampleInfo.Measure1 + i].Value).ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
+                    samplingRefs[i] = decimal.Parse(dailyTestInfo.Columns[dailyTestInfo.Setpoint1 + i].Value).ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
+                    samplingMeas[i] = decimal.Parse(dailyTestInfo.Columns[dailyTestInfo.Measure1 + i].Value).ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
                 }
                 catch (Exception ex)
                 {
@@ -1249,7 +1249,7 @@ namespace Main
                 tableValues[0, 1 + i] = samplingRefs[i];
                 tableValues[1, 1 + i] = samplingMeas[i];
                 tableValues[2, 1 + i] = (decimal.Parse(samplingRefs[i]) - decimal.Parse(samplingMeas[i])).ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
-                tableValues[3, 1 + i] = Pages.SubCycle.WeightBowl.IsSampWeightCorrect(decimal.Parse(samplingMeas[i]), decimal.Parse(samplingRefs[i])) ? "PASS" : "FAIL";
+                tableValues[3, 1 + i] = Pages.SubCycle.CycleWeight.IsSampWeightCorrect(decimal.Parse(samplingMeas[i]), decimal.Parse(samplingRefs[i])) ? "PASS" : "FAIL";
             }
 
             double xShift = (page.Width - 2 * margin) / tableValues.GetLength(0);

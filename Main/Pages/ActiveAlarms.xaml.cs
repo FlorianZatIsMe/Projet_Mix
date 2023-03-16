@@ -66,63 +66,46 @@ namespace Main.Pages
             string[] array;
             //string[] columnNames = MySettings["Columns"].Split(',');
 
-            //if (MyDatabase.IsConnected()) // while loop is better
-            if(true)
+            try
             {
-                try
+                //Création des colonnes
+                foreach (Column column in auditTrailInfo.Columns)
                 {
-                    //Création des colonnes
-                    foreach (Column column in auditTrailInfo.Columns)
-                    {
-                        dt.Columns.Add(new DataColumn(column.DisplayName));
-                    }
-
-                    foreach (Tuple<int, int> id in AlarmManagement.ActiveAlarms)
-                    {
-                        // A CORRIGER : IF RESULT IS FALSE
-                        Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneArrayRow(new AuditTrailInfo(), AlarmManagement.Alarms[id.Item1, id.Item2].id.ToString()); });
-                        array = (string[])t.Result;
-                        //array = MyDatabase.GetOneArrayRow(new AuditTrailInfo(), AlarmManagement.Alarms[id.Item1, id.Item2].id.ToString());
-
-                        if (array != null)
-                        {
-                            try
-                            {
-                                array[auditTrailInfo.DateTime] = Convert.ToDateTime(array[auditTrailInfo.DateTime]).ToString("dd.MMMyyyy HH:mm:ss");
-                            }
-                            catch (Exception ex)
-                            {
-                                logger.Error(ex.Message);
-                            }
-
-                            row = dt.NewRow();
-                            row.ItemArray = array;
-                            dt.Rows.Add(row);
-                        }
-                    }
-
-                    this.Dispatcher.Invoke(() =>
-                    {
-                        //Implémentation dans la DataGrid 
-                        dataGridAlarms.ItemsSource = dt.DefaultView;
-                        dataGridAlarms.Columns[auditTrailInfo.Id].Visibility = Visibility.Collapsed;
-                    });
+                    dt.Columns.Add(new DataColumn(column.DisplayName));
                 }
-                catch (Exception) { }
-            }
-            else
-            {
-                dt.Columns.Add(new DataColumn(Settings.Default.AuditTrail_ErrorTitle));
-                row = dt.NewRow();
-                row.ItemArray = new string[] { DatabaseSettings.Error_connectToDbFailed };
-                dt.Rows.Add(row);
+
+                foreach (Tuple<int, int> id in AlarmManagement.ActiveAlarms)
+                {
+                    // A CORRIGER : IF RESULT IS FALSE
+                    Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneArrayRow(new AuditTrailInfo(), AlarmManagement.Alarms[id.Item1, id.Item2].id.ToString()); });
+                    array = (string[])t.Result;
+                    //array = MyDatabase.GetOneArrayRow(new AuditTrailInfo(), AlarmManagement.Alarms[id.Item1, id.Item2].id.ToString());
+
+                    if (array != null)
+                    {
+                        try
+                        {
+                            array[auditTrailInfo.DateTime] = Convert.ToDateTime(array[auditTrailInfo.DateTime]).ToString("dd.MMMyyyy HH:mm:ss");
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Error(ex.Message);
+                        }
+
+                        row = dt.NewRow();
+                        row.ItemArray = array;
+                        dt.Rows.Add(row);
+                    }
+                }
 
                 this.Dispatcher.Invoke(() =>
                 {
                     //Implémentation dans la DataGrid 
                     dataGridAlarms.ItemsSource = dt.DefaultView;
+                    dataGridAlarms.Columns[auditTrailInfo.Id].Visibility = Visibility.Collapsed;
                 });
             }
+            catch (Exception) { }
         }
         private void ButtonAckAll_Click(object sender, RoutedEventArgs e)
         {

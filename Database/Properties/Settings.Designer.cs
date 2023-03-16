@@ -1846,9 +1846,9 @@ namespace Database.Properties {
   <string>measure4</string>
   <string>status</string>
 </ArrayOfString>")]
-        public global::System.Collections.Specialized.StringCollection Sample_ColIds {
+        public global::System.Collections.Specialized.StringCollection DailyTest_ColIds {
             get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["Sample_ColIds"]));
+                return ((global::System.Collections.Specialized.StringCollection)(this["DailyTest_ColIds"]));
             }
         }
         
@@ -1870,126 +1870,126 @@ namespace Database.Properties {
   <string>Masse mesurée</string>
   <string>Statut</string>
 </ArrayOfString>")]
-        public global::System.Collections.Specialized.StringCollection Sample_ColDesc {
+        public global::System.Collections.Specialized.StringCollection DailyTest_ColDesc {
             get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["Sample_ColDesc"]));
+                return ((global::System.Collections.Specialized.StringCollection)(this["DailyTest_ColDesc"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("sampling")]
-        public string Sample_TableName {
+        [global::System.Configuration.DefaultSettingValueAttribute("daily_test")]
+        public string DailyTest_TableName {
             get {
-                return ((string)(this["Sample_TableName"]));
+                return ((string)(this["DailyTest_TableName"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int Sample_ColN_id {
+        public int DailyTest_ColN_id {
             get {
-                return ((int)(this["Sample_ColN_id"]));
+                return ((int)(this["DailyTest_ColN_id"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("2")]
-        public int Sample_ColN_dateTime {
+        public int DailyTest_ColN_dateTime {
             get {
-                return ((int)(this["Sample_ColN_dateTime"]));
+                return ((int)(this["DailyTest_ColN_dateTime"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("4")]
-        public int Sample_ColN_setpoint1 {
+        public int DailyTest_ColN_setpoint1 {
             get {
-                return ((int)(this["Sample_ColN_setpoint1"]));
+                return ((int)(this["DailyTest_ColN_setpoint1"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("5")]
-        public int Sample_ColN_setpoint2 {
+        public int DailyTest_ColN_setpoint2 {
             get {
-                return ((int)(this["Sample_ColN_setpoint2"]));
+                return ((int)(this["DailyTest_ColN_setpoint2"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("6")]
-        public int Sample_ColN_setpoint3 {
+        public int DailyTest_ColN_setpoint3 {
             get {
-                return ((int)(this["Sample_ColN_setpoint3"]));
+                return ((int)(this["DailyTest_ColN_setpoint3"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("7")]
-        public int Sample_ColN_setpoint4 {
+        public int DailyTest_ColN_setpoint4 {
             get {
-                return ((int)(this["Sample_ColN_setpoint4"]));
+                return ((int)(this["DailyTest_ColN_setpoint4"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("8")]
-        public int Sample_ColN_measure1 {
+        public int DailyTest_ColN_measure1 {
             get {
-                return ((int)(this["Sample_ColN_measure1"]));
+                return ((int)(this["DailyTest_ColN_measure1"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("9")]
-        public int Sample_ColN_measure2 {
+        public int DailyTest_ColN_measure2 {
             get {
-                return ((int)(this["Sample_ColN_measure2"]));
+                return ((int)(this["DailyTest_ColN_measure2"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public int Sample_ColN_measure3 {
+        public int DailyTest_ColN_measure3 {
             get {
-                return ((int)(this["Sample_ColN_measure3"]));
+                return ((int)(this["DailyTest_ColN_measure3"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("11")]
-        public int Sample_ColN_measure4 {
+        public int DailyTest_ColN_measure4 {
             get {
-                return ((int)(this["Sample_ColN_measure4"]));
+                return ((int)(this["DailyTest_ColN_measure4"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("12")]
-        public int Sample_ColN_status {
+        public int DailyTest_ColN_status {
             get {
-                return ((int)(this["Sample_ColN_status"]));
+                return ((int)(this["DailyTest_ColN_status"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int Sample_ColN_username {
+        public int DailyTest_ColN_username {
             get {
-                return ((int)(this["Sample_ColN_username"]));
+                return ((int)(this["DailyTest_ColN_username"]));
             }
         }
         
@@ -2005,9 +2005,9 @@ namespace Database.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("3")]
-        public int Sample_ColN_equipmentName {
+        public int DailyTest_ColN_equipmentName {
             get {
-                return ((int)(this["Sample_ColN_equipmentName"]));
+                return ((int)(this["DailyTest_ColN_equipmentName"]));
             }
         }
         

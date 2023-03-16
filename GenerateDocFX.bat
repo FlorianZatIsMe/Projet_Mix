@@ -1,1 +1,2 @@
-C:\Users\Julien\Downloads\docfx\docfx.exe "C:\Temp\FPO_WPF_Test\docfx.json" --serve
+C:\Users\Julien\Downloads\docfx\docfx.exe "C:\Temp\MixingApplication\docfx.json" --serve
+PAUSE

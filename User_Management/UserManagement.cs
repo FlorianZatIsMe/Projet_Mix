@@ -47,23 +47,6 @@ namespace User_Management
             info = info_arg;            // Set the info variable from the parameter
         }
 
-        // Method to show MessageBoxes in front of the main window
-        private static void ShowMessageBox(string message)
-        {
-            // If the class was updated (the main window variable was set) then the MessageBox is shown in front of the main window
-            if (info.Window != null)
-            {
-                Application.Current.Dispatcher.BeginInvoke(new Action(() => // Invoke the action MessageBox
-                {
-                    MessageBox.Show(info.Window, message);                  // Show the MessageBox in front of the main window
-                }));
-            }
-            // else (if the main window variable wasn't set) then
-            else
-            {
-                MessageBox.Show(message);   // Show the default MessageBox
-            }
-        }
         /// <summary>
         /// Update the access table variable
         /// </summary>
@@ -116,6 +99,8 @@ namespace User_Management
             // If role wasn't updated at the end of the loop, role = guest application group name
             if (role == null) role = AccessTableInfo.NoneRole;
 
+            SetAccess(role);
+            /*
             // Update of access table variable...
             // accessTable contains the information of the database table access_table
             AccessTableInfo accessTable = new AccessTableInfo();
@@ -125,34 +110,72 @@ namespace User_Management
             Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneBoolRow(accessTable); });
             // Storage of the database result in the variable CurrentAccessTable
             CurrentAccessTable = (bool[])t.Result;
-
+            */
             // Return the application group name
             return role;
-        }
-        /// <returns>The access table variable</returns>
-        public static bool[] GetCurrentAccessTable()
-        {
-            logger.Debug("GetCurrentAccessTable");  //  Log a debug message
-            return CurrentAccessTable;              // Return the access table variable
         }
 
         /// <summary>
         /// Update the current access table with the guest rights
         /// </summary>
         /// <returns>True if the table was updated, false otherwirse</returns>
-        public static bool SetNoneAccess()
+        public static void SetNoneAccess()
+        {
+            SetAccess(AccessTableInfo.NoneRole);
+        }
+
+        private static void SetAccess(string role)
         {
             // Update of access table variable...
             // accessTable contains the information of the database table access_table
             AccessTableInfo accessTable = new AccessTableInfo();
             // Set the value of the role column to the none role
-            accessTable.Columns[accessTable.Role].Value = AccessTableInfo.NoneRole;
-            // Start database task: get the row of the database table access_table for the applicable role (returns bool array)
-            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneBoolRow(accessTable); });
-            // Storage of the database result in the variable CurrentAccessTable
-            CurrentAccessTable = (bool[])t.Result;
+            //accessTable.Columns[accessTable.Role].Value = AccessTableInfo.NoneRole;
 
-            return !(CurrentAccessTable == null);
+            object[] values = new object[accessTable.Ids.Count()];
+            values[accessTable.Role] = role;
+
+            // Start database task: get the row of the database table access_table for the applicable role (returns bool array)
+            //Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneBoolRow(accessTable); });
+
+            // Start database task: get the row of the database table access_table for the applicable role (returns bool array)
+            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow_new(accessTable, values: values); });
+            // Storage of the database result in the variable CurrentAccessTable
+            //CurrentAccessTable = (bool[])t.Result;
+
+            CurrentAccessTable = new bool[accessTable.Ids.Count()];
+            object[] row = (object[])t.Result;
+
+            // If the row from the access table wasn't found, we return and give backup access to the backup if the role is administrator
+            if (row == null)
+            {
+                if (role == AccessTableInfo.AdministratorRole)
+                {
+                    CurrentAccessTable[AccessTableInfo.Backup] = true;
+                }
+
+                return;
+            }
+
+            for (int i = 0; i < accessTable.Ids.Count(); i++)
+            {
+                //logger.Trace(i.ToString() + " - " + row[i].ToString());
+                try
+                {
+                    CurrentAccessTable[i] = Convert.ToBoolean(row[i]);
+                }
+                catch (Exception)
+                {
+                    CurrentAccessTable[i] = false;
+                }
+            }
+        }
+
+        /// <returns>The access table variable</returns>
+        public static bool[] GetCurrentAccessTable()
+        {
+            logger.Debug("GetCurrentAccessTable");  //  Log a debug message
+            return CurrentAccessTable;              // Return the access table variable
         }
     }
 }

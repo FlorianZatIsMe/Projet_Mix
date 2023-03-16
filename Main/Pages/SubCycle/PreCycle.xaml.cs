@@ -80,7 +80,7 @@ namespace Main.Pages.SubCycle
 
             if (General.ShowMessageBox(Settings.Default.PreCycle_Request_StartCycle, Settings.Default.PreCycle_Request_StartCycle_Title, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                info.frameMain.Content = new WeightBowl(info);
+                info.frameMain.Content = new CycleWeight(info);
             }
         }
         private void FxAnnuler(object sender, RoutedEventArgs e)

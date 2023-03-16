@@ -54,6 +54,8 @@ namespace Main
         private bool wasActTimeUpdated = false;
         private readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+        private bool flag = false;
+
         public MainWindow()
         {
 #if DEBUG
@@ -85,13 +87,6 @@ namespace Main
             //synth.SelectVoiceByHints(VoiceGender.Male, VoiceAge.Senior);
             //synth.Speak("Oh... You're sweet, thank you. I don't love you, but it's nice to know that someone loves me. Who wouldn't anyway ?");
 
-            while (true)
-            {
-                if (MessageBox.Show("on continue ?", "GO", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    Balance.Connect();
-                }
-            }
 
             General.ShowMessageBox("Fini je crois");
             Environment.Exit(1);
@@ -99,6 +94,7 @@ namespace Main
 
             InitializeComponent();
 
+            MyMessageBox.SetParentWindow(this);
             AlarmManagement.ActiveAlarmEvent += ActiveAlarmEvent;
             AlarmManagement.InactiveAlarmEvent += InactiveAlarmEvent;
 
@@ -110,13 +106,9 @@ namespace Main
             catch (Exception)
             {
                 logger.Error("Problème de connexion avec l'active directory");
-                UpdateUser(username: "none",
-                    role: "none");
-                if(!UserManagement.SetNoneAccess())
-                {
-                    General.ShowMessageBox("On a un sérieux problème");
-                    logger.Error("On a un sérieux problème");
-                }
+                UserManagement.SetNoneAccess();
+                UpdateUser(username: "aucun utilisateur",
+                    role: AccessTableInfo.NoneRole);
             }
 
             labelSoftwareName.Text = General.application_name + " version " + General.application_version;
@@ -172,15 +164,15 @@ namespace Main
             AlarmManagement.Initialize(new Alarm_Management.IniInfo() { AuditTrail_SystemUsername = Settings.Default.General_SystemUsername, Window = this });
 
             Balance.Connect();
-            RS232Pump.rs232.Initialize(new Driver_RS232.IniInfo() { Window = this });
+            RS232Pump.Initialize(/*new Driver_RS232.IniInfo() { Window = this }*/);
             Driver_ColdTrap.ColdTrap.Initialize(new Driver_ColdTrap.IniInfo() { Window = this });
             UserManagement.Initialize(new User_Management.IniInfo() { Window = this });
             //SpeedMixerModbus.Initialize();
-            if (RS232Pump.rs232.IsOpen())
+            if (RS232Pump.IsOpen())
             {
-                RS232Pump.rs232.BlockUse();
-                RS232Pump.rs232.SetCommand("!C802 0");
-                RS232Pump.rs232.FreeUse();
+                RS232Pump.BlockUse();
+                RS232Pump.StopPump();
+                RS232Pump.FreeUse();
             }
 
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
@@ -199,7 +191,7 @@ namespace Main
 
             // check if result is null
 
-            if (tableInfos == null)
+            if (tableInfos == null || tableInfos.Count == 0)
             {
                 General.ShowMessageBox("C'est pas bien de ne pas se connecter à la base de données");
                 logger.Error("C'est pas bien de ne pas se connecter à la base de données");
@@ -272,11 +264,7 @@ namespace Main
 
             if (General.currentRole != AccessTableInfo.NoneRole && DateTime.Now.AddMinutes(-1).CompareTo(General.lastActTime) > 0)
             {
-                if (!UserManagement.SetNoneAccess())
-                {
-                    General.ShowMessageBox("C'est pas bien ça");
-                    logger.Error("C'est pas bien ça");
-                }
+                UserManagement.SetNoneAccess();
                 logger.Debug("Auto log off at " + DateTime.Now.ToString());
 
                 this.Dispatcher.Invoke(() => {
@@ -329,7 +317,6 @@ namespace Main
             General.loggedUsername = username;
             General.currentRole = role;
             labelUser.Text = username + ", " + role;
-
             bool[] currentAccess = UserManagement.GetCurrentAccessTable();
 
             bool isATest;
@@ -338,11 +325,13 @@ namespace Main
             if (isCycleStarted && frameMain.Content.GetType().GetInterface(typeof(Pages.ISubCycle).Name) != null)
             {
                 Pages.ISubCycle subCycle = frameMain.Content as Pages.ISubCycle;
+                subCycle.EnablePage(false);
                 isATest = subCycle.IsItATest();
             }
             else
             {
                 isATest = false;
+                frameMain.Content = new Pages.Status();
             }
 
             menuItemStart.Visibility = 
@@ -482,24 +471,20 @@ namespace Main
                 };
             });
         }
-        public void ActivateWindow()
-        {
-            this.Activate();
-        }
         private void FxCycleStart(object sender, RoutedEventArgs e)
         {
             if (!isCycleStarted)
             {
-                SampleInfo sampleInfo = new SampleInfo();
-                sampleInfo.Columns[sampleInfo.Status].Value = DatabaseSettings.General_TrueValue_Write;
-                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(sampleInfo, sampleInfo.Columns[sampleInfo.Id].Id); });
+                DailyTestInfo dailyTestInfo = new DailyTestInfo();
+                dailyTestInfo.Columns[dailyTestInfo.Status].Value = DatabaseSettings.General_TrueValue_Write;
+                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(dailyTestInfo, dailyTestInfo.Columns[dailyTestInfo.Id].Id); });
                 string id = ((int)t.Result).ToString();
 
-                sampleInfo = new SampleInfo();
-                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(SampleInfo), id); });
-                sampleInfo = (SampleInfo)t.Result;
+                dailyTestInfo = new DailyTestInfo();
+                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(DailyTestInfo), id); });
+                dailyTestInfo = (DailyTestInfo)t.Result;
 
-                DateTime lastSampling = Convert.ToDateTime(sampleInfo.Columns[sampleInfo.DateTime].Value);
+                DateTime lastSampling = Convert.ToDateTime(dailyTestInfo.Columns[dailyTestInfo.DateTime].Value);
 
                 if (lastSampling.CompareTo(DateTime.Now.AddDays(-1)) < 0)
                 {
@@ -508,7 +493,7 @@ namespace Main
                     {
                         if (General.ShowMessageBox("Le dernier test journalier de la balance a été fait le " + lastSampling.ToString(Settings.Default.Date_Format_Read) + " à " + lastSampling.ToString(Settings.Default.Time_Format) + ", voulez-vous faire le test journalier ?", "Test journalier", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                         {
-                            frameMain.Content = new Pages.SubCycle.WeightBowl(frameMain);
+                            frameMain.Content = new Pages.SubCycle.CycleWeight(frameMain);
                             return;
                         }
                     }
@@ -597,7 +582,7 @@ namespace Main
 
         private void FxSampling(object sender, RoutedEventArgs e)
         {
-            frameMain.Content = new Pages.SubCycle.WeightBowl(frameMain);
+            frameMain.Content = new Pages.SubCycle.CycleWeight(frameMain);
         }
 
         private void frameMain_ContentRendered(object sender, EventArgs e)
@@ -615,6 +600,32 @@ namespace Main
                 General.ResetLastActTime();
                 await Task.Delay(2000);
                 wasActTimeUpdated = false;
+            }
+        }
+
+        public async void Window_Deactivated(object sender, EventArgs e)
+        {/*
+            this.Deactivated -= Window_Deactivated;
+
+            await Task.Delay(1000);
+            logger.Fatal(this.ActualHeight.ToString());
+
+            while (!this.IsActive)
+            {
+                this.Activate();
+                await Task.Delay(1000);
+            }
+            this.Deactivated += Window_Deactivated;*/
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            bool[] currentAccessTable = UserManagement.GetCurrentAccessTable();
+
+            if (!currentAccessTable[AccessTableInfo.ApplicationStop])
+            {
+                MessageBox.Show("C'est pas bien ça");
+                e.Cancel = true;
             }
         }
     }

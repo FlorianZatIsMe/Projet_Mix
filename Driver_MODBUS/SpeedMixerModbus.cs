@@ -162,101 +162,6 @@ namespace Driver_MODBUS
 
             return speedMixer.Available(Settings.Default.ScanAlarmTimer_Interval); // c'est nul ce truc
         }
-        public static void SetProgram(string[] array)
-        {
-            //if (!IsConnected()) Connect();
-
-            if (IsConnected())
-            {
-                int vaccumScale;
-                int speedParameter;
-                int timeParameter;
-                int pressureParameter;
-                string speedFromDB;
-                string timeFromDB;
-                string pressureFromDB;
-
-                try
-                {
-
-                    speedMixer.WriteSingleRegister(Settings.Default.Register_Instruction, 0);    // Instruction to allow the modification of the parameters
-
-                    // Name of the program
-
-                    for (int i = 0; i < 10; i++)
-                    {
-                        speedMixer.WriteSingleRegister(Settings.Default.Register_MixName + i, 0);
-                    }
-
-                    speedMixer.WriteSingleRegister(Settings.Default.Register_Acceleration, int.Parse(array[4]));  // Acceleration
-                    speedMixer.WriteSingleRegister(Settings.Default.Register_Deceleration, int.Parse(array[5]));  // Deceleration
-                    speedMixer.WriteSingleRegister(Settings.Default.Register_VacuumInUse, array[6] == "True" ? 1 : 0);    // Vacuum in Use (0=No ; 1=Yes)
-
-                    //                    speedMixer.WriteSingleRegister(3048, 0);    // ça ne fonctionne pas, ça devrait être le choix du vent gas
-                    //                    speedMixer.WriteSingleRegister(3049, 0);    // Monitor type Je pense que ça ne fonctionne pas
-
-                    switch (array[9])
-                    {
-                        case "Torr":
-                            vaccumScale = 1;
-                            break;
-                        case "mBar":
-                            vaccumScale = 2;
-                            break;
-                        case "inHg":
-                            vaccumScale = 3;
-                            break;
-                        case "PSIA":
-                            vaccumScale = 4;
-                            break;
-                        default:
-                            vaccumScale = -1;
-                            break;
-                    }
-
-                    if (vaccumScale != -1) speedMixer.WriteSingleRegister(Settings.Default.Register_VacuumScale, vaccumScale);    // Vacuum Scale (1=Torr ; 2=mBar ; 3=inHg ; 4=PSIA)
-                    else ShowMessageBox(MethodBase.GetCurrentMethod().Name + " - Qu'est-ce que t'as fait ?");
-                    //SpeedMixer.WriteSingleRegister(3052, 0);    // S Curve, pas touche
-
-                    speedMixer.WriteSingleRegister(Settings.Default.Register_ProgramId, 0);    // Numéro du programme
-                    speedMixer.WriteSingleRegister(Settings.Default.Register_Instruction, 1);    // Commande pour mettre à jour tout les paramètres
-
-                    //ShowMessageBox("Alors...");
-
-                    //speedMixer.WriteSingleRegister(3053, 0);    // Instruction to allow the modification of the parameters
-
-                    for (int i = 0; i < 10; i++)
-                    {
-                        speedFromDB = array[12 + 3 * i];
-                        timeFromDB = array[13 + 3 * i];
-                        pressureFromDB = array[14 + 3 * i];
-
-                        //ShowMessageBox(timeFromDB);
-
-                        speedParameter = (speedFromDB == "" || speedFromDB == null) ? 0 : int.Parse(speedFromDB);
-                        timeParameter = (timeFromDB == "" || timeFromDB == null) ? 0 : int.Parse(timeFromDB);
-                        pressureParameter = (pressureFromDB == "" || pressureFromDB == null) ? 0 : int.Parse(pressureFromDB);
-
-                        speedMixer.WriteSingleRegister(Settings.Default.Register_Speed01 + i, speedParameter);       // Vitesse des 10 phases
-                        speedMixer.WriteSingleRegister(Settings.Default.Register_Time01 + i, timeParameter);        // Temps des 10 phases
-                        speedMixer.WriteSingleRegister(Settings.Default.Register_Pressure01 + i, 10 * pressureParameter);    // Pression de vide des 10 phases
-                    }
-
-                    speedMixer.WriteSingleRegister(Settings.Default.Register_Instruction, 0);    // Instruction to allow the modification of the parameters
-                    speedMixer.WriteSingleRegister(Settings.Default.Register_ProgramId, 0);    // Numéro du programme
-                    speedMixer.WriteSingleRegister(Settings.Default.Register_Instruction, 1);    // Commande pour mettre à jour tout les paramètres
-                }
-                catch (Exception ex)
-                {
-                    logger.Error(ex.Message);
-                    ShowMessageBox(ex.Message);
-                }
-            }
-            else
-            {
-                ShowMessageBox("Problème de connection avec le SpeedMixer");
-            }
-        }
         public static void SetProgram(RecipeSpeedMixerInfo recipe)
         {
             //if (!IsConnected()) Connect();
@@ -277,13 +182,6 @@ namespace Driver_MODBUS
             string pressureFromDB;
 
             speedMixer.WriteSingleRegister(Settings.Default.Register_Instruction, Settings.Default.Instruction_Reset);    // Instruction to allow the modification of the parameters
-
-            // Name of the program
-
-            for (int i = 0; i < 10; i++)
-            {
-                speedMixer.WriteSingleRegister(Settings.Default.Register_MixName + i, 0);
-            }
 
             speedMixer.WriteSingleRegister(Settings.Default.Register_Acceleration, int.Parse(recipe.Columns[recipe.Acceleration].Value));  // Acceleration
             speedMixer.WriteSingleRegister(Settings.Default.Register_Deceleration, int.Parse(recipe.Columns[recipe.Deceleration].Value));  // Deceleration

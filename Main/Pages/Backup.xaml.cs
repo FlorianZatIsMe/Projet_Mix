@@ -50,9 +50,15 @@ namespace Main.Pages
             labelStatus.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             labelStatus.Arrange(new Rect(0, 0, labelStatus.DesiredSize.Width, labelStatus.DesiredSize.Height));
 
+            UpdateBackupList();
+        }
+
+        private void UpdateBackupList()
+        {
             DirectoryInfo backupDirInfo = new DirectoryInfo(backupPath);
             FileInfo[] files = backupDirInfo.GetFiles("*" + backupExtFile);
 
+            lbBackups.Items.Clear();
             lbBackups.Items.SortDescriptions.Clear();
             lbBackups.Items.SortDescriptions.Add(new SortDescription("Content", ListSortDirection.Descending));
             for (int i = 0; i < files.Length; i++)
@@ -61,6 +67,7 @@ namespace Main.Pages
             }
             lbBackups.Items.Refresh();
         }
+
         private async void Backup_Click(object sender, RoutedEventArgs e)
         {
             logger.Debug("Backup_Click");
@@ -136,9 +143,6 @@ namespace Main.Pages
                 // Si l'alarme est active, on la désactive
                 if (AlarmManagement.Alarms[4, 0].Status == AlarmStatus.ACTIVE || AlarmManagement.Alarms[4, 0].Status == AlarmStatus.ACK) AlarmManagement.InactivateAlarm(4, 0);
 
-                // c'est peut-être nul ça (je veux dire la gestion du mutex), il faut ajouter un wait non ?
-                logger.Warn("c'est peut-être nul ça (je veux dire la gestion du mutex), il faut ajouter un wait non ?");
-
                 AuditTrailInfo auditTInfo = new AuditTrailInfo();
                 auditTInfo.Columns[auditTInfo.Username].Value = Settings.Default.General_SystemUsername;
                 auditTInfo.Columns[auditTInfo.EventType].Value = Settings.Default.General_AuditTrailEvent_Event;
@@ -147,8 +151,6 @@ namespace Main.Pages
                 // A CORRIGER : IF RESULT IS FALSE
                 Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTInfo); });
                 //MyDatabase.InsertRow(auditTInfo, mutex);
-
-                //MyDatabase.Disconnect();
 
                 General.count = Settings.Default.Backup_maxBackupCount;
                 isBackupSucceeded = true;
@@ -195,6 +197,14 @@ namespace Main.Pages
             if (lbBackups.SelectedItem != null)
             {
                 string restoreFileName = (lbBackups.SelectedItem as ListBoxItem).Content.ToString();
+
+                if (!File.Exists(backupPath + restoreFileName))
+                {
+                    General.ShowMessageBox("Fichier " + backupPath + restoreFileName + " n'existe pas");
+                    UpdateBackupList();
+                    return;
+                }                
+
                 nLines = File.ReadAllLines(backupPath + restoreFileName).Length + Settings.Default.Backup_nLines_offset;
 
                 wpStatus.Visibility = Visibility.Visible;

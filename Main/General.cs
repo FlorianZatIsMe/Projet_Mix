@@ -100,13 +100,16 @@ namespace Main
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    result = MessageBox.Show(owner: info.Window, messageBoxText: message, caption: caption, button: button);
+                    result = MyMessageBox.Show(messageBoxText: message, button: button);
+                    //result = MessageBox.Show(owner: info.Window, messageBoxText: message, caption: caption, button: button);
                 }));
             }
             else
             {
-                result = MessageBox.Show(message, caption, button);
+                result = MyMessageBox.Show(message, button);
+                //result = MessageBox.Show(message, caption, button);
             }
+
             return result;
         }
 
@@ -117,13 +120,16 @@ namespace Main
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    result = MessageBox.Show(owner: info.Window, messageBoxText: message);
+                    result = MyMessageBox.Show(messageBoxText: message);
+                    //result = MessageBox.Show(owner: info.Window, messageBoxText: message);
                 }));
             }
             else
             {
-                result = MessageBox.Show(message);
+                result = MyMessageBox.Show(message);
+                //result = MessageBox.Show(message);
             }
+
             return result;
         }
 
@@ -393,7 +399,7 @@ namespace Main
 
             if (nextSeqInfo.recipeParam.Columns[nextSeqInfo.recipeParam.NextSeqType].Value == null || nextSeqInfo.recipeParam.Columns[nextSeqInfo.recipeParam.NextSeqType].Value == "") // S'il n'y a pas de prochaine séquence 
             {
-                nextSeqInfo.frameMain.Content = new WeightBowl(nextSeqInfo);
+                nextSeqInfo.frameMain.Content = new CycleWeight(nextSeqInfo);
                 //LastThingToChange(recipeParam: nextSeqInfo.recipeParam, frameMain: nextSeqInfo.frameMain, frameInfoCycle: nextSeqInfo.frameInfoCycle, idCycle: nextSeqInfo.idCycle, previousSeqType: nextSeqInfo.previousSeqType, previousSeqId: nextSeqInfo.previousSeqId.ToString(), isTest: nextSeqInfo.isTest, comment: nextSeqInfo.comment);
             }
             else
@@ -853,7 +859,7 @@ namespace Main
                 if (keyBoardProcess != null)
                 {
                     info.Window.Activate();
-                    //keyBoardProcess.Kill();
+                    keyBoardProcess.Kill();
                 }
             }
             catch (Exception)

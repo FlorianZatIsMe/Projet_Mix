@@ -604,64 +604,66 @@
     <Setting Name="Main_AlarmIconAct" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Resources/img_alarm_act.png</Value>
     </Setting>
-    <Setting Name="RecipeMix_IdDBControls" Type="Main.Pages.IdDBControls" Scope="Application">
-      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;IdDBControls xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
-  &lt;list&gt;
-    &lt;int&gt;3&lt;/int&gt;
-    &lt;int&gt;4&lt;/int&gt;
-    &lt;int&gt;5&lt;/int&gt;
-    &lt;int&gt;10&lt;/int&gt;
-    &lt;int&gt;12&lt;/int&gt;
-    &lt;int&gt;13&lt;/int&gt;
-    &lt;int&gt;14&lt;/int&gt;
-    &lt;int&gt;15&lt;/int&gt;
-    &lt;int&gt;16&lt;/int&gt;
-    &lt;int&gt;17&lt;/int&gt;
-    &lt;int&gt;18&lt;/int&gt;
-    &lt;int&gt;19&lt;/int&gt;
-    &lt;int&gt;20&lt;/int&gt;
-    &lt;int&gt;21&lt;/int&gt;
-    &lt;int&gt;22&lt;/int&gt;
-    &lt;int&gt;23&lt;/int&gt;
-    &lt;int&gt;24&lt;/int&gt;
-    &lt;int&gt;25&lt;/int&gt;
-    &lt;int&gt;26&lt;/int&gt;
-    &lt;int&gt;27&lt;/int&gt;
-    &lt;int&gt;28&lt;/int&gt;
-    &lt;int&gt;29&lt;/int&gt;
-    &lt;int&gt;30&lt;/int&gt;
-    &lt;int&gt;31&lt;/int&gt;
-    &lt;int&gt;32&lt;/int&gt;
-    &lt;int&gt;33&lt;/int&gt;
-    &lt;int&gt;34&lt;/int&gt;
-    &lt;int&gt;35&lt;/int&gt;
-    &lt;int&gt;36&lt;/int&gt;
-    &lt;int&gt;37&lt;/int&gt;
-    &lt;int&gt;38&lt;/int&gt;
-    &lt;int&gt;39&lt;/int&gt;
-    &lt;int&gt;40&lt;/int&gt;
-    &lt;int&gt;41&lt;/int&gt;
-    &lt;int&gt;42&lt;/int&gt;
-    &lt;int&gt;43&lt;/int&gt;
-    &lt;int&gt;44&lt;/int&gt;
-    &lt;int&gt;45&lt;/int&gt;
-  &lt;/list&gt;
-&lt;/IdDBControls&gt;</Value>
-    </Setting>
-    <Setting Name="RecipeWeight_IdDBControls" Type="Main.Pages.IdDBControls" Scope="Application">
-      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;IdDBControls xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
-  &lt;list&gt;
-    &lt;int&gt;3&lt;/int&gt;
-    &lt;int&gt;5&lt;/int&gt;
-    &lt;int&gt;8&lt;/int&gt;
-    &lt;int&gt;9&lt;/int&gt;
-  &lt;/list&gt;
-&lt;/IdDBControls&gt;</Value>
-    </Setting>
     <Setting Name="Main_StopIconDis" Type="System.String" Scope="User">
       <Value Profile="(Default)">Resources/img_stop_dis.png</Value>
+    </Setting>
+    <Setting Name="RecipeMix_IdDBControls" Type="Main.Pages.IdDBControls" Scope="Application">
+      <Value Profile="(Default)">
+          &lt;IdDBControls xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+            &lt;list&gt;
+              &lt;int&gt;3&lt;/int&gt;
+              &lt;int&gt;4&lt;/int&gt;
+              &lt;int&gt;5&lt;/int&gt;
+              &lt;int&gt;10&lt;/int&gt;
+              &lt;int&gt;12&lt;/int&gt;
+              &lt;int&gt;13&lt;/int&gt;
+              &lt;int&gt;14&lt;/int&gt;
+              &lt;int&gt;15&lt;/int&gt;
+              &lt;int&gt;16&lt;/int&gt;
+              &lt;int&gt;17&lt;/int&gt;
+              &lt;int&gt;18&lt;/int&gt;
+              &lt;int&gt;19&lt;/int&gt;
+              &lt;int&gt;20&lt;/int&gt;
+              &lt;int&gt;21&lt;/int&gt;
+              &lt;int&gt;22&lt;/int&gt;
+              &lt;int&gt;23&lt;/int&gt;
+              &lt;int&gt;24&lt;/int&gt;
+              &lt;int&gt;25&lt;/int&gt;
+              &lt;int&gt;26&lt;/int&gt;
+              &lt;int&gt;27&lt;/int&gt;
+              &lt;int&gt;28&lt;/int&gt;
+              &lt;int&gt;29&lt;/int&gt;
+              &lt;int&gt;30&lt;/int&gt;
+              &lt;int&gt;31&lt;/int&gt;
+              &lt;int&gt;32&lt;/int&gt;
+              &lt;int&gt;33&lt;/int&gt;
+              &lt;int&gt;34&lt;/int&gt;
+              &lt;int&gt;35&lt;/int&gt;
+              &lt;int&gt;36&lt;/int&gt;
+              &lt;int&gt;37&lt;/int&gt;
+              &lt;int&gt;38&lt;/int&gt;
+              &lt;int&gt;39&lt;/int&gt;
+              &lt;int&gt;40&lt;/int&gt;
+              &lt;int&gt;41&lt;/int&gt;
+              &lt;int&gt;42&lt;/int&gt;
+              &lt;int&gt;43&lt;/int&gt;
+              &lt;int&gt;44&lt;/int&gt;
+              &lt;int&gt;45&lt;/int&gt;
+            &lt;/list&gt;
+          &lt;/IdDBControls&gt;
+        </Value>
+    </Setting>
+    <Setting Name="RecipeWeight_IdDBControls" Type="Main.Pages.IdDBControls" Scope="Application">
+      <Value Profile="(Default)">
+          &lt;IdDBControls xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+            &lt;list&gt;
+              &lt;int&gt;3&lt;/int&gt;
+              &lt;int&gt;5&lt;/int&gt;
+              &lt;int&gt;8&lt;/int&gt;
+              &lt;int&gt;9&lt;/int&gt;
+            &lt;/list&gt;
+          &lt;/IdDBControls&gt;
+        </Value>
     </Setting>
   </Settings>
 </SettingsFile>

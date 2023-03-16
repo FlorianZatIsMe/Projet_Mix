@@ -1,36 +1,21 @@
 ﻿using Database;
 using Main.Properties;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Configuration;
-using System.Data.Common;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Globalization;
-using System.Diagnostics;
 using Main.Pages.SubCycle;
 
 namespace Main.Pages
 {
     public interface ISubRecipe
     {
-        //int seqType { get; }
         void SetPage(ISeqTabInfo seqInfo);
         ISeqTabInfo GetPage();
         bool IsFormatOk();
@@ -80,8 +65,7 @@ namespace Main.Pages
             {
                 subRcpPgType = typeof(Pages.SubRecipe.Weight),
                 subRecipeInfo = new RecipeWeightInfo(),
-                subCycPgType = typeof(Pages.SubCycle.WeightBowl),
-                //subCycPgType = typeof(Pages.SubCycle.CycleWeight),
+                subCycPgType = typeof(Pages.SubCycle.CycleWeight),
                 subCycleInfo = new CycleWeightInfo()
             },
 
@@ -125,7 +109,6 @@ namespace Main.Pages
         private bool curMethodDoneOnGoing;
         private string finalWeightMin = "";
         private string finalWeightMax = "";
-        private Process keyBoardProcess;
         private MainWindow mainWindow;
         private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -184,9 +167,6 @@ namespace Main.Pages
                 default:
                     break;
             }
-
-            // Si on a testé une recette et qu'on revient ici alors on ne se déconnecte pas
-            //if (action != Action.Modify || recipeName == "") //MyDatabase.Disconnect();
         }
 
         /* Create_NewRecipe()
@@ -210,11 +190,6 @@ namespace Main.Pages
             List<ISeqTabInfo> seqInfoList = new List<ISeqTabInfo>();
             ISubRecipe recipeSeq;
             Task<object> t;
-            /*
-            if (!MyDatabase.IsConnected()) {
-                General.ShowMessageBox(DatabaseSettings.Error01);
-                return false;
-            }*/
 
             if (recipeName == "") {
                 General.ShowMessageBox(Settings.Default.Recipe_Request_FillRecipeName);
@@ -246,26 +221,13 @@ namespace Main.Pages
                 General.ShowMessageBox(Settings.Default.Recipe_Info_ExistingRecipe);
                 return false;
             }
-            /*
-            if (new_version == 1 && 
-                isRecipeCreated &&
-                MyDatabase.GetMax(recipeInfo, recipeInfo.columns[recipeInfo.version].id) != 0) {
-                General.ShowMessageBox(Settings.Default.Recipe_Info_ExistingRecipe);
-                return false;
-            }
-             */
-
-            // pourquoi faire ça, je ne sais plus, à voir...
-            //using (RecipeInfo recipeInfo = new RecipeInfo()) {}
 
             recipeInfo = new RecipeInfo();
             recipeInfo.Columns[recipeInfo.Name].Value = recipeName;
             recipeInfo.Columns[recipeInfo.Version].Value = new_version.ToString();
             recipeInfo.Columns[recipeInfo.FinaleWeightMin].Value = int.Parse(finalWeightMin, NumberStyles.AllowThousands).ToString();
             recipeInfo.Columns[recipeInfo.FinaleWeightMax].Value = int.Parse(finalWeightMax, NumberStyles.AllowThousands).ToString();
-
             recipeInfo.Columns[recipeInfo.Status].Value = MyDatabase.GetRecipeStatus(status).ToString();
-            //recipeInfo.columns[recipeInfo.status].value = MyDatabase.GetRecipeStatus(status).ToString();
 
             seqInfoList.Add(recipeInfo);
 
@@ -313,18 +275,15 @@ namespace Main.Pages
                     // A CORRIGER : IF RESULT IS FALSE
                     t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(seqInfoList[i]); });
                     isRecordOk = (bool)t.Result;
-                    //isRecordOk = MyDatabase.InsertRow(seqInfoList[i]);
 
                     // A CORRIGER : IF RESULT IS FALSE
                     t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(seqInfoList[i].TabName, seqInfoList[i].Columns[seqInfoList[i].Id].Id); });
                     seqInfoList[i - 1].Columns[seqInfoList[i - 1].NextSeqId].Value = ((int)t.Result).ToString();
-                    //seqInfoList[i - 1].columns[seqInfoList[i - 1].nextSeqId].value = MyDatabase.GetMax(seqInfoList[i].name, seqInfoList[i].columns[seqInfoList[i].id].id).ToString();
                     seqInfoList[i - 1].Columns[seqInfoList[i - 1].NextSeqType].Value = seqInfoList[i].SeqType.ToString();
                 }
                 else break;
             }
             if (isRecordOk) isRecordOk = (bool)MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(seqInfoList[0]); }).Result;
-            //if (isRecordOk) isRecordOk = MyDatabase.InsertRow(seqInfoList[0]);
 
             if (isRecordOk) {
                 if (new_version == 1) General.ShowMessageBox(Settings.Default.Recipe_Info_RecipeCreated);
@@ -347,7 +306,6 @@ namespace Main.Pages
 
                     // A CORRIGER : IF RESULT IS FALSE
                     t = MyDatabase.TaskEnQueue(() => { return MyDatabase.DeleteRow(seqTabInfo, id); });
-                    //MyDatabase.DeleteRow(seqInfoList[i + 1], seqInfoList[i].columns[seqInfoList[i].nextSeqId].value);
 
                     i++;
                 } while (seqInfoList[i].Columns[seqInfoList[i].NextSeqId].Value != null);
@@ -368,18 +326,10 @@ namespace Main.Pages
             RecipeInfo recipeInfo = new RecipeInfo();
             ISubRecipe currentPage;
             ISeqTabInfo currentRecipeSeq;
-            /*
-            if (!MyDatabase.IsConnected())
-            {
-                logger.Error(DatabaseSettings.Error01);
-                General.ShowMessageBox(DatabaseSettings.Error01);
-                return;
-            }*/
 
             // A CORRIGER : IF RESULT IS FALSE
             t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeInfo), id); });
             recipeInfo = (RecipeInfo)t.Result;
-            //recipeInfo = (RecipeInfo)MyDatabase.GetOneRow(typeof(RecipeInfo), id);
 
             if (recipeInfo.Columns == null) // Si la requête envoyer ne contient qu'une seule ligne
             {
@@ -422,12 +372,10 @@ namespace Main.Pages
 
                 if (gridMain.Children[gridMain.Children.Count - 1].GetType().Equals(typeof(Frame))) // Si le dernier élément de la grille gridMain est une frame on continue
                 {
-                    //MyDatabase.Close_reader(); // On ferme le reader de la db pour pouvoir lancer une autre requête
 
                     // A CORRIGER : IF RESULT IS FALSE
                     t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(Sequence.list[int.Parse(nextSeqType)].subRecipeInfo.GetType(), nextSeqID); });
                     currentRecipeSeq = (ISeqTabInfo)t.Result;
-                    //currentRecipeSeq = (ISeqInfo)MyDatabase.GetOneRow(Sequence.list[int.Parse(nextSeqType)].subRecipeInfo.GetType(), nextSeqID);
                     currentFrame = gridMain.Children[gridMain.Children.Count - 1] as Frame;
 
                     currentPage = currentFrame.Content as ISubRecipe;
@@ -460,38 +408,12 @@ namespace Main.Pages
 
             Frame frame = new Frame();
             frame.ContentRendered += SubRecipeFrame_ContentRendered;
-            //frame.PreviewMouseDoubleClick += FrameTest;
 
             frame.Content = Activator.CreateInstance(Pages.Sequence.list[int.Parse(seqType)].subRcpPgType, new object[] { frame, nRow.ToString() });
 
             Grid.SetRow(frame, gridMain.RowDefinitions.Count() - 1);
             gridMain.Children.Add(frame);
             nRow++;
-        }
-        private void FrameTest(object sender, MouseButtonEventArgs e)
-        {
-            logger.Debug("FrameTest");
-
-            Frame frame = sender as Frame;
-
-            if (frame.Content.GetType().GetInterface(typeof(ISubRecipe).Name) != null)
-            {
-                ISubRecipe recipeSeq = frame.Content as ISubRecipe;
-                ISeqTabInfo seqInfo = recipeSeq.GetPage();
-
-                string row = "";
-                for (int j = 0; j < seqInfo.Columns.Count(); j++)
-                {
-                    row = row + seqInfo.Columns[j].Value + " ";
-                }
-
-                General.ShowMessageBox(row);
-            }
-            else
-            {
-                General.ShowMessageBox(frame.Content.GetType().ToString());
-            }
-
         }
         private void Update_SequenceNumbers()
         {
@@ -524,17 +446,9 @@ namespace Main.Pages
             string nextSeqId;
             Task<object> t;
 
-            /*
-            if (!MyDatabase.IsConnected()) // while loop is better
-            {
-                General.ShowMessageBox(DatabaseSettings.Error01);
-                return;
-            }*/
-
             // A CORRIGER : IF RESULT IS FALSE
             t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(new RecipeInfo().GetType(), id); });
             RecipeInfo recipeInfo = (RecipeInfo)t.Result;
-            //RecipeInfo recipeInfo = (RecipeInfo)MyDatabase.GetOneRow(new RecipeInfo().GetType(), id);
 
             if (recipeInfo == null)
             {
@@ -546,21 +460,18 @@ namespace Main.Pages
             nextSeqId = recipeInfo.Columns[recipeInfo.NextSeqId].Value;
             // A CORRIGER : IF RESULT IS FALSE
             t = MyDatabase.TaskEnQueue(() => { return MyDatabase.DeleteRow(new RecipeInfo(), id); });
-            //MyDatabase.DeleteRow(new RecipeInfo(), id);
 
             while (nextSeqType != "" && nextSeqType != null)
             {
                 // A CORRIGER : IF RESULT IS FALSE
                 t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(Sequence.list[int.Parse(nextSeqType)].subRecipeInfo.GetType(), nextSeqId); });
                 subRecipeSeq = (ISeqTabInfo)t.Result;
-                //subRecipeSeq = (ISeqInfo)MyDatabase.GetOneRow(Sequence.list[int.Parse(nextSeqType)].subRecipeInfo.GetType(), nextSetId);
 
                 if (subRecipeSeq != null)
                 {
                     // A CORRIGER : IF RESULT IS FALSE
                     t = MyDatabase.TaskEnQueue(() => { return MyDatabase.DeleteRow(subRecipeSeq, nextSeqId); });
                     t.Wait();
-                    //MyDatabase.DeleteRow(subRecipeSeq, nextSetId);
                     nextSeqType = subRecipeSeq.Columns[subRecipeSeq.NextSeqType].Value;
                     nextSeqId = subRecipeSeq.Columns[subRecipeSeq.NextSeqId].Value;
                 }
@@ -599,9 +510,7 @@ namespace Main.Pages
         {
             logger.Debug("ButtonCreate_Click");
 
-            //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
             Create_NewRecipe(tbRecipeNameNew.Text, 1, RecipeStatus.DRAFT);
-            //MyDatabase.Disconnect();
         }
         private async void CbxPgmToModify_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -610,8 +519,6 @@ namespace Main.Pages
             if (isCbxToModifAvailable)
             {
                 logger.Trace("CbxPgmToModify_SelectionChanged");
-
-                //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
 
                 ComboBox comboBox = sender as ComboBox;
                 curMethodDoneOnGoing = true;
@@ -624,7 +531,6 @@ namespace Main.Pages
 
                 panelInfoRecipe.Visibility = Visibility.Visible;
                 panelTestRecipe.Visibility = Visibility.Visible;
-                //MyDatabase.Disconnect();
             }
         }
         private void ButtonModify_Click(object sender, RoutedEventArgs e)
@@ -635,7 +541,6 @@ namespace Main.Pages
             Task<object> t;
 
             // A CORRIGER : IF RESULT IS FALSE
-            //if (labelStatus.Text == status[MyDatabase.GetRecipeStatus(RecipeStatus.PROD)])
             if (labelStatus.Text == status[MyDatabase.GetRecipeStatus(RecipeStatus.PROD)])
             {
                 if (General.ShowMessageBox(Settings.Default.Recipe_Request_UpdateProdRecipe, Settings.Default.General_Request_ConfirmationTitle, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
@@ -646,15 +551,12 @@ namespace Main.Pages
                         // A CORRIGER : IF RESULT IS FALSE
                         t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(recipeInfo.TabName, recipeInfo.Columns[recipeInfo.Id].Id); });
                         ProgramIDs[currentIndex] = ((int)t.Result).ToString();
-                        //ProgramIDs[currentIndex] = MyDatabase.GetMax(recipeInfo.name, recipeInfo.columns[recipeInfo.id].id).ToString();
 
                         labelStatus.Text = status[MyDatabase.GetRecipeStatus(RecipeStatus.DRAFT)];
-                        //labelStatus.Text = status[MyDatabase.GetRecipeStatus(RecipeStatus.DRAFT)];
                         labelVersion.Text = (int.Parse(labelVersion.Text) + 1).ToString();
                     }
                 }
             }
-            //else if (labelStatus.Text == status[MyDatabase.GetRecipeStatus(RecipeStatus.DRAFT)])
             else if (labelStatus.Text == status[MyDatabase.GetRecipeStatus(RecipeStatus.DRAFT)])
             {
                 bool isStillDraft = false;
@@ -671,34 +573,37 @@ namespace Main.Pages
                             // A CORRIGER : IF RESULT IS FALSE
                             t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(recipeInfo.TabName, recipeInfo.Columns[recipeInfo.Id].Id); });
                             ProgramIDs[currentIndex] = ((int)t.Result).ToString();
-                            //ProgramIDs[currentIndex] = MyDatabase.GetMax(recipeInfo.name, recipeInfo.columns[recipeInfo.id].id).ToString();
 
                             // Get the new recipe
                             t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeInfo), ProgramIDs[currentIndex].ToString()); });
                             RecipeInfo oldRecipe = (RecipeInfo)t.Result;
 
-                            // Get the previous version of the recipe (Create new recipe and set recipe name and version)
-                            string name = oldRecipe.Columns[oldRecipe.Name].Value;
-                            int version = int.Parse(oldRecipe.Columns[oldRecipe.Version].Value);
-                            oldRecipe = new RecipeInfo();
-                            oldRecipe.Columns[oldRecipe.Name].Value = name;
-                            oldRecipe.Columns[oldRecipe.Version].Value = version.ToString();
-                            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(table: oldRecipe); });
-                            oldRecipe = (RecipeInfo)t.Result;
+                            string name = oldRecipe.Columns[oldRecipe.Name].Value;                   // name of the recipe
+                            int version = int.Parse(oldRecipe.Columns[oldRecipe.Version].Value) - 1; // version of the previous recipe
 
-                            if (oldRecipe == null)
+                            if (version > 0)
                             {
-                                labelStatus.Text = "###";
-                                General.ShowMessageBox("Problème dans la création de la recette");
-                                return;
-                            }
+                                // Get the previous version of the recipe (Create new recipe and set recipe name and version)
+                                oldRecipe = new RecipeInfo();
+                                oldRecipe.Columns[oldRecipe.Name].Value = name;
+                                oldRecipe.Columns[oldRecipe.Version].Value = version.ToString();
+                                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(table: oldRecipe); });
+                                oldRecipe = (RecipeInfo)t.Result;
 
-                            // Update the status of the previous version of the recipe to Obsolete
-                            string id = oldRecipe.Columns[oldRecipe.Id].Value;
-                            oldRecipe = new RecipeInfo();
-                            oldRecipe.Columns[recipeInfo.Status].Value = MyDatabase.GetRecipeStatus(RecipeStatus.OBSOLETE).ToString();
-                            // A CORRIGER : IF RESULT IS FALSE
-                            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(oldRecipe, id); });
+                                if (oldRecipe == null)
+                                {
+                                    labelStatus.Text = "###";
+                                    General.ShowMessageBox("Problème dans la création de la recette");
+                                    return;
+                                }
+
+                                // Update the status of the previous version of the recipe to Obsolete
+                                string id = oldRecipe.Columns[oldRecipe.Id].Value;
+                                oldRecipe = new RecipeInfo();
+                                oldRecipe.Columns[recipeInfo.Status].Value = MyDatabase.GetRecipeStatus(RecipeStatus.OBSOLETE).ToString();
+                                // A CORRIGER : IF RESULT IS FALSE
+                                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(oldRecipe, id); });
+                            }
 
                             labelStatus.Text = status[MyDatabase.GetRecipeStatus(RecipeStatus.PROD)];
                         }
@@ -741,32 +646,19 @@ namespace Main.Pages
             string recipeId = ProgramIDs[currentIndex];
             Task<object> t;
 
-
-            //MyDatabase.Connect();
-            /*
-            if (!MyDatabase.IsConnected())
-            {
-                logger.Error(DatabaseSettings.Error01);
-                General.ShowMessageBox(DatabaseSettings.Error01);
-                return;
-            }*/
-
             // A CORRIGER : IF RESULT IS FALSE
             t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeInfo), recipeId); });
             recipeInfo = (RecipeInfo)t.Result;
-            //recipeInfo = (RecipeInfo)MyDatabase.GetOneRow(typeof(RecipeInfo), ProgramIDs[currentIndex]);
 
             if (recipeInfo == null)
             {
                 General.ShowMessageBox(Settings.Default.Recipe_Error_RecipeNotFound);
                 return;
-                //goto End;
             }
 
 
             if ((bool)rbDelete.IsChecked)
             {
-                //if (recipeInfo.columns[recipeInfo.status].value == MyDatabase.GetRecipeStatus(RecipeStatus.PROD).ToString())
                 if (recipeInfo.Columns[recipeInfo.Status].Value == MyDatabase.GetRecipeStatus(RecipeStatus.PROD).ToString())
                 {
                     if (General.ShowMessageBox(Settings.Default.Recipe_Request_DelProdRecipe1 + 
@@ -780,7 +672,6 @@ namespace Main.Pages
 
                         // A CORRIGER : IF RESULT IS FALSE
                         t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(recipeToUpdate, recipeId); });
-                        //MyDatabase.Update_Row(recipeToUpdate, ProgramIDs[currentIndex]);
 
                         ProgramIDs.RemoveAt(currentIndex);
                         ProgramNames.RemoveAt(currentIndex);
@@ -808,15 +699,6 @@ namespace Main.Pages
                             t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(recipe, recipe.Columns[recipe.Id].Id); });
                             ProgramIDs[currentIndex] = ((int)t.Result).ToString();
                             recipeId = ProgramIDs[currentIndex];
-                            //ProgramIDs[currentIndex] = MyDatabase.GetMax(recipe, recipe.columns[recipe.id].id).ToString();
-                            /*
-                            recipeToUpdate = new RecipeInfo();
-                            recipeToUpdate.Columns[recipeToUpdate.Status].Value = MyDatabase.GetRecipeStatus(RecipeStatus.PROD).ToString();
-
-                            // A CORRIGER : IF RESULT IS FALSE
-                            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(recipeToUpdate, recipeId); });
-                            */
-                            //MyDatabase.Update_Row(recipeToUpdate, ProgramIDs[currentIndex]);
                         }
                         else if (int.Parse(recipeInfo.Columns[recipeInfo.Version].Value) == 1)
                         {
@@ -852,7 +734,6 @@ namespace Main.Pages
 
                     // A CORRIGER : IF RESULT IS FALSE
                     t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(recipeToUpdate, recipeId); });
-                    //MyDatabase.Update_Row(recipeToUpdate, ProgramIDs[currentIndex]);
 
                     ProgramIDs.RemoveAt(currentIndex);
                     ProgramNames.RemoveAt(currentIndex);
@@ -866,8 +747,6 @@ namespace Main.Pages
                 logger.Error(Settings.Default.Recipe_DelAct_Error_NoRadiobt);
                 General.ShowMessageBox(Settings.Default.Recipe_DelAct_Error_NoRadiobt);
             }
-        //End:
-            //MyDatabase.Disconnect();
         }
         private void CbxAddDefaultText(ComboBox comboBox, int index)
         {
@@ -900,8 +779,6 @@ namespace Main.Pages
             {
                 RadioButton radioButton = sender as RadioButton;
 
-                //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
-
                 if (radioButton == rbActivate)
                 {
                     General.Update_RecipeNames(cbxPgmToActDelete, ProgramNames, ProgramIDs, RecipeStatus.OBSOLETE);
@@ -912,7 +789,6 @@ namespace Main.Pages
                     General.Update_RecipeNames(cbxPgmToActDelete, ProgramNames, ProgramIDs, RecipeStatus.PRODnDRAFT);
                     btDelAct.Content = Settings.Default.Recipe_btDelAct_Delete;
                 }
-                //MyDatabase.Disconnect();
             }
         }
         private void Test_Sequence_Click(object sender, RoutedEventArgs e)
@@ -956,7 +832,7 @@ namespace Main.Pages
                 info.frameInfoCycle = frameInfoCycle;
                 info.isTest = true;
                 info.bowlWeight = "";
-                info.frameMain.Content = new WeightBowl(info);
+                info.frameMain.Content = new CycleWeight(info);
                 mainWindow.UpdateMenuStartCycle(false);
             }
         }
@@ -967,8 +843,6 @@ namespace Main.Pages
 
             if (isCbxToCopyAvailable)
             {
-                //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
-
                 isCbxVersionCpyAvailable = false;
 
                 ComboBox comboBox = sender as ComboBox;
@@ -977,59 +851,39 @@ namespace Main.Pages
 
                 ProgramVersions.Clear();
 
-                //if (MyDatabase.IsConnected())
-                if (true)
+                RecipeInfo recipeInfo = new RecipeInfo();
+                recipeInfo.Columns[recipeInfo.Name].Value = ProgramNames[comboBox.SelectedIndex];
+
+                ReadInfo readInfo = new ReadInfo(
+                    _tableInfo: recipeInfo,
+                    _orderBy: recipeInfo.Columns[recipeInfo.Version].Id,
+                    _isOrderAsc: false);
+
+                // A CORRIGER : IF RESULT IS FALSE
+                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetRows(readInfo); });
+                List<IComTabInfo> tableInfos = (List<IComTabInfo>)t.Result;
+
+                for (int i = 0; i < tableInfos.Count; i++)
                 {
-                    RecipeInfo recipeInfo = new RecipeInfo();
-                    recipeInfo.Columns[recipeInfo.Name].Value = ProgramNames[comboBox.SelectedIndex];
-
-                    ReadInfo readInfo = new ReadInfo(
-                        _tableInfo: recipeInfo,
-                        _orderBy: recipeInfo.Columns[recipeInfo.Version].Id,
-                        _isOrderAsc: false);
-
-                    // A CORRIGER : IF RESULT IS FALSE
-                    t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetRows(readInfo); });
-                    List<IComTabInfo> tableInfos = (List<IComTabInfo>)t.Result;
-                    //List <ITableInfo> tableInfos = MyDatabase.GetRows(readInfo);
-/*                    List<ITableInfo> tableInfos = MyDatabase.GetRows(recipeInfo,
-                        orderBy: recipeInfo.columns[recipeInfo.version].id, isOrderAsc: false);*/
-
-                    for (int i = 0; i < tableInfos.Count; i++)
-                    {
-                        ProgramVersions.Add(tableInfos[i].Columns[recipeInfo.Version].Value);
-                    }
-
-                    cbxVersionToCopy.ItemsSource = ProgramVersions;
-
-                    if (ProgramVersions.Count > 0)
-                    {
-                        cbxVersionToCopy.SelectedIndex = 1;
-                        cbxVersionToCopy.Items.Refresh();
-                    }
-
-                    cbxVersionToCopy.SelectedIndex = 0;
-                    cbxVersionToCopy.Items.Refresh();
-
-                    isCbxVersionCpyAvailable = true;
+                    ProgramVersions.Add(tableInfos[i].Columns[recipeInfo.Version].Value);
                 }
-                else
+
+                cbxVersionToCopy.ItemsSource = ProgramVersions;
+
+                if (ProgramVersions.Count > 0)
                 {
-                    ProgramVersions.Add(Settings.Default.Recipe_cbx_DefaultValue);
-                    ProgramVersions.Add(Settings.Default.Recipe_cbx_DefaultValue);
-                    ProgramVersions.Add(Settings.Default.Recipe_cbx_DefaultValue);
-
-                    cbxVersionToCopy.ItemsSource = ProgramVersions;
+                    cbxVersionToCopy.SelectedIndex = 1;
                     cbxVersionToCopy.Items.Refresh();
-                    cbxVersionToCopy.SelectedIndex = 0;
-
-                    General.ShowMessageBox(DatabaseSettings.Error_connectToDbFailed);
                 }
+
+                cbxVersionToCopy.SelectedIndex = 0;
+                cbxVersionToCopy.Items.Refresh();
+
+                isCbxVersionCpyAvailable = true;
 
                 while (curMethodDoneOnGoing) await Task.Delay(Settings.Default.Recipe_WaitRecipeDisplayedDelay);
 
                 panelVersionRecipe.Visibility = Visibility.Visible;
-                //MyDatabase.Disconnect();
             }
         }
         private async void CbxVersionToCopy_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1041,8 +895,6 @@ namespace Main.Pages
             {
                 logger.Trace("CbxVersionToCopy_SelectionChanged");
 
-                //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
-
                 ComboBox comboBox = sender as ComboBox;
 
                 RecipeInfo recipeInfo = new RecipeInfo();
@@ -1052,30 +904,23 @@ namespace Main.Pages
                 // A CORRIGER : IF RESULT IS FALSE
                 t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(table: recipeInfo); });
                 recipeInfo = (RecipeInfo)t.Result;
-                //recipeInfo = (RecipeInfo)MyDatabase.GetOneRow(table: recipeInfo);
 
                 curMethodDoneOnGoing = true;
                 Display_Recipe(recipeInfo.Columns[recipeInfo.Id].Value);
                 while (curMethodDoneOnGoing) await Task.Delay(Settings.Default.Recipe_WaitRecipeDisplayedDelay);
-
-                //MyDatabase.Disconnect();
             }
         }
         private void ButtonCopy_Click(object sender, RoutedEventArgs e)
         {
             logger.Debug("ButtonCopy_Click");
 
-            //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
-
-            if (Create_NewRecipe(tbRecipeNameCpy.Text, 1, RecipeStatus.DRAFT, false))
+            if (Create_NewRecipe(tbRecipeNameCpy.Text, 1, RecipeStatus.DRAFT, true))
             {
                 isCbxToCopyAvailable = false;
                 General.Update_RecipeNames(cbxPgmToCopy, ProgramNames, ProgramIDs, RecipeStatus.PRODnDRAFT);
                 panelVersionRecipe.Visibility = Visibility.Collapsed;
                 isCbxToCopyAvailable = true;
             }
-
-            //MyDatabase.Disconnect();
         }
 
         private void tbWeightMinNew_LostFocus(object sender, RoutedEventArgs e)

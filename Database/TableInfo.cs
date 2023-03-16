@@ -46,6 +46,8 @@ namespace Database
         string TabName { get; }
         /// <value>Columns of the database table</value>
         List<Column> Columns { get; set; }
+        /// <value>Name of the columns of the database table</value>
+        string[] Ids { get; }
     }
 
     /// <summary>
@@ -155,6 +157,9 @@ namespace Database
         /// <value>Columns of the database table. From IBasTabInfo interface</value>
         public List<Column> Columns { get; set; }
 
+        /// <value>Name of the columns of the database table. From IBasTabInfo interface</value>
+        public string[] Ids { get; set; }
+
         /// <value>Index of the id column (usually the first one: 0). This column <c>must be</c> an integer, usually automatically incremented. From IComTabInfo interface</value>
         public int Id { get; }
 
@@ -196,6 +201,10 @@ namespace Database
         {
             // Import the list of names of the columns of the database table from the settings
             StringCollection colId = Settings.Default.AccessTable_ColIds;
+            // Import the list of names of the columns of the database table from the settings
+            Ids = new string[colId.Count];
+            colId.CopyTo(Ids, 0);
+            
             // Import the name of the database table from the settings
             TabName = Settings.Default.AccessTable_TableName;
 
@@ -232,6 +241,9 @@ namespace Database
 
         /// <value>Columns of the database table. From IBasTabInfo interface</value>
         public List<Column> Columns { get; set; }
+
+        /// <value>Name of the columns of the database table. From IBasTabInfo interface</value>
+        public string[] Ids { get; }
 
         /// <value>Index of the id column (usually the first one: 0). This column <c>must be</c> an integer, usually automatically incremented. From IComTabInfo interface</value>
         public int Id { get; }
@@ -321,6 +333,9 @@ namespace Database
         /// <value>Columns of the database table. From IBasTabInfo interface</value>
         public List<Column> Columns { get; set; }
 
+        /// <value>Name of the columns of the database table. From IBasTabInfo interface</value>
+        public string[] Ids { get; set; }
+
         /// <value>Identification number of the current sequential table. From ISeqTabInfo interface</value>
         public int SeqType { get; }
 
@@ -405,6 +420,9 @@ namespace Database
 
         /// <value>Columns of the database table. From IBasTabInfo interface</value>
         public List<Column> Columns { get; set; }
+
+        /// <value>Name of the columns of the database table. From IBasTabInfo interface</value>
+        public string[] Ids { get; set; }
 
         /// <value>Identification number of the current sequential table. From ISeqTabInfo interface</value>
         public int SeqType { get; }
@@ -547,6 +565,9 @@ namespace Database
 
         /// <value>Columns of the database table. From IBasTabInfo interface</value>
         public List<Column> Columns { get; set; }
+
+        /// <value>Name of the columns of the database table. From IBasTabInfo interface</value>
+        public string[] Ids { get; set; }
 
         /// <value>Identification number of the current sequential table. From ISeqTabInfo interface</value>
         public int SeqType { get; }
@@ -691,6 +712,9 @@ namespace Database
         /// <value>Columns of the database table. From IBasTabInfo interface</value>
         public List<Column> Columns { get; set; }
 
+        /// <value>Name of the columns of the database table. From IBasTabInfo interface</value>
+        public string[] Ids { get; set; }
+
         /// <value>Identification number of the current sequential table. From ISeqTabInfo interface</value>
         public int SeqType { get; }
 
@@ -818,6 +842,9 @@ namespace Database
 
         /// <value>Columns of the database table. From IBasTabInfo interface</value>
         public List<Column> Columns { get; set; }
+
+        /// <value>Name of the columns of the database table. From IBasTabInfo interface</value>
+        public string[] Ids { get; set; }
 
         /// <value>Identification number of the current sequential table. From ISeqTabInfo interface</value>
         public int SeqType { get; }
@@ -1043,6 +1070,9 @@ namespace Database
         /// <value>Columns of the database table. From IBasTabInfo interface</value>
         public List<Column> Columns { get; set; }
 
+        /// <value>Name of the columns of the database table. From IBasTabInfo interface</value>
+        public string[] Ids { get; set; }
+
         /// <value>Identification number of the current sequential table. From ISeqTabInfo interface</value>
         public int SeqType { get; }
 
@@ -1195,6 +1225,9 @@ namespace Database
         /// <value>Columns of the database table. From IBasTabInfo interface</value>
         public List<Column> Columns { get; set; }
 
+        /// <value>Name of the columns of the database table. From IBasTabInfo interface</value>
+        public string[] Ids { get; set; }
+
         /// <value>Index of the speed column. This column contains speed logged during the speedmixer's sequence</value>
         public int Speed { get; }
 
@@ -1238,6 +1271,9 @@ namespace Database
         /// <value>Columns of the database table. From IBasTabInfo interface</value>
         public List<Column> Columns { get; set; }
 
+        /// <value>Name of the columns of the database table. From IBasTabInfo interface</value>
+        public string[] Ids { get; set; }
+
         /// <value>Index of the average speed column. This column contains average speed calculated at the end of the speedmixer's sequence</value>
         public int SpeedAvg { get; }
 
@@ -1260,19 +1296,19 @@ namespace Database
     /// status
     /// <para>Creation revision: 001</para>
     /// </summary>
-    public class SampleInfo : IComTabInfo, IDtTabInfo
+    public class DailyTestInfo : IComTabInfo, IDtTabInfo
     {
         /// <summary>
         /// Sets all the variables of the class except the values of the variable Columns
         /// </summary>
-        public SampleInfo()
+        public DailyTestInfo()
         {
             // Import the list of names of the columns of the database table from the settings
-            StringCollection colId = Settings.Default.Sample_ColIds;
+            StringCollection colId = Settings.Default.DailyTest_ColIds;
             // Import the list of names to be displayed of the columns from the settings
-            StringCollection colDesc = Settings.Default.Sample_ColDesc;
+            StringCollection colDesc = Settings.Default.DailyTest_ColDesc;
             // Import the name of the database table from the settings
-            TabName = Settings.Default.Sample_TableName;
+            TabName = Settings.Default.DailyTest_TableName;
 
             // Initialization of the variable Columns
             Columns = new List<Column>();
@@ -1281,19 +1317,19 @@ namespace Database
             for (int i = 0; i < colId.Count; i++) Columns.Add(new Column(colId[i], colDesc[i]));
 
             // Import the value of the indexes of the applicable variable from the settings
-            Id = Settings.Default.Sample_ColN_id;
-            Username = Settings.Default.Sample_ColN_username;
-            DateTime = Settings.Default.Sample_ColN_dateTime;
-            EquipmentName = Settings.Default.Sample_ColN_equipmentName;
-            Setpoint1 = Settings.Default.Sample_ColN_setpoint1;
-            Setpoint2 = Settings.Default.Sample_ColN_setpoint1 + 1;
-            Setpoint3 = Settings.Default.Sample_ColN_setpoint1 + 2;
-            Setpoint4 = Settings.Default.Sample_ColN_setpoint1 + 3;
-            Measure1 = Settings.Default.Sample_ColN_measure1;
-            Measure2 = Settings.Default.Sample_ColN_measure1 + 1;
-            Measure3 = Settings.Default.Sample_ColN_measure1 + 2;
-            Measure4 = Settings.Default.Sample_ColN_measure1 + 3;
-            Status = Settings.Default.Sample_ColN_status;
+            Id = Settings.Default.DailyTest_ColN_id;
+            Username = Settings.Default.DailyTest_ColN_username;
+            DateTime = Settings.Default.DailyTest_ColN_dateTime;
+            EquipmentName = Settings.Default.DailyTest_ColN_equipmentName;
+            Setpoint1 = Settings.Default.DailyTest_ColN_setpoint1;
+            Setpoint2 = Settings.Default.DailyTest_ColN_setpoint1 + 1;
+            Setpoint3 = Settings.Default.DailyTest_ColN_setpoint1 + 2;
+            Setpoint4 = Settings.Default.DailyTest_ColN_setpoint1 + 3;
+            Measure1 = Settings.Default.DailyTest_ColN_measure1;
+            Measure2 = Settings.Default.DailyTest_ColN_measure1 + 1;
+            Measure3 = Settings.Default.DailyTest_ColN_measure1 + 2;
+            Measure4 = Settings.Default.DailyTest_ColN_measure1 + 3;
+            Status = Settings.Default.DailyTest_ColN_status;
 
             // Set of the number of samples possible
             SamplesNumber = 4;
@@ -1304,6 +1340,9 @@ namespace Database
 
         /// <value>Columns of the database table. From IBasTabInfo interface</value>
         public List<Column> Columns { get; set; }
+
+        /// <value>Name of the columns of the database table. From IBasTabInfo interface</value>
+        public string[] Ids { get; set; }
 
         /// <value>Index of the id column (usually the first one: 0). This column <c>must be</c> an integer, usually automatically incremented. From IComTabInfo interface</value>
         public int Id { get; }

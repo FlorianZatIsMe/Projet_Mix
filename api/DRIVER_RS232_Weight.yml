@@ -1,0 +1,22 @@
+### YamlMime:ManagedReference
+items:
+- uid: DRIVER_RS232_Weight
+  commentId: N:DRIVER_RS232_Weight
+  id: DRIVER_RS232_Weight
+  children:
+  - DRIVER_RS232_Weight.RS232Weight
+  langs:
+  - csharp
+  - vb
+  name: DRIVER_RS232_Weight
+  nameWithType: DRIVER_RS232_Weight
+  fullName: DRIVER_RS232_Weight
+  type: Namespace
+  assemblies:
+  - DRIVER.Weight
+references:
+- uid: DRIVER_RS232_Weight.RS232Weight
+  commentId: T:DRIVER_RS232_Weight.RS232Weight
+  name: RS232Weight
+  nameWithType: RS232Weight
+  fullName: DRIVER_RS232_Weight.RS232Weight

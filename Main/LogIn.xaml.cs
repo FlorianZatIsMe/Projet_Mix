@@ -31,6 +31,7 @@ namespace Main
         {
             logger.Debug("Start");
             mainWindow = window;
+            mainWindow.Deactivated -= mainWindow.Window_Deactivated;
             InitializeComponent();
         }
         private void Click(string user = null)
@@ -39,11 +40,12 @@ namespace Main
 
             if (user == null)
             {
+                UserManagement.SetNoneAccess();/*
                 if (!UserManagement.SetNoneAccess())
                 {
-                    General.ShowMessageBox("C'est pas bien ça");
+                    MessageBox.Show("C'est pas bien ça");
                     logger.Error("C'est pas bien ça");
-                }
+                }*/
 
                 mainWindow.UpdateUser("aucun utilisateur", AccessTableInfo.NoneRole);
             }
@@ -118,6 +120,30 @@ namespace Main
         private void ButtonLogOff_Click(object sender, RoutedEventArgs e)
         {
             Click();
+        }
+
+        private async void Window_Deactivated(object sender, EventArgs e)
+        {
+            this.Deactivated -= Window_Deactivated;
+
+            while (!mainWindow.IsActive)
+            {
+                mainWindow.Activate();
+                await Task.Delay(1000);
+            }
+
+            while (!this.IsActive)
+            {
+                this.Activate();
+                await Task.Delay(1000);
+            }
+            this.Deactivated += Window_Deactivated;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            this.Deactivated -= Window_Deactivated;
+            mainWindow.Deactivated += mainWindow.Window_Deactivated;
         }
     }
 }

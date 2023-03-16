@@ -52,10 +52,14 @@ namespace Main.Pages
             labelStatus.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             labelStatus.Arrange(new Rect(0, 0, labelStatus.DesiredSize.Width, labelStatus.DesiredSize.Height));
 
+            UpdateBackupList();
+        }
+        private void UpdateBackupList()
+        {
             DirectoryInfo archiveDirInfo = new DirectoryInfo(archivingPath);
-
             FileInfo[] files = archiveDirInfo.GetFiles("*" + archiveExtFile);
 
+            lbArchives.Items.Clear();
             lbArchives.Items.SortDescriptions.Clear();
             lbArchives.Items.SortDescriptions.Add(new SortDescription("Content", ListSortDirection.Descending));
             for (int i = 0; i < files.Length; i++)
@@ -64,6 +68,7 @@ namespace Main.Pages
             }
             lbArchives.Items.Refresh();
         }
+
         private async void Archive_Click(object sender, RoutedEventArgs e)
         {
             logger.Debug("Archive_Click");
@@ -168,6 +173,14 @@ namespace Main.Pages
             if (lbArchives.SelectedItem != null)
             {
                 string restoreFileName = (lbArchives.SelectedItem as ListBoxItem).Content.ToString();
+
+                if (!File.Exists(archivingPath + restoreFileName))
+                {
+                    General.ShowMessageBox("Fichier " + archivingPath + restoreFileName + " n'existe pas");
+                    UpdateBackupList();
+                    return;
+                }
+
                 nLines = File.ReadAllLines(archivingPath + restoreFileName).Length + Settings.Default.Archiving_nLines_offset;
 
                 wpStatus.Visibility = Visibility.Visible;

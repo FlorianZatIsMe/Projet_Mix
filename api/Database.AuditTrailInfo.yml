@@ -1,0 +1,995 @@
+### YamlMime:ManagedReference
+items:
+- uid: Database.AuditTrailInfo
+  commentId: T:Database.AuditTrailInfo
+  id: AuditTrailInfo
+  parent: Database
+  children:
+  - Database.AuditTrailInfo.#ctor
+  - Database.AuditTrailInfo.Columns
+  - Database.AuditTrailInfo.Comment
+  - Database.AuditTrailInfo.DateTime
+  - Database.AuditTrailInfo.Description
+  - Database.AuditTrailInfo.EventType
+  - Database.AuditTrailInfo.Id
+  - Database.AuditTrailInfo.Ids
+  - Database.AuditTrailInfo.TabName
+  - Database.AuditTrailInfo.Username
+  - Database.AuditTrailInfo.ValueAfter
+  - Database.AuditTrailInfo.ValueBefore
+  langs:
+  - csharp
+  - vb
+  name: AuditTrailInfo
+  nameWithType: AuditTrailInfo
+  fullName: Database.AuditTrailInfo
+  type: Class
+  source:
+    id: AuditTrailInfo
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 122
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nClass containing the infomration of the audit trail database table. The table must contain at least the following colummns: \nId (UNIQUE INTEGER)\nDateTime, \nusername, \neventType, \ndescription, \nvalueBefore, \nvalueAfter, \ncomment\n<p>Creation revision: 001</p>\n"
+  example: []
+  syntax:
+    content: 'public class AuditTrailInfo : IComTabInfo, IDtTabInfo, IBasTabInfo'
+    content.vb: >-
+      Public Class AuditTrailInfo
+
+          Implements IComTabInfo, IDtTabInfo, IBasTabInfo
+  inheritance:
+  - System.Object
+  implements:
+  - Database.IComTabInfo
+  - Database.IDtTabInfo
+  - Database.IBasTabInfo
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Database.AuditTrailInfo.#ctor
+  commentId: M:Database.AuditTrailInfo.#ctor
+  id: '#ctor'
+  parent: Database.AuditTrailInfo
+  langs:
+  - csharp
+  - vb
+  name: AuditTrailInfo()
+  nameWithType: AuditTrailInfo.AuditTrailInfo()
+  fullName: Database.AuditTrailInfo.AuditTrailInfo()
+  type: Constructor
+  source:
+    id: .ctor
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 127
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nSets all the variables of the class except the values of the variable Columns\n"
+  example: []
+  syntax:
+    content: public AuditTrailInfo()
+    content.vb: Public Sub New
+  overload: Database.AuditTrailInfo.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Database.AuditTrailInfo.TabName
+  commentId: P:Database.AuditTrailInfo.TabName
+  id: TabName
+  parent: Database.AuditTrailInfo
+  langs:
+  - csharp
+  - vb
+  name: TabName
+  nameWithType: AuditTrailInfo.TabName
+  fullName: Database.AuditTrailInfo.TabName
+  type: Property
+  source:
+    id: TabName
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 154
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public string TabName { get; }
+    parameters: []
+    return:
+      type: System.String
+      description: Name of the database table. From IBasTabInfo interface
+    content.vb: Public ReadOnly Property TabName As String
+  overload: Database.AuditTrailInfo.TabName*
+  implements:
+  - Database.IBasTabInfo.TabName
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.AuditTrailInfo.Columns
+  commentId: P:Database.AuditTrailInfo.Columns
+  id: Columns
+  parent: Database.AuditTrailInfo
+  langs:
+  - csharp
+  - vb
+  name: Columns
+  nameWithType: AuditTrailInfo.Columns
+  fullName: Database.AuditTrailInfo.Columns
+  type: Property
+  source:
+    id: Columns
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 157
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public List<Column> Columns { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{Database.Column}
+      description: Columns of the database table. From IBasTabInfo interface
+    content.vb: Public Property Columns As List(Of Column)
+  overload: Database.AuditTrailInfo.Columns*
+  implements:
+  - Database.IBasTabInfo.Columns
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Database.AuditTrailInfo.Ids
+  commentId: P:Database.AuditTrailInfo.Ids
+  id: Ids
+  parent: Database.AuditTrailInfo
+  langs:
+  - csharp
+  - vb
+  name: Ids
+  nameWithType: AuditTrailInfo.Ids
+  fullName: Database.AuditTrailInfo.Ids
+  type: Property
+  source:
+    id: Ids
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 160
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public string[] Ids { get; set; }
+    parameters: []
+    return:
+      type: System.String[]
+      description: Name of the columns of the database table. From IBasTabInfo interface
+    content.vb: Public Property Ids As String()
+  overload: Database.AuditTrailInfo.Ids*
+  implements:
+  - Database.IBasTabInfo.Ids
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Database.AuditTrailInfo.Id
+  commentId: P:Database.AuditTrailInfo.Id
+  id: Id
+  parent: Database.AuditTrailInfo
+  langs:
+  - csharp
+  - vb
+  name: Id
+  nameWithType: AuditTrailInfo.Id
+  fullName: Database.AuditTrailInfo.Id
+  type: Property
+  source:
+    id: Id
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 163
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int Id { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: 'Index of the id column (usually the first one: 0). This column <code>must be</code> an integer, usually automatically incremented. From IComTabInfo interface'
+    content.vb: Public ReadOnly Property Id As Integer
+  overload: Database.AuditTrailInfo.Id*
+  implements:
+  - Database.IComTabInfo.Id
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.AuditTrailInfo.DateTime
+  commentId: P:Database.AuditTrailInfo.DateTime
+  id: DateTime
+  parent: Database.AuditTrailInfo
+  langs:
+  - csharp
+  - vb
+  name: DateTime
+  nameWithType: AuditTrailInfo.DateTime
+  fullName: Database.AuditTrailInfo.DateTime
+  type: Property
+  source:
+    id: DateTime
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 166
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int DateTime { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the date and time column. This column contains the date and time of the insertion the rows. From IDtTabInfo
+    content.vb: Public ReadOnly Property DateTime As Integer
+  overload: Database.AuditTrailInfo.DateTime*
+  implements:
+  - Database.IDtTabInfo.DateTime
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.AuditTrailInfo.Username
+  commentId: P:Database.AuditTrailInfo.Username
+  id: Username
+  parent: Database.AuditTrailInfo
+  langs:
+  - csharp
+  - vb
+  name: Username
+  nameWithType: AuditTrailInfo.Username
+  fullName: Database.AuditTrailInfo.Username
+  type: Property
+  source:
+    id: Username
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 169
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int Username { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the username column. This column contains the username of the user who performed the event to be logged in the audit trail
+    content.vb: Public ReadOnly Property Username As Integer
+  overload: Database.AuditTrailInfo.Username*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.AuditTrailInfo.EventType
+  commentId: P:Database.AuditTrailInfo.EventType
+  id: EventType
+  parent: Database.AuditTrailInfo
+  langs:
+  - csharp
+  - vb
+  name: EventType
+  nameWithType: AuditTrailInfo.EventType
+  fullName: Database.AuditTrailInfo.EventType
+  type: Property
+  source:
+    id: EventType
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 172
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int EventType { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the event type column. This column contains the type the event to be logged in the audit trail
+    content.vb: Public ReadOnly Property EventType As Integer
+  overload: Database.AuditTrailInfo.EventType*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.AuditTrailInfo.Description
+  commentId: P:Database.AuditTrailInfo.Description
+  id: Description
+  parent: Database.AuditTrailInfo
+  langs:
+  - csharp
+  - vb
+  name: Description
+  nameWithType: AuditTrailInfo.Description
+  fullName: Database.AuditTrailInfo.Description
+  type: Property
+  source:
+    id: Description
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 175
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int Description { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the description column. This column contains the description the event to be logged in the audit trail
+    content.vb: Public ReadOnly Property Description As Integer
+  overload: Database.AuditTrailInfo.Description*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.AuditTrailInfo.ValueBefore
+  commentId: P:Database.AuditTrailInfo.ValueBefore
+  id: ValueBefore
+  parent: Database.AuditTrailInfo
+  langs:
+  - csharp
+  - vb
+  name: ValueBefore
+  nameWithType: AuditTrailInfo.ValueBefore
+  fullName: Database.AuditTrailInfo.ValueBefore
+  type: Property
+  source:
+    id: ValueBefore
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 178
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int ValueBefore { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the value before column. This column contains the value before the event to be logged in the audit trail
+    content.vb: Public ReadOnly Property ValueBefore As Integer
+  overload: Database.AuditTrailInfo.ValueBefore*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.AuditTrailInfo.ValueAfter
+  commentId: P:Database.AuditTrailInfo.ValueAfter
+  id: ValueAfter
+  parent: Database.AuditTrailInfo
+  langs:
+  - csharp
+  - vb
+  name: ValueAfter
+  nameWithType: AuditTrailInfo.ValueAfter
+  fullName: Database.AuditTrailInfo.ValueAfter
+  type: Property
+  source:
+    id: ValueAfter
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 181
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int ValueAfter { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the value after column. This column contains the value after the event to be logged in the audit trail
+    content.vb: Public ReadOnly Property ValueAfter As Integer
+  overload: Database.AuditTrailInfo.ValueAfter*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.AuditTrailInfo.Comment
+  commentId: P:Database.AuditTrailInfo.Comment
+  id: Comment
+  parent: Database.AuditTrailInfo
+  langs:
+  - csharp
+  - vb
+  name: Comment
+  nameWithType: AuditTrailInfo.Comment
+  fullName: Database.AuditTrailInfo.Comment
+  type: Property
+  source:
+    id: Comment
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 184
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int Comment { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the comment column. This column contains the comment of the event to be logged in the audit trail
+    content.vb: Public ReadOnly Property Comment As Integer
+  overload: Database.AuditTrailInfo.Comment*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+references:
+- uid: Database
+  commentId: N:Database
+  name: Database
+  nameWithType: Database
+  fullName: Database
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Database.IComTabInfo
+  commentId: T:Database.IComTabInfo
+  parent: Database
+  name: IComTabInfo
+  nameWithType: IComTabInfo
+  fullName: Database.IComTabInfo
+- uid: Database.IDtTabInfo
+  commentId: T:Database.IDtTabInfo
+  parent: Database
+  name: IDtTabInfo
+  nameWithType: IDtTabInfo
+  fullName: Database.IDtTabInfo
+- uid: Database.IBasTabInfo
+  commentId: T:Database.IBasTabInfo
+  parent: Database
+  name: IBasTabInfo
+  nameWithType: IBasTabInfo
+  fullName: Database.IBasTabInfo
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Database.AuditTrailInfo.#ctor*
+  commentId: Overload:Database.AuditTrailInfo.#ctor
+  name: AuditTrailInfo
+  nameWithType: AuditTrailInfo.AuditTrailInfo
+  fullName: Database.AuditTrailInfo.AuditTrailInfo
+- uid: Database.AuditTrailInfo.TabName*
+  commentId: Overload:Database.AuditTrailInfo.TabName
+  name: TabName
+  nameWithType: AuditTrailInfo.TabName
+  fullName: Database.AuditTrailInfo.TabName
+- uid: Database.IBasTabInfo.TabName
+  commentId: P:Database.IBasTabInfo.TabName
+  parent: Database.IBasTabInfo
+  name: TabName
+  nameWithType: IBasTabInfo.TabName
+  fullName: Database.IBasTabInfo.TabName
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Database.AuditTrailInfo.Columns*
+  commentId: Overload:Database.AuditTrailInfo.Columns
+  name: Columns
+  nameWithType: AuditTrailInfo.Columns
+  fullName: Database.AuditTrailInfo.Columns
+- uid: Database.IBasTabInfo.Columns
+  commentId: P:Database.IBasTabInfo.Columns
+  parent: Database.IBasTabInfo
+  name: Columns
+  nameWithType: IBasTabInfo.Columns
+  fullName: Database.IBasTabInfo.Columns
+- uid: System.Collections.Generic.List{Database.Column}
+  commentId: T:System.Collections.Generic.List{Database.Column}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<Column>
+  nameWithType: List<Column>
+  fullName: System.Collections.Generic.List<Database.Column>
+  nameWithType.vb: List(Of Column)
+  fullName.vb: System.Collections.Generic.List(Of Database.Column)
+  name.vb: List(Of Column)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Database.Column
+    name: Column
+    nameWithType: Column
+    fullName: Database.Column
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Database.Column
+    name: Column
+    nameWithType: Column
+    fullName: Database.Column
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: Database.AuditTrailInfo.Ids*
+  commentId: Overload:Database.AuditTrailInfo.Ids
+  name: Ids
+  nameWithType: AuditTrailInfo.Ids
+  fullName: Database.AuditTrailInfo.Ids
+- uid: Database.IBasTabInfo.Ids
+  commentId: P:Database.IBasTabInfo.Ids
+  parent: Database.IBasTabInfo
+  name: Ids
+  nameWithType: IBasTabInfo.Ids
+  fullName: Database.IBasTabInfo.Ids
+- uid: System.String[]
+  isExternal: true
+  name: String[]
+  nameWithType: String[]
+  fullName: System.String[]
+  nameWithType.vb: String()
+  fullName.vb: System.String()
+  name.vb: String()
+  spec.csharp:
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: Database.AuditTrailInfo.Id*
+  commentId: Overload:Database.AuditTrailInfo.Id
+  name: Id
+  nameWithType: AuditTrailInfo.Id
+  fullName: Database.AuditTrailInfo.Id
+- uid: Database.IComTabInfo.Id
+  commentId: P:Database.IComTabInfo.Id
+  parent: Database.IComTabInfo
+  name: Id
+  nameWithType: IComTabInfo.Id
+  fullName: Database.IComTabInfo.Id
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Database.AuditTrailInfo.DateTime*
+  commentId: Overload:Database.AuditTrailInfo.DateTime
+  name: DateTime
+  nameWithType: AuditTrailInfo.DateTime
+  fullName: Database.AuditTrailInfo.DateTime
+- uid: Database.IDtTabInfo.DateTime
+  commentId: P:Database.IDtTabInfo.DateTime
+  parent: Database.IDtTabInfo
+  name: DateTime
+  nameWithType: IDtTabInfo.DateTime
+  fullName: Database.IDtTabInfo.DateTime
+- uid: Database.AuditTrailInfo.Username*
+  commentId: Overload:Database.AuditTrailInfo.Username
+  name: Username
+  nameWithType: AuditTrailInfo.Username
+  fullName: Database.AuditTrailInfo.Username
+- uid: Database.AuditTrailInfo.EventType*
+  commentId: Overload:Database.AuditTrailInfo.EventType
+  name: EventType
+  nameWithType: AuditTrailInfo.EventType
+  fullName: Database.AuditTrailInfo.EventType
+- uid: Database.AuditTrailInfo.Description*
+  commentId: Overload:Database.AuditTrailInfo.Description
+  name: Description
+  nameWithType: AuditTrailInfo.Description
+  fullName: Database.AuditTrailInfo.Description
+- uid: Database.AuditTrailInfo.ValueBefore*
+  commentId: Overload:Database.AuditTrailInfo.ValueBefore
+  name: ValueBefore
+  nameWithType: AuditTrailInfo.ValueBefore
+  fullName: Database.AuditTrailInfo.ValueBefore
+- uid: Database.AuditTrailInfo.ValueAfter*
+  commentId: Overload:Database.AuditTrailInfo.ValueAfter
+  name: ValueAfter
+  nameWithType: AuditTrailInfo.ValueAfter
+  fullName: Database.AuditTrailInfo.ValueAfter
+- uid: Database.AuditTrailInfo.Comment*
+  commentId: Overload:Database.AuditTrailInfo.Comment
+  name: Comment
+  nameWithType: AuditTrailInfo.Comment
+  fullName: Database.AuditTrailInfo.Comment

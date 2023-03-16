@@ -1,0 +1,22 @@
+### YamlMime:ManagedReference
+items:
+- uid: Driver_RS232_Pump
+  commentId: N:Driver_RS232_Pump
+  id: Driver_RS232_Pump
+  children:
+  - Driver_RS232_Pump.RS232Pump
+  langs:
+  - csharp
+  - vb
+  name: Driver_RS232_Pump
+  nameWithType: Driver_RS232_Pump
+  fullName: Driver_RS232_Pump
+  type: Namespace
+  assemblies:
+  - Driver.RS232-Pump
+references:
+- uid: Driver_RS232_Pump.RS232Pump
+  commentId: T:Driver_RS232_Pump.RS232Pump
+  name: RS232Pump
+  nameWithType: RS232Pump
+  fullName: Driver_RS232_Pump.RS232Pump

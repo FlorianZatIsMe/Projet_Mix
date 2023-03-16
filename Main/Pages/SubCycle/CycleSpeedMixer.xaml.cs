@@ -442,14 +442,14 @@ namespace Main.Pages.SubCycle
             // Ici on va afficher un ruban qui dit qu'on démarre le timer est en cours
             // 
 
-            if (!isPumpFree && RS232Pump.rs232.IsFree())
+            if (!isPumpFree && RS232Pump.IsFree())
             {
-                RS232Pump.rs232.BlockUse();
+                RS232Pump.BlockUse();
                 isPumpFree = true;
             }
 
             // Si la connection avec la pompe est ouverte et qu'on a le droit de lui parler...
-            if (RS232Pump.rs232.IsOpen() && isPumpFree)
+            if (RS232Pump.IsOpen() && isPumpFree)
             {
                 pumpNotFreeSince = 0; // On réinitialise la valeur du timeout
 
@@ -459,13 +459,13 @@ namespace Main.Pages.SubCycle
                     if (recipeSpeedMixerInfo.Columns[recipeSpeedMixerInfo.Vaccum_control].Value == DatabaseSettings.General_TrueValue_Read)
                     //if (currentPhaseParameters[6] == "True")
                     {
-                        RS232Pump.rs232.SetCommand("!C802 1");   // Si on contrôle la pression, on démarre la pompe
+                        RS232Pump.StartPump();   // Si on contrôle la pression, on démarre la pompe
 
                         //Task.Delay(25); // C'est sale il faut changer ça
 
                         //RS232Pump.SetCommand("!C803 0");   // On pompe à fond
                     }
-                    else RS232Pump.rs232.SetCommand("!C802 0"); // Sinon on arrête la pompe 
+                    else RS232Pump.StopPump(); // Sinon on arrête la pompe 
                     wasPumpActivated = true;
                 }
             }
@@ -628,22 +628,22 @@ namespace Main.Pages.SubCycle
             if (!isCycleStopped && recipeSpeedMixerInfo.Columns[recipeSpeedMixerInfo.NextSeqType].Value != recipeSpeedMixerInfo.SeqType.ToString()) // Si la prochaine séquence est une séquence de poids et que le cycle n'est pas arrêté
             //if (!isCycleStopped && currentPhaseParameters[1] == "0") // Si la prochaine séquence est une séquence de poids et que le cycle n'est pas arrêté
             {
-                if (RS232Pump.rs232.IsOpen() && isPumpFree) RS232Pump.rs232.SetCommand("!C802 0");
-                RS232Pump.rs232.FreeUse();
+                if (RS232Pump.IsOpen() && isPumpFree) RS232Pump.StopPump();
+                RS232Pump.FreeUse();
                 isPumpFree = false;
             }
             else if (!isCycleStopped && recipeSpeedMixerInfo.Columns[recipeSpeedMixerInfo.NextSeqType].Value == recipeSpeedMixerInfo.SeqType.ToString()) // Si la prochaine séquence est une séquence speedmixer et que le cycle n'est pas arrêté
             //else if (!isCycleStopped && currentPhaseParameters[1] == "1") // Si la prochaine séquence est une séquence speedmixer et que le cycle n'est pas arrêté
             {
-                RS232Pump.rs232.FreeUse();
+                RS232Pump.FreeUse();
                 isPumpFree = false;
             }
             else if (recipeSpeedMixerInfo.Columns[recipeSpeedMixerInfo.NextSeqType].Value == null || 
                 recipeSpeedMixerInfo.Columns[recipeSpeedMixerInfo.NextSeqType].Value == "" || isCycleStopped) // Si c'est fini
             //else if (currentPhaseParameters[1] == null || currentPhaseParameters[1] == "" || isCycleStopped) // Si c'est fini
             {
-                if (RS232Pump.rs232.IsOpen() && isPumpFree) RS232Pump.rs232.SetCommand("!C802 0");
-                RS232Pump.rs232.FreeUse();
+                if (RS232Pump.IsOpen() && isPumpFree) RS232Pump.StopPump();
+                RS232Pump.FreeUse();
                 isPumpFree = false;
 
                 comment = isCycleStopped ? "Cycle interrompu" : "";

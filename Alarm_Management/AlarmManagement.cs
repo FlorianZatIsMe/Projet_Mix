@@ -168,7 +168,6 @@ namespace Alarm_Management
             }
 
             int n = -1;
-            int mutexID;
             bool isAlarmNotActive = Alarms[id1, id2].Status != AlarmStatus.ACTIVE && 
                                     Alarms[id1, id2].Status != AlarmStatus.ACK;
 
@@ -179,28 +178,12 @@ namespace Alarm_Management
                 return;
             }
 
-            mutexID = -1;
-            //mutexID = MyDatabase.Connect(false);
-
             // Add test if database not connected, and do that everywhere
 
             AlarmStatus statusBefore = Alarms[id1, id2].Status;
             AlarmStatus statusAfter = AlarmStatus.ACTIVE;
 
             UpdateAlarm(id1, id2, statusBefore, statusAfter);
-            /*
-            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-            auditTrailInfo.Columns[auditTrailInfo.Username].Value = info.AuditTrail_SystemUsername;
-            auditTrailInfo.Columns[auditTrailInfo.EventType].Value = GetAlarmType(Alarms[id1, id2].Type);
-            auditTrailInfo.Columns[auditTrailInfo.Description].Value = GetAlarmDescription(id1, id2);
-            auditTrailInfo.Columns[auditTrailInfo.ValueBefore].Value = statusBefore.ToString();
-            auditTrailInfo.Columns[auditTrailInfo.ValueAfter].Value = statusAfter.ToString();
-            MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTrailInfo); });
-
-            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(auditTrailInfo.TabName, auditTrailInfo.Columns[auditTrailInfo.Id].Id); });
-            Alarms[id1, id2].id = (int)t.Result;
-            Alarms[id1, id2].Status = statusAfter;
-            */
 
             ActiveAlarms.Add(new Tuple<int, int>(id1, id2));
 
@@ -234,7 +217,6 @@ namespace Alarm_Management
             }
 
             int n = -1;
-            int mutexID;
 
             for (int i = 0; i < ActiveAlarms.Count; i++)
             {
@@ -256,9 +238,6 @@ namespace Alarm_Management
                 ShowMessageBox(Settings.Default.Error05);
                 return;
             }
-
-            mutexID = -1;
-            //mutexID = MyDatabase.Connect(false);
 
             AlarmStatus statusBefore = Alarms[id1, id2].Status;
             AlarmStatus statusAfter = AlarmStatus.None;
@@ -294,19 +273,6 @@ namespace Alarm_Management
             if (statusAfter != AlarmStatus.None)
             {
                 UpdateAlarm(id1, id2, statusBefore, statusAfter);
-                /*
-                AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-                auditTrailInfo.Columns[auditTrailInfo.Username].Value = info.AuditTrail_SystemUsername;
-                auditTrailInfo.Columns[auditTrailInfo.EventType].Value = GetAlarmType(Alarms[id1, id2].Type);
-                auditTrailInfo.Columns[auditTrailInfo.Description].Value = GetAlarmDescription(id1, id2);
-                auditTrailInfo.Columns[auditTrailInfo.ValueBefore].Value = statusBefore.ToString();
-                auditTrailInfo.Columns[auditTrailInfo.ValueAfter].Value = statusAfter.ToString();
-                MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTrailInfo); });
-
-                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(auditTrailInfo.TabName, auditTrailInfo.Columns[auditTrailInfo.Id].Id); });
-                Alarms[id1, id2].id = (int)t.Result;
-                Alarms[id1, id2].Status = statusAfter;
-                */
 
                 if (statusAfter == AlarmStatus.INACTIVE)
                 {
@@ -320,8 +286,6 @@ namespace Alarm_Management
                 ActiveAlarms.RemoveAt(n);
                 if (ActiveAlarms.Count == 0) InactiveAlarmEvent();
             }
-
-            //MyDatabase.Disconnect(mutex: mutexID);
         }
         public static void AcknowledgeAlarm(int id1, int id2)
         {
@@ -333,7 +297,6 @@ namespace Alarm_Management
             }
 
             int n = -1;
-            int mutexID;
 
             for (int i = 0; i < ActiveAlarms.Count; i++)
             {
@@ -357,23 +320,7 @@ namespace Alarm_Management
                 return;
             }
 
-            //mutexID = MyDatabase.Connect(false);
-            mutexID = -1;
-
             UpdateAlarm(id1, id2, statusBefore, statusAfter);
-            /*
-            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-            auditTrailInfo.Columns[auditTrailInfo.Username].Value = info.AuditTrail_SystemUsername;
-            auditTrailInfo.Columns[auditTrailInfo.EventType].Value = GetAlarmType(Alarms[id1, id2].Type);
-            auditTrailInfo.Columns[auditTrailInfo.Description].Value = GetAlarmDescription(id1, id2);
-            auditTrailInfo.Columns[auditTrailInfo.ValueBefore].Value = statusBefore.ToString();
-            auditTrailInfo.Columns[auditTrailInfo.ValueAfter].Value = statusAfter.ToString();
-            MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTrailInfo); });
-
-            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(auditTrailInfo.TabName, auditTrailInfo.Columns[auditTrailInfo.Id].Id); });
-            Alarms[id1, id2].id = (int)t.Result;
-            Alarms[id1, id2].Status = statusAfter;
-            */
 
             if (statusAfter == AlarmStatus.ACK)
             {

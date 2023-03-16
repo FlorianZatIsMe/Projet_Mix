@@ -32,9 +32,7 @@ namespace Main.Pages.SubCycle
         //private Task taskCheckAlarm;
         //private MyDatabase db = new MyDatabase();
         private readonly Frame frameCycleInfo;
-        //private bool isCheckAlarms_onGoing = true;
 
-        private AuditTrailInfo ATInfo = new AuditTrailInfo();
         private readonly AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
         private int firstAlarmId;
 
@@ -133,89 +131,6 @@ namespace Main.Pages.SubCycle
             checkAlarmsTimer.Enabled = true;
         }
 
-        /* checkAlarmsTimer_OnTimedEvent
-         * 
-         * Description: affiche dans le panneau d'informations tous les évènements d'alarmes (ACTIVE, ACK, INACTIVE et RAZ)
-         * 
-         * Version: 1.0
-         
-        private void ScanConnectTimer_OnTimedEvent_old(Object source, System.Timers.ElapsedEventArgs e)
-        {
-            //logger.Debug("ScanConnectTimer_OnTimedEvent");
-            Task<object> t;
-
-            // S'il y a un évènement d'alarme qui n'a pas été affiché...
-            if (!activeAlarms.SequenceEqual(AlarmManagement.ActiveAlarms))
-            {
-                // On parcours toutes les alarmes actives
-                for (int i = 0; i < AlarmManagement.ActiveAlarms.Count; i++)
-                {
-                    // Si l'alarme active qu'on regarde n'a pas été affichée...
-                    if (!activeAlarms.Contains(AlarmManagement.ActiveAlarms[i]))
-                    {
-                        // On met dans la variable array, l'enregistrement d'audit trail de l'alarme en question
-                        ATInfo = new AuditTrailInfo();
-                        // A CORRIGER : IF RESULT IS FALSE
-                        t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(AuditTrailInfo), AlarmManagement.Alarms[AlarmManagement.ActiveAlarms[i].Item1, AlarmManagement.ActiveAlarms[i].Item2].id.ToString()); });
-                        ATInfo = (AuditTrailInfo)t.Result;
-                        //auditTrailInfo = (AuditTrailInfo)MyDatabase.GetOneRow(typeof(AuditTrailInfo), AlarmManagement.Alarms[AlarmManagement.ActiveAlarms[i].Item1, AlarmManagement.ActiveAlarms[i].Item2].id.ToString());
-
-                        // S'il n'y a pas eu d'erreur, on affiche les infos de l'alarme
-                        if (ATInfo.Columns.Count() != 0)
-                        {
-                            this.Dispatcher.Invoke(() =>
-                            {
-                                AddRow(ATInfo.Columns[ATInfo.DateTime].Value + " - " +
-                                    ATInfo.Columns[ATInfo.Description].Value + " - " +
-                                    ATInfo.Columns[ATInfo.ValueAfter].Value);
-                            });
-                        }
-                        else
-                        {
-                            logger.Error(Settings.Default.CycleInfo_Error02);
-                            General.ShowMessageBox(Settings.Default.CycleInfo_Error02);
-                        }
-                    }
-                }
-
-                // activeAlarms = AlarmManagement.activeAlarms mais en plus chiant
-                activeAlarms.Clear();
-                for (int i = 0; i < AlarmManagement.ActiveAlarms.Count; i++) activeAlarms.Add(AlarmManagement.ActiveAlarms[i]);
-            }
-
-            // S'il y a une Remise A Zéro d'une alarme qui n'a pas été affichée...
-            if (AlarmManagement.RAZalarms.Count > 0)
-            {
-                // On parcours toutes les alarmes RAZ
-                for (int i = 0; i < AlarmManagement.RAZalarms.Count; i++)
-                {
-                    // On met dans la variable array l'enregistrement d'audit trail de l'alarme
-                    ATInfo = new AuditTrailInfo();
-                    // A CORRIGER : IF RESULT IS FALSE
-                    t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(AuditTrailInfo), AlarmManagement.RAZalarms[i].ToString()); });
-                    ATInfo = (AuditTrailInfo)t.Result;
-                    //auditTrailInfo = (AuditTrailInfo)MyDatabase.GetOneRow(typeof(AuditTrailInfo), AlarmManagement.RAZalarms[i].ToString());
-
-                    // S'il n'y a pas eu d'erreur, on affiche les infos de l'alarme
-                    if (ATInfo.Columns.Count() != 0)
-                    {
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            AddRow(ATInfo.Columns[ATInfo.DateTime].Value + " - " +
-                                ATInfo.Columns[ATInfo.Description].Value + " - " +
-                                ATInfo.Columns[ATInfo.ValueAfter].Value);
-                        });
-                    }
-                    else
-                    {
-                        logger.Error(Settings.Default.CycleInfo_Error02);
-                        General.ShowMessageBox(Settings.Default.CycleInfo_Error02);
-                    }
-                }
-                AlarmManagement.RAZalarms.Clear();
-            }
-            checkAlarmsTimer.Enabled = true;
-        }*/
         public void NewInfo(ISeqTabInfo cycleSeqInfo, decimal finalWeight = -1)
         {
             logger.Debug("NewInfo(ISeqInfo cycleSeqInfo)");

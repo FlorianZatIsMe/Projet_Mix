@@ -226,6 +226,7 @@
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -247,6 +248,9 @@
     <Compile Include="LogIn.xaml.cs">
       <DependentUpon>LogIn.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MyMessageBox.xaml.cs">
+      <DependentUpon>MyMessageBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\ActiveAlarms.xaml.cs">
       <DependentUpon>ActiveAlarms.xaml</DependentUpon>
     </Compile>
@@ -262,8 +266,8 @@
     <Compile Include="Pages\Sampling.xaml.cs">
       <DependentUpon>Sampling.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\SubCycle\WeightBowl.xaml.cs">
-      <DependentUpon>WeightBowl.xaml</DependentUpon>
+    <Compile Include="Pages\SubCycle\CycleWeight.xaml.cs">
+      <DependentUpon>CycleWeight.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings1.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -287,6 +291,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MyMessageBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\ActiveAlarms.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -323,7 +331,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\SubCycle\CycleWeight.xaml">
+    <Page Include="Pages\SubCycle\CycleWeight_old.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -331,7 +339,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\SubCycle\WeightBowl.xaml">
+    <Page Include="Pages\SubCycle\CycleWeight.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -362,8 +370,8 @@
     <Compile Include="Pages\SubCycle\CycleSpeedMixer.xaml.cs">
       <DependentUpon>CycleSpeedMixer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\SubCycle\CycleWeight.xaml.cs">
-      <DependentUpon>CycleWeight.xaml</DependentUpon>
+    <Compile Include="Pages\SubCycle\CycleWeight_old.xaml.cs">
+      <DependentUpon>CycleWeight_old.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\SubCycle\PreCycle.xaml.cs">
       <DependentUpon>PreCycle.xaml</DependentUpon>
