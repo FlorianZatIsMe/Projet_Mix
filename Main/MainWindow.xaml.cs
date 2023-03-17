@@ -76,7 +76,7 @@ namespace Main
                 Thread.CurrentThread.CurrentUICulture = culture;
             }
 
-            /*
+            //*
             AlarmManagement.Initialize(new Alarm_Management.IniInfo() { AuditTrail_SystemUsername = Settings.Default.General_SystemUsername, Window = this });
             InitializeComponent();
             AlarmManagement.ActiveAlarmEvent += ActiveAlarmEvent;
@@ -87,6 +87,7 @@ namespace Main
             //synth.SelectVoiceByHints(VoiceGender.Male, VoiceAge.Senior);
             //synth.Speak("Oh... You're sweet, thank you. I don't love you, but it's nice to know that someone loves me. Who wouldn't anyway ?");
 
+            Pages.Archiving.ExecuteFullArchive();
 
             General.ShowMessageBox("Fini je crois");
             Environment.Exit(1);
@@ -248,6 +249,7 @@ namespace Main
         {
             //General.ShowMessageBox("Au revoir");
         }
+
         private void CurrentTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
             this.Dispatcher.Invoke(() =>

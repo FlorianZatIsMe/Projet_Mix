@@ -1340,6 +1340,41 @@ namespace Database
             return result;
         }
 
+        public static object[] GetOneRow(string tableName, int nRow, string orderBy = null, bool isOrderAsc = true)
+        {
+            logger.Debug("GetOneRow");
+
+            if (!IsConnected())
+            {
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                ShowMessageBox(Settings.Default.Error_connectToDbFailed);
+                return null;
+            }
+
+            string orderArg = "";
+            if (orderBy != null)
+            {
+                orderArg = " ORDER BY " + orderBy + (isOrderAsc ? " ASC" : " DESC");
+            }
+
+            SendCommand_new("SELECT * FROM " + tableName + orderArg + " LIMIT " + (nRow - 1).ToString() + ", 1");
+            object[] row = ReadNext_new();
+
+            if (row == null)
+            {
+                logger.Error(Settings.Default.Error17);
+                ShowMessageBox(Settings.Default.Error17);
+                return null;
+            }
+
+            if (ReadNext_new() != null)
+            {
+                logger.Error(Settings.Default.Error15);
+                ShowMessageBox(Settings.Default.Error15);
+                return null;
+            }
+            return row;
+        }
         public static IComTabInfo GetOneRow(Type tableType = null, string id = null, IComTabInfo table = null)
         {
             logger.Debug("GetOneRow");
@@ -1931,6 +1966,35 @@ namespace Database
             }
             return result;
         }
+
+        public static int GetRowCount(string tableName)
+        {
+            if (!IsConnected())
+            {
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                ShowMessageBox(Settings.Default.Error_connectToDbFailed);
+                return -1;
+            }
+
+            SendCommand("SELECT COUNT(*) FROM " + tableName);
+            object[] values = ReadNext_new();
+
+            if (values.Count() != 1)
+            {
+                return -1;
+            }
+
+            try
+            {
+                return Convert.ToInt32(values[0]);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+                return -1;
+            }
+        }
+
         public static int GetMax(string tableName, string column)
         {           
             int result = -1;

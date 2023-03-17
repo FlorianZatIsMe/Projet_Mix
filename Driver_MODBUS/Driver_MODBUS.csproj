@@ -36,7 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EasyModbus">
-      <HintPath>..\..\Librairies\EasyModbus.dll</HintPath>
+      <HintPath>..\..\..\Users\Julien\OneDrive - Integra LifeSciences Corporation\Desktop\EasyModbusTCP .NET Package V5.6\EasyModbusLibrary for .NET (DLL)\EasyModbus.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>

@@ -152,7 +152,7 @@ namespace Main.Pages
             logger.Debug("UpdateAlarmTimer_OnTimedEvent");
 
             LoadAlarms();
-            updateAlarmTimer.Enabled = true;
+            if(updateAlarmTimer != null) updateAlarmTimer.Enabled = true;
         }
     }
 }

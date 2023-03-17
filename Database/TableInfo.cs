@@ -129,6 +129,8 @@ namespace Database
         {
             // Import the list of names of the columns of the database table from the settings
             StringCollection colId = Settings.Default.AuditTrail_ColIds;
+            Ids = new string[colId.Count];
+            colId.CopyTo(Ids, 0);
             // Import the list of names to be displayed of the columns from the settings
             StringCollection colDesc = Settings.Default.AuditTrail_ColDesc;
             // Import the name of the database table from the settings

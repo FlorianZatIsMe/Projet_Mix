@@ -10268,208 +10268,6 @@ items:
   modifiers.vb:
   - Public
   - ReadOnly
-- uid: Main.Properties.Settings.RecipeMix_IdDBControls
-  commentId: P:Main.Properties.Settings.RecipeMix_IdDBControls
-  id: RecipeMix_IdDBControls
-  parent: Main.Properties.Settings
-  langs:
-  - csharp
-  - vb
-  name: RecipeMix_IdDBControls
-  nameWithType: Settings.RecipeMix_IdDBControls
-  fullName: Main.Properties.Settings.RecipeMix_IdDBControls
-  type: Property
-  source:
-    id: RecipeMix_IdDBControls
-    path: C:\Temp\MixingApplication\Main\Properties\Settings1.Designer.cs
-    startLine: 1823
-  assemblies:
-  - MixingApplication
-  namespace: Main.Properties
-  syntax:
-    content: >-
-      [ApplicationScopedSetting]
-
-      [DefaultSettingValue("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<IdDBControls xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n  <list>\r\n    <int>3</int>\r\n    <int>4</int>\r\n    <int>5</int>\r\n    <int>10</int>\r\n    <int>12</int>\r\n    <int>13</int>\r\n    <int>14</int>\r\n    <int>15</int>\r\n    <int>16</int>\r\n    <int>17</int>\r\n    <int>18</int>\r\n    <int>19</int>\r\n    <int>20</int>\r\n    <int>21</int>\r\n    <int>22</int>\r\n    <int>23</int>\r\n    <int>24</int>\r\n    <int>25</int>\r\n    <int>26</int>\r\n    <int>27</int>\r\n    <int>28</int>\r\n    <int>29</int>\r\n    <int>30</int>\r\n    <int>31</int>\r\n    <int>32</int>\r\n    <int>33</int>\r\n    <int>34</int>\r\n    <int>35</int>\r\n    <int>36</int>\r\n    <int>37</int>\r\n    <int>38</int>\r\n    <int>39</int>\r\n    <int>40</int>\r\n    <int>41</int>\r\n    <int>42</int>\r\n    <int>43</int>\r\n    <int>44</int>\r\n    <int>45</int>\r\n  </list>\r\n</IdDBControls>")]
-
-      public IdDBControls RecipeMix_IdDBControls { get; }
-    parameters: []
-    return:
-      type: Main.Pages.IdDBControls
-    content.vb: >-
-      <ApplicationScopedSetting>
-
-      <DefaultSettingValue("<?xml version=""1.0"" encoding=""utf-16""?>" & vbCrLf & "<IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">" & vbCrLf & "  <list>" & vbCrLf & "    <int>3</int>" & vbCrLf & "    <int>4</int>" & vbCrLf & "    <int>5</int>" & vbCrLf & "    <int>10</int>" & vbCrLf & "    <int>12</int>" & vbCrLf & "    <int>13</int>" & vbCrLf & "    <int>14</int>" & vbCrLf & "    <int>15</int>" & vbCrLf & "    <int>16</int>" & vbCrLf & "    <int>17</int>" & vbCrLf & "    <int>18</int>" & vbCrLf & "    <int>19</int>" & vbCrLf & "    <int>20</int>" & vbCrLf & "    <int>21</int>" & vbCrLf & "    <int>22</int>" & vbCrLf & "    <int>23</int>" & vbCrLf & "    <int>24</int>" & vbCrLf & "    <int>25</int>" & vbCrLf & "    <int>26</int>" & vbCrLf & "    <int>27</int>" & vbCrLf & "    <int>28</int>" & vbCrLf & "    <int>29</int>" & vbCrLf & "    <int>30</int>" & vbCrLf & "    <int>31</int>" & vbCrLf & "    <int>32</int>" & vbCrLf & "    <int>33</int>" & vbCrLf & "    <int>34</int>" & vbCrLf & "    <int>35</int>" & vbCrLf & "    <int>36</int>" & vbCrLf & "    <int>37</int>" & vbCrLf & "    <int>38</int>" & vbCrLf & "    <int>39</int>" & vbCrLf & "    <int>40</int>" & vbCrLf & "    <int>41</int>" & vbCrLf & "    <int>42</int>" & vbCrLf & "    <int>43</int>" & vbCrLf & "    <int>44</int>" & vbCrLf & "    <int>45</int>" & vbCrLf & "  </list>" & vbCrLf & "</IdDBControls>")>
-
-      Public ReadOnly Property RecipeMix_IdDBControls As IdDBControls
-  overload: Main.Properties.Settings.RecipeMix_IdDBControls*
-  attributes:
-  - type: System.Configuration.ApplicationScopedSettingAttribute
-    ctor: System.Configuration.ApplicationScopedSettingAttribute.#ctor
-    arguments: []
-  - type: System.Configuration.DefaultSettingValueAttribute
-    ctor: System.Configuration.DefaultSettingValueAttribute.#ctor(System.String)
-    arguments:
-    - type: System.String
-      value: >-
-        <?xml version="1.0" encoding="utf-16"?>
-
-        <IdDBControls xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-
-          <list>
-
-            <int>3</int>
-
-            <int>4</int>
-
-            <int>5</int>
-
-            <int>10</int>
-
-            <int>12</int>
-
-            <int>13</int>
-
-            <int>14</int>
-
-            <int>15</int>
-
-            <int>16</int>
-
-            <int>17</int>
-
-            <int>18</int>
-
-            <int>19</int>
-
-            <int>20</int>
-
-            <int>21</int>
-
-            <int>22</int>
-
-            <int>23</int>
-
-            <int>24</int>
-
-            <int>25</int>
-
-            <int>26</int>
-
-            <int>27</int>
-
-            <int>28</int>
-
-            <int>29</int>
-
-            <int>30</int>
-
-            <int>31</int>
-
-            <int>32</int>
-
-            <int>33</int>
-
-            <int>34</int>
-
-            <int>35</int>
-
-            <int>36</int>
-
-            <int>37</int>
-
-            <int>38</int>
-
-            <int>39</int>
-
-            <int>40</int>
-
-            <int>41</int>
-
-            <int>42</int>
-
-            <int>43</int>
-
-            <int>44</int>
-
-            <int>45</int>
-
-          </list>
-
-        </IdDBControls>
-  modifiers.csharp:
-  - public
-  - get
-  modifiers.vb:
-  - Public
-  - ReadOnly
-- uid: Main.Properties.Settings.RecipeWeight_IdDBControls
-  commentId: P:Main.Properties.Settings.RecipeWeight_IdDBControls
-  id: RecipeWeight_IdDBControls
-  parent: Main.Properties.Settings
-  langs:
-  - csharp
-  - vb
-  name: RecipeWeight_IdDBControls
-  nameWithType: Settings.RecipeWeight_IdDBControls
-  fullName: Main.Properties.Settings.RecipeWeight_IdDBControls
-  type: Property
-  source:
-    id: RecipeWeight_IdDBControls
-    path: C:\Temp\MixingApplication\Main\Properties\Settings1.Designer.cs
-    startLine: 1874
-  assemblies:
-  - MixingApplication
-  namespace: Main.Properties
-  syntax:
-    content: >-
-      [ApplicationScopedSetting]
-
-      [DefaultSettingValue("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<IdDBControls xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n  <list>\r\n    <int>3</int>\r\n    <int>5</int>\r\n    <int>8</int>\r\n    <int>9</int>\r\n  </list>\r\n</IdDBControls>")]
-
-      public IdDBControls RecipeWeight_IdDBControls { get; }
-    parameters: []
-    return:
-      type: Main.Pages.IdDBControls
-    content.vb: >-
-      <ApplicationScopedSetting>
-
-      <DefaultSettingValue("<?xml version=""1.0"" encoding=""utf-16""?>" & vbCrLf & "<IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">" & vbCrLf & "  <list>" & vbCrLf & "    <int>3</int>" & vbCrLf & "    <int>5</int>" & vbCrLf & "    <int>8</int>" & vbCrLf & "    <int>9</int>" & vbCrLf & "  </list>" & vbCrLf & "</IdDBControls>")>
-
-      Public ReadOnly Property RecipeWeight_IdDBControls As IdDBControls
-  overload: Main.Properties.Settings.RecipeWeight_IdDBControls*
-  attributes:
-  - type: System.Configuration.ApplicationScopedSettingAttribute
-    ctor: System.Configuration.ApplicationScopedSettingAttribute.#ctor
-    arguments: []
-  - type: System.Configuration.DefaultSettingValueAttribute
-    ctor: System.Configuration.DefaultSettingValueAttribute.#ctor(System.String)
-    arguments:
-    - type: System.String
-      value: >-
-        <?xml version="1.0" encoding="utf-16"?>
-
-        <IdDBControls xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-
-          <list>
-
-            <int>3</int>
-
-            <int>5</int>
-
-            <int>8</int>
-
-            <int>9</int>
-
-          </list>
-
-        </IdDBControls>
-  modifiers.csharp:
-  - public
-  - get
-  modifiers.vb:
-  - Public
-  - ReadOnly
 - uid: Main.Properties.Settings.Main_StopIconDis
   commentId: P:Main.Properties.Settings.Main_StopIconDis
   id: Main_StopIconDis
@@ -10484,7 +10282,7 @@ items:
   source:
     id: Main_StopIconDis
     path: C:\Temp\MixingApplication\Main\Properties\Settings1.Designer.cs
-    startLine: 1891
+    startLine: 1823
   assemblies:
   - MixingApplication
   namespace: Main.Properties
@@ -10520,6 +10318,106 @@ items:
   - set
   modifiers.vb:
   - Public
+- uid: Main.Properties.Settings.RecipeMix_IdDBControls
+  commentId: P:Main.Properties.Settings.RecipeMix_IdDBControls
+  id: RecipeMix_IdDBControls
+  parent: Main.Properties.Settings
+  langs:
+  - csharp
+  - vb
+  name: RecipeMix_IdDBControls
+  nameWithType: Settings.RecipeMix_IdDBControls
+  fullName: Main.Properties.Settings.RecipeMix_IdDBControls
+  type: Property
+  source:
+    id: RecipeMix_IdDBControls
+    path: C:\Temp\MixingApplication\Main\Properties\Settings1.Designer.cs
+    startLine: 1835
+  assemblies:
+  - MixingApplication
+  namespace: Main.Properties
+  syntax:
+    content: >-
+      [ApplicationScopedSetting]
+
+      [DefaultSettingValue("\r\n          <IdDBControls xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n            <list>\r\n              <int>3</int>\r\n              <int>4</int>\r\n              <int>5</int>\r\n              <int>10</int>\r\n              <int>12</int>\r\n              <int>13</int>\r\n              <int>14</int>\r\n              <int>15</int>\r\n              <int>16</int>\r\n              <int>17</int>\r\n              <int>18</int>\r\n              <int>19</int>\r\n              <int>20</int>\r\n              <int>21</int>\r\n              <int>22</int>\r\n              <int>23</int>\r\n              <int>24</int>\r\n              <int>25</int>\r\n              <int>26</int>\r\n              <int>27</int>\r\n              <int>28</int>\r\n              <int>29</int>\r\n              <int>30</int>\r\n              <int>31</int>\r\n              <int>32</int>\r\n              <int>33</int>\r\n              <int>34</int>\r\n              <int>35</int>\r\n              <int>36</int>\r\n              <int>37</int>\r\n              <int>38</int>\r\n              <int>39</int>\r\n              <int>40</int>\r\n              <int>41</int>\r\n              <int>42</int>\r\n              <int>43</int>\r\n              <int>44</int>\r\n              <int>45</int>\r\n            </list>\r\n          </IdDBControls>\r\n        ")]
+
+      public IdDBControls RecipeMix_IdDBControls { get; }
+    parameters: []
+    return:
+      type: Main.Pages.IdDBControls
+    content.vb: >-
+      <ApplicationScopedSetting>
+
+      <DefaultSettingValue(vbCrLf & "          <IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">" & vbCrLf & "            <list>" & vbCrLf & "              <int>3</int>" & vbCrLf & "              <int>4</int>" & vbCrLf & "              <int>5</int>" & vbCrLf & "              <int>10</int>" & vbCrLf & "              <int>12</int>" & vbCrLf & "              <int>13</int>" & vbCrLf & "              <int>14</int>" & vbCrLf & "              <int>15</int>" & vbCrLf & "              <int>16</int>" & vbCrLf & "              <int>17</int>" & vbCrLf & "              <int>18</int>" & vbCrLf & "              <int>19</int>" & vbCrLf & "              <int>20</int>" & vbCrLf & "              <int>21</int>" & vbCrLf & "              <int>22</int>" & vbCrLf & "              <int>23</int>" & vbCrLf & "              <int>24</int>" & vbCrLf & "              <int>25</int>" & vbCrLf & "              <int>26</int>" & vbCrLf & "              <int>27</int>" & vbCrLf & "              <int>28</int>" & vbCrLf & "              <int>29</int>" & vbCrLf & "              <int>30</int>" & vbCrLf & "              <int>31</int>" & vbCrLf & "              <int>32</int>" & vbCrLf & "              <int>33</int>" & vbCrLf & "              <int>34</int>" & vbCrLf & "              <int>35</int>" & vbCrLf & "              <int>36</int>" & vbCrLf & "              <int>37</int>" & vbCrLf & "              <int>38</int>" & vbCrLf & "              <int>39</int>" & vbCrLf & "              <int>40</int>" & vbCrLf & "              <int>41</int>" & vbCrLf & "              <int>42</int>" & vbCrLf & "              <int>43</int>" & vbCrLf & "              <int>44</int>" & vbCrLf & "              <int>45</int>" & vbCrLf & "            </list>" & vbCrLf & "          </IdDBControls>" & vbCrLf & "        ")>
+
+      Public ReadOnly Property RecipeMix_IdDBControls As IdDBControls
+  overload: Main.Properties.Settings.RecipeMix_IdDBControls*
+  attributes:
+  - type: System.Configuration.ApplicationScopedSettingAttribute
+    ctor: System.Configuration.ApplicationScopedSettingAttribute.#ctor
+    arguments: []
+  - type: System.Configuration.DefaultSettingValueAttribute
+    ctor: System.Configuration.DefaultSettingValueAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: "\r\n          <IdDBControls xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n            <list>\r\n              <int>3</int>\r\n              <int>4</int>\r\n              <int>5</int>\r\n              <int>10</int>\r\n              <int>12</int>\r\n              <int>13</int>\r\n              <int>14</int>\r\n              <int>15</int>\r\n              <int>16</int>\r\n              <int>17</int>\r\n              <int>18</int>\r\n              <int>19</int>\r\n              <int>20</int>\r\n              <int>21</int>\r\n              <int>22</int>\r\n              <int>23</int>\r\n              <int>24</int>\r\n              <int>25</int>\r\n              <int>26</int>\r\n              <int>27</int>\r\n              <int>28</int>\r\n              <int>29</int>\r\n              <int>30</int>\r\n              <int>31</int>\r\n              <int>32</int>\r\n              <int>33</int>\r\n              <int>34</int>\r\n              <int>35</int>\r\n              <int>36</int>\r\n              <int>37</int>\r\n              <int>38</int>\r\n              <int>39</int>\r\n              <int>40</int>\r\n              <int>41</int>\r\n              <int>42</int>\r\n              <int>43</int>\r\n              <int>44</int>\r\n              <int>45</int>\r\n            </list>\r\n          </IdDBControls>\r\n        "
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Main.Properties.Settings.RecipeWeight_IdDBControls
+  commentId: P:Main.Properties.Settings.RecipeWeight_IdDBControls
+  id: RecipeWeight_IdDBControls
+  parent: Main.Properties.Settings
+  langs:
+  - csharp
+  - vb
+  name: RecipeWeight_IdDBControls
+  nameWithType: Settings.RecipeWeight_IdDBControls
+  fullName: Main.Properties.Settings.RecipeWeight_IdDBControls
+  type: Property
+  source:
+    id: RecipeWeight_IdDBControls
+    path: C:\Temp\MixingApplication\Main\Properties\Settings1.Designer.cs
+    startLine: 1887
+  assemblies:
+  - MixingApplication
+  namespace: Main.Properties
+  syntax:
+    content: >-
+      [ApplicationScopedSetting]
+
+      [DefaultSettingValue("\r\n          <IdDBControls xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n            <list>\r\n              <int>3</int>\r\n              <int>5</int>\r\n              <int>8</int>\r\n              <int>9</int>\r\n            </list>\r\n          </IdDBControls>\r\n        ")]
+
+      public IdDBControls RecipeWeight_IdDBControls { get; }
+    parameters: []
+    return:
+      type: Main.Pages.IdDBControls
+    content.vb: >-
+      <ApplicationScopedSetting>
+
+      <DefaultSettingValue(vbCrLf & "          <IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">" & vbCrLf & "            <list>" & vbCrLf & "              <int>3</int>" & vbCrLf & "              <int>5</int>" & vbCrLf & "              <int>8</int>" & vbCrLf & "              <int>9</int>" & vbCrLf & "            </list>" & vbCrLf & "          </IdDBControls>" & vbCrLf & "        ")>
+
+      Public ReadOnly Property RecipeWeight_IdDBControls As IdDBControls
+  overload: Main.Properties.Settings.RecipeWeight_IdDBControls*
+  attributes:
+  - type: System.Configuration.ApplicationScopedSettingAttribute
+    ctor: System.Configuration.ApplicationScopedSettingAttribute.#ctor
+    arguments: []
+  - type: System.Configuration.DefaultSettingValueAttribute
+    ctor: System.Configuration.DefaultSettingValueAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: "\r\n          <IdDBControls xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n            <list>\r\n              <int>3</int>\r\n              <int>5</int>\r\n              <int>8</int>\r\n              <int>9</int>\r\n            </list>\r\n          </IdDBControls>\r\n        "
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
 references:
 - uid: Main.Properties
   commentId: N:Main.Properties
@@ -12526,6 +12424,11 @@ references:
   name: Main_AlarmIconAct
   nameWithType: Settings.Main_AlarmIconAct
   fullName: Main.Properties.Settings.Main_AlarmIconAct
+- uid: Main.Properties.Settings.Main_StopIconDis*
+  commentId: Overload:Main.Properties.Settings.Main_StopIconDis
+  name: Main_StopIconDis
+  nameWithType: Settings.Main_StopIconDis
+  fullName: Main.Properties.Settings.Main_StopIconDis
 - uid: Main.Properties.Settings.RecipeMix_IdDBControls*
   commentId: Overload:Main.Properties.Settings.RecipeMix_IdDBControls
   name: RecipeMix_IdDBControls
@@ -12547,8 +12450,3 @@ references:
   name: RecipeWeight_IdDBControls
   nameWithType: Settings.RecipeWeight_IdDBControls
   fullName: Main.Properties.Settings.RecipeWeight_IdDBControls
-- uid: Main.Properties.Settings.Main_StopIconDis*
-  commentId: Overload:Main.Properties.Settings.Main_StopIconDis
-  name: Main_StopIconDis
-  nameWithType: Settings.Main_StopIconDis
-  fullName: Main.Properties.Settings.Main_StopIconDis

@@ -1833,52 +1833,75 @@ namespace Main.Properties {
             }
         }
         
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int Archive_fromRowNumber {
+            get {
+                return ((int)(this["Archive_fromRowNumber"]));
+            }
+            set {
+                this["Archive_fromRowNumber"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("900")]
+        public int Archive_untilRowNumber {
+            get {
+                return ((int)(this["Archive_untilRowNumber"]));
+            }
+            set {
+                this["Archive_untilRowNumber"] = value;
+            }
+        }
+        
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"
-          <IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-            <list>
-              <int>3</int>
-              <int>4</int>
-              <int>5</int>
-              <int>10</int>
-              <int>12</int>
-              <int>13</int>
-              <int>14</int>
-              <int>15</int>
-              <int>16</int>
-              <int>17</int>
-              <int>18</int>
-              <int>19</int>
-              <int>20</int>
-              <int>21</int>
-              <int>22</int>
-              <int>23</int>
-              <int>24</int>
-              <int>25</int>
-              <int>26</int>
-              <int>27</int>
-              <int>28</int>
-              <int>29</int>
-              <int>30</int>
-              <int>31</int>
-              <int>32</int>
-              <int>33</int>
-              <int>34</int>
-              <int>35</int>
-              <int>36</int>
-              <int>37</int>
-              <int>38</int>
-              <int>39</int>
-              <int>40</int>
-              <int>41</int>
-              <int>42</int>
-              <int>43</int>
-              <int>44</int>
-              <int>45</int>
-            </list>
-          </IdDBControls>
-        ")]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <list>
+    <int>3</int>
+    <int>4</int>
+    <int>5</int>
+    <int>10</int>
+    <int>12</int>
+    <int>13</int>
+    <int>14</int>
+    <int>15</int>
+    <int>16</int>
+    <int>17</int>
+    <int>18</int>
+    <int>19</int>
+    <int>20</int>
+    <int>21</int>
+    <int>22</int>
+    <int>23</int>
+    <int>24</int>
+    <int>25</int>
+    <int>26</int>
+    <int>27</int>
+    <int>28</int>
+    <int>29</int>
+    <int>30</int>
+    <int>31</int>
+    <int>32</int>
+    <int>33</int>
+    <int>34</int>
+    <int>35</int>
+    <int>36</int>
+    <int>37</int>
+    <int>38</int>
+    <int>39</int>
+    <int>40</int>
+    <int>41</int>
+    <int>42</int>
+    <int>43</int>
+    <int>44</int>
+    <int>45</int>
+  </list>
+</IdDBControls>")]
         public global::Main.Pages.IdDBControls RecipeMix_IdDBControls {
             get {
                 return ((global::Main.Pages.IdDBControls)(this["RecipeMix_IdDBControls"]));
@@ -1887,16 +1910,15 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"
-          <IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-            <list>
-              <int>3</int>
-              <int>5</int>
-              <int>8</int>
-              <int>9</int>
-            </list>
-          </IdDBControls>
-        ")]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <list>
+    <int>3</int>
+    <int>5</int>
+    <int>8</int>
+    <int>9</int>
+  </list>
+</IdDBControls>")]
         public global::Main.Pages.IdDBControls RecipeWeight_IdDBControls {
             get {
                 return ((global::Main.Pages.IdDBControls)(this["RecipeWeight_IdDBControls"]));
