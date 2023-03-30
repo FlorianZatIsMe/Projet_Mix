@@ -203,6 +203,10 @@
       <Project>{995498BD-68E4-4DAD-98C3-42563DBD79D8}</Project>
       <Name>Driver_RS232</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Message\Message.csproj">
+      <Project>{77b11b88-ceda-40c3-8b83-e2ef31bce0b3}</Project>
+      <Name>Message</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

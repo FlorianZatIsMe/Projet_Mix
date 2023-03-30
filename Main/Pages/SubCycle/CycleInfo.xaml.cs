@@ -29,8 +29,6 @@ namespace Main.Pages.SubCycle
         private static int seqNumber;
         private readonly static List<Tuple<int, int>> activeAlarms = new List<Tuple<int, int>>();
         private System.Timers.Timer checkAlarmsTimer;
-        //private Task taskCheckAlarm;
-        //private MyDatabase db = new MyDatabase();
         private readonly Frame frameCycleInfo;
 
         private readonly AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
@@ -38,7 +36,7 @@ namespace Main.Pages.SubCycle
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public CycleInfo(CycleTableInfo cycleTableInfo, Frame frame)
+        public CycleInfo(CycleTableInfo cycleTableInfo, object[] cycleTableValues, Frame frame)
         {
             logger.Debug("Start");
 
@@ -54,7 +52,7 @@ namespace Main.Pages.SubCycle
 
                 t = MyDatabase.TaskEnQueue(() => {
                     return
-                    MyDatabase.GetMax(auditTrailInfo, auditTrailInfo.Columns[auditTrailInfo.Id].Id);
+                    MyDatabase.GetMax_new(auditTrailInfo, auditTrailInfo.Ids[auditTrailInfo.Id]);
                 });
                 firstAlarmId = (int)t.Result;             
             }
@@ -66,7 +64,7 @@ namespace Main.Pages.SubCycle
                 Interval = Settings.Default.CycleInfo_checkAlarmsTimer_Interval,
                 AutoReset = false
             };
-            //checkAlarmsTimer.Elapsed += ScanConnectTimer_OnTimedEvent;
+            checkAlarmsTimer.Elapsed += ScanConnectTimer_OnTimedEvent;
 
             frameCycleInfo = frame;
 
@@ -75,14 +73,14 @@ namespace Main.Pages.SubCycle
             if (info.Length != 4)
             {
                 logger.Error(Settings.Default.CycleInfo_Error01);
-                General.ShowMessageBox(Settings.Default.CycleInfo_Error01);
+                Message.MyMessageBox.Show(Settings.Default.CycleInfo_Error01);
                 return;
             }*/
 
-            labelOFNumber.Text = cycleTableInfo.Columns[cycleTableInfo.BatchNumber].Value;
-            labelRecipeName.Text = cycleTableInfo.Columns[cycleTableInfo.RecipeName].Value;
-            labelRecipeVersion.Text = cycleTableInfo.Columns[cycleTableInfo.RecipeVersion].Value;
-            labelFinalWeight.Text = cycleTableInfo.Columns[cycleTableInfo.FinalWeight].Value;
+            labelOFNumber.Text = cycleTableValues[cycleTableInfo.BatchNumber].ToString();
+            labelRecipeName.Text = cycleTableValues[cycleTableInfo.RecipeName].ToString();
+            labelRecipeVersion.Text = cycleTableValues[cycleTableInfo.RecipeVersion].ToString();
+            labelFinalWeight.Text = cycleTableValues[cycleTableInfo.FinalWeight].ToString();
 
             SetVisibility(true);
         }
@@ -106,15 +104,29 @@ namespace Main.Pages.SubCycle
         {
             int lastAlarmId;
             Task<object> t;
-            List<AuditTrailInfo> auditTrailInfos = new List<AuditTrailInfo>();
+            AuditTrailInfo auditTrailInfos = new AuditTrailInfo();
 
             t = MyDatabase.TaskEnQueue(() => { return 
-                MyDatabase.GetMax(auditTrailInfo, auditTrailInfo.Columns[auditTrailInfo.Id].Id); });
+                MyDatabase.GetMax_new(auditTrailInfo, auditTrailInfo.Ids[auditTrailInfo.Id]); });
             lastAlarmId = (int)t.Result;
 
             if (firstAlarmId != lastAlarmId)
             {
-                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetAlarms(firstAlarmId + 1, lastAlarmId, true); });
+                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetAlarms_new(firstAlarmId + 1, lastAlarmId, true); });
+                List<object[]> rows = (List<object[]>)t.Result;
+                firstAlarmId = lastAlarmId;
+
+                foreach (object[] info in rows)
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        AddRow(info[auditTrailInfos.DateTime] + " - " +
+                            info[auditTrailInfos.Description] + " - " +
+                            info[auditTrailInfos.ValueAfter]);
+                    });
+                }
+
+                /*
                 auditTrailInfos = (List<AuditTrailInfo>)t.Result;
                 firstAlarmId = lastAlarmId;
 
@@ -126,40 +138,41 @@ namespace Main.Pages.SubCycle
                             info.Columns[info.Description].Value + " - " +
                             info.Columns[info.ValueAfter].Value);
                     });
-                }
+                }*/
             }
             checkAlarmsTimer.Enabled = true;
         }
 
-        public void NewInfo(ISeqTabInfo cycleSeqInfo, decimal finalWeight = -1)
+        public void NewInfo(ISeqTabInfo cycleSeqInfo, object[] recipe, decimal finalWeight = -1)
         {
             logger.Debug("NewInfo(ISeqInfo cycleSeqInfo)");
 
             if (cycleSeqInfo.GetType().Equals(typeof(RecipeWeightInfo)))
             {
-                NewInfo(cycleSeqInfo as RecipeWeightInfo, finalWeight);
+                NewWeightInfo(recipe, finalWeight);
             }
             else if (cycleSeqInfo.GetType().Equals(typeof(RecipeSpeedMixerInfo)))
             {
-                NewInfo(cycleSeqInfo as RecipeSpeedMixerInfo);
+                NewSpeedMixerInfo(recipe);
             }
             else
             {
                 logger.Error(Settings.Default.CycleInfo_Error03);
-                General.ShowMessageBox(Settings.Default.CycleInfo_Error03);
+                Message.MyMessageBox.Show(Settings.Default.CycleInfo_Error03);
             }
         }
-        public void NewInfo(RecipeWeightInfo recipeWeightInfo, decimal finalWeight)
+        public void NewWeightInfo(object[] recipeWeight, decimal finalWeight)
         {
             logger.Debug("NewInfo(RecipeWeightInfo recipeWeightInfo)");
 
             if (finalWeight == -1)
             {
                 logger.Error("Pas bien");
-                General.ShowMessageBox("Pas bien");
+                Message.MyMessageBox.Show("Pas bien");
             }
 
             CycleWeightInfo cycleWeightInfo = new CycleWeightInfo();
+            RecipeWeightInfo recipeWeightInfo = new RecipeWeightInfo();
 
             WrapPanel wrapPanel = new WrapPanel
             {
@@ -169,35 +182,35 @@ namespace Main.Pages.SubCycle
             TextBlock productName = new TextBlock
             {
                 Foreground = Brushes.Wheat,
-                Text = cycleWeightInfo.Columns[cycleWeightInfo.Product].DisplayName + ": " + 
-                recipeWeightInfo.Columns[recipeWeightInfo.Name].Value
+                Text = cycleWeightInfo.Descriptions[cycleWeightInfo.Product] + ": " +
+                recipeWeight[recipeWeightInfo.Name].ToString()
             };
 
             TextBlock min = new TextBlock
             {
                 Foreground = Brushes.Wheat,
                 Margin = new Thickness(20, 0, 0, 0),
-                Text = cycleWeightInfo.Columns[cycleWeightInfo.Min].DisplayName + ": " + 
-                Math.Round(cycleWeightInfo.GetMin(recipeWeightInfo, finalWeight), 
-                int.Parse(recipeWeightInfo.Columns[recipeWeightInfo.DecimalNumber].Value))
-                .ToString("N" + recipeWeightInfo.Columns[recipeWeightInfo.DecimalNumber].Value).ToString()
+                Text = cycleWeightInfo.Descriptions[cycleWeightInfo.Min] + ": " + 
+                Math.Round(cycleWeightInfo.GetMin(recipeWeight, finalWeight), 
+                int.Parse(recipeWeight[recipeWeightInfo.DecimalNumber].ToString()))
+                .ToString("N" + recipeWeight[recipeWeightInfo.DecimalNumber].ToString())
             };
 
             TextBlock max = new TextBlock
             {
                 Foreground = Brushes.Wheat,
                 Margin = new Thickness(20, 0, 0, 0),
-                Text = cycleWeightInfo.Columns[cycleWeightInfo.Max].DisplayName + ": " +
-                Math.Round(cycleWeightInfo.GetMax(recipeWeightInfo, finalWeight),
-                int.Parse(recipeWeightInfo.Columns[recipeWeightInfo.DecimalNumber].Value))
-                .ToString("N" + recipeWeightInfo.Columns[recipeWeightInfo.DecimalNumber].Value).ToString()
+                Text = cycleWeightInfo.Descriptions[cycleWeightInfo.Max] + ": " +
+                Math.Round(cycleWeightInfo.GetMax(recipeWeight, finalWeight),
+                int.Parse(recipeWeight[recipeWeightInfo.DecimalNumber].ToString()))
+                .ToString("N" + recipeWeight[recipeWeightInfo.DecimalNumber].ToString()).ToString()
             };
 
             TextBlock actualWeight = new TextBlock
             {
                 Foreground = Brushes.Wheat,
                 Margin = new Thickness(20, 0, 0, 0),
-                Text = cycleWeightInfo.Columns[cycleWeightInfo.ActualValue].DisplayName + ": -"
+                Text = cycleWeightInfo.Descriptions[cycleWeightInfo.ActualValue] + ": -"
             };
 
             wrapPanel.Children.Add(productName);
@@ -208,11 +221,12 @@ namespace Main.Pages.SubCycle
             StackMain.Children.Add(wrapPanel);
             wrapPanels.Add(wrapPanel);
         }
-        public void NewInfo(RecipeSpeedMixerInfo recipeSpeedMixerInfo)
+        public void NewSpeedMixerInfo(object[] recipe)
         {
             logger.Debug("NewInfo(RecipeSpeedMixerInfo recipeSpeedMixerInfo)");
 
             CycleSpeedMixerInfo cycleSpeedMixerInfo = new CycleSpeedMixerInfo();
+            RecipeSpeedMixerInfo recipeSpeedMixerInfo = new RecipeSpeedMixerInfo();
             // General.CurrentCycleInfo.NewInfoSpeedMixer(new string[] { array[3] });
 
             WrapPanel wrapPanel = new WrapPanel
@@ -223,7 +237,7 @@ namespace Main.Pages.SubCycle
             TextBlock programName = new TextBlock
             {
                 Foreground = Brushes.Wheat,
-                Text = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.Name].DisplayName + ": " + recipeSpeedMixerInfo.Columns[recipeSpeedMixerInfo.Name].Value
+                Text = cycleSpeedMixerInfo.Descriptions[cycleSpeedMixerInfo.Name] + ": " + recipe[recipeSpeedMixerInfo.Name].ToString()
             };
 
             TextBlock status = new TextBlock
@@ -245,7 +259,7 @@ namespace Main.Pages.SubCycle
 
             CycleWeightInfo cycleWeightInfo = new CycleWeightInfo();
             (wrapPanels[seqNumber].Children[3] as TextBlock).Text = 
-                cycleWeightInfo.Columns[cycleWeightInfo.ActualValue].DisplayName + ": " + 
+                cycleWeightInfo.Descriptions[cycleWeightInfo.ActualValue] + ": " + 
                 info[0];
         }
         public void UpdateCurrentSpeedMixerInfo(string[] info)

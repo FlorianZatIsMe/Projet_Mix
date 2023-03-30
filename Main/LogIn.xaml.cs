@@ -25,13 +25,15 @@ namespace Main
     /// </summary>
     public partial class LogIn : Window
     {
-        readonly MainWindow mainWindow;
+        private MainWindow mainWindow = null;
+        private EventHandler windowDeactivatedEvent;
         private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        public LogIn(MainWindow window)
+        public LogIn(MainWindow parent, EventHandler windowDeactivatedEvent_arg)
         {
             logger.Debug("Start");
-            mainWindow = window;
-            mainWindow.Deactivated -= mainWindow.Window_Deactivated;
+            mainWindow = parent;
+            windowDeactivatedEvent = windowDeactivatedEvent_arg;
+            mainWindow.Deactivated -= windowDeactivatedEvent;
             InitializeComponent();
         }
         private void Click(string user = null)
@@ -40,12 +42,7 @@ namespace Main
 
             if (user == null)
             {
-                UserManagement.SetNoneAccess();/*
-                if (!UserManagement.SetNoneAccess())
-                {
-                    MessageBox.Show("C'est pas bien ça");
-                    logger.Error("C'est pas bien ça");
-                }*/
+                UserManagement.SetNoneAccess();
 
                 mainWindow.UpdateUser("aucun utilisateur", AccessTableInfo.NoneRole);
             }
@@ -58,21 +55,21 @@ namespace Main
 
                     if (isCredentialValid)
                     {
-                        if (user.ToLower() == "julien.aquilon") MessageBox.Show("Salut Chef");
+                        if (user.ToLower() == "julien.aquilon") Message.MyMessageBox.Show("Salut Chef");
 
                         string role = UserManagement.UpdateAccessTable(user);
                         mainWindow.UpdateUser(user, role);
                     }
                     else
                     {
-                        MessageBox.Show(Settings.Default.LogIn_Info_PswIncorrect);
+                        Message.MyMessageBox.Show(Settings.Default.LogIn_Info_PswIncorrect);
                         return;
                     }
                 }
                 catch (Exception)
                 {
                     logger.Error("Problème de connexion avec l'active directory");
-                    MessageBox.Show("Problème de connexion avec l'active directory");
+                    Message.MyMessageBox.Show("Problème de connexion avec l'active directory");
                     return;
                 }
             }
@@ -122,20 +119,15 @@ namespace Main
             Click();
         }
 
-        private async void Window_Deactivated(object sender, EventArgs e)
+        public async void Window_Deactivated(object sender, EventArgs e)
         {
             this.Deactivated -= Window_Deactivated;
-
-            while (!mainWindow.IsActive)
-            {
-                mainWindow.Activate();
-                await Task.Delay(1000);
-            }
+            await Task.Delay(2000);
 
             while (!this.IsActive)
             {
                 this.Activate();
-                await Task.Delay(1000);
+                await Task.Delay(2000);
             }
             this.Deactivated += Window_Deactivated;
         }
@@ -143,7 +135,13 @@ namespace Main
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             this.Deactivated -= Window_Deactivated;
-            mainWindow.Deactivated += mainWindow.Window_Deactivated;
+            mainWindow.Deactivated += windowDeactivatedEvent;
+            Message.MyMessageBox.SetParentWindow(mainWindow, windowDeactivatedEvent);
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            Message.MyMessageBox.SetParentWindow(this, this.Window_Deactivated);
         }
     }
 }

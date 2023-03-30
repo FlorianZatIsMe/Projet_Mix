@@ -50,7 +50,7 @@ namespace Main.Pages.SubRecipe
         {
             logger.Debug("Start");
 
-            ControlsIDs = new int[recipeSpeedMixerInfo.Columns.Count];
+            ControlsIDs = new int[recipeSpeedMixerInfo.Ids.Count()];
             List<int> list = Settings.Default.RecipeMix_IdDBControls.list;
             int n = 0;
 
@@ -176,7 +176,7 @@ namespace Main.Pages.SubRecipe
             }
             catch (Exception ex)
             {
-                General.ShowMessageBox(ex.Message);
+                Message.MyMessageBox.Show(ex.Message);
             }
         }
         private void tgPhase_Checked(object sender, RoutedEventArgs e)
@@ -214,25 +214,32 @@ namespace Main.Pages.SubRecipe
             }
             catch (Exception ex)
             {
-                General.ShowMessageBox(ex.Message);
+                Message.MyMessageBox.Show(ex.Message);
             }
         }
-        public void SetPage(ISeqTabInfo seqInfo)
+        public void SetPage(object[] seqValues)
         {
             logger.Debug("SetPage");
 
-            RecipeSpeedMixerInfo recipeInfo = seqInfo as RecipeSpeedMixerInfo;
+            RecipeSpeedMixerInfo recipeInfo = new RecipeSpeedMixerInfo();
             int i;
 
-            tbProgramName.Text = recipeInfo.Columns[recipeInfo.Name].Value;
-            tbAcceleration.Text = recipeInfo.Columns[recipeInfo.Acceleration].Value;
-            tbDeceleration.Text = recipeInfo.Columns[recipeInfo.Deceleration].Value;
-            cbVacuum.IsChecked = recipeInfo.Columns[recipeInfo.Vaccum_control].Value == DatabaseSettings.General_TrueValue_Read;
+            if (seqValues.Count() != recipeInfo.Ids.Count())
+            {
+                logger.Error("On a un problème");
+                Message.MyMessageBox.Show("On a un problème");
+                return;
+            }
+
+            tbProgramName.Text = seqValues[recipeInfo.Name].ToString();
+            tbAcceleration.Text = seqValues[recipeInfo.Acceleration].ToString();
+            tbDeceleration.Text = seqValues[recipeInfo.Deceleration].ToString();
+            cbVacuum.IsChecked = seqValues[recipeInfo.Vaccum_control].ToString() == DatabaseSettings.General_TrueValue_Read;
             //if (recipeInfo.columns[recipeInfo.isVentgasAir].value == DatabaseSettings.General_TrueValue_Read) rbAir.IsChecked = true;
             //cbMonitorType.IsChecked = recipeInfo.columns[recipeInfo.monitorType].value == DatabaseSettings.General_TrueValue_Read;
-            cbxPressureUnit.Text = recipeInfo.Columns[recipeInfo.PressureUnit].Value;
+            cbxPressureUnit.Text = seqValues[recipeInfo.PressureUnit].ToString();
             //tbSCurve.Text = recipeInfo.columns[recipeInfo.scurve].value;
-            cbColdTrap.IsChecked = recipeInfo.Columns[recipeInfo.Coldtrap].Value == DatabaseSettings.General_TrueValue_Read;
+            cbColdTrap.IsChecked = seqValues[recipeInfo.Coldtrap].ToString() == DatabaseSettings.General_TrueValue_Read;
 
             TbProgramName_LostFocus(tbProgramName, new RoutedEventArgs());
             TbAcceleration_LostFocus(tbAcceleration, new RoutedEventArgs());
@@ -241,11 +248,11 @@ namespace Main.Pages.SubRecipe
             //TbSCurve_LostFocus(tbSCurve, new RoutedEventArgs());
 
             i = 0;
-            while (i != 10 && recipeInfo.Columns[recipeInfo.Speed00 + 3 * i].Value != "")
+            while (i != 10 && seqValues[recipeInfo.Speed00 + 3 * i] != null && seqValues[recipeInfo.Speed00 + 3 * i].ToString() != "")
             {
-                speeds[i].Text = recipeInfo.Columns[recipeInfo.Speed00 + 3 * i].Value;
-                times[i].Text = recipeInfo.Columns[recipeInfo.Time00 + 3 * i].Value;
-                pressures[i].Text = recipeInfo.Columns[recipeInfo.Pressure00 + 3 * i].Value;
+                speeds[i].Text = seqValues[recipeInfo.Speed00 + 3 * i].ToString();
+                times[i].Text = seqValues[recipeInfo.Time00 + 3 * i].ToString();
+                pressures[i].Text = seqValues[recipeInfo.Pressure00 + 3 * i].ToString();
 
                 if (i > 0)
                 {
@@ -259,10 +266,10 @@ namespace Main.Pages.SubRecipe
                 i++;
             }
 
-            tbSpeedMin.Text = recipeInfo.Columns[recipeInfo.SpeedMin].Value;
-            tbSpeedMax.Text = recipeInfo.Columns[recipeInfo.SpeedMax].Value;
-            tbPressureMin.Text = recipeInfo.Columns[recipeInfo.PressureMin].Value;
-            tbPressureMax.Text = recipeInfo.Columns[recipeInfo.PressureMax].Value;
+            tbSpeedMin.Text = seqValues[recipeInfo.SpeedMin].ToString();
+            tbSpeedMax.Text = seqValues[recipeInfo.SpeedMax].ToString();
+            tbPressureMin.Text = seqValues[recipeInfo.PressureMin].ToString();
+            tbPressureMax.Text = seqValues[recipeInfo.PressureMax].ToString();
 
             TbSpeedMin_LostFocus(tbSpeedMin, new RoutedEventArgs());
             TbSpeedMax_LostFocus(tbSpeedMax, new RoutedEventArgs());
@@ -274,43 +281,93 @@ namespace Main.Pages.SubRecipe
             logger.Debug("GetPage");
 
             RecipeSpeedMixerInfo recipeInfo = new RecipeSpeedMixerInfo();
+            object[] recipeValues = new object[recipeInfo.Ids.Count()];
 
             try
             {
-                recipeInfo.Columns[recipeInfo.Name].Value = tbProgramName.Text;
-                recipeInfo.Columns[recipeInfo.Acceleration].Value = int.Parse(tbAcceleration.Text, NumberStyles.AllowThousands).ToString();
-                recipeInfo.Columns[recipeInfo.Deceleration].Value = int.Parse(tbDeceleration.Text, NumberStyles.AllowThousands).ToString();
-                recipeInfo.Columns[recipeInfo.Vaccum_control].Value = (bool)cbVacuum.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
-                recipeInfo.Columns[recipeInfo.IsVentgasAir].Value = DatabaseSettings.General_TrueValue_Write;
-                //UrecipeInfo.columns[recipeInfo.isVentgasAir].value = (bool)rbAir.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
-                recipeInfo.Columns[recipeInfo.MonitorType].Value = DatabaseSettings.General_TrueValue_Write;
-                //recipeInfo.columns[recipeInfo.monitorType].value = (bool)cbMonitorType.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
-                recipeInfo.Columns[recipeInfo.PressureUnit].Value = cbxPressureUnit.Text;
-                recipeInfo.Columns[recipeInfo.Scurve].Value = "-";// tbSCurve.Text;
-                recipeInfo.Columns[recipeInfo.Coldtrap].Value = (bool)cbColdTrap.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+                recipeValues[recipeInfo.Name] = tbProgramName.Text;
+                recipeValues[recipeInfo.Acceleration] = int.Parse(tbAcceleration.Text, NumberStyles.AllowThousands).ToString();
+                recipeValues[recipeInfo.Deceleration] = int.Parse(tbDeceleration.Text, NumberStyles.AllowThousands).ToString();
+                recipeValues[recipeInfo.Vaccum_control] = (bool)cbVacuum.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+                recipeValues[recipeInfo.IsVentgasAir] = DatabaseSettings.General_TrueValue_Write;
+                //UrecipeValues[recipeInfo.isVentgasAir] = (bool)rbAir.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+                recipeValues[recipeInfo.MonitorType] = DatabaseSettings.General_TrueValue_Write;
+                //recipeValues[recipeInfo.monitorType] = (bool)cbMonitorType.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+                recipeValues[recipeInfo.PressureUnit] = cbxPressureUnit.Text;
+                recipeValues[recipeInfo.Scurve] = "-";// tbSCurve.Text;
+                recipeValues[recipeInfo.Coldtrap] = (bool)cbColdTrap.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
 
                 int i = 0;
                 do
                 {
-                    recipeInfo.Columns[recipeInfo.Speed00 + 3 * i].Value = int.Parse(speeds[i].Text, NumberStyles.AllowThousands).ToString();
-                    recipeInfo.Columns[recipeInfo.Time00 + 3 * i].Value = int.Parse(times[i].Text, NumberStyles.AllowThousands).ToString();
-                    recipeInfo.Columns[recipeInfo.Pressure00 + 3 * i].Value = int.Parse(pressures[i].Text, NumberStyles.AllowThousands).ToString();
+                    recipeValues[recipeInfo.Speed00 + 3 * i] = int.Parse(speeds[i].Text, NumberStyles.AllowThousands).ToString();
+                    recipeValues[recipeInfo.Time00 + 3 * i] = int.Parse(times[i].Text, NumberStyles.AllowThousands).ToString();
+                    recipeValues[recipeInfo.Pressure00 + 3 * i] = int.Parse(pressures[i].Text, NumberStyles.AllowThousands).ToString();
                     i++;
                 } while (i != 10 && (bool)toggleButtons[i].IsChecked);
 
-                recipeInfo.Columns[recipeInfo.SpeedMin].Value = int.Parse(tbSpeedMin.Text, NumberStyles.AllowThousands).ToString();
-                recipeInfo.Columns[recipeInfo.SpeedMax].Value = int.Parse(tbSpeedMax.Text, NumberStyles.AllowThousands).ToString();
-                recipeInfo.Columns[recipeInfo.PressureMin].Value = int.Parse(tbPressureMin.Text, NumberStyles.AllowThousands).ToString();
-                recipeInfo.Columns[recipeInfo.PressureMax].Value = int.Parse(tbPressureMax.Text, NumberStyles.AllowThousands).ToString();
+                recipeValues[recipeInfo.SpeedMin] = int.Parse(tbSpeedMin.Text, NumberStyles.AllowThousands).ToString();
+                recipeValues[recipeInfo.SpeedMax] = int.Parse(tbSpeedMax.Text, NumberStyles.AllowThousands).ToString();
+                recipeValues[recipeInfo.PressureMin] = int.Parse(tbPressureMin.Text, NumberStyles.AllowThousands).ToString();
+                recipeValues[recipeInfo.PressureMax] = int.Parse(tbPressureMax.Text, NumberStyles.AllowThousands).ToString();
             }
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                General.ShowMessageBox(ex.Message);
+                Message.MyMessageBox.Show(ex.Message);
                 recipeInfo = null;
             }
 
             return recipeInfo;
+        }
+        public ISeqTabInfo GetRecipeInfo()
+        {
+            logger.Debug("GetRecipeInfo");
+            return new RecipeSpeedMixerInfo();
+        }
+        public object[] GetRecipeValues()
+        {
+            logger.Debug("GetRecipeValues");
+
+            RecipeSpeedMixerInfo recipeInfo = new RecipeSpeedMixerInfo();
+            object[] recipeValues = new object[recipeInfo.Ids.Count()];
+
+            try
+            {
+                recipeValues[recipeInfo.Name] = tbProgramName.Text;
+                recipeValues[recipeInfo.Acceleration] = int.Parse(tbAcceleration.Text, NumberStyles.AllowThousands);
+                recipeValues[recipeInfo.Deceleration] = int.Parse(tbDeceleration.Text, NumberStyles.AllowThousands);
+                recipeValues[recipeInfo.Vaccum_control] = (bool)cbVacuum.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+                recipeValues[recipeInfo.IsVentgasAir] = DatabaseSettings.General_TrueValue_Write;
+                //UrecipeValues[recipeInfo.isVentgasAir] = (bool)rbAir.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+                recipeValues[recipeInfo.MonitorType] = DatabaseSettings.General_TrueValue_Write;
+                //recipeValues[recipeInfo.monitorType] = (bool)cbMonitorType.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+                recipeValues[recipeInfo.PressureUnit] = cbxPressureUnit.Text;
+                recipeValues[recipeInfo.Scurve] = "-";// tbSCurve.Text;
+                recipeValues[recipeInfo.Coldtrap] = (bool)cbColdTrap.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+
+                int i = 0;
+                do
+                {
+                    recipeValues[recipeInfo.Speed00 + 3 * i] = int.Parse(speeds[i].Text, NumberStyles.AllowThousands);
+                    recipeValues[recipeInfo.Time00 + 3 * i] = int.Parse(times[i].Text, NumberStyles.AllowThousands);
+                    recipeValues[recipeInfo.Pressure00 + 3 * i] = int.Parse(pressures[i].Text, NumberStyles.AllowThousands);
+                    i++;
+                } while (i != 10 && (bool)toggleButtons[i].IsChecked);
+
+                recipeValues[recipeInfo.SpeedMin] = int.Parse(tbSpeedMin.Text, NumberStyles.AllowThousands);
+                recipeValues[recipeInfo.SpeedMax] = int.Parse(tbSpeedMax.Text, NumberStyles.AllowThousands);
+                recipeValues[recipeInfo.PressureMin] = int.Parse(tbPressureMin.Text, NumberStyles.AllowThousands);
+                recipeValues[recipeInfo.PressureMax] = int.Parse(tbPressureMax.Text, NumberStyles.AllowThousands);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+                Message.MyMessageBox.Show(ex.Message);
+                recipeValues = null;
+            }
+
+            return recipeValues;
         }
         private void TbProgramName_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -327,7 +384,7 @@ namespace Main.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //General.ShowMessageBox(FormatControl[i].ToString());
+            //Message.MyMessageBox.Show(FormatControl[i].ToString());
         }
         private void TbAcceleration_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -345,7 +402,7 @@ namespace Main.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //General.ShowMessageBox(FormatControl[i].ToString());
+            //Message.MyMessageBox.Show(FormatControl[i].ToString());
         }
         private void TbDeceleration_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -363,7 +420,7 @@ namespace Main.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //General.ShowMessageBox(FormatControl[i].ToString());
+            //Message.MyMessageBox.Show(FormatControl[i].ToString());
         }
         private void TbSCurve_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -380,7 +437,7 @@ namespace Main.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }*/
-            //General.ShowMessageBox(FormatControl[i].ToString());
+            //Message.MyMessageBox.Show(FormatControl[i].ToString());
 
             int i = ControlsIDs[recipeSpeedMixerInfo.Scurve];
             FormatControl[i] = true;
@@ -417,7 +474,7 @@ namespace Main.Pages.SubRecipe
 
             TextBox textBox = sender as TextBox;
             int i = ControlsIDs[recipeSpeedMixerInfo.Time00];
-            //General.ShowMessageBox(i.ToString() + " - " + recipeSpeedMixerInfo.time00.ToString());
+            //Message.MyMessageBox.Show(i.ToString() + " - " + recipeSpeedMixerInfo.time00.ToString());
             for (int j = 0; j < PhasesNumber; j++)
             {
                 if (textBox == times[j])
@@ -433,7 +490,7 @@ namespace Main.Pages.SubRecipe
                         {
                             FormatControl[i + 3 * j] = false;
                         }
-                        //General.ShowMessageBox((i+j).ToString() + " - " + FormatControl[i + j].ToString());
+                        //Message.MyMessageBox.Show((i+j).ToString() + " - " + FormatControl[i + j].ToString());
                     }
                 }
             }
@@ -481,7 +538,7 @@ namespace Main.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //General.ShowMessageBox(FormatControl[i].ToString());
+            //Message.MyMessageBox.Show(FormatControl[i].ToString());
         }
         private void TbSpeedMax_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -499,7 +556,7 @@ namespace Main.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //General.ShowMessageBox(FormatControl[i].ToString());
+            //Message.MyMessageBox.Show(FormatControl[i].ToString());
         }
         private void TbPressureMin_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -517,7 +574,7 @@ namespace Main.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //General.ShowMessageBox(FormatControl[i].ToString());
+            //Message.MyMessageBox.Show(FormatControl[i].ToString());
         }
         private void TbPressureMax_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -535,7 +592,7 @@ namespace Main.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //General.ShowMessageBox(FormatControl[i].ToString());
+            //Message.MyMessageBox.Show(FormatControl[i].ToString());
         }
         public bool IsFormatOk()
         {
@@ -547,14 +604,14 @@ namespace Main.Pages.SubRecipe
             for (int i = 0; i < FormatControl.Length; i++)
             {
                 n += FormatControl[i] ? 1 : 0;
-                //General.ShowMessageBox(i.ToString() + " - " + FormatControl[i].ToString());
+                //Message.MyMessageBox.Show(i.ToString() + " - " + FormatControl[i].ToString());
             }
 
             for (int i = 1; i < PhasesNumber; i++)
             {
                 x += (bool)toggleButtons[i].IsChecked ? 0 : 3; // Pour chaque checkbox décoché, on ajoutera 3 au score final
             }
-            //General.ShowMessageBox(n.ToString() + " + " + x.ToString() + " = " + (n+x).ToString() + " / " + FormatControl.Length.ToString());
+            //Message.MyMessageBox.Show(n.ToString() + " + " + x.ToString() + " = " + (n+x).ToString() + " / " + FormatControl.Length.ToString());
             return (n + x) == FormatControl.Length;
         }
     }

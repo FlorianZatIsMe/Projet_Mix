@@ -26,22 +26,7 @@ namespace Driver_RS232
         private readonly int alarmConnectId1;
         private readonly int alarmConnectId2;
         private readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        //private static IniInfo info;
 
-        /*        private static void ShowMessageBox(string message)
-                {
-                    if (info.Window != null)
-                    {
-                        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                        {
-                            MessageBox.Show(info.Window, message);
-                        }));
-                    }
-                    else
-                    {
-                        MessageBox.Show(message);
-                    }
-                }*/
 
         public RS232(SerialPort serialPort_arg, int alarmConnectId1_arg, int alarmConnectId2_arg, SerialDataReceivedEventHandler target)
         {

@@ -44,7 +44,7 @@ namespace Main.Pages.SubRecipe
         {
             logger.Debug("Start");
             
-            ControlsIDs = new int[recipeWeightInfo.Columns.Count];
+            ControlsIDs = new int[recipeWeightInfo.Ids.Count()];
             List<int> list = Settings.Default.RecipeWeight_IdDBControls.list;
             int n = 0;
 
@@ -97,26 +97,33 @@ namespace Main.Pages.SubRecipe
 
             tbSeqNumber.Text = n.ToString();
         }
-        public void SetPage(ISeqTabInfo seqInfo)
+        public void SetPage(object[] seqValues)
         {
             logger.Debug("SetPage");
-            RecipeWeightInfo recipeInfo = seqInfo as RecipeWeightInfo;
+            RecipeWeightInfo recipeInfo = new RecipeWeightInfo();
 
-            tbProduct.Text = recipeInfo.Columns[recipeInfo.Name].Value;
-            cbIsBarcode.IsChecked = recipeInfo.Columns[recipeInfo.IsBarcodeUsed].Value == DatabaseSettings.General_TrueValue_Read;
-            tbBarcode.Text = recipeInfo.Columns[recipeInfo.Barcode].Value;
+            if (seqValues.Count() != recipeInfo.Ids.Count())
+            {
+                logger.Error("On a un problème");
+                Message.MyMessageBox.Show("On a un problème");
+                return;
+            }
+
+            tbProduct.Text = seqValues[recipeInfo.Name].ToString();
+            cbIsBarcode.IsChecked = seqValues[recipeInfo.IsBarcodeUsed].ToString() == DatabaseSettings.General_TrueValue_Read;
+            tbBarcode.Text = seqValues[recipeInfo.Barcode].ToString();
             //cbxUnit.Text = recipeInfo.Columns[recipeInfo.Unit].Value;
             //cbxDecimalNumbers.Text = recipeInfo.Columns[recipeInfo.DecimalNumber].Value;
             //tbDecimalNumber.Text = recipeInfo.columns[recipeInfo.decimalNumber].value;
 
-            tbSetpoint.Text = decimal.Parse(recipeInfo.Columns[recipeInfo.Setpoint].Value).ToString("N" + Settings.Default.RecipeWeight_NbDecimal.ToString());
-            tbRange.Text = decimal.Parse(recipeInfo.Columns[recipeInfo.Criteria].Value).ToString("N" + Settings.Default.RecipeWeight_NbDecimal.ToString());
+            tbSetpoint.Text = ((decimal)seqValues[recipeInfo.Setpoint]).ToString("N" + Settings.Default.RecipeWeight_NbDecimal.ToString());
+            tbRange.Text = ((decimal)seqValues[recipeInfo.Criteria]).ToString("N" + Settings.Default.RecipeWeight_NbDecimal.ToString());
             /*
 
             tbSetpoint.Text = decimal.Parse(recipeInfo.Columns[recipeInfo.Setpoint].Value).ToString("N" + int.Parse(cbxDecimalNumbers.Text).ToString());
             tbRange.Text = decimal.Parse(recipeInfo.Columns[recipeInfo.Criteria].Value).ToString("N" + int.Parse(cbxDecimalNumbers.Text).ToString());
              */
-            cbIsSolvent.IsChecked = recipeInfo.Columns[recipeInfo.IsSolvent].Value == DatabaseSettings.General_TrueValue_Read;
+            cbIsSolvent.IsChecked = seqValues[recipeInfo.IsSolvent].ToString() == DatabaseSettings.General_TrueValue_Read;
 
             TbProduct_LostFocus(tbProduct, new RoutedEventArgs());
             if ((bool)cbIsBarcode.IsChecked) TbBarcode_LostFocus(tbBarcode, new RoutedEventArgs());
@@ -131,20 +138,47 @@ namespace Main.Pages.SubRecipe
             logger.Debug("GetPage");
 
             RecipeWeightInfo recipeInfo = new RecipeWeightInfo();
+            object[] recipeValues = new object[recipeInfo.Ids.Count()];
 
             // ICI, il faut faire du Parse et des try
 
-            recipeInfo.Columns[recipeInfo.Name].Value = tbProduct.Text;
-            recipeInfo.Columns[recipeInfo.IsBarcodeUsed].Value = (bool)cbIsBarcode.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
-            recipeInfo.Columns[recipeInfo.Barcode].Value = tbBarcode.Text;
-            recipeInfo.Columns[recipeInfo.Unit].Value = Settings.Default.RecipeWeight_gG_Unit; // cbxUnit.Text;
-            recipeInfo.Columns[recipeInfo.DecimalNumber].Value = Settings.Default.RecipeWeight_NbDecimal.ToString();
-            //recipeInfo.Columns[recipeInfo.DecimalNumber].Value = cbxDecimalNumbers.Text;
-            recipeInfo.Columns[recipeInfo.Setpoint].Value = tbSetpoint.Text;
-            recipeInfo.Columns[recipeInfo.Criteria].Value = tbRange.Text;
-            recipeInfo.Columns[recipeInfo.IsSolvent].Value = (bool)cbIsSolvent.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+            recipeValues[recipeInfo.Name] = tbProduct.Text;
+            recipeValues[recipeInfo.IsBarcodeUsed] = (bool)cbIsBarcode.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+            recipeValues[recipeInfo.Barcode] = tbBarcode.Text;
+            recipeValues[recipeInfo.Unit] = Settings.Default.RecipeWeight_gG_Unit; // cbxUnit.Text;
+            recipeValues[recipeInfo.DecimalNumber] = Settings.Default.RecipeWeight_NbDecimal.ToString();
+            //recipeValues[recipeInfo.DecimalNumber] = cbxDecimalNumbers.Text;
+            recipeValues[recipeInfo.Setpoint] = tbSetpoint.Text;
+            recipeValues[recipeInfo.Criteria] = tbRange.Text;
+            recipeValues[recipeInfo.IsSolvent] = (bool)cbIsSolvent.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
 
             return recipeInfo;
+        }
+        public ISeqTabInfo GetRecipeInfo()
+        {
+            logger.Debug("GetRecipeInfo");
+            return new RecipeWeightInfo();
+        }
+        public object[] GetRecipeValues()
+        {
+            logger.Debug("GetRecipeValues");
+
+            RecipeWeightInfo recipeInfo = new RecipeWeightInfo();
+            object[] recipeValues = new object[recipeInfo.Ids.Count()];
+
+            // ICI, il faut faire du Parse et des try
+
+            recipeValues[recipeInfo.Name] = tbProduct.Text;
+            recipeValues[recipeInfo.IsBarcodeUsed] = (bool)cbIsBarcode.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+            recipeValues[recipeInfo.Barcode] = tbBarcode.Text;
+            recipeValues[recipeInfo.Unit] = Settings.Default.RecipeWeight_gG_Unit; // cbxUnit.Text;
+            recipeValues[recipeInfo.DecimalNumber] = Settings.Default.RecipeWeight_NbDecimal.ToString();
+            //recipeValues[recipeInfo.DecimalNumber] = cbxDecimalNumbers.Text;
+            recipeValues[recipeInfo.Setpoint] = tbSetpoint.Text;
+            recipeValues[recipeInfo.Criteria] = tbRange.Text;
+            recipeValues[recipeInfo.IsSolvent] = (bool)cbIsSolvent.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+
+            return recipeValues;
         }
         private void CbIsBarcode_Checked(object sender, RoutedEventArgs e)
         {
@@ -178,7 +212,7 @@ namespace Main.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //General.ShowMessageBox(FormatControl[i].ToString());
+            //Message.MyMessageBox.Show(FormatControl[i].ToString());
         }
         private void TbBarcode_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -198,7 +232,7 @@ namespace Main.Pages.SubRecipe
 
             CurrentFormatControl_tbBarcode = FormatControl[i];
 
-            //General.ShowMessageBox(FormatControl[i].ToString());
+            //Message.MyMessageBox.Show(FormatControl[i].ToString());
         }
         private void TbSetpoint_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -229,7 +263,7 @@ namespace Main.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //General.ShowMessageBox(FormatControl[i].ToString());
+            //Message.MyMessageBox.Show(FormatControl[i].ToString());
         }
         private void TbRange_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -260,7 +294,7 @@ namespace Main.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //General.ShowMessageBox(FormatControl[i].ToString());
+            //Message.MyMessageBox.Show(FormatControl[i].ToString());
         }
         /*
         private void TbMax_LostFocus(object sender, RoutedEventArgs e)
@@ -291,7 +325,7 @@ namespace Main.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //General.ShowMessageBox(FormatControl[i].ToString());
+            //Message.MyMessageBox.Show(FormatControl[i].ToString());
         }*/
         public bool IsFormatOk()
         {
@@ -306,7 +340,7 @@ namespace Main.Pages.SubRecipe
             }
 
             x = (bool)cbIsBarcode.IsChecked ? 0 : 1;
-            //General.ShowMessageBox(((n + x) == FormatControl.Length).ToString() + " - " + (n + x).ToString() + " = " + n.ToString() + " + " + x.ToString() + " / " + FormatControl.Length.ToString()); //((n + x) == FormatControl.Length).ToString() + n.ToString + x.ToString() + FormatControl.Length.ToString()
+            //Message.MyMessageBox.Show(((n + x) == FormatControl.Length).ToString() + " - " + (n + x).ToString() + " = " + n.ToString() + " + " + x.ToString() + " / " + FormatControl.Length.ToString()); //((n + x) == FormatControl.Length).ToString() + n.ToString + x.ToString() + FormatControl.Length.ToString()
             return (n+x) == FormatControl.Length;
         }
     }

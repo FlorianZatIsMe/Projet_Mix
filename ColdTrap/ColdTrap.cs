@@ -25,21 +25,6 @@ namespace Driver_ColdTrap
             info = info_arg;
         }
 
-        private static void ShowMessageBox(string message)
-        {
-            if (info.Window != null)
-            {
-                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    MessageBox.Show(info.Window, message);
-                }));
-            }
-            else
-            {
-                MessageBox.Show(message);
-            }
-        }
-
         static ColdTrap()
         {
             try
@@ -57,7 +42,7 @@ namespace Driver_ColdTrap
             }
             catch (DaqException exception)
             {
-                ShowMessageBox("DaqException: " + exception.Message);
+                Message.MyMessageBox.Show("DaqException: " + exception.Message);
                 //dispose task
                 myTask.Dispose();
             }
@@ -76,14 +61,14 @@ namespace Driver_ColdTrap
             {
                 //dispose task
                 myTask.Dispose();
-                ShowMessageBox("DaqException_2: " + exception.Message);
+                Message.MyMessageBox.Show("DaqException_2: " + exception.Message);
             }
 
             catch (IndexOutOfRangeException exception)
             {
                 //dispose task
                 myTask.Dispose();
-                ShowMessageBox("Error: You must specify eight lines in the channel string (i.e., 0:7). " + exception.Message);
+                Message.MyMessageBox.Show("Error: You must specify eight lines in the channel string (i.e., 0:7). " + exception.Message);
             }
             return false;
         }

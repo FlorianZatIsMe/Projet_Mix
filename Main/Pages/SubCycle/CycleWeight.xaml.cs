@@ -73,6 +73,7 @@ namespace Main.Pages.SubCycle
         private readonly SubCycleArg subCycle;
         private readonly int previousSeqId;
         private readonly RecipeWeightInfo recipeWeightInfo = new RecipeWeightInfo();
+        private readonly object[] recipeWeightValues;
         //private readonly decimal setpoint;
         //private readonly decimal min;
         //private readonly decimal max;
@@ -84,6 +85,7 @@ namespace Main.Pages.SubCycle
         //private bool disposedValue;
         //private decimal currentWeight;
         private readonly CycleWeightInfo cycleWeightInfo = new CycleWeightInfo();
+        private readonly object[] cycleWeightValues;
 
 
         // Constructor to measure the mass of the empty bowl at the start of a cycle
@@ -121,51 +123,64 @@ namespace Main.Pages.SubCycle
             message1 = message1FullBowl;
 
             //Calculation the theoritical total weight
-            CycleTableInfo currentCycle = new CycleTableInfo();
-            CycleWeightInfo currentWeigh = new CycleWeightInfo();
-            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(CycleTableInfo), nextSeqInfo.idCycle.ToString()); });
-            currentCycle = (CycleTableInfo)t.Result;
+            CycleTableInfo cycleTableInfo = new CycleTableInfo();
+            object[] cycleValues;
+            CycleWeightInfo cycleWeightInfo = new CycleWeightInfo();
+            object[] cycleWeightValues;
+            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow_new(new CycleTableInfo(), nextSeqInfo.idCycle); });
+            cycleValues = (object[])t.Result;
 
             try
             {
-                currentSetpoint = decimal.Parse(currentCycle.Columns[currentCycle.bowlWeight].Value);
+                currentSetpoint = decimal.Parse(cycleValues[cycleTableInfo.bowlWeight].ToString());
             }
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                General.ShowMessageBox(ex.Message);
+                Message.MyMessageBox.Show(ex.Message);
                 currentSetpoint = -1;
             }
 
-            ISeqTabInfo seqTabInfo = currentCycle;
-            string nextId = currentCycle.Columns[currentCycle.NextSeqId].Value;
-            string nextType = currentCycle.Columns[currentCycle.NextSeqType].Value;
+            ISeqTabInfo seqTabInfo = cycleTableInfo;
+            object[] seqTabValues;
+            int? nextId;
+            if (cycleValues[cycleTableInfo.NextSeqId] == null) nextId = null;
+            else nextId = (int)cycleValues[cycleTableInfo.NextSeqId];
+
+            int? nextType;
+            if (cycleValues[cycleTableInfo.NextSeqType] == null) nextType = null;
+            else nextType = (int)cycleValues[cycleTableInfo.NextSeqType];
 
             if (currentSetpoint != -1)
             {
-                while (nextId != "" && nextId != null)
+                while (nextId != null)
                 {
-                    t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(Sequence.list[int.Parse(nextType)].subCycleInfo.GetType(), nextId); });
-                    seqTabInfo = (ISeqTabInfo)t.Result;
-                    nextId = seqTabInfo.Columns[seqTabInfo.NextSeqId].Value;
-                    nextType = seqTabInfo.Columns[seqTabInfo.NextSeqType].Value;
+                    seqTabInfo = Sequence.list[(int)nextType].subCycleInfo;
+                    t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow_new(seqTabInfo, nextId); });
+                    seqTabValues = (object[])t.Result;
 
-                    if (seqTabInfo.SeqType == currentWeigh.SeqType)
+                    if (seqTabValues[seqTabInfo.NextSeqId] == null || seqTabValues[seqTabInfo.NextSeqId].ToString() == "") nextId = null;
+                    else nextId = int.Parse(seqTabValues[seqTabInfo.NextSeqId].ToString());
+
+                    if (seqTabValues[seqTabInfo.NextSeqType] == null || seqTabValues[seqTabInfo.NextSeqType].ToString() =="") nextType = null;
+                    else nextType = int.Parse(seqTabValues[seqTabInfo.NextSeqType].ToString());
+
+                    if (seqTabInfo.SeqType == cycleWeightInfo.SeqType)
                     {
-                        currentWeigh = (CycleWeightInfo)seqTabInfo;
+                        cycleWeightValues = seqTabValues;
 
-                        if (currentWeigh.Columns[currentWeigh.IsSolvent].Value == DatabaseSettings.General_FalseValue_Read)
+                        if (cycleWeightValues[cycleWeightInfo.IsSolvent].ToString() == DatabaseSettings.General_FalseValue_Read)
                         {
                             try
                             {
-                                currentSetpoint += decimal.Parse(currentWeigh.Columns[currentWeigh.ActualValue].Value);
+                                currentSetpoint += decimal.Parse(cycleWeightValues[cycleWeightInfo.ActualValue].ToString());
                             }
                             catch (Exception ex)
                             {
                                 logger.Error(ex.Message);
-                                General.ShowMessageBox(ex.Message);
+                                Message.MyMessageBox.Show(ex.Message);
                                 currentSetpoint = -1;
-                                nextType = "";
+                                nextType = null;
                             }
                         }
                     }
@@ -203,71 +218,57 @@ namespace Main.Pages.SubCycle
             subCycle = subCycleArg;
             frameMain = subCycle.frameMain;
 
-            //subCycle.frameMain.ContentRendered += new EventHandler(FrameMain_ContentRendered);
-
             //isSequenceOver = false;
             isWeightCorrect = false;
             //wasBalanceFreeOnce = false;
             General.CurrentCycleInfo.UpdateSequenceNumber();
 
-            /*
-            // Initialisation des timers
-            getWeightTimer = new System.Timers.Timer
-            {
-                Interval = Settings.Default.CycleWeight_getWeightTimer_Interval,
-                AutoReset = false
-            };
-            getWeightTimer.Elapsed += GetWeightTimer_OnTimedEvent;*/
+            //t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeWeightInfo), subCycle.id.ToString()); });
+            //recipeWeightInfo = (RecipeWeightInfo)t.Result;
 
-            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeWeightInfo), subCycle.id); });
-            recipeWeightInfo = (RecipeWeightInfo)t.Result;
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow_new(new RecipeWeightInfo(), subCycle.id); });
+            recipeWeightValues = (object[])t.Result;
 
-            if (recipeWeightInfo == null) // Si la commande a renvoyée une ligne
+            if (recipeWeightValues == null) // Si la commande a renvoyée une ligne
             {
                 logger.Error(Settings.Default.CycleWeight_Error_NoRecipe);
-                General.ShowMessageBox(Settings.Default.CycleWeight_Error_NoRecipe);
+                Message.MyMessageBox.Show(Settings.Default.CycleWeight_Error_NoRecipe);
                 return; // ou exit carrément
             }
 
-            cycleWeightInfo.SetRecipeParameters(recipeWeightInfo, subCycle.idCycle);
+            cycleWeightValues = cycleWeightInfo.GetRecipeParameters(recipeWeightValues, subCycle.idCycle);
 
-            message1 = message1Cycle1 + recipeWeightInfo.Columns[recipeWeightInfo.Name].Value + message1Cycle2;
-            currentSetpoint = decimal.Parse(cycleWeightInfo.Columns[cycleWeightInfo.Setpoint].Value);
-            setpointText2 = "g [ " + cycleWeightInfo.Columns[cycleWeightInfo.Min].Value + "; " + cycleWeightInfo.Columns[cycleWeightInfo.Max].Value + " ]";
-
-            /*
-            tbPhaseName.Text = recipeWeightInfo.Columns[recipeWeightInfo.Name].Value;
-            labelWeight.Text = Settings.Default.CycleWeight_WeightField + " (" + Settings.Default.CycleWeight_SetpointField + ": " + cycleWeightInfo.Columns[cycleWeightInfo.Setpoint].Value + Settings.Default.CycleFinalWeight_g_Unit + ")";
-            labelWeightLimits.Text = "[ " + cycleWeightInfo.Columns[cycleWeightInfo.Min].Value + "; " + cycleWeightInfo.Columns[cycleWeightInfo.Max].Value + " ]";
-            */
+            message1 = message1Cycle1 + recipeWeightValues[recipeWeightInfo.Name].ToString() + message1Cycle2;
+            currentSetpoint = decimal.Parse(cycleWeightValues[cycleWeightInfo.Setpoint].ToString());
+            setpointText2 = "g [ " + cycleWeightValues[cycleWeightInfo.Min].ToString() + "; " + cycleWeightValues[cycleWeightInfo.Max].ToString() + " ]";
 
             InitializeComponent();
 
-            logger.Error(cycleWeightInfo.IsSolvent.ToString() + " - " + cycleWeightInfo.Columns[cycleWeightInfo.IsSolvent].Id + " - " + cycleWeightInfo.Columns[cycleWeightInfo.IsSolvent].Value);
+            logger.Error(cycleWeightInfo.IsSolvent.ToString() + " - " + cycleWeightInfo.Ids[cycleWeightInfo.IsSolvent] + " - " + cycleWeightValues[cycleWeightInfo.IsSolvent].ToString());
             // A CORRIGER : IF RESULT IS FALSE
-            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(cycleWeightInfo); });
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(cycleWeightInfo, cycleWeightValues); });
             //MyDatabase.InsertRow(cycleWInfo);
             // A CORRIGER : IF RESULT IS FALSE
-            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(cycleWeightInfo.TabName, cycleWeightInfo.Columns[cycleWeightInfo.Id].Id); });
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax_new(cycleWeightInfo, cycleWeightInfo.Ids[cycleWeightInfo.Id]); });
             previousSeqId = (int)t.Result;
-            //idSubCycle = MyDatabase.GetMax(cycleWInfo.name, cycleWInfo.columns[cycleWInfo.id].id);
 
-            subCycle.prevSeqInfo.Columns[subCycle.prevSeqInfo.NextSeqType].Value = cycleWeightInfo.SeqType.ToString();
-            subCycle.prevSeqInfo.Columns[subCycle.prevSeqInfo.NextSeqId].Value = previousSeqId.ToString();
+            object[] prevSeqValues = new object[subCycle.prevSeqInfo.Ids.Count()];
+            prevSeqValues[subCycle.prevSeqInfo.NextSeqType] = cycleWeightInfo.SeqType.ToString();
+            prevSeqValues[subCycle.prevSeqInfo.NextSeqId] = previousSeqId.ToString();
 
             // A CORRIGER : IF RESULT IS FALSE
-            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(subCycle.prevSeqInfo, subCycle.idPrevious.ToString()); });
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row_new(subCycle.prevSeqInfo, prevSeqValues, subCycle.idPrevious); });
             //MyDatabase.Update_Row(subCycle.prevSeqInfo, subCycle.idPrevious.ToString());
-            
+
             nextSeqInfo = new NextSeqInfo(
-                recipeParam_arg: recipeWeightInfo, // done
+                recipeInfo_arg: recipeWeightInfo, // done
+                recipeValues_arg: recipeWeightValues,
                 frameMain_arg: subCycle.frameMain,
                 frameInfoCycle_arg: subCycle.frameInfoCycle,
                 idCycle_arg: subCycle.idCycle,
                 previousSeqType_arg: recipeWeightInfo.SeqType, // done
-                previousSeqId_arg: previousSeqId.ToString(),
-                isTest_arg: subCycle.isTest);
-
+                previousSeqId_arg: previousSeqId,
+                isTest_arg: subCycle.isTest) ;
             Initialize();
         }
 
@@ -319,8 +320,8 @@ namespace Main.Pages.SubCycle
                         }
                         else if (isCycle)
                         {
-                            labelWeight.Foreground = Math.Abs(weight.value - decimal.Parse(recipeWeightInfo.Columns[recipeWeightInfo.Setpoint].Value)) <= decimal.Parse(recipeWeightInfo.Columns[recipeWeightInfo.Criteria].Value) ? Brushes.AliceBlue : Brushes.Red;
-                            logger.Error((Math.Abs(weight.value - decimal.Parse(recipeWeightInfo.Columns[recipeWeightInfo.Setpoint].Value)) <= decimal.Parse(recipeWeightInfo.Columns[recipeWeightInfo.Criteria].Value)).ToString() + weight.value.ToString() + recipeWeightInfo.Columns[recipeWeightInfo.Setpoint].Value + Math.Abs(weight.value - decimal.Parse(recipeWeightInfo.Columns[recipeWeightInfo.Setpoint].Value)).ToString() + recipeWeightInfo.Columns[recipeWeightInfo.Criteria].Value);
+                            labelWeight.Foreground = Math.Abs(weight.value - decimal.Parse(recipeWeightValues[recipeWeightInfo.Setpoint].ToString())) <= decimal.Parse(recipeWeightValues[recipeWeightInfo.Criteria].ToString()) ? Brushes.AliceBlue : Brushes.Red;
+                            logger.Error((Math.Abs(weight.value - decimal.Parse(recipeWeightValues[recipeWeightInfo.Setpoint].ToString())) <= decimal.Parse(recipeWeightValues[recipeWeightInfo.Criteria].ToString())).ToString() + weight.value.ToString() + recipeWeightValues[recipeWeightInfo.Setpoint].ToString() + Math.Abs(weight.value - decimal.Parse(recipeWeightValues[recipeWeightInfo.Setpoint].ToString())).ToString() + recipeWeightValues[recipeWeightInfo.Criteria].ToString());
             }
                     }
                 });
@@ -349,7 +350,7 @@ namespace Main.Pages.SubCycle
                 while (!isBalanceFree)
                 {
                     // We ask the user if he wants to try to block the balance again
-                    if (General.ShowMessageBox("La balance n'est pas disponible, voulez-vous attendre ?", "Balance bloquée", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    if (Message.MyMessageBox.Show("La balance n'est pas disponible, voulez-vous attendre ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
                         // If he wants to wait, we wait
                         if (Balance.IsFree())
@@ -373,7 +374,7 @@ namespace Main.Pages.SubCycle
                 while (!Balance.IsConnected() && !isManual)
                 {
                     // We ask the user if he wants to try to connect to the balance again
-                    if (General.ShowMessageBox("La balance n'est pas connecté, voulez-vous attendre ?", "Balance déconnecté", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    if (Message.MyMessageBox.Show("La balance n'est pas connecté, voulez-vous attendre ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
                         // If he wants to wait, we connect to the balance
                         Balance.Connect();
@@ -396,10 +397,9 @@ namespace Main.Pages.SubCycle
                 }
 
                 // On vérifie le scan du produit, si on est en train de peser un produit et que la recette demande de contrôler le code barre
-                if (isCycle && recipeWeightInfo.Columns[recipeWeightInfo.IsBarcodeUsed].Value == DatabaseSettings.General_TrueValue_Read)
+                if (isCycle && recipeWeightValues[recipeWeightInfo.IsBarcodeUsed].ToString() == DatabaseSettings.General_TrueValue_Read)
                 {
-                    tbScan.Focus();
-                    labelMessage.Text = Settings.Default.CycleWeight_Request_ScanProduct + " " + recipeWeightInfo.Columns[recipeWeightInfo.Name].Value;
+                    labelMessage.Text = Settings.Default.CycleWeight_Request_ScanProduct + " " + recipeWeightValues[recipeWeightInfo.Name].ToString();
                     tbScan.Visibility = Visibility.Visible;
                     isScanningStep = true;
 
@@ -416,11 +416,11 @@ namespace Main.Pages.SubCycle
                 // if we are in manual mode, perform a manual tare
                 if (isManual)
                 {
-                    General.ShowMessageBox("Veuillez retirer tout object sur la balance puis faites une tare de la balance manuellement. Cliquer sur le ok une fois terminé");
+                    Message.MyMessageBox.Show("Veuillez retirer tout object sur la balance puis faites une tare de la balance manuellement. Cliquer sur le ok une fois terminé");
                 }
                 else
                 {
-                    General.ShowMessageBox("Veuillez retirer tout object sur la balance. Cliquer sur le bouton une fois fait");
+                    Message.MyMessageBox.Show("Veuillez retirer tout object sur la balance. Cliquer sur le bouton une fois fait");
                 }
 
                 labelWeight.Visibility = isManual ? Visibility.Collapsed : Visibility.Visible;
@@ -454,7 +454,7 @@ namespace Main.Pages.SubCycle
                     }
                     else
                     {
-                        if (General.ShowMessageBox("Tare de la balance échouée, voulez-vous réessayer ?", "Titre", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                        if (Message.MyMessageBox.Show("Tare de la balance échouée, voulez-vous réessayer ?", MessageBoxButton.YesNo) == MessageBoxResult.No)
                         {
                             exeTare = false;
                             Stop();
@@ -481,6 +481,9 @@ namespace Main.Pages.SubCycle
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
+            Button button = sender as Button;
+            button.IsEnabled = false;
+
             bool keepWaiting = true;
             int waitingCounter = 0;
 
@@ -498,7 +501,7 @@ namespace Main.Pages.SubCycle
                     if (waitingCounter > 10) // 5s
                     {
                         // On demande à l'opérateur s'il veut continuer à attendre
-                        if (General.ShowMessageBox("Le poids n'est toujours pas stable, voulez-vous continuer à attendre ?", "Problème de stabilité", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                        if (Message.MyMessageBox.Show("Le poids n'est toujours pas stable, voulez-vous continuer à attendre ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                         {
                             // S'il veut continuer à attendre, on continue à attendre
                             waitingCounter = 0;
@@ -508,14 +511,14 @@ namespace Main.Pages.SubCycle
                             // Sinon on arrête d'attendre
                             keepWaiting = false;
                             Stop();
-                            return;
+                            goto End;
                         }
                     }
                 }
 
                 StopTimer();
 
-                if (!keepWaiting) return;
+                if (!keepWaiting) goto End;
 
                 // Le poids est stable, du coup on le stock dans info et on lance la séquence
                 validWeight = weight.value;
@@ -528,8 +531,8 @@ namespace Main.Pages.SubCycle
                 }
                 else
                 {
-                    General.ShowMessageBox("Format de la masse incorrect");
-                    return;
+                    Message.MyMessageBox.Show("Format de la masse incorrect");
+                    goto End;
                 }
             }
 
@@ -537,10 +540,10 @@ namespace Main.Pages.SubCycle
             {
                 if (!IsFinalWeightCorrect(validWeight, currentSetpoint))  //if (!IsWeightCorrect(validWeight))
                 {
-                    if (General.ShowMessageBox("La masse du produit est incorrecte, voulez-vous continuer ?", "Masse incorrect", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                    if (Message.MyMessageBox.Show("La masse du produit est incorrecte, voulez-vous continuer ?", MessageBoxButton.YesNo) == MessageBoxResult.No)
                     {
                         StartTimer();
-                        return;
+                        goto End;
                     }
                 }
 
@@ -555,10 +558,10 @@ namespace Main.Pages.SubCycle
                 // Sinon, message d'erreur qui propose de recommencer ou pas
                 if(!IsSampWeightCorrect(validWeight, currentSetpoint)) //if (!IsWeightCorrect(validWeight))
                 {
-                    if (General.ShowMessageBox("La masse du poids étalon est incorrecte, voulez-vous continuer ?", "Masse incorrect", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                    if (Message.MyMessageBox.Show("La masse du poids étalon est incorrecte, voulez-vous continuer ?", MessageBoxButton.YesNo) == MessageBoxResult.No)
                     {
                         StartTimer();
-                        return;
+                        goto End;
                     }
                     else
                     {
@@ -595,45 +598,48 @@ namespace Main.Pages.SubCycle
 
                     // On met dans la base de données toutes les mesures (cible et valeur) avec le status
                     DailyTestInfo dailyTestInfo = new DailyTestInfo();
-                    dailyTestInfo.Columns[dailyTestInfo.Username].Value = General.loggedUsername;
-                    dailyTestInfo.Columns[dailyTestInfo.EquipmentName].Value = General.equipement_name;
+                    object[] dailyTestValues = new object[dailyTestInfo.Ids.Count()];
+                    dailyTestValues[dailyTestInfo.Username] = General.loggedUsername;
+                    dailyTestValues[dailyTestInfo.EquipmentName] = General.equipement_name;
                     for (int i = 0; i < referenceMasses.Length; i++)
                     {
-                        dailyTestInfo.Columns[dailyTestInfo.Setpoint1 + i].Value = referenceMasses[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
-                        dailyTestInfo.Columns[dailyTestInfo.Measure1 + i].Value = measuredMasses[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
+                        dailyTestValues[dailyTestInfo.Setpoint1 + i] = referenceMasses[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
+                        dailyTestValues[dailyTestInfo.Measure1 + i] = measuredMasses[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
                     }
-                    dailyTestInfo.Columns[dailyTestInfo.Status].Value = isSamplingPass ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
-                    Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(dailyTestInfo); });
+                    dailyTestValues[dailyTestInfo.Status] = isSamplingPass ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+                    Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(dailyTestInfo, dailyTestValues); });
                     bool isSamplingRecorded = (bool)t.Result;
 
                     // Même chose dans l'audit trail
                     string description = "Test journalier " + (isSamplingPass ? "réussi" : "échoué");
                     for (int i = 0; i < referenceMasses.Length; i++)
                     {
-                        description += "\n" + dailyTestInfo.Columns[dailyTestInfo.Setpoint1 + i].DisplayName + ": " + referenceMasses[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal) + "g - ";
-                        description += dailyTestInfo.Columns[dailyTestInfo.Measure1 + i].DisplayName + ": " + measuredMasses[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal) + "g";
+                        description += "\n" + dailyTestInfo.Descriptions[dailyTestInfo.Setpoint1 + i] + ": " + referenceMasses[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal) + "g - ";
+                        description += dailyTestInfo.Descriptions[dailyTestInfo.Measure1 + i] + ": " + measuredMasses[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal) + "g";
                     }
 
                     AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-                    auditTrailInfo.Columns[auditTrailInfo.Username].Value = General.loggedUsername;
-                    auditTrailInfo.Columns[auditTrailInfo.EventType].Value = Settings.Default.General_AuditTrailEvent_Event;
-                    auditTrailInfo.Columns[auditTrailInfo.Description].Value = description;
-                    t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTrailInfo); });
+                    object[] auditTrailValues = new object[auditTrailInfo.Ids.Count()];
+                    auditTrailValues[auditTrailInfo.Username] = General.loggedUsername;
+                    auditTrailValues[auditTrailInfo.EventType] = Settings.Default.General_AuditTrailEvent_Event;
+                    auditTrailValues[auditTrailInfo.Description] = description;
+                    t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTrailInfo, auditTrailValues); });
 
                     // On génère le rapport d'étalonnage
                     if (isSamplingRecorded)
                     {
-                        t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(new DailyTestInfo(), dailyTestInfo.Columns[dailyTestInfo.Id].Id); });
+                        t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax_new(new DailyTestInfo(), dailyTestInfo.Ids[dailyTestInfo.Id]); });
                         ReportGeneration report = new ReportGeneration();
-                        string id = ((int)t.Result).ToString();
-                        General.ShowMessageBox("Test journalier " + (isSamplingPass ? "réussi" : "échoué"));
+                        int id = ((int)t.Result);
+                        Message.MyMessageBox.Show("Test journalier " + (isSamplingPass ? "réussi" : "échoué"));
                         Task printReportTask = Task.Factory.StartNew(() => report.GenerateSamplingReport(id));
-                        printReportTask.Wait();
-                        General.ShowMessageBox("Rapport généré");
+                        //printReportTask.Wait();
+                        //report.GenerateSamplingReport(id);
+                        //Message.MyMessageBox.Show("Rapport généré");
                     }
                     else
                     {
-                        General.ShowMessageBox("L'étalonnage n'a pas être enregistrer");
+                        Message.MyMessageBox.Show("L'étalonnage n'a pas être enregistrer");
                     }
                     frameMain.Content = new Pages.Status();
                 }
@@ -643,13 +649,13 @@ namespace Main.Pages.SubCycle
                 Task<object> t;
 
                 isWeightCorrect =
-                    validWeight >= decimal.Parse(cycleWeightInfo.Columns[cycleWeightInfo.Min].Value) &&
-                    validWeight <= decimal.Parse(cycleWeightInfo.Columns[cycleWeightInfo.Max].Value);
+                    validWeight >= decimal.Parse(cycleWeightValues[cycleWeightInfo.Min].ToString()) &&
+                    validWeight <= decimal.Parse(cycleWeightValues[cycleWeightInfo.Max].ToString());
 
                 if (!isWeightCorrect)
                 {
-                    General.ShowMessageBox(Settings.Default.CycleWeight_IncorrectWeight);
-                    return;
+                    Message.MyMessageBox.Show(Settings.Default.CycleWeight_IncorrectWeight);
+                    goto End;
                 }
                 else
                 {
@@ -658,22 +664,22 @@ namespace Main.Pages.SubCycle
                     General.CurrentCycleInfo.UpdateCurrentWeightInfo(new string[] { validWeight.ToString() });
 
                     CycleWeightInfo cycleWInfo = new CycleWeightInfo();
-                    cycleWInfo.Columns[cycleWInfo.WasWeightManual].Value = isManual ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
-                    cycleWInfo.Columns[cycleWInfo.DateTime].Value = DateTime.Now.ToString(Settings.Default.DateTime_Format_Write);
-                    cycleWInfo.Columns[cycleWInfo.ActualValue].Value = validWeight.ToString();
+                    object[] cycleWValues = new object[cycleWInfo.Ids.Count()];
+                    cycleWValues[cycleWInfo.WasWeightManual] = isManual ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+                    cycleWValues[cycleWInfo.DateTime] = DateTime.Now.ToString(Settings.Default.DateTime_Format_Write);
+                    cycleWValues[cycleWInfo.ActualValue] = validWeight.ToString();
 
                     // A CORRIGER : IF RESULT IS FALSE
-                    t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(cycleWInfo, previousSeqId.ToString()); });
-
-                    SubCycleArg sub = new SubCycleArg(subCycle.frameMain, subCycle.frameInfoCycle, recipeWeightInfo.Columns[recipeWeightInfo.NextSeqId].Value, subCycle.idCycle, previousSeqId, recipeWeightInfo.TabName, new CycleWeightInfo(), subCycle.isTest);
+                    t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row_new(cycleWInfo, cycleWValues, previousSeqId); });
 
                     NextSeqInfo nextSeqInfo = new NextSeqInfo(
-                        recipeParam_arg: recipeWeightInfo,
+                        recipeInfo_arg: recipeWeightInfo,
+                        recipeValues_arg: recipeWeightValues,
                         frameMain_arg: subCycle.frameMain,
                         frameInfoCycle_arg: subCycle.frameInfoCycle,
                         idCycle_arg: subCycle.idCycle,
                         previousSeqType_arg: 0,
-                        previousSeqId_arg: previousSeqId.ToString(),
+                        previousSeqId_arg: previousSeqId,
                         isTest_arg: subCycle.isTest);
                     General.NextSequence(nextSeqInfo, new CycleWeightInfo());
                 }
@@ -683,7 +689,8 @@ namespace Main.Pages.SubCycle
                 info.bowlWeight = validWeight.ToString("N" + Settings.Default.RecipeWeight_NbDecimal.ToString());
                 General.StartCycle(info);
             }
-
+        End:
+            button.IsEnabled = true;
         }
 
         private void Stop()
@@ -700,18 +707,6 @@ namespace Main.Pages.SubCycle
             {
                 StopCycle();
             }
-
-/*            if (!isSampling && info.isTest)
-            {
-                // A CORRIGER : IF RESULT IS FALSE
-                Task<object> task = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeInfo), info.recipeID); });
-                RecipeInfo recipeInfo = (RecipeInfo)task.Result;
-                info.frameMain.Content = new Recipe(RcpAction.Modify, info.frameMain, info.frameInfoCycle, recipeInfo.Columns.Count == 0 ? "" : recipeInfo.Columns[recipeInfo.Name].Value);
-            }
-            else
-            {
-                frameMain.Content = new Status();
-            }*/
         }
         private void StopTimer()
         {
@@ -735,9 +730,11 @@ namespace Main.Pages.SubCycle
             }
             else if (isBowlWeight && info.isTest)
             {
-                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeInfo), info.recipeID.ToString()); });
-                RecipeInfo recipeInfo = (RecipeInfo)t.Result;
-                info.frameMain.Content = new Recipe(RcpAction.Modify, info.frameMain, info.frameInfoCycle, recipeInfo.Columns.Count == 0 ? "" : recipeInfo.Columns[recipeInfo.Name].Value, General.info.Window);
+                RecipeInfo recipeInfo = new RecipeInfo();
+                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow_new(new RecipeInfo(), info.recipeID); });
+                object[] recipeValues = (object[])t.Result;
+
+                info.frameMain.Content = new Recipe(RcpAction.Modify, info.frameMain, info.frameInfoCycle, recipeValues == null ? "" : recipeValues[recipeInfo.Name].ToString(), General.info.Window);
             }
             else
             {
@@ -808,7 +805,7 @@ namespace Main.Pages.SubCycle
 
             if (e.Key == Key.Enter)
             {
-                if (recipeWeightInfo.Columns[recipeWeightInfo.Barcode].Value == textbox.Text)
+                if (recipeWeightValues[recipeWeightInfo.Barcode].ToString() == textbox.Text)
                 {
                     isScanningStep = false;
                     tbScan.Visibility = Visibility.Collapsed;
@@ -816,13 +813,26 @@ namespace Main.Pages.SubCycle
                 else
                 {
                     textbox.Text = "";
-                    for (int i = 0; i < recipeWeightInfo.Columns.Count; i++)
+                    for (int i = 0; i < recipeWeightInfo.Ids.Count(); i++)
                     {
-                        logger.Trace(recipeWeightInfo.Columns[i].Value);
+                        logger.Trace(recipeWeightValues[i].ToString());
                     }
-                    General.ShowMessageBox(Settings.Default.CycleWeigh_IncorrectBarcode + " " + recipeWeightInfo.Columns[recipeWeightInfo.Barcode].Value);
+                    Message.MyMessageBox.Show(Settings.Default.CycleWeigh_IncorrectBarcode + " " + recipeWeightValues[recipeWeightInfo.Barcode].ToString());
                 }
             }
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (isScanningStep)
+            {
+                Message.MyMessageBox.Show(tbScan.Focus().ToString());
+            }
+        }
+
+        private void tbScan_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            tbScan.Focus();
         }
     }
 }

@@ -207,6 +207,10 @@
       <Project>{9DA604D9-06C8-4EFF-9688-E9934CE25F40}</Project>
       <Name>Database</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Message\Message.csproj">
+      <Project>{77b11b88-ceda-40c3-8b83-e2ef31bce0b3}</Project>
+      <Name>Message</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

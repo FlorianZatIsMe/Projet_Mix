@@ -4,6 +4,8 @@ using Main.Pages;
 using Main.Properties;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
+using System.Drawing.Printing;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -14,13 +16,15 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Drawing.Printing;
+//using System.Drawing.Printing;
 using System.Diagnostics;
 using static Alarm_Management.AlarmManagement;
 using System.Collections;
 using System.Threading;
 using System.Net.Sockets;
 using System.Net;
+using System.Drawing;
+using System.Printing;
 
 namespace Main
 {
@@ -104,7 +108,7 @@ namespace Main
         private readonly double marginH_GeneralInfo = 25;
         private readonly double marginH_GeneralInfoItems = 8;
 
-        private readonly string recipeNameVersionField = "ID recette et version";
+        private readonly string recipeNameVersionField = "ID recette et révision";
         private readonly string equipmentNameField = "ID équipement";
         private readonly string dtStartCycleField = "Début du cycle";
         private readonly string dtEndCycleField = "Fin du cycle";
@@ -192,7 +196,7 @@ namespace Main
             gfxs[pagesNumber - 1].DrawString(templateNumber, new XFont(fontDoc, fontBodySize1), XBrushes.Black, rect, XStringFormats.CenterRight);
 
             // Footer
-            gfxs[pagesNumber - 1].DrawString(generationDateTimeField + ": " + generationDateTime.ToString(),
+            gfxs[pagesNumber - 1].DrawString(generationDateTimeField + ": " + generationDateTime.ToString(Settings.Default.DateTime_Format_Read),
                 new XFont(fontDoc, fontFooterSize),
                 XBrushes.Black, x: margin, y: page.Height - margin, XStringFormats.BottomLeft);
             gfxs[pagesNumber - 1].DrawString(application_nameField + ": " + General.application_name + " - " + application_versionField + ": " + General.application_version,
@@ -209,7 +213,7 @@ namespace Main
             // Info traçabilité
             XRect rect;
             string traceabilityText1 = jobNumberField + ": " + jobNumber + " ; " + batchNumberField + ": " + batchNumber;
-            string traceabilityText2 = qtyNumberField + ": " + qtyNumber + " ; " + itemNumberField + ": " + itemNumber;
+            string traceabilityText2 = ""; // qtyNumberField + ": " + qtyNumber + " ; " + itemNumberField + ": " + itemNumber;
             rect = new XRect(x: 0, y: margin, width: page.Width, height: heightLogo / 2);
             gfxs[pagesNumber - 1].DrawString(traceabilityText1, new XFont(fontDoc, fontBodySize1), XBrushes.Black, rect, XStringFormats.BottomCenter);
             rect.Y += heightLogo / 2;
@@ -300,14 +304,15 @@ namespace Main
             currentY = DrawStringColumns(page, y, values, 2);
 
             DailyTestInfo dailyTestInfo = new DailyTestInfo();
-            dailyTestInfo.Columns[dailyTestInfo.Status].Value = DatabaseSettings.General_TrueValue_Write;
+            object[] dailyTestValues = new object[dailyTestInfo.Ids.Count()];
+            dailyTestValues[dailyTestInfo.Status] = DatabaseSettings.General_TrueValue_Write;
 
             string lastSampling;
             bool isSamplingGood = false;
 
             try
             {
-                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetLastDailyTestDate(dailyTestInfo, Convert.ToDateTime(dtStartCycle)); });
+                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetLastDailyTestDate(dailyTestInfo, dailyTestValues, Convert.ToDateTime(dtStartCycle)); });
 
                 DateTime? lastSamplingDate = (DateTime?)t.Result;
 
@@ -399,19 +404,19 @@ namespace Main
 
             return currentY;
         }
-        private double GenerateSequence(int seqType, PdfPage page, int n, double y, ISeqTabInfo cycleSeqInfo)
+        private double GenerateSequence(int seqType, PdfPage page, int n, double y, object[] cycleSeqValues)
         {
             if (seqType == recipeWeightInfo.SeqType)
             {
-                return GenerateWeightSeq(page, n, y, cycleSeqInfo);
+                return GenerateWeightSeq(page, n, y, cycleSeqValues);
             }
             else if (seqType == recipeSpeedMixerInfo.SeqType)
             {
-                return GenerateSpeedMixerSeq(page, n, y, cycleSeqInfo);
+                return GenerateSpeedMixerSeq(page, n, y, cycleSeqValues);
 
             }
 
-            General.ShowMessageBox(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Et bah alors !");
+            Message.MyMessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Et bah alors !");
             return -2;
         }
 
@@ -433,29 +438,29 @@ namespace Main
         private readonly string statusFAIL = "FAIL";
         private readonly int weightSeq_statusColumnNumber = 4;
 
-        private double GenerateWeightSeq(PdfPage page, int n, double y, ISeqTabInfo cycleSeqInfo)
+        private double GenerateWeightSeq(PdfPage page, int n, double y, object[] cycleSeqValues)
         {
             logger.Debug("GenerateWeightSeq");
 
-            CycleWeightInfo cycleWeightInfo = cycleSeqInfo as CycleWeightInfo;
+            CycleWeightInfo cycleWeightInfo = new CycleWeightInfo();
 
-            if (cycleWeightInfo.Columns == null) return -1;
+            if (cycleSeqValues == null) return -1;
 
-            string product = cycleWeightInfo.Columns[cycleWeightInfo.Product].Value;//3
-            string wasWeightManual = cycleWeightInfo.Columns[cycleWeightInfo.WasWeightManual].Value;//4
-            string dateTime = (cycleWeightInfo.Columns[cycleWeightInfo.DateTime].Value == "" ||
-                cycleWeightInfo.Columns[cycleWeightInfo.DateTime] == null) ? na :
-                Convert.ToDateTime(cycleWeightInfo.Columns[cycleWeightInfo.DateTime].Value).ToString(Settings.Default.DateTime_Format_Read); //5
+            string product = cycleSeqValues[cycleWeightInfo.Product].ToString();//3
+            string wasWeightManual = cycleSeqValues[cycleWeightInfo.WasWeightManual].ToString();//4
+            string dateTime = (cycleSeqValues[cycleWeightInfo.DateTime].ToString() == "" ||
+                cycleSeqValues[cycleWeightInfo.DateTime] == null) ? na :
+                Convert.ToDateTime(cycleSeqValues[cycleWeightInfo.DateTime].ToString()).ToString(Settings.Default.DateTime_Format_Read); //5
             string actualValue;
             string setpoint;
             string minimum;
             string maximum;
-            string unit = cycleWeightInfo.Columns[cycleWeightInfo.Unit].Value;//10
-            string decimalNumber = cycleWeightInfo.Columns[cycleWeightInfo.DecimalNumber].Value;//11
+            string unit = cycleSeqValues[cycleWeightInfo.Unit].ToString();//10
+            string decimalNumber = cycleSeqValues[cycleWeightInfo.DecimalNumber].ToString();//11
 
             try
             {
-                actualValue = decimal.Parse(cycleWeightInfo.Columns[cycleWeightInfo.ActualValue].Value).ToString("N" + decimalNumber); //6
+                actualValue = decimal.Parse(cycleSeqValues[cycleWeightInfo.ActualValue].ToString()).ToString("N" + decimalNumber); //6
             }
             catch (Exception)
             {
@@ -464,7 +469,7 @@ namespace Main
 
             try
             {
-                setpoint = decimal.Parse(cycleWeightInfo.Columns[cycleWeightInfo.Setpoint].Value).ToString("N" + decimalNumber);//7
+                setpoint = decimal.Parse(cycleSeqValues[cycleWeightInfo.Setpoint].ToString()).ToString("N" + decimalNumber);//7
             }
             catch (Exception)
             {
@@ -473,7 +478,7 @@ namespace Main
 
             try
             {
-                minimum = decimal.Parse(cycleWeightInfo.Columns[cycleWeightInfo.Min].Value).ToString("N" + decimalNumber);//8
+                minimum = decimal.Parse(cycleSeqValues[cycleWeightInfo.Min].ToString()).ToString("N" + decimalNumber);//8
             }
             catch (Exception)
             {
@@ -482,7 +487,7 @@ namespace Main
 
             try
             {
-                maximum = decimal.Parse(cycleWeightInfo.Columns[cycleWeightInfo.Max].Value).ToString("N" + decimalNumber);
+                maximum = decimal.Parse(cycleSeqValues[cycleWeightInfo.Max].ToString()).ToString("N" + decimalNumber);
             }
             catch (Exception)
             {
@@ -605,33 +610,33 @@ namespace Main
 
         private readonly string smSeq_speedUnit = "RPM";
 
-        private double GenerateSpeedMixerSeq(PdfPage page, int n, double y, ISeqTabInfo cycleSeqInfo)
+        private double GenerateSpeedMixerSeq(PdfPage page, int n, double y, object[] cycleSeqValues)
         {
             logger.Debug("GenerateSpeedMixerSeq");
 
-            CycleSpeedMixerInfo cycleSpeedMixerInfo = cycleSeqInfo as CycleSpeedMixerInfo;
+            CycleSpeedMixerInfo cycleSpeedMixerInfo = new CycleSpeedMixerInfo();
 
-            string dtStartSpeedMixerSeq = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.DateTimeStart].Value == "" ? na : Convert.ToDateTime(cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.DateTimeStart].Value).ToString(Settings.Default.DateTime_Format_Read);
-            string dtEndSpeedMixerSeq = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.DateTimeEnd].Value == "" ? na : Convert.ToDateTime(cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.DateTimeEnd].Value).ToString(Settings.Default.DateTime_Format_Read);
-            string timeMixTh = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.TimeSeqTh].Value;
-            string timeMixEff = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.TimeSeqEff].Value == "" ? na : cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.TimeSeqEff].Value;
+            string dtStartSpeedMixerSeq = cycleSeqValues[cycleSpeedMixerInfo.DateTimeStart].ToString() == "" ? na : Convert.ToDateTime(cycleSeqValues[cycleSpeedMixerInfo.DateTimeStart].ToString()).ToString(Settings.Default.DateTime_Format_Read);
+            string dtEndSpeedMixerSeq = cycleSeqValues[cycleSpeedMixerInfo.DateTimeEnd].ToString() == "" ? na : Convert.ToDateTime(cycleSeqValues[cycleSpeedMixerInfo.DateTimeEnd].ToString()).ToString(Settings.Default.DateTime_Format_Read);
+            string timeMixTh = cycleSeqValues[cycleSpeedMixerInfo.TimeSeqTh].ToString();
+            string timeMixEff = cycleSeqValues[cycleSpeedMixerInfo.TimeSeqEff].ToString() == "" ? na : cycleSeqValues[cycleSpeedMixerInfo.TimeSeqEff].ToString();
             string timeSpeedMixerSeq;
 
-            string pressureUnit = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.PressureUnit].Value;
+            string pressureUnit = cycleSeqValues[cycleSpeedMixerInfo.PressureUnit].ToString();
 
-            string speedMin = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.SpeedMin].Value;
-            string speedMax = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.SpeedMax].Value;
+            string speedMin = cycleSeqValues[cycleSpeedMixerInfo.SpeedMin].ToString();
+            string speedMax = cycleSeqValues[cycleSpeedMixerInfo.SpeedMax].ToString();
             string speedParam = speedMin + smSeq_speedUnit + " - " + speedMax + smSeq_speedUnit;
 
-            string pressureMin = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.PressureMin].Value;
-            string pressureMax = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.PressureMax].Value;
+            string pressureMin = cycleSeqValues[cycleSpeedMixerInfo.PressureMin].ToString();
+            string pressureMax = cycleSeqValues[cycleSpeedMixerInfo.PressureMax].ToString();
             string pressureParam = pressureMin + pressureUnit + " - " + pressureMax + pressureUnit;
 
-            string speedMean = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.SpeedAvg].Value == "" ? na : (double.Parse(cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.PressureAvg].Value).ToString("N0") + smSeq_speedUnit);
-            string pressureMean = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.PressureAvg].Value == "" ? na : (double.Parse(cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.PressureAvg].Value).ToString("N2") + pressureUnit);
+            string speedMean = cycleSeqValues[cycleSpeedMixerInfo.SpeedAvg].ToString() == "" ? na : (double.Parse(cycleSeqValues[cycleSpeedMixerInfo.PressureAvg].ToString()).ToString("N0") + smSeq_speedUnit);
+            string pressureMean = cycleSeqValues[cycleSpeedMixerInfo.PressureAvg].ToString() == "" ? na : (double.Parse(cycleSeqValues[cycleSpeedMixerInfo.PressureAvg].ToString()).ToString("N2") + pressureUnit);
 
-            string speedSTD = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.SpeedStd].Value == "" ? na : (double.Parse(cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.SpeedStd].Value).ToString("N0") + smSeq_speedUnit);
-            string pressureSTD = cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.PressureStd].Value == "" ? na : (double.Parse(cycleSpeedMixerInfo.Columns[cycleSpeedMixerInfo.PressureStd].Value).ToString("N2") + pressureUnit);
+            string speedSTD = cycleSeqValues[cycleSpeedMixerInfo.SpeedStd].ToString() == "" ? na : (double.Parse(cycleSeqValues[cycleSpeedMixerInfo.SpeedStd].ToString()).ToString("N0") + smSeq_speedUnit);
+            string pressureSTD = cycleSeqValues[cycleSpeedMixerInfo.PressureStd].ToString() == "" ? na : (double.Parse(cycleSeqValues[cycleSpeedMixerInfo.PressureStd].ToString()).ToString("N2") + pressureUnit);
 
             XRect rect;
             double currentShift = 0;
@@ -826,17 +831,18 @@ namespace Main
             {
                 //AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
                 // nul corriger ça
-                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetAlarms(firstAlarmId, lastAlarmId); });
-                List<AuditTrailInfo> tables = (List<AuditTrailInfo>)t.Result;
+                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetAlarms_new(firstAlarmId, lastAlarmId); });
+                AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+                List<object[]> tablesValues = (List<object[]>)t.Result;
                 //List <AuditTrailInfo> tables = MyDatabase.GetAlarms(firstAlarmId, lastAlarmId);
 
-                for (int i = 0; i < tables.Count; i++)
+                for (int i = 0; i < tablesValues.Count; i++)
                 {
-                    if (tables[i] != null)
+                    if (tablesValues[i] != null)
                     {
-                        timestamp = tables[i].Columns[tables[i].DateTime].Value;
-                        description = tables[i].Columns[tables[i].Description].Value;
-                        status = tables[i].Columns[tables[i].ValueAfter].Value;
+                        timestamp = tablesValues[i][auditTrailInfo.DateTime].ToString();
+                        description = tablesValues[i][auditTrailInfo.Description].ToString();
+                        status = tablesValues[i][auditTrailInfo.ValueAfter].ToString();
                         alarm = timestamp + " - " + description + " - " + status;
 
                         gfxs[pagesNumber - 1].DrawString(alarm,
@@ -891,6 +897,7 @@ namespace Main
 
         private void GenerateCommentSignature(PdfPage page, double y)
         {
+
             logger.Debug("GenerateCommentSignature");
 
             double currentY = y;
@@ -949,7 +956,6 @@ namespace Main
             gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectSignatureOutlineSize), rect);
             rect.X += rect.Width;
             gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectSignatureOutlineSize), rect);
-
         }
         private void GenerateCroquis1(PdfPage page)
         {
@@ -1060,7 +1066,7 @@ namespace Main
 
             return page.Height - y - marginB_TitleComment - fontDoc_fontTitleSize_Height - cycleResultRowHeight - 2 * signatureRowHeight - heightFooter - margin;
         }
-        public void GenerateCycleReport(string id)
+        public void GenerateCycleReport(int id)
         {
             logger.Debug("PdfGenerator");
 
@@ -1070,34 +1076,36 @@ namespace Main
 
             // Initialize cycle information
             // A CORRIGER : IF RESULT IS FALSE
-            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(CycleTableInfo), id); });
-            CycleTableInfo cycleTableInfo = (CycleTableInfo)t.Result;
-            //CycleTableInfo cycleTableInfo = (CycleTableInfo)MyDatabase.GetOneRow(typeof(CycleTableInfo), id);
-            ISeqTabInfo cycleSeqInfo;
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow_new(new CycleTableInfo(), id); });
+            CycleTableInfo cycleTableInfo = new CycleTableInfo();
+            object[] cycleTableValues = (object[])t.Result;
 
-            if (cycleTableInfo == null)
+            ISeqTabInfo cycleSeqInfo;
+            object[] cycleSeqValues;
+
+            if (cycleTableValues == null)
             {
                 logger.Error(Settings.Default.Report_Info_CycleInfoNotFound);
-                General.ShowMessageBox(Settings.Default.Report_Info_CycleInfoNotFound);
+                Message.MyMessageBox.Show(Settings.Default.Report_Info_CycleInfoNotFound);
                 return;
             }
 
-            jobNumber = cycleTableInfo.Columns[cycleTableInfo.JobNumber].Value;
-            batchNumber = cycleTableInfo.Columns[cycleTableInfo.BatchNumber].Value;
-            qtyNumber = cycleTableInfo.Columns[cycleTableInfo.FinalWeight].Value + cycleTableInfo.Columns[cycleTableInfo.FinalWeightUnit].Value;
-            itemNumber = cycleTableInfo.Columns[cycleTableInfo.ItemNumber].Value;
-            recipeNameVersion = cycleTableInfo.Columns[cycleTableInfo.RecipeName].Value + " - Version " + cycleTableInfo.Columns[cycleTableInfo.RecipeVersion].Value;
-            equipmentName = cycleTableInfo.Columns[cycleTableInfo.EquipmentName].Value;
-            dtStartCycle = Convert.ToDateTime(cycleTableInfo.Columns[cycleTableInfo.DateTimeStartCycle].Value).ToString(Settings.Default.DateTime_Format_Read);
-            dtEndCycle = Convert.ToDateTime(cycleTableInfo.Columns[cycleTableInfo.DateTimeEndCycle].Value).ToString(Settings.Default.DateTime_Format_Read);
-            user = cycleTableInfo.Columns[cycleTableInfo.Username].Value;
-            firstAlarmId = cycleTableInfo.Columns[cycleTableInfo.FirstAlarmId].Value == "" ? -1 : int.Parse(cycleTableInfo.Columns[cycleTableInfo.FirstAlarmId].Value);
-            lastAlarmId = cycleTableInfo.Columns[cycleTableInfo.LastAlarmId].Value == "" ? -1 : int.Parse(cycleTableInfo.Columns[cycleTableInfo.LastAlarmId].Value);
-            comment = cycleTableInfo.Columns[cycleTableInfo.Comment].Value;
-            isTest = cycleTableInfo.Columns[cycleTableInfo.IsItATest].Value == DatabaseSettings.General_TrueValue_Read;
-            bowlWeight = cycleTableInfo.Columns[cycleTableInfo.bowlWeight].Value;
-            lastWeightTh = cycleTableInfo.Columns[cycleTableInfo.lastWeightTh].Value;
-            lastWeightEff = cycleTableInfo.Columns[cycleTableInfo.lastWeightEff].Value;
+            jobNumber = cycleTableValues[cycleTableInfo.JobNumber].ToString();
+            batchNumber = cycleTableValues[cycleTableInfo.BatchNumber].ToString();
+            qtyNumber = cycleTableValues[cycleTableInfo.FinalWeight].ToString() + cycleTableValues[cycleTableInfo.FinalWeightUnit].ToString();
+            itemNumber = cycleTableValues[cycleTableInfo.ItemNumber].ToString();
+            recipeNameVersion = cycleTableValues[cycleTableInfo.RecipeName].ToString() + " - Révision " + int.Parse(cycleTableValues[cycleTableInfo.RecipeVersion].ToString()).ToString("000");
+            equipmentName = cycleTableValues[cycleTableInfo.EquipmentName].ToString();
+            dtStartCycle = Convert.ToDateTime(cycleTableValues[cycleTableInfo.DateTimeStartCycle].ToString()).ToString(Settings.Default.DateTime_Format_Read);
+            dtEndCycle = Convert.ToDateTime(cycleTableValues[cycleTableInfo.DateTimeEndCycle].ToString()).ToString(Settings.Default.DateTime_Format_Read);
+            user = cycleTableValues[cycleTableInfo.Username].ToString();
+            firstAlarmId = cycleTableValues[cycleTableInfo.FirstAlarmId].ToString() == "" ? -1 : int.Parse(cycleTableValues[cycleTableInfo.FirstAlarmId].ToString());
+            lastAlarmId = cycleTableValues[cycleTableInfo.LastAlarmId].ToString() == "" ? -1 : int.Parse(cycleTableValues[cycleTableInfo.LastAlarmId].ToString());
+            comment = cycleTableValues[cycleTableInfo.Comment].ToString();
+            isTest = cycleTableValues[cycleTableInfo.IsItATest].ToString() == DatabaseSettings.General_TrueValue_Read;
+            bowlWeight = cycleTableValues[cycleTableInfo.bowlWeight].ToString();
+            lastWeightTh = cycleTableValues[cycleTableInfo.lastWeightTh].ToString();
+            lastWeightEff = cycleTableValues[cycleTableInfo.lastWeightEff].ToString();
 
             templateNumber = cycleTemplateNumber;
 
@@ -1120,27 +1128,27 @@ namespace Main
             currentY = GenerateGeneralInfo(page, currentY + marginH_GeneralInfo);
 
             cycleSeqInfo = cycleTableInfo;
+            cycleSeqValues = cycleTableValues;
 
-            while (cycleSeqInfo.Columns[cycleSeqInfo.NextSeqType].Value != null && cycleSeqInfo.Columns[cycleSeqInfo.NextSeqType].Value != "")
+            while (cycleSeqValues[cycleSeqInfo.NextSeqType] != null && cycleSeqValues[cycleSeqInfo.NextSeqType].ToString() != "")
             {
-                nextSeqType = int.Parse(cycleSeqInfo.Columns[cycleSeqInfo.NextSeqType].Value);
+                nextSeqType = int.Parse(cycleSeqValues[cycleSeqInfo.NextSeqType].ToString());
                 // A CORRIGER : IF RESULT IS FALSE
-                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(Pages.Sequence.list[nextSeqType].subCycleInfo.GetType(), cycleSeqInfo.Columns[cycleSeqInfo.NextSeqId].Value); });
-                cycleSeqInfo = (ISeqTabInfo)t.Result;
-                //cycleSeqInfo = (ISeqInfo)MyDatabase.GetOneRow(Pages.Sequence.list[nextSeqType].subCycleInfo.GetType(), cycleSeqInfo.columns[cycleSeqInfo.nextSeqId].value);
+                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow_new(Pages.Sequence.list[nextSeqType].subCycleInfo, int.Parse(cycleSeqValues[cycleSeqInfo.NextSeqId].ToString())); });
+                cycleSeqValues = (object[])t.Result;
 
-                if (cycleSeqInfo == null)
+                if (cycleSeqValues == null)
                 {
                     logger.Error(Settings.Default.Report_Info_CycleInfoNotFound);
-                    General.ShowMessageBox(Settings.Default.Report_Info_CycleInfoNotFound);
+                    Message.MyMessageBox.Show(Settings.Default.Report_Info_CycleInfoNotFound);
                     return;
                 }
 
-                currentY = GenerateSequence(nextSeqType, page, seqNumber, currentY + smSeq_marginL_Cells, cycleSeqInfo);
+                currentY = GenerateSequence(nextSeqType, page, seqNumber, currentY + smSeq_marginL_Cells, cycleSeqValues);
                 if (currentY == -1)
                 {
                     currentY = NewPage(page);
-                    currentY = GenerateSequence(nextSeqType, page, seqNumber, currentY + smSeq_marginL_Cells, cycleSeqInfo);
+                    currentY = GenerateSequence(nextSeqType, page, seqNumber, currentY + smSeq_marginL_Cells, cycleSeqValues);
                 }
                 if (currentY == -2) return;
 
@@ -1155,12 +1163,26 @@ namespace Main
             for (int i = 0; i < document.Pages.Count; i++) UpdatePagination(document.Pages[i], gfxs[i], i + 1);
 
             string fileName = cycleReportPath + generationDateTime.ToString("yyyy.MM.dd_HH.mm.ss") + "_" +
-                jobNumber + "_" + batchNumber + "_" + itemNumber + ".pdf";
+                jobNumber + "_" + batchNumber + "_" + itemNumber;// + ".pdf";
+            string suffix = "";
+            int index = 0;
 
-            if (!File.Exists(fileName)) document.Save(fileName);
+            while (File.Exists(fileName + suffix + ".pdf"))
+            {
+                index++;
+                suffix = "_" + index.ToString();
+            }
+
+            fileName = fileName + suffix + ".pdf";
+
+            if (!File.Exists(fileName))
+            {
+                document.Save(fileName);
+                PrintPaperOnce(fileName);
+            }
         }
 
-        public void GenerateSamplingReport(string id)
+        public void GenerateSamplingReport(int id)
         {
 
             logger.Debug("GenerateSamplingReport");
@@ -1169,26 +1191,28 @@ namespace Main
 
             // Initialize cycle information
             // A CORRIGER : IF RESULT IS FALSE
-            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(DailyTestInfo), id); });
-            DailyTestInfo dailyTestInfo = (DailyTestInfo)t.Result;
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow_new(new DailyTestInfo(), id); });
+            DailyTestInfo dailyTestInfo = new DailyTestInfo();
+            object[] dailyTestValues = (object[])t.Result;
 
-            if (dailyTestInfo == null)
+
+            if (dailyTestValues == null)
             {
                 logger.Error(Settings.Default.Report_Info_CycleInfoNotFound);
-                General.ShowMessageBox(Settings.Default.Report_Info_CycleInfoNotFound);
+                Message.MyMessageBox.Show(Settings.Default.Report_Info_CycleInfoNotFound);
                 return;
             }
 
-            user = dailyTestInfo.Columns[dailyTestInfo.Username].Value;
-            dateTimeSampling = Convert.ToDateTime(dailyTestInfo.Columns[dailyTestInfo.DateTime].Value).ToString(Settings.Default.DateTime_Format_Read);
-            equipmentName = dailyTestInfo.Columns[dailyTestInfo.EquipmentName].Value;
-            samplingStatus = dailyTestInfo.Columns[dailyTestInfo.Status].Value == DatabaseSettings.General_TrueValue_Read ? statusPASS : statusFAIL;
+            user = dailyTestValues[dailyTestInfo.Username].ToString();
+            dateTimeSampling = Convert.ToDateTime(dailyTestValues[dailyTestInfo.DateTime].ToString()).ToString(Settings.Default.DateTime_Format_Read);
+            equipmentName = dailyTestValues[dailyTestInfo.EquipmentName].ToString();
+            samplingStatus = dailyTestValues[dailyTestInfo.Status].ToString() == DatabaseSettings.General_TrueValue_Read ? statusPASS : statusFAIL;
 
             templateNumber = samplingTemplateNumber;
 
             int nSamples = 0;
 
-            while (dailyTestInfo.Columns[dailyTestInfo.Measure1 + nSamples].Value != "" && nSamples < dailyTestInfo.SamplesNumber)
+            while (dailyTestValues[dailyTestInfo.Measure1 + nSamples].ToString() != "" && nSamples < dailyTestInfo.SamplesNumber)
             {
                 nSamples++;
             }
@@ -1200,8 +1224,8 @@ namespace Main
             {
                 try
                 {
-                    samplingRefs[i] = decimal.Parse(dailyTestInfo.Columns[dailyTestInfo.Setpoint1 + i].Value).ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
-                    samplingMeas[i] = decimal.Parse(dailyTestInfo.Columns[dailyTestInfo.Measure1 + i].Value).ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
+                    samplingRefs[i] = decimal.Parse(dailyTestValues[dailyTestInfo.Setpoint1 + i].ToString()).ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
+                    samplingMeas[i] = decimal.Parse(dailyTestValues[dailyTestInfo.Measure1 + i].ToString()).ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
                 }
                 catch (Exception ex)
                 {
@@ -1251,7 +1275,7 @@ namespace Main
                 tableValues[2, 1 + i] = (decimal.Parse(samplingRefs[i]) - decimal.Parse(samplingMeas[i])).ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
                 tableValues[3, 1 + i] = Pages.SubCycle.CycleWeight.IsSampWeightCorrect(decimal.Parse(samplingMeas[i]), decimal.Parse(samplingRefs[i])) ? "PASS" : "FAIL";
             }
-
+            
             double xShift = (page.Width - 2 * margin) / tableValues.GetLength(0);
             XRect rect;
 
@@ -1273,7 +1297,7 @@ namespace Main
                     gfxs[pagesNumber - 1].DrawString(tableValues[i, 1 + j], new XFont(fontDoc, fontBodySize2),
                         (i == statusId ? (tableValues[i, 1 + j] == statusPASS ? BrushGreen1 : BrushRed1) :
                         XBrushes.Black),
-                        rect, XStringFormats.Center);
+                        rect, PdfSharp.Drawing.XStringFormats.Center);
                 }
             }
             currentY += tableValues.GetLength(1) * smSeq_RowHeight;
@@ -1282,38 +1306,24 @@ namespace Main
 
             for (int i = 0; i < document.Pages.Count; i++) UpdatePagination(document.Pages[i], gfxs[i], i + 1);
 
-            string fileName = samplingReportPath + generationDateTime.ToString("yyyy.MM.dd_HH.mm.ss") + ".pdf";
+            string fileName = samplingReportPath + generationDateTime.ToString("yyyy.MM.dd_HH.mm.ss");
+            string suffix = "";
+            int index = 0;
 
-            if (!File.Exists(fileName)) document.Save(fileName);
-            /*
-            ProcessStartInfo info = new ProcessStartInfo();
-            info.Verb = "print";
-            info.FileName = fileName;
-            info.CreateNoWindow = true;
-            info.WindowStyle = ProcessWindowStyle.Hidden;
-
-            Process p = new Process
+            while (File.Exists(fileName + suffix + ".pdf"))
             {
-                StartInfo = info
-            };
-            p.Start();
+                index++;
+                suffix = "_" + index.ToString();
+            }
 
-            p.WaitForInputIdle();
-            MessageBox.Show("Alors ?");
-            p.WaitForExit();
-            MessageBox.Show("STOP");*/
-            //System.Threading.Thread.Sleep(30000);
-            /*if (false == p.CloseMainWindow())
+            fileName = fileName + suffix + ".pdf";
+
+            if (!File.Exists(fileName))
             {
-                MessageBox.Show("Voilà, c'est fini");
-                p.Kill();
-            }*/
-
-
-
-            BatchPrint.PrintBinaryFile(fileName, "CHLOCPRN001", "Queue Name", General.loggedUsername);
+                document.Save(fileName);
+                PrintPaperOnce(fileName);
+            }
         }
-
         private double DrawTitle(PdfPage page, double y, string title)
         {
             logger.Debug("DrawTitle");
@@ -1337,153 +1347,140 @@ namespace Main
 
             return y + marginH_GeneralInfo + (int)((values.Length - 1) / nColumns) * generalInfoHeight + textHeight + smSeq_marginL_Cells;
         }
-    }
-    public class BatchPrint
-    {
 
-        private const int cPort = 515;
-        private const char cLineFeed = '\n';
-        private const int cDefaultByteSize = 4;
-        public static string ErrorMessage = string.Empty;
-        private static string mHost;
-        private static string mQueue;
-        private static string mUser;
-        private static readonly Queue mPrintQueue = new Queue();
-        private static readonly Dictionary<string, int> mLastPrintId = new Dictionary<string, int>();
-
-        public static bool PrintBinaryFile(string filePath, string printerName, string queueName, string userName)
+        private void PrintPaperAndConfirm(string fileName)
         {
-            try
-            {
-                mHost = printerName;
-                mQueue = queueName;
-                mUser = userName;
-                BeginPrint(filePath);
-            }
-            catch (Exception ex)
-            {
-                ErrorMessage += ex.Message + cLineFeed + ex.StackTrace;
-            }
-            return ErrorMessage.Length <= 0;
-        }
+            bool result = true;
+            MessageBoxResult boxResult = MessageBoxResult.Yes;
 
-        private static void BeginPrint(string filePath)
-        {
-            mPrintQueue.Enqueue(filePath);
-            ThreadStart myThreadDelegate = SendFileToPrinter;
-            var myThread = new Thread(myThreadDelegate);
-            myThread.Start();
-        }
-
-        private static void SendFileToPrinter()
-        {
-            ErrorMessage = string.Empty;
-            var fileFromQueue = (string)mPrintQueue.Dequeue();
-            var tcpClient = new TcpClient();
-            tcpClient.Connect(mHost, cPort);
-            const char space = ' ';
-            using (var networkStream = tcpClient.GetStream())
+            do
             {
-                if (!networkStream.CanWrite)
+                result = PrintPaper(fileName);
+                if (result)
                 {
-                    ErrorMessage = "NetworkStream.CanWrite failed";
-                    networkStream.Close();
-                    tcpClient.Close();
-                    return;
+                    boxResult = Message.MyMessageBox.Show("L'impression a été lancé, pouvez-vous confirimer ?", MessageBoxButton.YesNo);
                 }
-                var thisPc = Dns.GetHostName();
-                var printId = GetPrintId();
-                var dfA = string.Format("dfA{0}{1}", printId, thisPc);
-                var cfA = string.Format("cfA{0}{1}", printId, thisPc);
-                var controlFile = string.Format("H{0}\nP{1}\n{5}{2}\nU{3}\nN{4}\n", thisPc, mUser, dfA, dfA, Path.GetFileName(fileFromQueue), true);
-                const int bufferSize = (cDefaultByteSize * 1024);
-                var buffer = new byte[bufferSize];
-                var acknowledgement = new byte[cDefaultByteSize];
-                var position = 0;
-                buffer[position++] = 2;
-                ProcessBuffer(mQueue, ref buffer, ref position, (byte)cLineFeed);
-                if (!IsAcknowledgementValid(buffer, position, acknowledgement, networkStream, tcpClient, "No response from printer"))
-                    return;
-                position = 0;
-                buffer[position++] = 2;
-                var cFileLength = controlFile.Length.ToString();
-                ProcessBuffer(cFileLength, ref buffer, ref position, (byte)space);
-                ProcessBuffer(cfA, ref buffer, ref position, (byte)cLineFeed);
-                if (!IsAcknowledgementValid(buffer, position, acknowledgement, networkStream, tcpClient, "Error on control file len"))
-                    return;
-                position = 0;
-                ProcessBuffer(controlFile, ref buffer, ref position, 0);
-                if (!IsAcknowledgementValid(buffer, position, acknowledgement, networkStream, tcpClient, "Error on control file"))
-                    return;
-                position = 0;
-                buffer[position++] = 3;
-                var dataFileInfo = new FileInfo(fileFromQueue);
-                cFileLength = dataFileInfo.Length.ToString();
-                ProcessBuffer(cFileLength, ref buffer, ref position, (byte)space);
-                ProcessBuffer(dfA, ref buffer, ref position, (byte)cLineFeed);
-                if (!IsAcknowledgementValid(buffer, position, acknowledgement, networkStream, tcpClient, "Error on dfA"))
-                    return;
-                long totalbytes = 0;
-                using (var fileStream = new FileStream(fileFromQueue, FileMode.Open))
-                {
-                    int bytesRead;
-                    while ((bytesRead = fileStream.Read(buffer, 0, bufferSize)) > 0)
-                    {
-                        totalbytes += bytesRead;
-                        networkStream.Write(buffer, 0, bytesRead);
-                        networkStream.Flush();
-                    }
-                    fileStream.Close();
-                }
-                if (dataFileInfo.Length != totalbytes)
-                    ErrorMessage = fileFromQueue + "File length error";
-                position = 0;
-                buffer[position++] = 0;
-                if (!IsAcknowledgementValid(buffer, position, acknowledgement, networkStream, tcpClient, "Error on file"))
-                    return;
-                networkStream.Close();
-                tcpClient.Close();
+
+            } while (result && boxResult == MessageBoxResult.No);
+
+            if (!result)
+            {
+                Message.MyMessageBox.Show("Impression échouée");
             }
         }
 
-        private static int GetPrintId()
+        private bool PrintPaper(string fileName)
         {
-            var count = 0;
-            lock (mLastPrintId)
+            bool result = false;
+            MessageBoxResult boxResult = MessageBoxResult.Yes;
+
+            do
             {
-                if (mLastPrintId.ContainsKey(mUser))
-                    count = mLastPrintId[mUser];
+                //Task<bool> task = new Task<bool>(() => { return PrintPaperOnce(fileName); });
+                //task.Start();
+                result = PrintPaperOnce(fileName);
+
+                if (!result)
+                {
+                    boxResult = Message.MyMessageBox.Show("L'impression a échoué, voulez-vous lancer une nouvelle impression ?", MessageBoxButton.YesNo);
+                }
+
+            } while (!result && boxResult == MessageBoxResult.Yes);
+            return result;
+        }
+
+        private bool PrintPaperOnce(string fileName)
+        {
+            PrintQueue printQueue;
+            int count = 0;
+            bool result = false;
+            /*
+            // Ici on attends qu'il n'y a plus d'impression en cours
+            do
+            {
+                printQueue = LocalPrintServer.GetDefaultPrintQueue();
+                Task.Delay(Settings.Default.Report_Print_Delay2_Time_ms).Wait();
                 count++;
-                count %= 1000;
-                if (mLastPrintId.ContainsKey(mUser))
-                    mLastPrintId[mUser] = count;
-                else
-                    mLastPrintId.Add(mUser, count);
-            }
-            return count;
-        }
+                logger.Trace(count.ToString());
+            } while (printQueue.NumberOfJobs != 0 && count < Settings.Default.Report_Print_Delay2_MaxCount);
 
-        private static void ProcessBuffer(string item, ref byte[] buffer, ref int position, byte nextPosition)
-        {
-            foreach (var t in item)
+            if (count == Settings.Default.Report_Print_Delay2_MaxCount)
             {
-                buffer[position++] = (byte)t;
+                logger.Error("Impression existante bloquée");
+                return false;
             }
-            buffer[position++] = nextPosition;
-        }
+            */
+            logger.Debug("On va lancer l'impression");
 
-        private static bool IsAcknowledgementValid(byte[] buffer, int position, byte[] acknowledgement, NetworkStream networkStream, TcpClient tcpClient, string errorMsg)
-        {
-            networkStream.Write(buffer, 0, position);
-            networkStream.Flush();
-            networkStream.Read(acknowledgement, 0, cDefaultByteSize);
-            if (acknowledgement[0] == 0)
-                return true;
-            ErrorMessage = errorMsg;
-            networkStream.Close();
-            tcpClient.Close();
-            return false;
-        }
+            ProcessStartInfo info = new ProcessStartInfo();
+            info.Verb = "print";
+            info.FileName = fileName;
+            info.CreateNoWindow = true;
+            info.WindowStyle = ProcessWindowStyle.Hidden;
+            Process p = new Process();
+            p.StartInfo = info;
+            result = p.Start();
+            //p.WaitForInputIdle();
+            /*
+            // Ici on attend le début d'impression de notre document
+            count = 0;
+            do
+            {
+                printQueue = LocalPrintServer.GetDefaultPrintQueue();
+                Task.Delay(Settings.Default.Report_Print_Delay1_Time_ms).Wait();
+                count++;
+                logger.Trace(count.ToString());
+            } while (printQueue.NumberOfJobs == 0 && count < Settings.Default.Report_Print_Delay1_MaxCount);
 
+            if (count == Settings.Default.Report_Print_Delay1_MaxCount)
+            {
+                logger.Error("Le document ne s'ajoute pas à la liste d'impression " + count.ToString() + ", " + Settings.Default.Report_Print_Delay1_Time_ms.ToString());
+                goto End;
+            }
+
+            logger.Debug(printQueue.NumberOfJobs.ToString());
+
+            // Ici on attend la fin d'impression de notre document
+            count = 0;
+            do
+            {
+                printQueue = LocalPrintServer.GetDefaultPrintQueue();
+                Task.Delay(Settings.Default.Report_Print_Delay2_Time_ms).Wait();
+                count++;
+                logger.Trace(count.ToString());
+            } while (printQueue.NumberOfJobs != 0 && count < Settings.Default.Report_Print_Delay2_MaxCount);
+
+            if (count == Settings.Default.Report_Print_Delay2_MaxCount)
+            {
+                logger.Error("Impression bloquée");
+                goto End;
+            }
+            */
+            // logger.Debug(printQueue.NumberOfJobs.ToString());
+            //result = true;
+
+            //End:
+            //Task.Delay(10000).Wait();
+
+            if (!result && Message.MyMessageBox.Show("L'impression a échoué, voulez-vous la relancer ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                return PrintPaperOnce(fileName);
+            }
+            else if (!result)
+            {
+                return false;
+            }
+
+            MessageBoxResult boxResult = Message.MyMessageBox.Show("L'impression a été lancé, pouvez-vous confirmer ?", MessageBoxButton.YesNo);
+
+            if (!p.CloseMainWindow()) p.Kill();
+
+            if (boxResult == MessageBoxResult.No)
+            {
+                return PrintPaperOnce(fileName);
+            }
+
+            return result;
+        }
     }
 }

@@ -29,7 +29,7 @@ namespace Main.Pages.SubCycle
         private readonly Frame frameMain = new Frame();
         private readonly Frame frameInfoCycle = new Frame();
         private readonly List<string> ProgramNames = new List<string>();
-        private readonly List<string> ProgramIDs = new List<string>();
+        private readonly List<int> ProgramIDs = new List<int>();
         private bool isCbxRecipeAvailable = false;
         private int finalWeightMin = 0;
         private int finalWeightMax = 0;
@@ -55,22 +55,60 @@ namespace Main.Pages.SubCycle
         {
             logger.Debug("FxOK");
 
+            if (!VerifyFormatOF()) return;
+
             try
             {
                 if (int.Parse(tbFinalWeight.Text, NumberStyles.AllowThousands) < finalWeightMin || int.Parse(tbFinalWeight.Text, NumberStyles.AllowThousands) > finalWeightMax)
                 {
-                    General.ShowMessageBox("C'est pas bien ce que tu fais. Min: " + finalWeightMin.ToString() + ", Max: " + finalWeightMax.ToString());
+                    Message.MyMessageBox.Show("C'est pas bien ce que tu fais. Min: " + finalWeightMin.ToString() + ", Max: " + finalWeightMax.ToString());
                     return;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                General.ShowMessageBox("C'est pas bien ce que tu fais. Min: " + finalWeightMin.ToString() + ", Max: " + finalWeightMax.ToString());
+                Message.MyMessageBox.Show("C'est pas bien ce que tu fais. Min: " + finalWeightMin.ToString() + ", Max: " + finalWeightMax.ToString());
                 return;
             }
 
+            int recipeIndex = -1;
+            if ((bool)tgBarcodeOption.IsChecked)
+            {
+                if (cbxRecipeName.SelectedIndex == -1)
+                {
+                    Message.MyMessageBox.Show("Veuillez sélectionner un code produit");
+                    return;
+                }
+                recipeIndex = cbxRecipeName.SelectedIndex;
+            }
+            else
+            {
+                bool isRecipeOk = false;
+                for (int i = 0; i < ProgramNames.Count; i++)
+                {
+                    if (tbRecipeName.Text == ProgramNames[i])
+                    {
+                        isRecipeOk = true;
+                        recipeIndex = i;
+                    }
+                }
+                if (!isRecipeOk)
+                {
+                    Message.MyMessageBox.Show("Code produit incorrect");
+                    return;
+                }
+            }
+
+            if (recipeIndex == -1)
+            {
+                Message.MyMessageBox.Show("Drôle d'erreur");
+                logger.Error("Drôle d'erreur");
+                return;
+            }
+
+
             CycleStartInfo info;
-            info.recipeID = ProgramIDs[cbxRecipeName.SelectedIndex];
+            info.recipeID = ProgramIDs[recipeIndex];
             info.OFnumber = tbOFnumber.Text;
             info.finalWeight = tbFinalWeight.Text;
             info.frameMain = frameMain;
@@ -78,11 +116,38 @@ namespace Main.Pages.SubCycle
             info.isTest = false;
             info.bowlWeight = "";
 
-            if (General.ShowMessageBox(Settings.Default.PreCycle_Request_StartCycle, Settings.Default.PreCycle_Request_StartCycle_Title, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (Message.MyMessageBox.Show(Settings.Default.PreCycle_Request_StartCycle, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 info.frameMain.Content = new CycleWeight(info);
             }
         }
+
+        private bool VerifyFormatOF()
+        {
+            string text = tbOFnumber.Text;
+            string messageRequiredFormat = "Format du numéro d'OF incorrect. " + Settings.Default.OFNumber_NbChar.ToString() + " " + (Settings.Default.OFNumber_IsNumber ? "chiffres" : "charactères") + " requis";
+
+            if (text.Length != Settings.Default.OFNumber_NbChar)
+            {
+                Message.MyMessageBox.Show(messageRequiredFormat);
+                return false;
+            }
+
+            if (Settings.Default.OFNumber_IsNumber)
+            {
+                try
+                {
+                    int.Parse(text);
+                }
+                catch (Exception)
+                {
+                    Message.MyMessageBox.Show(messageRequiredFormat);
+                    return false;
+                }
+            }
+            return true;
+        }
+
         private void FxAnnuler(object sender, RoutedEventArgs e)
         {
             logger.Debug("FxAnnuler");
@@ -94,29 +159,89 @@ namespace Main.Pages.SubCycle
         private void cbxProgramName_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             logger.Debug("cbxProgramName_SelectionChanged" + cbxRecipeName.SelectedIndex.ToString());
+            SetFinalWeightRangeFromComboBox();
+        }
 
+        private void tbRecipeName_LostFocus(object sender, RoutedEventArgs e)
+        {
+            logger.Debug("tbRecipeName_LostFocus");
+            if(!SetFinalWeightRangeFromTextBox()) Message.MyMessageBox.Show("Code produit incorrect");
+        }
+
+        private void SetFinalWeightRangeFromComboBox()
+        {
             if (cbxRecipeName.SelectedIndex != -1 && isCbxRecipeAvailable)
             {
-                RecipeInfo recipeInfo;
-                int index = cbxRecipeName.SelectedIndex;
+                SetFinalWeightRange(cbxRecipeName.SelectedIndex);
+            }
+            else if (isCbxRecipeAvailable)
+            {
+                SetFinalWeightRange(-1);
+            }
+        }
 
-                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeInfo), ProgramIDs[index]); });
-                recipeInfo = (RecipeInfo)t.Result;
-
-                try
+        private bool SetFinalWeightRangeFromTextBox()
+        {
+            for (int i = 0; i < ProgramNames.Count; i++)
+            {
+                if (tbRecipeName.Text == ProgramNames[i])
                 {
-                    finalWeightMin = int.Parse(recipeInfo.Columns[recipeInfo.FinaleWeightMin].Value);
-                    finalWeightMax = int.Parse(recipeInfo.Columns[recipeInfo.FinaleWeightMax].Value);
+                    SetFinalWeightRange(i);
+                    return true;
                 }
-                catch (Exception ex)
-                {
-                    General.ShowMessageBox("La recette ne précise pas de min et max pour la masse du produit" + recipeInfo.Columns[recipeInfo.FinaleWeightMin].Value + " " + recipeInfo.Columns[recipeInfo.FinaleWeightMax].Value);
-                    finalWeightMin = 0;
-                    finalWeightMax = 0;
-                }
-                lbFinalWeight.Text = "Masse cible (g) [" + finalWeightMin + " ; " + finalWeightMax + "]";
             }
 
+            SetFinalWeightRange(-1);
+            return false;
+        }
+
+        private void SetFinalWeightRange(int index)
+        {
+            RecipeInfo recipeInfo = new RecipeInfo();
+
+            if (index == -1)
+            {
+                finalWeightMin = 0;
+                finalWeightMax = 0;
+                lbFinalWeight.Text = "Masse cible (g) [" + finalWeightMin + " ; " + finalWeightMax + "]";
+                return;
+            }
+
+            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow_new(new RecipeInfo(), ProgramIDs[index]); });
+            object[] recipeValues = (object[])t.Result;
+
+            try
+            {
+                finalWeightMin = (int)(recipeValues[recipeInfo.FinaleWeightMin]);
+                finalWeightMax = (int)(recipeValues[recipeInfo.FinaleWeightMax]);
+            }
+            catch (Exception ex)
+            {
+                Message.MyMessageBox.Show("La recette ne précise pas de min et max pour la masse du produit" + recipeValues[recipeInfo.FinaleWeightMin].ToString() + " " + recipeValues[recipeInfo.FinaleWeightMax].ToString());
+                finalWeightMin = 0;
+                finalWeightMax = 0;
+            }
+            lbFinalWeight.Text = "Masse cible (g) [" + finalWeightMin + " ; " + finalWeightMax + "]";
+        }
+
+        private void tgBarcodeOption_Click(object sender, RoutedEventArgs e)
+        {
+            cbxRecipeName.Visibility = (bool)tgBarcodeOption.IsChecked ? Visibility.Visible : Visibility.Collapsed;
+            tbRecipeName.Visibility = (bool)tgBarcodeOption.IsChecked ? Visibility.Collapsed : Visibility.Visible;
+
+            if ((bool)tgBarcodeOption.IsChecked)
+            {
+                SetFinalWeightRangeFromComboBox();
+            }
+            else
+            {
+                SetFinalWeightRangeFromTextBox();
+            }
+        }
+
+        private void tbOFnumber_LostFocus(object sender, RoutedEventArgs e)
+        {
+            VerifyFormatOF();
         }
     }
 }

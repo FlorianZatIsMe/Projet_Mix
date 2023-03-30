@@ -78,21 +78,6 @@ namespace Driver_MODBUS
             info = info_arg;
         }
 
-        private static void ShowMessageBox(string message)
-        {
-            if (info.Window != null)
-            {
-                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    MessageBox.Show(info.Window, message);
-                }));
-            }
-            else
-            {
-                MessageBox.Show(message);
-            }
-        }
-
         static SpeedMixerModbus()
         {
             logger.Debug("Start");
@@ -106,12 +91,7 @@ namespace Driver_MODBUS
             scanAlarmTimer.Elapsed += ScanAlarmTimer_OnTimedEvent;
             scanAlarmTimer.Start();
         }
-        /*
-        ~SpeedMixerModbus()
-        {
-            Disconnect();
-            ShowMessageBox(MethodBase.GetCurrentMethod().Name + " - SpeedMixer: Au revoir");
-        }*/
+
         private static void ScanAlarmTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
             if (isModbusActive && !IsConnected() && !areAlarmActive[0])
@@ -150,7 +130,7 @@ namespace Driver_MODBUS
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                ShowMessageBox(ex.Message);
+                Message.MyMessageBox.Show(ex.Message);
             }
         }
         public static bool IsConnected()
@@ -162,14 +142,13 @@ namespace Driver_MODBUS
 
             return speedMixer.Available(Settings.Default.ScanAlarmTimer_Interval); // c'est nul ce truc
         }
-        public static void SetProgram(RecipeSpeedMixerInfo recipe)
+        public static void SetProgram_new(object[] recipe)
         {
-            //if (!IsConnected()) Connect();
+            RecipeSpeedMixerInfo recipeSpeedMixerInfo = new RecipeSpeedMixerInfo();
 
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error01);
-                //ShowMessageBox(Settings.Default.Error01);
                 return;
             }
 
@@ -183,25 +162,25 @@ namespace Driver_MODBUS
 
             speedMixer.WriteSingleRegister(Settings.Default.Register_Instruction, Settings.Default.Instruction_Reset);    // Instruction to allow the modification of the parameters
 
-            speedMixer.WriteSingleRegister(Settings.Default.Register_Acceleration, int.Parse(recipe.Columns[recipe.Acceleration].Value));  // Acceleration
-            speedMixer.WriteSingleRegister(Settings.Default.Register_Deceleration, int.Parse(recipe.Columns[recipe.Deceleration].Value));  // Deceleration
-            speedMixer.WriteSingleRegister(Settings.Default.Register_VacuumInUse, 
-                recipe.Columns[recipe.Vaccum_control].Value == DatabaseSettings.General_TrueValue_Read ? 
+            speedMixer.WriteSingleRegister(Settings.Default.Register_Acceleration, (int)recipe[recipeSpeedMixerInfo.Acceleration]);  // Acceleration
+            speedMixer.WriteSingleRegister(Settings.Default.Register_Deceleration, (int)recipe[recipeSpeedMixerInfo.Deceleration]);  // Deceleration
+            speedMixer.WriteSingleRegister(Settings.Default.Register_VacuumInUse,
+                recipe[recipeSpeedMixerInfo.Vaccum_control].ToString() == DatabaseSettings.General_TrueValue_Read ?
                 Settings.Default.VacuumInUse_Yes : Settings.Default.VacuumInUse_No);    // Vacuum in Use (0=No ; 1=Yes)
 
             //speedMixer.WriteSingleRegister(3048, 0);    // ça ne fonctionne pas, ça devrait être le choix du vent gas
             //speedMixer.WriteSingleRegister(3049, 0);    // Monitor type Je pense que ça ne fonctionne pas
-            string pUnit = recipe.Columns[recipe.PressureUnit].Value;
-            vaccumScale = pUnit == recipe.PUnit_Torr ? Settings.Default.VacuumScale_Torr :
-                pUnit == recipe.PUnit_mBar ? Settings.Default.VacuumScale_mBar :
-                pUnit == recipe.PUnit_inHg ? Settings.Default.VacuumScale_inHg :
-                pUnit == recipe.PUnit_PSIA ? Settings.Default.VacuumScale_PSIA : Settings.Default.VacuumScale_Error;
+            string pUnit = recipe[recipeSpeedMixerInfo.PressureUnit].ToString();
+            vaccumScale = pUnit == recipeSpeedMixerInfo.PUnit_Torr ? Settings.Default.VacuumScale_Torr :
+                pUnit == recipeSpeedMixerInfo.PUnit_mBar ? Settings.Default.VacuumScale_mBar :
+                pUnit == recipeSpeedMixerInfo.PUnit_inHg ? Settings.Default.VacuumScale_inHg :
+                pUnit == recipeSpeedMixerInfo.PUnit_PSIA ? Settings.Default.VacuumScale_PSIA : Settings.Default.VacuumScale_Error;
 
             if (vaccumScale != Settings.Default.VacuumScale_Error) speedMixer.WriteSingleRegister(Settings.Default.Register_VacuumScale, vaccumScale);    // Vacuum Scale (1=Torr ; 2=mBar ; 3=inHg ; 4=PSIA)
-            else 
+            else
             {
                 logger.Error(Settings.Default.Error02);
-                ShowMessageBox(Settings.Default.Error02);
+                Message.MyMessageBox.Show(Settings.Default.Error02);
             }
             //SpeedMixer.WriteSingleRegister(3052, 0);    // S Curve, pas touche
 
@@ -212,9 +191,9 @@ namespace Driver_MODBUS
 
             for (int i = 0; i < 10; i++)
             {
-                speedFromDB = recipe.Columns[recipe.Speed00 + 3 * i].Value;
-                timeFromDB = recipe.Columns[recipe.Time00 + 3 * i].Value;
-                pressureFromDB = recipe.Columns[recipe.Pressure00 + 3 * i].Value;
+                speedFromDB = recipe[recipeSpeedMixerInfo.Speed00 + 3 * i].ToString();
+                timeFromDB = recipe[recipeSpeedMixerInfo.Time00 + 3 * i].ToString();
+                pressureFromDB = recipe[recipeSpeedMixerInfo.Pressure00 + 3 * i].ToString();
 
                 speedParameter = (speedFromDB == "" || speedFromDB == null) ? 0 : int.Parse(speedFromDB);
                 timeParameter = (timeFromDB == "" || timeFromDB == null) ? 0 : int.Parse(timeFromDB);
@@ -236,7 +215,6 @@ namespace Driver_MODBUS
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error01);
-                //ShowMessageBox(Settings.Default.Error01);
                 return;
             }
 
@@ -257,7 +235,6 @@ namespace Driver_MODBUS
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error01);
-                //ShowMessageBox(Settings.Default.Error01);
                 return;
             }
 
@@ -278,7 +255,6 @@ namespace Driver_MODBUS
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error01);
-                //ShowMessageBox(Settings.Default.Error01);
                 return;
             }
 
@@ -299,7 +275,6 @@ namespace Driver_MODBUS
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error01);
-                //ShowMessageBox(Settings.Default.Error01);
                 return status;
             }
 
@@ -310,7 +285,6 @@ namespace Driver_MODBUS
             for (int i = 0; i < 8; i++)
             {
                 status[i] = (uintMessage & mask) == (0x01 << i);
-                //ShowMessageBox(i.ToString() + " - " + (status[i]).ToString());
                 mask <<= 1;
             }
 
@@ -323,7 +297,6 @@ namespace Driver_MODBUS
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error01);
-                //ShowMessageBox(Settings.Default.Error01);
                 return -1;
             }
 
@@ -337,7 +310,6 @@ namespace Driver_MODBUS
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error01);
-                //ShowMessageBox(Settings.Default.Error01);
                 return -1;
             }
 

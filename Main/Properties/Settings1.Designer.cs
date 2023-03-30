@@ -1598,7 +1598,7 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("dd.MMMyyyy")]
+        [global::System.Configuration.DefaultSettingValueAttribute("dd MMM yyyy")]
         public string Date_Format_Read {
             get {
                 return ((string)(this["Date_Format_Read"]));
@@ -1616,7 +1616,7 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("dd.MMMyyyy HH:mm:ss")]
+        [global::System.Configuration.DefaultSettingValueAttribute("dd MMM yyyy HH:mm:ss")]
         public string DateTime_Format_Read {
             get {
                 return ((string)(this["DateTime_Format_Read"]));
@@ -1835,73 +1835,170 @@ namespace Main.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
-        public int Archive_fromRowNumber {
+        [global::System.Configuration.DefaultSettingValueAttribute("5500")]
+        public int Archive_RowNumberStartArchive {
             get {
-                return ((int)(this["Archive_fromRowNumber"]));
+                return ((int)(this["Archive_RowNumberStartArchive"]));
             }
             set {
-                this["Archive_fromRowNumber"] = value;
+                this["Archive_RowNumberStartArchive"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("900")]
-        public int Archive_untilRowNumber {
+        [global::System.Configuration.DefaultSettingValueAttribute("6020")]
+        public int Archive_RowNumberTrigger {
             get {
-                return ((int)(this["Archive_untilRowNumber"]));
+                return ((int)(this["Archive_RowNumberTrigger"]));
             }
             set {
-                this["Archive_untilRowNumber"] = value;
+                this["Archive_RowNumberTrigger"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(".csv")]
+        public string CsvExtFile {
+            get {
+                return ((string)(this["CsvExtFile"]));
+            }
+            set {
+                this["CsvExtFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Temp\\CSV\\")]
+        public string Archiving_csvPath {
+            get {
+                return ((string)(this["Archiving_csvPath"]));
+            }
+            set {
+                this["Archiving_csvPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool OFNumber_IsNumber {
+            get {
+                return ((bool)(this["OFNumber_IsNumber"]));
+            }
+            set {
+                this["OFNumber_IsNumber"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("7")]
+        public int OFNumber_NbChar {
+            get {
+                return ((int)(this["OFNumber_NbChar"]));
+            }
+            set {
+                this["OFNumber_NbChar"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public int Report_Print_Delay1_Time_ms {
+            get {
+                return ((int)(this["Report_Print_Delay1_Time_ms"]));
+            }
+            set {
+                this["Report_Print_Delay1_Time_ms"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("150")]
+        public int Report_Print_Delay1_MaxCount {
+            get {
+                return ((int)(this["Report_Print_Delay1_MaxCount"]));
+            }
+            set {
+                this["Report_Print_Delay1_MaxCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int Report_Print_Delay2_Time_ms {
+            get {
+                return ((int)(this["Report_Print_Delay2_Time_ms"]));
+            }
+            set {
+                this["Report_Print_Delay2_Time_ms"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int Report_Print_Delay2_MaxCount {
+            get {
+                return ((int)(this["Report_Print_Delay2_MaxCount"]));
+            }
+            set {
+                this["Report_Print_Delay2_MaxCount"] = value;
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-  <list>
-    <int>3</int>
-    <int>4</int>
-    <int>5</int>
-    <int>10</int>
-    <int>12</int>
-    <int>13</int>
-    <int>14</int>
-    <int>15</int>
-    <int>16</int>
-    <int>17</int>
-    <int>18</int>
-    <int>19</int>
-    <int>20</int>
-    <int>21</int>
-    <int>22</int>
-    <int>23</int>
-    <int>24</int>
-    <int>25</int>
-    <int>26</int>
-    <int>27</int>
-    <int>28</int>
-    <int>29</int>
-    <int>30</int>
-    <int>31</int>
-    <int>32</int>
-    <int>33</int>
-    <int>34</int>
-    <int>35</int>
-    <int>36</int>
-    <int>37</int>
-    <int>38</int>
-    <int>39</int>
-    <int>40</int>
-    <int>41</int>
-    <int>42</int>
-    <int>43</int>
-    <int>44</int>
-    <int>45</int>
-  </list>
-</IdDBControls>")]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"
+          <IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+            <list>
+              <int>3</int>
+              <int>4</int>
+              <int>5</int>
+              <int>10</int>
+              <int>12</int>
+              <int>13</int>
+              <int>14</int>
+              <int>15</int>
+              <int>16</int>
+              <int>17</int>
+              <int>18</int>
+              <int>19</int>
+              <int>20</int>
+              <int>21</int>
+              <int>22</int>
+              <int>23</int>
+              <int>24</int>
+              <int>25</int>
+              <int>26</int>
+              <int>27</int>
+              <int>28</int>
+              <int>29</int>
+              <int>30</int>
+              <int>31</int>
+              <int>32</int>
+              <int>33</int>
+              <int>34</int>
+              <int>35</int>
+              <int>36</int>
+              <int>37</int>
+              <int>38</int>
+              <int>39</int>
+              <int>40</int>
+              <int>41</int>
+              <int>42</int>
+              <int>43</int>
+              <int>44</int>
+              <int>45</int>
+            </list>
+          </IdDBControls>
+        ")]
         public global::Main.Pages.IdDBControls RecipeMix_IdDBControls {
             get {
                 return ((global::Main.Pages.IdDBControls)(this["RecipeMix_IdDBControls"]));
@@ -1910,15 +2007,16 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-  <list>
-    <int>3</int>
-    <int>5</int>
-    <int>8</int>
-    <int>9</int>
-  </list>
-</IdDBControls>")]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"
+          <IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+            <list>
+              <int>3</int>
+              <int>5</int>
+              <int>8</int>
+              <int>9</int>
+            </list>
+          </IdDBControls>
+        ")]
         public global::Main.Pages.IdDBControls RecipeWeight_IdDBControls {
             get {
                 return ((global::Main.Pages.IdDBControls)(this["RecipeWeight_IdDBControls"]));

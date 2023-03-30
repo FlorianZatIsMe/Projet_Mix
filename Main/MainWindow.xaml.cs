@@ -76,7 +76,7 @@ namespace Main
                 Thread.CurrentThread.CurrentUICulture = culture;
             }
 
-            //*
+            /*
             AlarmManagement.Initialize(new Alarm_Management.IniInfo() { AuditTrail_SystemUsername = Settings.Default.General_SystemUsername, Window = this });
             InitializeComponent();
             AlarmManagement.ActiveAlarmEvent += ActiveAlarmEvent;
@@ -87,15 +87,17 @@ namespace Main
             //synth.SelectVoiceByHints(VoiceGender.Male, VoiceAge.Senior);
             //synth.Speak("Oh... You're sweet, thank you. I don't love you, but it's nice to know that someone loves me. Who wouldn't anyway ?");
 
-            Pages.Archiving.ExecuteFullArchive();
+            ReportGeneration report = new ReportGeneration();
+            report.GenerateCycleReport(646);
 
-            General.ShowMessageBox("Fini je crois");
+            Message.MyMessageBox.Show("Fini je crois");
             Environment.Exit(1);
             //*/
 
             InitializeComponent();
 
             MyMessageBox.SetParentWindow(this);
+            Message.MyMessageBox.SetParentWindow(this, this.Window_Deactivated);
             AlarmManagement.ActiveAlarmEvent += ActiveAlarmEvent;
             AlarmManagement.InactiveAlarmEvent += InactiveAlarmEvent;
 
@@ -115,13 +117,13 @@ namespace Main
             labelSoftwareName.Text = General.application_name + " version " + General.application_version;
 
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-            auditTrailInfo.Columns[auditTrailInfo.Username].Value = General.loggedUsername;
-            auditTrailInfo.Columns[auditTrailInfo.EventType].Value = Settings.Default.General_AuditTrailEvent_Event;
-            auditTrailInfo.Columns[auditTrailInfo.Description].Value = Settings.Default.General_auditTrail_StartApp;
-            //MyDatabase.InsertRow(auditTrailInfo);
+            object[] values = new object[auditTrailInfo.Ids.Count()];
+            values[auditTrailInfo.Username] = General.loggedUsername;
+            values[auditTrailInfo.EventType] = Settings.Default.General_AuditTrailEvent_Event;
+            values[auditTrailInfo.Description] = Settings.Default.General_auditTrail_StartApp;
 
             // A corriger if insert didn't work
-            MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTrailInfo); });
+            MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTrailInfo, values); });
 
             frameMain.Content = new Pages.Status();
             frameInfoCycle.Content = null;
@@ -130,7 +132,7 @@ namespace Main
             currentTimeTimer = new System.Timers.Timer
             {
                 Interval = Settings.Default.Main_currentTimeTimer_Interval,
-                AutoReset = true
+                AutoReset = false
             };
             currentTimeTimer.Elapsed += CurrentTimer_OnTimedEvent;
             currentTimeTimer.Start();
@@ -139,7 +141,7 @@ namespace Main
             {
                 if (Pages.Sequence.list[i].subRecipeInfo.SeqType != i || Pages.Sequence.list[i].subCycleInfo.SeqType != i)
                 {
-                    General.ShowMessageBox(Settings.Default.Recipe_Error_listIncorrect);
+                    Message.MyMessageBox.Show(Settings.Default.Recipe_Error_listIncorrect);
                     logger.Error(Settings.Default.Recipe_Error_listIncorrect);
                     Environment.Exit(1);
                 }
@@ -177,69 +179,69 @@ namespace Main
             }
 
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-            auditTrailInfo.Columns[auditTrailInfo.Description].Value = General.auditTrail_BackupDesc;
-            // easy to make mutex better
+            object[] values = new object[auditTrailInfo.Ids.Count()];
+            values[auditTrailInfo.Description] = General.auditTrail_BackupDesc;
 
             ReadInfo readInfo = new ReadInfo(
                 _tableInfo: auditTrailInfo,
-                _orderBy: auditTrailInfo.Columns[auditTrailInfo.Id].Id,
+                _orderBy: auditTrailInfo.Ids[auditTrailInfo.Id],
                 _isOrderAsc: false
                 );
 
-            //List<ITableInfo> tableInfos = MyDatabase.GetRows(readInfo, 1);
-            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetRows(readInfo, 1); });
-            List<IComTabInfo> tableInfos = (List<IComTabInfo>)t.Result;
-
-            // check if result is null
+            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetRows_new(readInfo, values, 1); });
+            List<object[]> tableInfos = (List<object[]>)t.Result;
 
             if (tableInfos == null || tableInfos.Count == 0)
             {
-                General.ShowMessageBox("C'est pas bien de ne pas se connecter à la base de données");
+                Message.MyMessageBox.Show("C'est pas bien de ne pas se connecter à la base de données");
                 logger.Error("C'est pas bien de ne pas se connecter à la base de données");
                 return;
             }
 
-            auditTrailInfo = (AuditTrailInfo)tableInfos[0];
+            object[] auditTrailRow = tableInfos[0];
 
-            DateTime dtLastBackup = Convert.ToDateTime(auditTrailInfo.Columns[auditTrailInfo.DateTime].Value);
-            if (dtLastBackup.CompareTo(General.NextBackupTime.AddDays(-1)) < 0)
+            for (int i = 0; i < auditTrailRow.Count(); i++)
             {
-                logger.Debug("ExecuteBackupAuto at start");
-                ExecuteBackupAuto();
+                logger.Trace(auditTrailRow[i].ToString());
             }
-            else
+
+            try
             {
-                //MyDatabase.Disconnect();
+                DateTime dtLastBackup = Convert.ToDateTime(auditTrailRow[auditTrailInfo.DateTime]);
+                if (dtLastBackup.CompareTo(General.NextBackupTime.AddDays(-1)) < 0)
+                {
+                    logger.Debug("ExecuteBackupAuto at start");
+                    ExecuteBackupAuto();
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+                Message.MyMessageBox.Show(ex.Message);
+                return;
             }
         }
         private bool ExecuteBackupAuto()
         {
             bool wasBackupSucceeded = false;
             int nBackupAttempt = 0;
-            int mutexID;
-            // mutex à retirer
-            mutexID = -1;
-            //mutexID = MyDatabase.Connect(false);
 
             while (!wasBackupSucceeded && nBackupAttempt < 3)
             {
-                wasBackupSucceeded = Pages.Backup.ExecuteBackup(Settings.Default.General_SystemUsername, mutexID);
+                wasBackupSucceeded = Pages.Backup.ExecuteBackup(Settings.Default.General_SystemUsername);
 
                 nBackupAttempt++;
                 if (!wasBackupSucceeded)
                 {
                     AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-                    auditTrailInfo.Columns[auditTrailInfo.Username].Value = Settings.Default.General_SystemUsername;
-                    auditTrailInfo.Columns[auditTrailInfo.EventType].Value = Settings.Default.General_AuditTrailEvent_Event;
-                    auditTrailInfo.Columns[auditTrailInfo.Description].Value = Settings.Default.General_auditTrail_BackupFailedDesc + nBackupAttempt.ToString();
+                    object[] values = new object[auditTrailInfo.Ids.Count()];
+                    values[auditTrailInfo.Username] = Settings.Default.General_SystemUsername;
+                    values[auditTrailInfo.EventType] = Settings.Default.General_AuditTrailEvent_Event;
+                    values[auditTrailInfo.Description] = Settings.Default.General_auditTrail_BackupFailedDesc + nBackupAttempt.ToString();
 
-                    // A CORRIGER: CHECK IF RESULT FALSE
-                    MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTrailInfo); });
-                    //MyDatabase.InsertRow(auditTrailInfo, mutexID);
+                    MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTrailInfo, values); });
                 }
             }
-
-            //MyDatabase.Disconnect(mutexID);
 
             if (!wasBackupSucceeded) AlarmManagement.NewAlarm(4, 0);
 
@@ -247,7 +249,7 @@ namespace Main
         }
         ~MainWindow()
         {
-            //General.ShowMessageBox("Au revoir");
+            //Message.MyMessageBox.Show("Au revoir");
         }
 
         private void CurrentTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
@@ -262,6 +264,16 @@ namespace Main
                 wasAutoBackupStarted = true;
                 logger.Debug("ExecuteBackupAuto on time");
                 if (ExecuteBackupAuto()) General.NextBackupTime = General.NextBackupTime.AddDays(1);
+            }
+
+            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetRowCount((new AuditTrailInfo()).TabName); });
+            int nAuditTailRows = (int)t.Result;
+
+            if (nAuditTailRows > Settings.Default.Archive_RowNumberTrigger)
+            {
+                logger.Debug(nAuditTailRows.ToString());
+                Message.MyMessageBox.Show(nAuditTailRows.ToString());
+                if (!Pages.Archiving.ExecuteFullArchive()) Message.MyMessageBox.Show("Archivage échoué, merci de contacter un administrateur du système");
             }
 
             if (General.currentRole != AccessTableInfo.NoneRole && DateTime.Now.AddMinutes(-1).CompareTo(General.lastActTime) > 0)
@@ -313,6 +325,8 @@ namespace Main
                     logger.Fatal(ConfigurationManager.AppSettings["NextCalibDate"]);
                 }
             }
+
+            currentTimeTimer.Enabled = true;
         }
         public void UpdateUser(string username, string role)
         {
@@ -478,22 +492,33 @@ namespace Main
             if (!isCycleStarted)
             {
                 DailyTestInfo dailyTestInfo = new DailyTestInfo();
-                dailyTestInfo.Columns[dailyTestInfo.Status].Value = DatabaseSettings.General_TrueValue_Write;
-                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(dailyTestInfo, dailyTestInfo.Columns[dailyTestInfo.Id].Id); });
-                string id = ((int)t.Result).ToString();
+                object[] dailyTestValues = new object[dailyTestInfo.Ids.Count()];
+                dailyTestValues[dailyTestInfo.Status] = DatabaseSettings.General_TrueValue_Write;
+                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax_new(dailyTestInfo, dailyTestInfo.Ids[dailyTestInfo.Id], dailyTestValues); });
+                int id = (int)t.Result;
 
                 dailyTestInfo = new DailyTestInfo();
-                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(DailyTestInfo), id); });
-                dailyTestInfo = (DailyTestInfo)t.Result;
+                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow_new(dailyTestInfo, id); });
+                dailyTestValues = (object[])t.Result;
 
-                DateTime lastSampling = Convert.ToDateTime(dailyTestInfo.Columns[dailyTestInfo.DateTime].Value);
+                DateTime lastSampling;
+                try
+                {
+                    lastSampling = Convert.ToDateTime(dailyTestValues[dailyTestInfo.DateTime]);
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex.Message);
+                    Message.MyMessageBox.Show(ex.Message);
+                    return;
+                }
 
                 if (lastSampling.CompareTo(DateTime.Now.AddDays(-1)) < 0)
                 {
                     bool[] accessTable = UserManagement.GetCurrentAccessTable();
                     if (accessTable[AccessTableInfo.DailyTest])
                     {
-                        if (General.ShowMessageBox("Le dernier test journalier de la balance a été fait le " + lastSampling.ToString(Settings.Default.Date_Format_Read) + " à " + lastSampling.ToString(Settings.Default.Time_Format) + ", voulez-vous faire le test journalier ?", "Test journalier", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                        if (Message.MyMessageBox.Show("Le dernier test journalier de la balance a été fait le " + lastSampling.ToString(Settings.Default.Date_Format_Read) + " à " + lastSampling.ToString(Settings.Default.Time_Format) + ", voulez-vous faire le test journalier ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                         {
                             frameMain.Content = new Pages.SubCycle.CycleWeight(frameMain);
                             return;
@@ -501,7 +526,7 @@ namespace Main
                     }
                     else
                     {
-                        General.ShowMessageBox("Le dernier test journalier de la balance a été fait le " + lastSampling.ToString(Settings.Default.Date_Format_Read) + " à " + lastSampling.ToString(Settings.Default.Time_Format) + " veuillez contacter une personne compétente pour faire le test journalier");
+                        Message.MyMessageBox.Show("Le dernier test journalier de la balance a été fait le " + lastSampling.ToString(Settings.Default.Date_Format_Read) + " à " + lastSampling.ToString(Settings.Default.Time_Format) + " veuillez contacter une personne compétente pour faire le test journalier");
                         return;
                     }
 
@@ -556,7 +581,7 @@ namespace Main
         }
         private void FxUserLogInOut(object sender, RoutedEventArgs e)
         {
-            LogIn w = new LogIn(this);
+            LogIn w = new LogIn(this, this.Window_Deactivated);
             w.ShowDialog();
         }
         private void Close_App_Click(object sender, RoutedEventArgs e)
@@ -606,18 +631,16 @@ namespace Main
         }
 
         public async void Window_Deactivated(object sender, EventArgs e)
-        {/*
+        {
             this.Deactivated -= Window_Deactivated;
-
-            await Task.Delay(1000);
-            logger.Fatal(this.ActualHeight.ToString());
+            await Task.Delay(2000);
 
             while (!this.IsActive)
             {
                 this.Activate();
-                await Task.Delay(1000);
+                await Task.Delay(2000);
             }
-            this.Deactivated += Window_Deactivated;*/
+            this.Deactivated += Window_Deactivated;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -626,7 +649,7 @@ namespace Main
 
             if (!currentAccessTable[AccessTableInfo.ApplicationStop])
             {
-                MessageBox.Show("C'est pas bien ça");
+                Message.MyMessageBox.Show("C'est pas bien ça");
                 e.Cancel = true;
             }
         }

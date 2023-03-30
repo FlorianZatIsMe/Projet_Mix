@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Database
@@ -10,6 +11,7 @@ namespace Database
     /// Class containing the information of a column of a database table
     /// <para>Creation revision: 001</para>
     /// </summary>
+    /*
     public class Column
     {
         /// <value>Name of the column (readonly)</value>
@@ -17,7 +19,7 @@ namespace Database
         /// <value>Name of the colummn to be displayed by the application (readonly)</value>
         public string DisplayName { get; }
         /// <value>Value of the row</value>
-        public string Value { get; set; }
+        //public string Value { get; set; }
         /// <summary>
         /// Sets the value of the name and display name.
         /// </summary>
@@ -30,7 +32,7 @@ namespace Database
             // Set the value of the display name of the column (=null if not set)
             DisplayName = DisplayName_arg;
         }
-    }
+    }*/
 
     //
     // INTERFACES
@@ -45,9 +47,11 @@ namespace Database
         /// <value>Name of the database table</value>
         string TabName { get; }
         /// <value>Columns of the database table</value>
-        List<Column> Columns { get; set; }
+        //List<Column> Columns { get; set; }
         /// <value>Name of the columns of the database table</value>
         string[] Ids { get; }
+        /// <value>Description of the columns of the database table</value>
+        string[] Descriptions { get; }
     }
 
     /// <summary>
@@ -101,7 +105,14 @@ namespace Database
         /// </summary>
         /// <param name="recipe">Variable containing the recipe information</param>
         /// <param name="idCycle">The value of the id column (see Id from IComTabInfo) of the row of the first cycle sequential table</param>
-        void SetRecipeParameters(ISeqTabInfo recipe, int idCycle);
+        //void SetRecipeParameters(ISeqTabInfo recipe, int idCycle);
+
+        /// <summary>
+        /// Method which returns the recipe information related to the applicable recipe table 
+        /// </summary>
+        /// <param name="recipe">Variable containing the recipe information</param>
+        /// <param name="idCycle">The value of the id column (see Id from IComTabInfo) of the row of the first cycle sequential table</param>
+        object[] GetRecipeParameters(object[] recipe, int idCycle);
     }
 
     //
@@ -133,14 +144,16 @@ namespace Database
             colId.CopyTo(Ids, 0);
             // Import the list of names to be displayed of the columns from the settings
             StringCollection colDesc = Settings.Default.AuditTrail_ColDesc;
+            Descriptions = new string[colDesc.Count];
+            colDesc.CopyTo(Descriptions, 0);
             // Import the name of the database table from the settings
             TabName = Settings.Default.AuditTrail_TableName;
 
             // Initialization of the variable Columns
-            Columns = new List<Column>();
+            //Columns = new List<Column>();
             // For each element of the list of names of the columns, add a new column to the variable Columns.
             // This new column contains the name of the column of the databse table and the name of the columns to be displayed
-            for (int i = 0; i < colId.Count; i++) Columns.Add(new Column(colId[i], colDesc[i]));
+            //for (int i = 0; i < colId.Count; i++) Columns.Add(new Column(colId[i], colDesc[i]));
 
             // Import the value of the indexes of the applicable variable from the settings
             Id = Settings.Default.AuditTrail_ColN_id;
@@ -157,10 +170,12 @@ namespace Database
         public string TabName { get; }
 
         /// <value>Columns of the database table. From IBasTabInfo interface</value>
-        public List<Column> Columns { get; set; }
+        //public List<Column> Columns { get; set; }
 
         /// <value>Name of the columns of the database table. From IBasTabInfo interface</value>
         public string[] Ids { get; set; }
+        /// <value>Description of the columns of the database table</value>
+        public string[] Descriptions { get; }
 
         /// <value>Index of the id column (usually the first one: 0). This column <c>must be</c> an integer, usually automatically incremented. From IComTabInfo interface</value>
         public int Id { get; }
@@ -203,7 +218,6 @@ namespace Database
         {
             // Import the list of names of the columns of the database table from the settings
             StringCollection colId = Settings.Default.AccessTable_ColIds;
-            // Import the list of names of the columns of the database table from the settings
             Ids = new string[colId.Count];
             colId.CopyTo(Ids, 0);
             
@@ -211,10 +225,10 @@ namespace Database
             TabName = Settings.Default.AccessTable_TableName;
 
             // Initialization of the variable Columns
-            Columns = new List<Column>();
+            //Columns = new List<Column>();
             // For each element of the list of names of the columns, add a new column to the variable Columns.
             // This new column contains the name of the column of the databse table
-            for (int i = 0; i < colId.Count; i++) Columns.Add(new Column(colId[i]));
+            //for (int i = 0; i < colId.Count; i++) Columns.Add(new Column(colId[i]));
 
             // Import the value of the indexes of the applicable variable from the settings
             Id = Settings.Default.AccessTable_ColN_id;
@@ -242,10 +256,12 @@ namespace Database
         public string TabName { get; }
 
         /// <value>Columns of the database table. From IBasTabInfo interface</value>
-        public List<Column> Columns { get; set; }
+        //public List<Column> Columns { get; set; }
 
         /// <value>Name of the columns of the database table. From IBasTabInfo interface</value>
         public string[] Ids { get; }
+        /// <value>Description of the columns of the database table</value>
+        public string[] Descriptions { get; }
 
         /// <value>Index of the id column (usually the first one: 0). This column <c>must be</c> an integer, usually automatically incremented. From IComTabInfo interface</value>
         public int Id { get; }
@@ -307,16 +323,20 @@ namespace Database
         {
             // Import the list of names of the columns of the database table from the settings
             StringCollection colId = Settings.Default.Recipe_ColIds;
+            Ids = new string[colId.Count];
+            colId.CopyTo(Ids, 0);
             // Import the list of names to be displayed of the columns from the settings
             StringCollection colDesc = Settings.Default.Recipe_ColDesc;
+            Descriptions = new string[colDesc.Count];
+            colDesc.CopyTo(Descriptions, 0);
             // Import the name of the database table from the settings
             TabName = Settings.Default.Recipe_TableName;
 
             // Initialization of the variable Columns
-            Columns = new List<Column>();
+            //Columns = new List<Column>();
             // For each element of the list of names of the columns, add a new column to the variable Columns.
             // This new column contains the name of the column of the databse table and the name of the columns to be displayed
-            for (int i = 0; i < colId.Count; i++) Columns.Add(new Column(colId[i], colDesc[i]));
+            //for (int i = 0; i < colId.Count; i++) Columns.Add(new Column(colId[i], colDesc[i]));
 
             // Import the value of the indexes of the applicable variable from the settings
             Id = Settings.Default.Recipe_ColN_id;
@@ -333,10 +353,12 @@ namespace Database
         public string TabName { get; }
 
         /// <value>Columns of the database table. From IBasTabInfo interface</value>
-        public List<Column> Columns { get; set; }
+        //public List<Column> Columns { get; set; }
 
         /// <value>Name of the columns of the database table. From IBasTabInfo interface</value>
-        public string[] Ids { get; set; }
+        public string[] Ids { get; }
+        /// <value>Description of the columns of the database table</value>
+        public string[] Descriptions { get; }
 
         /// <value>Identification number of the current sequential table. From ISeqTabInfo interface</value>
         public int SeqType { get; }
@@ -391,14 +413,16 @@ namespace Database
         {
             // Import the list of names of the columns of the database table from the settings
             StringCollection colId = Settings.Default.RecipeWeight_ColIds;
+            Ids = new string[colId.Count];
+            colId.CopyTo(Ids, 0);
             // Import the name of the database table from the settings
             TabName = Settings.Default.RecipeWeight_TableName;
 
             // Initialization of the variable Columns
-            Columns = new List<Column>();
+            //Columns = new List<Column>();
             // For each element of the list of names of the columns, add a new column to the variable Columns.
             // This new column contains the name of the column of the databse table
-            for (int i = 0; i < colId.Count; i++) Columns.Add(new Column(colId[i]));
+            //for (int i = 0; i < colId.Count; i++) Columns.Add(new Column(colId[i]));
 
             // Import the sequential type of this class from the settings
             SeqType = Settings.Default.RecipeWeight_seqType;
@@ -421,10 +445,12 @@ namespace Database
         public string TabName { get; }
 
         /// <value>Columns of the database table. From IBasTabInfo interface</value>
-        public List<Column> Columns { get; set; }
+        //public List<Column> Columns { get; set; }
 
         /// <value>Name of the columns of the database table. From IBasTabInfo interface</value>
-        public string[] Ids { get; set; }
+        public string[] Ids { get; }
+        /// <value>Description of the columns of the database table</value>
+        public string[] Descriptions { get; }
 
         /// <value>Identification number of the current sequential table. From ISeqTabInfo interface</value>
         public int SeqType { get; }
@@ -522,14 +548,16 @@ namespace Database
         {
             // Import the list of names of the columns of the database table from the settings
             StringCollection colId = Settings.Default.RecipeSpeedMixer_ColIds;
+            Ids = new string[colId.Count];
+            colId.CopyTo(Ids, 0);
             // Import the name of the database table from the settings
             TabName = Settings.Default.RecipeSpeedMixer_TableName;
 
             // Initialization of the variable Columns
-            Columns = new List<Column>();
+            //Columns = new List<Column>();
             // For each element of the list of names of the columns, add a new column to the variable Columns.
             // This new column contains the name of the column of the databse table
-            for (int i = 0; i < colId.Count; i++) Columns.Add(new Column(colId[i]));
+            //for (int i = 0; i < colId.Count; i++) Columns.Add(new Column(colId[i]));
 
             // Import the sequential type of this class from the settings
             SeqType = Settings.Default.RecipeSpeedMixer_seqType;
@@ -566,10 +594,12 @@ namespace Database
         public string TabName { get; }
 
         /// <value>Columns of the database table. From IBasTabInfo interface</value>
-        public List<Column> Columns { get; set; }
+        ////public List<Column> Columns { get; set; }
 
         /// <value>Name of the columns of the database table. From IBasTabInfo interface</value>
-        public string[] Ids { get; set; }
+        public string[] Ids { get; }
+        /// <value>Description of the columns of the database table</value>
+        public string[] Descriptions { get; }
 
         /// <value>Identification number of the current sequential table. From ISeqTabInfo interface</value>
         public int SeqType { get; }
@@ -666,7 +696,7 @@ namespace Database
     /// <para>Creation revision: 001</para>
     /// </summary>
     /// <remarks>The information related to a cycle is separated in different rows of sequencetial tables based on ISeqTabInfo interface. The database table related to this class is the first sequence of the cycle information</remarks>
-    public class CycleTableInfo : ISeqTabInfo
+    public class CycleTableInfo : ISeqTabInfo, IDtTabInfo
     {
         /// <summary>
         /// Sets all the variables of the class except the values of the variable Columns
@@ -675,14 +705,16 @@ namespace Database
         {
             // Import the list of names of the columns of the database table from the settings
             StringCollection colId = Settings.Default.Cycle_ColIds;
+            Ids = new string[colId.Count];
+            colId.CopyTo(Ids, 0);
             // Import the name of the database table from the settings
             TabName = Settings.Default.Cycle_TableName;
 
             // Initialization of the variable Columns
-            Columns = new List<Column>();
+            //Columns = new List<Column>();
             // For each element of the list of names of the columns, add a new column to the variable Columns.
             // This new column contains the name of the column of the databse table
-            for (int i = 0; i < colId.Count; i++) Columns.Add(new Column(colId[i]));
+            //for (int i = 0; i < colId.Count; i++) Columns.Add(new Column(colId[i]));
 
             // Import the value of the indexes of the applicable variable from the settings
             Id = Settings.Default.Cycle_ColN_id;
@@ -706,16 +738,20 @@ namespace Database
             bowlWeight = Settings.Default.Cycle_ColN_bowlWeight;
             lastWeightTh = Settings.Default.Cycle_ColN_lastWeightTh;
             lastWeightEff = Settings.Default.Cycle_ColN_lastWeightEff;
+
+            DateTime = DateTimeStartCycle;
         }
 
         /// <value>Name of the database table. From IBasTabInfo interface</value>
         public string TabName { get; }
 
         /// <value>Columns of the database table. From IBasTabInfo interface</value>
-        public List<Column> Columns { get; set; }
+        //public List<Column> Columns { get; set; }
 
         /// <value>Name of the columns of the database table. From IBasTabInfo interface</value>
-        public string[] Ids { get; set; }
+        public string[] Ids { get; }
+        /// <value>Description of the columns of the database table</value>
+        public string[] Descriptions { get; }
 
         /// <value>Identification number of the current sequential table. From ISeqTabInfo interface</value>
         public int SeqType { get; }
@@ -781,6 +817,9 @@ namespace Database
 
         /// <value>Index of the actual last weighcolumn. This column contains the actual weight the empty bowl and product at the end of the mix</value>
         public int lastWeightEff { get; }
+
+        /// <value>Index of the date and time column. From IDtTabInfo</value>
+        public int DateTime { get; }
     }
 
     /// <summary>
@@ -800,7 +839,7 @@ namespace Database
     /// <para>Creation revision: 001</para>
     /// </summary>
     /// <remarks>This table contains the information of the cycle weight sequences</remarks>
-    public class CycleWeightInfo : ICycleSeqInfo
+    public class CycleWeightInfo : ICycleSeqInfo, IDtTabInfo
     {
         /// <summary>
         /// Sets all the variables of the class except the values of the variable Columns
@@ -809,16 +848,20 @@ namespace Database
         {
             // Import the list of names of the columns of the database table from the settings
             StringCollection colId = Settings.Default.CycleWeight_ColIds;
+            Ids = new string[colId.Count];
+            colId.CopyTo(Ids, 0);
             // Import the list of names to be displayed of the columns from the settings
             StringCollection colDesc = Settings.Default.CycleWeight_ColDesc;
+            Descriptions = new string[colDesc.Count];
+            colDesc.CopyTo(Descriptions, 0);
             // Import the name of the database table from the settings
             TabName = Settings.Default.CycleWeight_TableName;
 
             // Initialization of the variable Columns
-            Columns = new List<Column>();
+            //Columns = new List<Column>();
             // For each element of the list of names of the columns, add a new column to the variable Columns.
             // This new column contains the name of the column of the databse table and the name of the columns to be displayed
-            for (int i = 0; i < colId.Count; i++) Columns.Add(new Column(colId[i], colDesc[i]));
+            //for (int i = 0; i < colId.Count; i++) Columns.Add(new Column(colId[i], colDesc[i]));
 
             // Import the sequential type of this class from the settings
             SeqType = Settings.Default.CycleWeight_seqType;
@@ -839,14 +882,19 @@ namespace Database
             IsSolvent = Settings.Default.CycleWeight_ColN_isSolvent;
         }
 
+        // Declaration of the logger to log errors
+        private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         /// <value>Name of the database table. From IBasTabInfo interface</value>
         public string TabName { get; }
 
         /// <value>Columns of the database table. From IBasTabInfo interface</value>
-        public List<Column> Columns { get; set; }
+        //public List<Column> Columns { get; set; }
 
         /// <value>Name of the columns of the database table. From IBasTabInfo interface</value>
-        public string[] Ids { get; set; }
+        public string[] Ids { get; }
+        /// <value>Description of the columns of the database table</value>
+        public string[] Descriptions { get; }
 
         /// <value>Identification number of the current sequential table. From ISeqTabInfo interface</value>
         public int SeqType { get; }
@@ -865,7 +913,7 @@ namespace Database
         /// <value>Index of the was weight manual column. This column informs if the user entered the weighedt value manually or not</value>
         public int WasWeightManual { get; }
 
-        /// <value>Index of the date and time column. This column contains the date and time of the weighting</value>
+        /// <value>Index of the date and time column. This column contains the date and time of the weighting. From IDtTabInfo</value>
         public int DateTime { get; }
 
         /// <value>Index of the weighted value column. This column contains weighted value of the product</value>
@@ -890,113 +938,115 @@ namespace Database
         public int IsSolvent { get; }
 
         /// <summary>
-        /// Method which sets the recipe information related to the weight recipe table 
+        /// Method which returns the recipe information related to the applicable recipe table 
         /// </summary>
         /// <param name="recipe">Variable containing the recipe information</param>
         /// <param name="idCycle">The value of the id column (see Id from IComTabInfo) of the row of the first cycle sequential table</param>
-        public void SetRecipeParameters(ISeqTabInfo recipe, int idCycle)
+        public object[] GetRecipeParameters(object[] recipe, int idCycle)
         {
-            // Declaration of the logger to log errors
-            NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+            object[] failReturn = null;
+            object[] returnValues = new object[Ids.Length];
 
             // If the recipe in parameter is not a weight recipe then an error message is displayed / logged and the method is stopped
-            if (recipe.GetType() != typeof(RecipeWeightInfo))
+            if (recipe.Length != (new RecipeWeightInfo()).Ids.Length)
             {
                 logger.Error(Settings.Default.ICycleSeqInfo_Error_RecipeIncorrect + ": " + recipe.GetType().ToString());
-                MyDatabase.ShowMessageBox(Settings.Default.ICycleSeqInfo_Error_RecipeIncorrect + ": " + recipe.GetType().ToString());
-                return;
+                Message.MyMessageBox.Show(Settings.Default.ICycleSeqInfo_Error_RecipeIncorrect + ": " + recipe.GetType().ToString());
+                return failReturn;
             }
 
-            // Declaration of a weight recipe variable based on the recipe parameter
-            RecipeWeightInfo recipeWeighInfo = recipe as RecipeWeightInfo;
+            // Declaration of a weight recipe variable
+            RecipeWeightInfo recipeWeighInfo = new RecipeWeightInfo();
             // Declaration of a cycle variable containing the values of the row whose id is the id parameter
-            CycleTableInfo cycleTableInfo = (CycleTableInfo)MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(CycleTableInfo), idCycle.ToString()); }).Result;
+            CycleTableInfo cycleTableInfo = new CycleTableInfo();
+            object[] cycleTableValues = (object[])MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow_new(new CycleTableInfo(), idCycle); }).Result;
             // If the cycle variable is null, an error message is logged and the method is stopped
-            if (cycleTableInfo == null)
+            if (cycleTableValues == null)
             {
                 logger.Error(Settings.Default.Error_FromHere);
-                return;
+                return failReturn;
             }
 
-            decimal convRatio = GetConvRatio(recipeWeighInfo); // Declaration of the conversion ratio variable
-            /*
-            // The program tries...
-            try
-            {
-                // Calculation of the weight conversion ratio from the unit of the final weight and recipe values (setpoint, min and max). It allows the conversion of the final weight (e.g. in g) and recipe values (e.g. in mg/g)
-                // Note: the setpoint, min and max are calculated as follow: (recipe value) x (final weight) x (conversion ratio)
-                //convRatio = (cycleTableInfo.Columns[cycleTableInfo.FinalWeightUnit].Value == MyDatabase.info.CycleFinalWeight_g_Unit ? (decimal)MyDatabase.info.CycleFinalWeight_g_Conversion : 0) *
-                    //(recipeWInfo.Columns[recipeWInfo.Unit].Value == MyDatabase.info.RecipeWeight_gG_Unit ? (decimal)MyDatabase.info.RecipeWeight_gG_Conversion :
-                    //recipeWInfo.Columns[recipeWInfo.Unit].Value == MyDatabase.info.RecipeWeight_mgG_Unit ? (decimal)MyDatabase.info.RecipeWeight_mgG_Conversion : 0);
-
-                convRatio = (decimal)0.01 * (recipeWeighInfo.Columns[recipeWeighInfo.Unit].Value == MyDatabase.info.RecipeWeight_gG_Unit ? (decimal)MyDatabase.info.RecipeWeight_gG_Conversion :
-                    recipeWeighInfo.Columns[recipeWeighInfo.Unit].Value == MyDatabase.info.RecipeWeight_mgG_Unit ? (decimal)MyDatabase.info.RecipeWeight_mgG_Conversion : 0);
-
-            }
-            // If the code above generated an error then an error message is displayed / logged and the method is stopped
-            catch (Exception ex)
-            {
-                logger.Error(ex.Message);
-                MyDatabase.ShowMessageBox(ex.Message);
-                return;
-            }*/
-
+            decimal convRatio = GetConvRatio(recipe); // Declaration of the conversion ratio variable
 
             // If the conversion ratio is incorrect (if the units of the final weight or of the recipe values weren't configured in the settings)
             // Then an error message is displayed / logged and the method is stopped
             if (convRatio == 0)
             {
                 logger.Error(Settings.Default.ICycleSeqInfo_Error_convRatioIncorrect);
-                MyDatabase.ShowMessageBox(Settings.Default.ICycleSeqInfo_Error_convRatioIncorrect);
-                return;
+                Message.MyMessageBox.Show(Settings.Default.ICycleSeqInfo_Error_convRatioIncorrect);
+                return failReturn;
             }
 
             // The program tries...
             try
             {
-                decimal setpoint = decimal.Parse(recipeWeighInfo.Columns[recipeWeighInfo.Setpoint].Value);
-                decimal criteria = decimal.Parse(recipeWeighInfo.Columns[recipeWeighInfo.Criteria].Value);
-                decimal finalWeight = decimal.Parse(cycleTableInfo.Columns[cycleTableInfo.FinalWeight].Value);
-                string decimalNumber = recipeWeighInfo.Columns[recipeWeighInfo.DecimalNumber].Value;
+                decimal setpoint = decimal.Parse(recipe[recipeWeighInfo.Setpoint].ToString());
+                decimal criteria = decimal.Parse(recipe[recipeWeighInfo.Criteria].ToString());
+                decimal finalWeight = decimal.Parse(cycleTableValues[cycleTableInfo.FinalWeight].ToString());
+                //string decimalNumber = recipe[recipeWeighInfo.DecimalNumber];
 
                 // Set of the values of the columns product, setpoint, min, max, unit and decimal number on the current weight cycle object from the recipe parameter
-                Columns[Product].Value = recipeWeighInfo.Columns[recipeWeighInfo.Name].Value;
-                Columns[Setpoint].Value = (convRatio * setpoint * finalWeight).ToString("N" + decimalNumber);
-                Columns[Min].Value = (convRatio * (setpoint - criteria) * finalWeight).ToString("N" + decimalNumber);
-                Columns[Max].Value = (convRatio * (setpoint + criteria) * finalWeight).ToString("N" + decimalNumber);
-                Columns[Unit].Value = cycleTableInfo.Columns[cycleTableInfo.FinalWeightUnit].Value;
-                Columns[DecimalNumber].Value = recipeWeighInfo.Columns[recipeWeighInfo.DecimalNumber].Value;
-                Columns[IsSolvent].Value = recipeWeighInfo.Columns[recipeWeighInfo.IsSolvent].Value == Settings.Default.General_TrueValue_Read ? Settings.Default.General_TrueValue_Write : Settings.Default.General_FalseValue_Write;
+                returnValues[Product] = recipe[recipeWeighInfo.Name];
+                returnValues[Setpoint] = (convRatio * setpoint * finalWeight);
+                returnValues[Min] = (convRatio * (setpoint - criteria) * finalWeight);
+                returnValues[Max] = (convRatio * (setpoint + criteria) * finalWeight);
+                returnValues[Unit] = cycleTableValues[cycleTableInfo.FinalWeightUnit];
+                returnValues[DecimalNumber] = recipe[recipeWeighInfo.DecimalNumber];
+                returnValues[IsSolvent] = recipe[recipeWeighInfo.IsSolvent].ToString() == Settings.Default.General_TrueValue_Read ? Settings.Default.General_TrueValue_Write : Settings.Default.General_FalseValue_Write;
             }
             // If the code above generated an error then an error message is displayed / logged
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                MyDatabase.ShowMessageBox(ex.Message);
+                Message.MyMessageBox.Show(ex.Message);
             }
+            return returnValues;
         }
 
-        private decimal GetConvRatio(RecipeWeightInfo recipeWeighInfo)
+        private decimal GetConvRatio(object[] recipe)
         {
             return 1;
-            //return (decimal)0.01 * (recipeWeighInfo.Columns[recipeWeighInfo.Unit].Value == MyDatabase.info.RecipeWeight_gG_Unit ? (decimal)MyDatabase.info.RecipeWeight_gG_Conversion :
-            //        recipeWeighInfo.Columns[recipeWeighInfo.Unit].Value == MyDatabase.info.RecipeWeight_mgG_Unit ? (decimal)MyDatabase.info.RecipeWeight_mgG_Conversion : 0); ;
         }
 
-        public decimal GetMin(RecipeWeightInfo recipeWeighInfo, decimal finalWeight)
+        public decimal GetMin(object[] recipe, decimal finalWeight)
         {
-            decimal convRatio = GetConvRatio(recipeWeighInfo);
-            decimal setpoint = decimal.Parse(recipeWeighInfo.Columns[recipeWeighInfo.Setpoint].Value);
-            decimal criteria = decimal.Parse(recipeWeighInfo.Columns[recipeWeighInfo.Criteria].Value);
+            RecipeWeightInfo recipeWeightInfo = new RecipeWeightInfo();
+            decimal convRatio = GetConvRatio(recipe);
+            decimal setpoint = 0;
+            decimal criteria = 0;
+
+            try
+            {
+                setpoint = (decimal)(recipe[recipeWeightInfo.Setpoint]);
+                criteria = (decimal)(recipe[recipeWeightInfo.Criteria]);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+                Message.MyMessageBox.Show(ex.Message);
+            }
 
             return convRatio * (setpoint - criteria) * finalWeight;
         }
 
-        public decimal GetMax(RecipeWeightInfo recipeWeighInfo, decimal finalWeight)
+        public decimal GetMax(object[] recipe, decimal finalWeight)
         {
-            decimal convRatio = GetConvRatio(recipeWeighInfo);
-            decimal setpoint = decimal.Parse(recipeWeighInfo.Columns[recipeWeighInfo.Setpoint].Value);
-            decimal criteria = decimal.Parse(recipeWeighInfo.Columns[recipeWeighInfo.Criteria].Value);
+            RecipeWeightInfo recipeWeightInfo = new RecipeWeightInfo();
+            decimal convRatio = GetConvRatio(recipe);
+            decimal setpoint = 0;
+            decimal criteria = 0;
+
+            try
+            {
+                setpoint = (decimal)(recipe[recipeWeightInfo.Setpoint]);
+                criteria = (decimal)(recipe[recipeWeightInfo.Criteria]);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+                Message.MyMessageBox.Show(ex.Message);
+            }
 
             return convRatio * (setpoint + criteria) * finalWeight;
         }
@@ -1022,7 +1072,7 @@ namespace Database
     /// <para>Creation revision: 001</para>
     /// </summary>
     /// <remarks>This table contains the information of the cycle speedmixer sequences</remarks>
-    public class CycleSpeedMixerInfo : ICycleSeqInfo
+    public class CycleSpeedMixerInfo : ICycleSeqInfo, IDtTabInfo
     {
         /// <summary>
         /// Sets all the variables of the class except the values of the variable Columns
@@ -1031,17 +1081,21 @@ namespace Database
         {
             // Import the list of names of the columns of the database table from the settings
             StringCollection colId = Settings.Default.CycleSpeedMixer_ColIds;
+            Ids = new string[colId.Count];
+            colId.CopyTo(Ids, 0);
             // Import the list of names to be displayed of the columns from the settings
             StringCollection colDesc = Settings.Default.CycleSpeedMixer_ColDesc;
+            Descriptions = new string[colDesc.Count];
+            colDesc.CopyTo(Descriptions, 0);
             // Import the name of the database table from the settings
             TabName = Settings.Default.CycleSpeedMixer_TableName;
 
 
             // Initialization of the variable Columns
-            Columns = new List<Column>();
+            //Columns = new List<Column>();
             // For each element of the list of names of the columns, add a new column to the variable Columns.
             // This new column contains the name of the column of the databse table and the name of the columns to be displayed
-            for (int i = 0; i < colId.Count; i++) Columns.Add(new Column(colId[i], colDesc[i]));
+            //for (int i = 0; i < colId.Count; i++) Columns.Add(new Column(colId[i], colDesc[i]));
 
             // Import the sequential type of this class from the settings
             SeqType = Settings.Default.CycleSpeedMixer_seqType;
@@ -1064,16 +1118,21 @@ namespace Database
             PressureAvg = Settings.Default.CycleSpeedMixer_ColN_pressureMean;
             SpeedStd = Settings.Default.CycleSpeedMixer_ColN_speedStd;
             PressureStd = Settings.Default.CycleSpeedMixer_ColN_pressureStd;
+
+            DateTime = DateTimeStart;
         }
 
         /// <value>Name of the database table. From IBasTabInfo interface</value>
         public string TabName { get; }
 
         /// <value>Columns of the database table. From IBasTabInfo interface</value>
-        public List<Column> Columns { get; set; }
+        //public List<Column> Columns { get; set; }
 
         /// <value>Name of the columns of the database table. From IBasTabInfo interface</value>
-        public string[] Ids { get; set; }
+        public string[] Ids { get; }
+
+        /// <value>Description of the columns of the database table</value>
+        public string[] Descriptions { get; }
 
         /// <value>Identification number of the current sequential table. From ISeqTabInfo interface</value>
         public int SeqType { get; }
@@ -1128,38 +1187,49 @@ namespace Database
         /// <value>Index of the standard deviation pressure column. This column contains standard deviation of the pressure during the sequence</value>
         public int PressureStd { get; }
 
+        /// <value>Index of the date and time column. From IDtTabInfo</value>
+        public int DateTime { get; }
+
         /// <summary>
-        /// Method which sets the recipe information related to the speedmixer recipe table 
+        /// Method which returns the recipe information related to the applicable recipe table 
         /// </summary>
-        /// <param name="recipe">Variable containing the recipe information</param>
+        /// <param name="recipeValues">Variable containing the recipe information</param>
         /// <param name="idCycle">The value of the id column (see Id from IComTabInfo) of the row of the first cycle sequential table</param>
-        public void SetRecipeParameters(ISeqTabInfo recipe, int idCycle)
+        public object[] GetRecipeParameters(object[] recipeValues, int idCycle)
         {
+            RecipeSpeedMixerInfo recipeSpeedMixerInfo = new RecipeSpeedMixerInfo();
+            object[] failValue = null;
+            object[] returnValues = new object[Ids.Length];
+
             // Declaration of the logger to log errors
             NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
             // If the recipe in parameter is not a speedmixer recipe then an error message is displayed / logged and the method is stopped
-            if (recipe.GetType() != typeof(RecipeSpeedMixerInfo))
+            if (recipeValues.Length != recipeSpeedMixerInfo.Ids.Length)
             {
-                logger.Error(Settings.Default.ICycleSeqInfo_Error_RecipeIncorrect + ": " + recipe.GetType().ToString());
-                MyDatabase.ShowMessageBox(Settings.Default.ICycleSeqInfo_Error_RecipeIncorrect + ": " + recipe.GetType().ToString());
-                return;
+                logger.Error(Settings.Default.ICycleSeqInfo_Error_RecipeIncorrect + ": " + recipeValues.Length.ToString());
+                Message.MyMessageBox.Show(Settings.Default.ICycleSeqInfo_Error_RecipeIncorrect + ": " + recipeValues.Length.ToString());
+                return failValue;
             }
-
-            // Declaration of a speedmixer recipe variable based on the recipe parameter
-            RecipeSpeedMixerInfo recipeSpeedMixerInfo = recipe as RecipeSpeedMixerInfo;
 
             int i = 0;              // Initialization of counter variable for the loop below
             int timeTh_seconds = 0; // Initialization a variable to calculate the theoritical time in seconds of the speedmixer sequence (calculated in the loop below)
 
             // Until the counter reaches 10 or the time of the next phase from the recipe parameter is empty...
-            while (i != 10 && recipeSpeedMixerInfo.Columns[recipeSpeedMixerInfo.Time00 + 3 * i].Value != "")
+            while (i != 10 && recipeValues[recipeSpeedMixerInfo.Time00 + 3 * i] != null && recipeValues[recipeSpeedMixerInfo.Time00 + 3 * i].ToString() != "")
             {
+                logger.Error((i != 10 && (recipeValues[recipeSpeedMixerInfo.Time00 + 3 * i] != null || recipeValues[recipeSpeedMixerInfo.Time00 + 3 * i].ToString() != "")).ToString());
+                logger.Error((i != 10).ToString());
+                logger.Error((recipeValues[recipeSpeedMixerInfo.Time00 + 3 * i] != null &&  recipeValues[recipeSpeedMixerInfo.Time00 + 3 * i].ToString() != "").ToString());
+                logger.Error((recipeValues[recipeSpeedMixerInfo.Time00 + 3 * i] != null).ToString());
+                logger.Error((recipeValues[recipeSpeedMixerInfo.Time00 + 3 * i].ToString() != "").ToString());
+
                 // The program tries...
                 try
                 {
+                    logger.Fatal((recipeSpeedMixerInfo.Time00 + 3 * i).ToString() + " - " + recipeValues[recipeSpeedMixerInfo.Time00 + 3 * i].ToString() + (recipeValues[recipeSpeedMixerInfo.Time00 + 3 * i] == null).ToString() + (recipeValues[recipeSpeedMixerInfo.Time00 + 3 * i].ToString() == "").ToString());
                     // Theoritical time = current value + the time of the next phase from the recipe parameter
-                    timeTh_seconds += int.Parse(recipeSpeedMixerInfo.Columns[recipeSpeedMixerInfo.Time00 + 3 * i].Value);
+                    timeTh_seconds += int.Parse(recipeValues[recipeSpeedMixerInfo.Time00 + 3 * i].ToString());
                     // Incrementation of the counter
                     i++;
                 }
@@ -1167,8 +1237,8 @@ namespace Database
                 catch (Exception ex)
                 {
                     logger.Error(ex.Message);
-                    MyDatabase.ShowMessageBox(ex.Message);
-                    return;
+                    Message.MyMessageBox.Show(ex.Message);
+                    return failValue;
                 }
             }
 
@@ -1176,20 +1246,24 @@ namespace Database
             try
             {
                 // Set of the values of the columns product, setpoint, min, max, unit and decimal number on the current weight cycle object from the recipe parameter
-                Columns[Name].Value = recipeSpeedMixerInfo.Columns[recipeSpeedMixerInfo.Name].Value;
-                Columns[TimeSeqTh].Value = TimeSpan.FromSeconds(timeTh_seconds).ToString();
-                Columns[PressureUnit].Value = recipeSpeedMixerInfo.Columns[recipeSpeedMixerInfo.PressureUnit].Value;
-                Columns[SpeedMin].Value = recipeSpeedMixerInfo.Columns[recipeSpeedMixerInfo.SpeedMin].Value;
-                Columns[SpeedMax].Value = recipeSpeedMixerInfo.Columns[recipeSpeedMixerInfo.SpeedMax].Value;
-                Columns[PressureMin].Value = recipeSpeedMixerInfo.Columns[recipeSpeedMixerInfo.PressureMin].Value;
-                Columns[PressureMax].Value = recipeSpeedMixerInfo.Columns[recipeSpeedMixerInfo.PressureMax].Value;
+                returnValues[Name] = recipeValues[recipeSpeedMixerInfo.Name];
+                returnValues[TimeSeqTh] = TimeSpan.FromSeconds(timeTh_seconds);
+                //returnValues[TimeSeqTh] = TimeSpan.FromSeconds(timeTh_seconds).ToString();
+                returnValues[PressureUnit] = recipeValues[recipeSpeedMixerInfo.PressureUnit];
+                returnValues[SpeedMin] = recipeValues[recipeSpeedMixerInfo.SpeedMin];
+                returnValues[SpeedMax] = recipeValues[recipeSpeedMixerInfo.SpeedMax];
+                returnValues[PressureMin] = recipeValues[recipeSpeedMixerInfo.PressureMin];
+                returnValues[PressureMax] = recipeValues[recipeSpeedMixerInfo.PressureMax];
             }
             // If the code above generated an error then an error message is displayed / logged
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                MyDatabase.ShowMessageBox(ex.Message);
+                Message.MyMessageBox.Show(ex.Message);
+                returnValues = failValue;
             }
+
+            return returnValues;
         }
     }
 
@@ -1207,14 +1281,16 @@ namespace Database
         {
             // Import the list of names of the columns of the database table from the settings
             StringCollection colId = Settings.Default.Temp_ColIds;
+            Ids = new string[colId.Count];
+            colId.CopyTo(Ids, 0);
             // Import the name of the database table from the settings
             TabName = Settings.Default.Temp_TableName;
 
             // Initialization of the variable Columns
-            Columns = new List<Column>();
+            //Columns = new List<Column>();
             // For each element of the list of names of the columns, add a new column to the variable Columns.
             // This new column contains the name of the column of the databse table
-            for (int i = 0; i < colId.Count; i++) Columns.Add(new Column(colId[i]));
+            //for (int i = 0; i < colId.Count; i++) Columns.Add(new Column(colId[i]));
 
             // Import the value of the indexes of the applicable variable from the settings
             Speed = Settings.Default.Temp_ColN_speed;
@@ -1225,10 +1301,13 @@ namespace Database
         public string TabName { get; }
 
         /// <value>Columns of the database table. From IBasTabInfo interface</value>
-        public List<Column> Columns { get; set; }
+        //public List<Column> Columns { get; set; }
 
         /// <value>Name of the columns of the database table. From IBasTabInfo interface</value>
-        public string[] Ids { get; set; }
+        public string[] Ids { get; }
+
+        /// <value>Description of the columns of the database table</value>
+        public string[] Descriptions { get; }
 
         /// <value>Index of the speed column. This column contains speed logged during the speedmixer's sequence</value>
         public int Speed { get; }
@@ -1253,11 +1332,11 @@ namespace Database
             TabName = "";
 
             // Initialization of the variable Columns
-            Columns = new List<Column>();
+            //Columns = new List<Column>();
             // For each element of the list of names of the columns, add a new empty column to the variable Columns.
             for (int i = 0; i < Settings.Default.TempResult_ColN; i++)
             {
-                Columns.Add(new Column());
+                //Columns.Add(new Column());
             }
 
             // Import the value of the indexes of the applicable variable from the settings
@@ -1271,10 +1350,13 @@ namespace Database
         public string TabName { get; }
 
         /// <value>Columns of the database table. From IBasTabInfo interface</value>
-        public List<Column> Columns { get; set; }
+        //public List<Column> Columns { get; set; }
 
         /// <value>Name of the columns of the database table. From IBasTabInfo interface</value>
-        public string[] Ids { get; set; }
+        public string[] Ids { get; }
+
+        /// <value>Description of the columns of the database table</value>
+        public string[] Descriptions { get; }
 
         /// <value>Index of the average speed column. This column contains average speed calculated at the end of the speedmixer's sequence</value>
         public int SpeedAvg { get; }
@@ -1307,16 +1389,20 @@ namespace Database
         {
             // Import the list of names of the columns of the database table from the settings
             StringCollection colId = Settings.Default.DailyTest_ColIds;
+            Ids = new string[colId.Count];
+            colId.CopyTo(Ids, 0);
             // Import the list of names to be displayed of the columns from the settings
             StringCollection colDesc = Settings.Default.DailyTest_ColDesc;
+            Descriptions = new string[colDesc.Count];
+            colDesc.CopyTo(Descriptions, 0);
             // Import the name of the database table from the settings
             TabName = Settings.Default.DailyTest_TableName;
 
             // Initialization of the variable Columns
-            Columns = new List<Column>();
+            //Columns = new List<Column>();
             // For each element of the list of names of the columns, add a new column to the variable Columns.
             // This new column contains the name of the column of the databse table and the name of the columns to be displayed
-            for (int i = 0; i < colId.Count; i++) Columns.Add(new Column(colId[i], colDesc[i]));
+            //for (int i = 0; i < colId.Count; i++) Columns.Add(new Column(colId[i], colDesc[i]));
 
             // Import the value of the indexes of the applicable variable from the settings
             Id = Settings.Default.DailyTest_ColN_id;
@@ -1341,10 +1427,13 @@ namespace Database
         public string TabName { get; }
 
         /// <value>Columns of the database table. From IBasTabInfo interface</value>
-        public List<Column> Columns { get; set; }
+        //public List<Column> Columns { get; set; }
 
         /// <value>Name of the columns of the database table. From IBasTabInfo interface</value>
-        public string[] Ids { get; set; }
+        public string[] Ids { get; }
+
+        /// <value>Description of the columns of the database table</value>
+        public string[] Descriptions { get; }
 
         /// <value>Index of the id column (usually the first one: 0). This column <c>must be</c> an integer, usually automatically incremented. From IComTabInfo interface</value>
         public int Id { get; }

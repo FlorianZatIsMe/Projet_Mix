@@ -60,6 +60,10 @@
       <Project>{D55D238D-616B-4AC6-ACEC-1C6D34F94A07}</Project>
       <Name>Alarm_Management</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Message\Message.csproj">
+      <Project>{77b11b88-ceda-40c3-8b83-e2ef31bce0b3}</Project>
+      <Name>Message</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

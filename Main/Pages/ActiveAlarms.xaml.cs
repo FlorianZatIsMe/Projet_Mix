@@ -37,9 +37,6 @@ namespace Main.Pages
         {
             logger.Debug("Start");
 
-            // if alarm active and not connected... (to add)
-            //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
-
             frameMain = frameMain_arg;
             frameMain.ContentRendered += new EventHandler(FrameMain_ContentRendered);
 
@@ -63,29 +60,28 @@ namespace Main.Pages
 
             DataTable dt = new DataTable();
             DataRow row;
-            string[] array;
+            object[] values;
             //string[] columnNames = MySettings["Columns"].Split(',');
 
             try
             {
                 //Création des colonnes
-                foreach (Column column in auditTrailInfo.Columns)
+                foreach (string columnName in auditTrailInfo.Descriptions)
                 {
-                    dt.Columns.Add(new DataColumn(column.DisplayName));
+                    dt.Columns.Add(new DataColumn(columnName));
                 }
 
                 foreach (Tuple<int, int> id in AlarmManagement.ActiveAlarms)
                 {
                     // A CORRIGER : IF RESULT IS FALSE
-                    Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneArrayRow(new AuditTrailInfo(), AlarmManagement.Alarms[id.Item1, id.Item2].id.ToString()); });
-                    array = (string[])t.Result;
-                    //array = MyDatabase.GetOneArrayRow(new AuditTrailInfo(), AlarmManagement.Alarms[id.Item1, id.Item2].id.ToString());
+                    Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow_new(new AuditTrailInfo(), AlarmManagement.Alarms[id.Item1, id.Item2].id); });
+                    values = (object[])t.Result;
 
-                    if (array != null)
+                    if (values != null)
                     {
                         try
                         {
-                            array[auditTrailInfo.DateTime] = Convert.ToDateTime(array[auditTrailInfo.DateTime]).ToString("dd.MMMyyyy HH:mm:ss");
+                            values[auditTrailInfo.DateTime] = Convert.ToDateTime(values[auditTrailInfo.DateTime]).ToString("dd.MMMyyyy HH:mm:ss");
                         }
                         catch (Exception ex)
                         {
@@ -93,7 +89,7 @@ namespace Main.Pages
                         }
 
                         row = dt.NewRow();
-                        row.ItemArray = array;
+                        row.ItemArray = values;
                         dt.Rows.Add(row);
                     }
                 }
@@ -137,13 +133,8 @@ namespace Main.Pages
 
             if (frameMain.Content != this)
             {
-                // if no alarm and not deconected... (to add)
-                //MyDatabase.Disconnect();
-
                 frameMain.ContentRendered -= FrameMain_ContentRendered;
-                //stopUpdating = true;
                 updateAlarmTimer.Dispose();
-                //Dispose(disposing: true); // Il va peut-être falloir sortir ça du "if"
             }
 
         }

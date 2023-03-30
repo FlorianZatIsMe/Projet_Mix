@@ -80,7 +80,7 @@ namespace Driver_RS232_Pump
             if (rs232.GetLastCommand() == "!C802 0" || rs232.GetLastCommand() == "!C802 1")
             {
                 // Il va falloir faire quelque chose s'il y une erreur: data != *C802 0
-                //MessageBox.Show(data);
+                //Message.MyMessageBox.Show(data);
             }
         }
     }

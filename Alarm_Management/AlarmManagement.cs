@@ -101,21 +101,6 @@ namespace Alarm_Management
 
         //private static Window mainWindow;
 
-        private static void ShowMessageBox(string message)
-        {
-            if (info.Window != null)
-            {
-                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    MessageBox.Show(info.Window, message);
-                }));
-            }
-            else
-            {
-                MessageBox.Show(message);
-            }
-        }
-
         static AlarmManagement()
         {
             logger.Debug("Start");
@@ -164,7 +149,7 @@ namespace Alarm_Management
 
             if (!isInitialized) {
                 logger.Error(Settings.Default.Error01);
-                ShowMessageBox(Settings.Default.Error01);
+                Message.MyMessageBox.Show(Settings.Default.Error01);
             }
 
             int n = -1;
@@ -174,7 +159,7 @@ namespace Alarm_Management
             // Si l'alarme est active, le programmeur est nul
             if (!isAlarmNotActive) {
                 logger.Error(Settings.Default.Error02);
-                ShowMessageBox(Settings.Default.Error02);
+                Message.MyMessageBox.Show(Settings.Default.Error02);
                 return;
             }
 
@@ -201,11 +186,11 @@ namespace Alarm_Management
                 if (n != -1) ActiveAlarms.RemoveAt(n);
                 else {
                     logger.Error(Settings.Default.Error03);
-                    ShowMessageBox(Settings.Default.Error03);
+                    Message.MyMessageBox.Show(Settings.Default.Error03);
                 }
             }
 
-            ShowMessageBox(GetAlarmDescription(id1, id2)); // Peut-être afficher la liste des alarmes actives à la place
+            Message.MyMessageBox.Show(GetAlarmDescription(id1, id2)); // Peut-être afficher la liste des alarmes actives à la place
 
             //MyDatabase.Disconnect(mutex: mutexID);
         }
@@ -213,7 +198,7 @@ namespace Alarm_Management
         {
             if (!isInitialized) {
                 logger.Error(Settings.Default.Error01);
-                ShowMessageBox(Settings.Default.Error01);
+                Message.MyMessageBox.Show(Settings.Default.Error01);
             }
 
             int n = -1;
@@ -229,13 +214,13 @@ namespace Alarm_Management
 
             if (n == -1) {
                 logger.Error(Settings.Default.Error04);
-                ShowMessageBox(Settings.Default.Error04);
+                Message.MyMessageBox.Show(Settings.Default.Error04);
                 return;
             }
 
             if (Alarms[id1, id2].Status == AlarmStatus.INACTIVE) {
                 logger.Error(Settings.Default.Error05);
-                ShowMessageBox(Settings.Default.Error05);
+                Message.MyMessageBox.Show(Settings.Default.Error05);
                 return;
             }
 
@@ -255,7 +240,7 @@ namespace Alarm_Management
                 else
                 {
                     logger.Error(Settings.Default.Error06);
-                    ShowMessageBox(Settings.Default.Error06);
+                    Message.MyMessageBox.Show(Settings.Default.Error06);
                     return;
                 }
             }
@@ -266,7 +251,7 @@ namespace Alarm_Management
             else
             {
                 logger.Error(Settings.Default.Error07);
-                ShowMessageBox(Settings.Default.Error07);
+                Message.MyMessageBox.Show(Settings.Default.Error07);
                 return;
             }
 
@@ -293,7 +278,7 @@ namespace Alarm_Management
 
             if (!isInitialized) {
                 logger.Error(Settings.Default.Error01);
-                ShowMessageBox(Settings.Default.Error01);
+                Message.MyMessageBox.Show(Settings.Default.Error01);
             }
 
             int n = -1;
@@ -309,7 +294,7 @@ namespace Alarm_Management
 
             if (n == -1) {
                 logger.Error(Settings.Default.Error04);
-                ShowMessageBox(Settings.Default.Error04);
+                Message.MyMessageBox.Show(Settings.Default.Error04);
                 return;
             }
 
@@ -333,7 +318,7 @@ namespace Alarm_Management
             else
             {
                 logger.Error(Settings.Default.Error08);
-                ShowMessageBox(Settings.Default.Error08);
+                Message.MyMessageBox.Show(Settings.Default.Error08);
             }
 
             ActiveAlarms.RemoveAt(n);
@@ -342,15 +327,16 @@ namespace Alarm_Management
         private static void UpdateAlarm(int id1, int id2, AlarmStatus statusBefore, AlarmStatus statusAfter)
         {
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-            auditTrailInfo.Columns[auditTrailInfo.Username].Value = info.AuditTrail_SystemUsername;
-            auditTrailInfo.Columns[auditTrailInfo.EventType].Value = GetAlarmType(Alarms[id1, id2].Type);
-            auditTrailInfo.Columns[auditTrailInfo.Description].Value = GetAlarmDescription(id1, id2);
-            auditTrailInfo.Columns[auditTrailInfo.ValueBefore].Value = statusBefore.ToString();
-            auditTrailInfo.Columns[auditTrailInfo.ValueAfter].Value = statusAfter.ToString();
+            object[] auditTrailValues = new object[auditTrailInfo.Ids.Length];
+            auditTrailValues[auditTrailInfo.Username] = info.AuditTrail_SystemUsername;
+            auditTrailValues[auditTrailInfo.EventType] = GetAlarmType(Alarms[id1, id2].Type);
+            auditTrailValues[auditTrailInfo.Description] = GetAlarmDescription(id1, id2);
+            auditTrailValues[auditTrailInfo.ValueBefore] = statusBefore.ToString();
+            auditTrailValues[auditTrailInfo.ValueAfter] = statusAfter.ToString();
 
-            MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTrailInfo); });
+            MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTrailInfo, auditTrailValues); });
 
-            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax(auditTrailInfo.TabName, auditTrailInfo.Columns[auditTrailInfo.Id].Id); });
+            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax_new(auditTrailInfo, auditTrailInfo.Ids[auditTrailInfo.Id]); });
             Alarms[id1, id2].id = (int)t.Result;
             Alarms[id1, id2].Status = statusAfter;
         }
@@ -365,7 +351,7 @@ namespace Alarm_Management
             foreach (Tuple<int, int> id in listId)
             {
                 UpdateAlarm(id.Item1, id.Item2, AlarmStatus.RAZ, Alarms[id.Item1, id.Item2].Status);
-                ShowMessageBox(GetAlarmDescription(id.Item1, id.Item2));
+                Message.MyMessageBox.Show(GetAlarmDescription(id.Item1, id.Item2));
             }
         }
         public static string GetAlarmType(AlarmType type)

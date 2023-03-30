@@ -71,8 +71,6 @@ namespace Main.Pages
         private async void Backup_Click(object sender, RoutedEventArgs e)
         {
             logger.Debug("Backup_Click");
-
-            //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
             Task<bool> task = Task<bool>.Factory.StartNew(() => ExecuteBackup(General.loggedUsername));
 
             wpStatus.Visibility = Visibility.Visible;
@@ -82,22 +80,21 @@ namespace Main.Pages
                 progressBar.Value = (double)(100 * General.count / maxBackupCount);
                 await Task.Delay(10);
             }
-            //MyDatabase.Disconnect();
 
             if (task.Result)
             {
                 logger.Debug(Settings.Default.Backup_BackupSuccessfull);
-                General.ShowMessageBox(Settings.Default.Backup_BackupSuccessfull);
+                Message.MyMessageBox.Show(Settings.Default.Backup_BackupSuccessfull);
                 lbBackups.Items.Insert(0, new ListBoxItem() { Content = lastBackupFileName });
             }
             else
             {
                 logger.Error(Settings.Default.Backup_BackupFailed);
-                General.ShowMessageBox(Settings.Default.Backup_BackupFailed);
+                Message.MyMessageBox.Show(Settings.Default.Backup_BackupFailed);
             }
             lastBackupFileName = "";
         }
-        public static bool ExecuteBackup(string username, int mutex = -1)
+        public static bool ExecuteBackup(string username)
         {
             logger.Debug("ExecuteBackup");
 
@@ -115,7 +112,7 @@ namespace Main.Pages
             string arg4 = DatabaseSettings.ConnectionInfo.Db;// dbName;
             string arg5 = backupPath + lastBackupFileName;
             string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5;
-            //General.ShowMessageBox(command);    
+            //Message.MyMessageBox.Show(command);    
             var processInfo = new ProcessStartInfo("cmd.exe", "/c " + command)
             {
                 CreateNoWindow = true,
@@ -139,18 +136,17 @@ namespace Main.Pages
 
             if (process.ExitCode == 0)
             {
-                //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
                 // Si l'alarme est active, on la désactive
                 if (AlarmManagement.Alarms[4, 0].Status == AlarmStatus.ACTIVE || AlarmManagement.Alarms[4, 0].Status == AlarmStatus.ACK) AlarmManagement.InactivateAlarm(4, 0);
 
                 AuditTrailInfo auditTInfo = new AuditTrailInfo();
-                auditTInfo.Columns[auditTInfo.Username].Value = Settings.Default.General_SystemUsername;
-                auditTInfo.Columns[auditTInfo.EventType].Value = Settings.Default.General_AuditTrailEvent_Event;
-                auditTInfo.Columns[auditTInfo.Description].Value = General.auditTrail_BackupDesc;
+                object[] values = new object[auditTInfo.Ids.Count()];
+                values[auditTInfo.Username] = Settings.Default.General_SystemUsername;
+                values[auditTInfo.EventType] = Settings.Default.General_AuditTrailEvent_Event;
+                values[auditTInfo.Description] = General.auditTrail_BackupDesc;
 
                 // A CORRIGER : IF RESULT IS FALSE
-                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTInfo); });
-                //MyDatabase.InsertRow(auditTInfo, mutex);
+                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTInfo, values); });
 
                 General.count = Settings.Default.Backup_maxBackupCount;
                 isBackupSucceeded = true;
@@ -200,7 +196,7 @@ namespace Main.Pages
 
                 if (!File.Exists(backupPath + restoreFileName))
                 {
-                    General.ShowMessageBox("Fichier " + backupPath + restoreFileName + " n'existe pas");
+                    Message.MyMessageBox.Show("Fichier " + backupPath + restoreFileName + " n'existe pas");
                     UpdateBackupList();
                     return;
                 }                
@@ -220,7 +216,7 @@ namespace Main.Pages
             }
             else
             {
-                General.ShowMessageBox(Settings.Default.ArchBack_Request_SelectFile);
+                Message.MyMessageBox.Show(Settings.Default.ArchBack_Request_SelectFile);
             }
         }
         private void ExecuteRestore(string username, string restoreFileName)
@@ -236,7 +232,7 @@ namespace Main.Pages
                 string arg4 = DatabaseSettings.ConnectionInfo.Db;// dbName;
                 string arg5 = backupPath + restoreFileName;
                 string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5;
-                //General.ShowMessageBox(command);    
+                //Message.MyMessageBox.Show(command);    
                 var processInfo = new ProcessStartInfo("cmd.exe", "/c " + command)
                 {
                     CreateNoWindow = true,
@@ -258,24 +254,21 @@ namespace Main.Pages
 
                 if (process.ExitCode == 0)
                 {
-                    //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
-
                     AuditTrailInfo auditTInfo = new AuditTrailInfo();
-                    auditTInfo.Columns[auditTInfo.Username].Value = username;
-                    auditTInfo.Columns[auditTInfo.EventType].Value = Settings.Default.General_AuditTrailEvent_Event;// "Evènement";
-                    auditTInfo.Columns[auditTInfo.Description].Value = General.auditTrail_RestoreDesc;
+                    object[] values = new object[auditTInfo.Ids.Count()];
+                    values[auditTInfo.Username] = username;
+                    values[auditTInfo.EventType] = Settings.Default.General_AuditTrailEvent_Event;// "Evènement";
+                    values[auditTInfo.Description] = General.auditTrail_RestoreDesc;
 
                     // A CORRIGER : IF RESULT IS FALSE
-                    Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTInfo); });
-                    //MyDatabase.InsertRow(auditTInfo);
-                    //MyDatabase.Disconnect();
+                    Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTInfo, values); });
 
                     General.count = nLines;
-                    General.ShowMessageBox(Settings.Default.ArchBack_restoreSuccessfull);
+                    Message.MyMessageBox.Show(Settings.Default.ArchBack_restoreSuccessfull);
                 }
                 else
                 {
-                    General.ShowMessageBox(Settings.Default.ArchBack_restoreFailed);
+                    Message.MyMessageBox.Show(Settings.Default.ArchBack_restoreFailed);
                 }
                 General.count = 0;
                 General.text = "";
@@ -284,7 +277,7 @@ namespace Main.Pages
             }
             else
             {
-                General.ShowMessageBox(Settings.Default.ArchBack_FileNotFound_1 + backupPath + restoreFileName + Settings.Default.ArchBack_FileNotFound_2);
+                Message.MyMessageBox.Show(Settings.Default.ArchBack_FileNotFound_1 + backupPath + restoreFileName + Settings.Default.ArchBack_FileNotFound_2);
             }
         }
         private void progressBar_Loaded(object sender, RoutedEventArgs e)

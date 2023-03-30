@@ -53,7 +53,6 @@ namespace Main.Pages
         }   
         ~AuditTrail()
         {
-            //General.ShowMessageBox("Audit Trail: Au revoir");
         }
         private void LoadAuditTrail(object sender, RoutedEventArgs e)
         {
@@ -80,17 +79,17 @@ namespace Main.Pages
                 _dtBefore: dtBefore,
                 _dtAfter: dtAfter,
                 _eventTypes: eventTypes.ToArray(),
-                _orderBy: auditTrailInfo.Columns[auditTrailInfo.Id].Id,
+                _orderBy: auditTrailInfo.Ids[auditTrailInfo.Id],
                 _isOrderAsc: false);
 
             // A CORRIGER : IF RESULT IS FALSE
-            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetAuditTrailRows(readInfo); });
-            List<string[]> tables = (List<string[]>)t.Result;
+            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetAuditTrailRows_new(readInfo); });
+            List<object[]> tables = (List<object[]>)t.Result;
 
             //Création des colonnes
-            foreach (Column column in auditTrailInfo.Columns)
+            for (int i = 0; i < auditTrailInfo.Descriptions.Count(); i++)
             {
-                dt.Columns.Add(new DataColumn(column.DisplayName));
+                dt.Columns.Add(new DataColumn(auditTrailInfo.Descriptions[i]));
             }
 
             for (int i = 0; i < tables.Count; i++)
@@ -309,9 +308,6 @@ namespace Main.Pages
             Frame frameMain = new Frame();
             if (frameMain.Content != this)
             {
-                // if no alarm and not deconected... (to add)
-                //MyDatabase.Disconnect();
-
                 frameMain.ContentRendered -= FrameMain_ContentRendered;
                 //updateAlarmTimer.Dispose();
                 //Dispose(disposing: true); // Il va peut-être falloir sortir ça du "if"

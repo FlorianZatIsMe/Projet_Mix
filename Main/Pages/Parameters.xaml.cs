@@ -66,7 +66,7 @@ namespace Main.Pages
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                General.ShowMessageBox(ex.Message);
+                Message.MyMessageBox.Show(ex.Message);
             }
             dpNextCalDateToUpdt = false;
         }
