@@ -258,9 +258,6 @@
     <Compile Include="LogIn.xaml.cs">
       <DependentUpon>LogIn.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MyMessageBox.xaml.cs">
-      <DependentUpon>MyMessageBox.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\ActiveAlarms.xaml.cs">
       <DependentUpon>ActiveAlarms.xaml</DependentUpon>
     </Compile>
@@ -272,9 +269,6 @@
     </Compile>
     <Compile Include="Pages\Parameters.xaml.cs">
       <DependentUpon>Parameters.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\Sampling.xaml.cs">
-      <DependentUpon>Sampling.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\SubCycle\CycleWeight.xaml.cs">
       <DependentUpon>CycleWeight.xaml</DependentUpon>
@@ -301,10 +295,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="MyMessageBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Pages\ActiveAlarms.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -326,10 +316,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\Recipe.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\Sampling.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -7,6 +7,7 @@ using System.Configuration;
 using System.Threading.Tasks;
 //using System.Threading;
 using Database.Properties;
+using Message;
 //using System.Windows.Threading;
 
 // CONFIURE "yyyy-MM-dd HH:mm:ss" SOME DAY, PLEASE
@@ -462,7 +463,7 @@ namespace Database
             if (!isCommandOk)
             {
                 logger.Error(Settings.Default.Error02 + isCommandOk.ToString());
-                Message.MyMessageBox.Show(Settings.Default.Error02);
+                MyMessageBox.Show(Settings.Default.Error02);
                 return false;
             }
 
@@ -475,7 +476,7 @@ namespace Database
             {
                 reader = null;
                 logger.Error(ex.Message);
-                Message.MyMessageBox.Show(ex.Message);
+                MyMessageBox.Show(ex.Message);
             }
             return result;
         }
@@ -487,7 +488,7 @@ namespace Database
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error_connectToDbFailed);
-                Message.MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
+                MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return;
             }
 
@@ -508,7 +509,7 @@ namespace Database
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error_connectToDbFailed);
-                Message.MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
+                MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return;
             }
 
@@ -533,7 +534,7 @@ namespace Database
             if (readInfo.DtBefore == null || readInfo.DtAfter == null)
             {
                 logger.Error(Settings.Default.Error_ReadAudit_ArgIncorrect);
-                Message.MyMessageBox.Show(Settings.Default.Error_ReadAudit_ArgIncorrect);
+                MyMessageBox.Show(Settings.Default.Error_ReadAudit_ArgIncorrect);
                 return false;
             }
 
@@ -544,7 +545,7 @@ namespace Database
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error_connectToDbFailed);
-                Message.MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
+                MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return false;
             }
 
@@ -594,20 +595,20 @@ namespace Database
             if (info.AlarmType_Alarm == null || info.AlarmType_Warning == null)
             {
                 logger.Error(Settings.Default.Error12);
-                Message.MyMessageBox.Show(Settings.Default.Error12);
+                MyMessageBox.Show(Settings.Default.Error12);
                 return false;
             }
 
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error_connectToDbFailed);
-                Message.MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
+                MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return false;
             }
 
             if (firstId > lastId)
             {
-                Message.MyMessageBox.Show("C'est pas bien ça");
+                MyMessageBox.Show("C'est pas bien ça");
                 return false;
             }
 
@@ -641,7 +642,7 @@ namespace Database
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error_connectToDbFailed);
-                Message.MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
+                MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return;
             }
 
@@ -655,7 +656,7 @@ namespace Database
             if (statusFilter == "")
             {
                 logger.Error(Settings.Default.Error03);
-                Message.MyMessageBox.Show(Settings.Default.Error03);
+                MyMessageBox.Show(Settings.Default.Error03);
                 return;
             }
 
@@ -679,14 +680,14 @@ namespace Database
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error_connectToDbFailed);
-                Message.MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
+                MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return null;
             }
 
             if (IsReaderNotAvailable())
             {
                 logger.Error(Settings.Default.Error04);
-                Message.MyMessageBox.Show(Settings.Default.Error04);
+                MyMessageBox.Show(Settings.Default.Error04);
                 return null;
             }
 
@@ -706,7 +707,7 @@ namespace Database
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                Message.MyMessageBox.Show(ex.Message);
+                MyMessageBox.Show(ex.Message);
                 return null;
             }
 
@@ -721,14 +722,14 @@ namespace Database
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error_connectToDbFailed);
-                Message.MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
+                MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return null;
             }
 
             if (IsReaderNotAvailable())
             {
                 logger.Error(Settings.Default.Error04);
-                Message.MyMessageBox.Show(Settings.Default.Error04);
+                MyMessageBox.Show(Settings.Default.Error04);
                 return null;
             }
 
@@ -748,7 +749,7 @@ namespace Database
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                Message.MyMessageBox.Show(ex.Message);
+                MyMessageBox.Show(ex.Message);
             }
             return array;
         }
@@ -761,14 +762,14 @@ namespace Database
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error_connectToDbFailed);
-                Message.MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
+                MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return null;
             }
 
             if (IsReaderNotAvailable())
             {
                 logger.Error(Settings.Default.Error04);
-                Message.MyMessageBox.Show(Settings.Default.Error04);
+                MyMessageBox.Show(Settings.Default.Error04);
                 return null;
             }
 
@@ -806,14 +807,14 @@ namespace Database
             if (tableInfo.Ids.Count() != values.Count())
             {
                 logger.Error("On a un problème");
-                Message.MyMessageBox.Show("On a un problème");
+                MyMessageBox.Show("On a un problème");
                 return false;
             }
 
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error_connectToDbFailed);
-                Message.MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
+                MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return false;
             }
 
@@ -833,7 +834,7 @@ namespace Database
             if (columnFields.Length == 0)
             {
                 logger.Error("On a un problème");
-                Message.MyMessageBox.Show("On a un problème");
+                MyMessageBox.Show("On a un problème");
                 return false;
             }
 
@@ -855,7 +856,7 @@ namespace Database
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                Message.MyMessageBox.Show(ex.Message);
+                MyMessageBox.Show(ex.Message);
             }
             return false;
         }
@@ -869,14 +870,14 @@ namespace Database
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error_connectToDbFailed);
-                Message.MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
+                MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return false;
             }
 
             if (tableInfo.Ids.Count() != values.Count())
             {
                 logger.Error("On a un problème");
-                Message.MyMessageBox.Show("On a un problème");
+                MyMessageBox.Show("On a un problème");
                 return false;
             }
 
@@ -888,7 +889,7 @@ namespace Database
             if (setArg == " SET ")
             {
                 logger.Error("On a un problème");
-                Message.MyMessageBox.Show("On a un problème");
+                MyMessageBox.Show("On a un problème");
                 return false;
             }
 
@@ -906,7 +907,7 @@ namespace Database
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error_connectToDbFailed);
-                Message.MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
+                MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return result;
             }
 
@@ -926,7 +927,7 @@ namespace Database
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error_connectToDbFailed);
-                Message.MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
+                MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return false;
             }
 
@@ -945,7 +946,7 @@ namespace Database
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error_connectToDbFailed);
-                Message.MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
+                MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return result;
             }
 
@@ -962,14 +963,14 @@ namespace Database
             if (id == null && table == null)
             {
                 logger.Error(Settings.Default.Error16);
-                Message.MyMessageBox.Show(Settings.Default.Error16);
+                MyMessageBox.Show(Settings.Default.Error16);
                 return null;
             }
 
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error_connectToDbFailed);
-                Message.MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
+                MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return null;
             }
 
@@ -981,14 +982,14 @@ namespace Database
             if (result == null)
             {
                 logger.Error(Settings.Default.Error17);
-                Message.MyMessageBox.Show(Settings.Default.Error17);
+                MyMessageBox.Show(Settings.Default.Error17);
                 return null;
             }
 
             if (ReadNext() != null)
             {
                 logger.Error(Settings.Default.Error15);
-                Message.MyMessageBox.Show(Settings.Default.Error15);
+                MyMessageBox.Show(Settings.Default.Error15);
                 return null;
             }
             return result;
@@ -1001,7 +1002,7 @@ namespace Database
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error_connectToDbFailed);
-                Message.MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
+                MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return null;
             }
 
@@ -1017,14 +1018,14 @@ namespace Database
             if (row == null)
             {
                 logger.Error(Settings.Default.Error17);
-                Message.MyMessageBox.Show(Settings.Default.Error17);
+                MyMessageBox.Show(Settings.Default.Error17);
                 return null;
             }
 
             if (ReadNext_new() != null)
             {
                 logger.Error(Settings.Default.Error15);
-                Message.MyMessageBox.Show(Settings.Default.Error15);
+                MyMessageBox.Show(Settings.Default.Error15);
                 return null;
             }
             return row;
@@ -1038,7 +1039,7 @@ namespace Database
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error_connectToDbFailed);
-                Message.MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
+                MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return null;
             }
 
@@ -1049,7 +1050,7 @@ namespace Database
             if (ReadNext_new() != null)
             {
                 logger.Error(Settings.Default.Error15);
-                Message.MyMessageBox.Show(Settings.Default.Error15);
+                MyMessageBox.Show(Settings.Default.Error15);
                 return null;
             }
 
@@ -1062,14 +1063,14 @@ namespace Database
             if (nRows > Settings.Default.MaxNumbRows || nRows < 0)
             {
                 logger.Error(Settings.Default.Error_NumbRowsIncorrect);
-                Message.MyMessageBox.Show(Settings.Default.Error_NumbRowsIncorrect);
+                MyMessageBox.Show(Settings.Default.Error_NumbRowsIncorrect);
                 return null;
             }
 
             if (tableInfo.Ids.Count() != values.Count())
             {
                 logger.Error("On a un problème");
-                Message.MyMessageBox.Show("On a un problème");
+                MyMessageBox.Show("On a un problème");
                 return null;
             }
 
@@ -1091,7 +1092,7 @@ namespace Database
             if (nRows == 0 && i == n)
             {
                 logger.Error(Settings.Default.Error_IDidntReadItAll);
-                Message.MyMessageBox.Show(Settings.Default.Error_IDidntReadItAll);
+                MyMessageBox.Show(Settings.Default.Error_IDidntReadItAll);
             }
             return rows;
         }
@@ -1102,20 +1103,20 @@ namespace Database
             if (nRows > Settings.Default.MaxNumbRows || nRows < -1)
             {
                 logger.Error(Settings.Default.Error_NumbRowsIncorrect);
-                Message.MyMessageBox.Show(Settings.Default.Error_NumbRowsIncorrect);
+                MyMessageBox.Show(Settings.Default.Error_NumbRowsIncorrect);
                 return null;
             }
             if (values != null && readInfo.TableInfo.Ids.Count() != values.Count())
             {
                 logger.Error("On a un problème");
-                Message.MyMessageBox.Show("On a un problème");
+                MyMessageBox.Show("On a un problème");
                 return null;
             }
 
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error_connectToDbFailed);
-                Message.MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
+                MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return null;
             }
 
@@ -1136,7 +1137,7 @@ namespace Database
             if (nRows == 0 && i == n)
             {
                 logger.Error(Settings.Default.Error_IDidntReadItAll);
-                Message.MyMessageBox.Show(Settings.Default.Error_IDidntReadItAll);
+                MyMessageBox.Show(Settings.Default.Error_IDidntReadItAll);
             }
             return tables;
         }
@@ -1148,14 +1149,14 @@ namespace Database
             if (nRows > Settings.Default.MaxNumbRows || nRows < 0)
             {
                 logger.Error(Settings.Default.Error_NumbRowsIncorrect);
-                Message.MyMessageBox.Show(Settings.Default.Error_NumbRowsIncorrect);
+                MyMessageBox.Show(Settings.Default.Error_NumbRowsIncorrect);
                 return null;
             }
 
             if (readInfo.DtBefore == null || readInfo.DtAfter == null)
             {
                 logger.Error(Settings.Default.Error_ReadAudit_ArgIncorrect);
-                Message.MyMessageBox.Show(Settings.Default.Error_ReadAudit_ArgIncorrect);
+                MyMessageBox.Show(Settings.Default.Error_ReadAudit_ArgIncorrect);
                 return null;
             }
 
@@ -1178,7 +1179,7 @@ namespace Database
             if (nRows == 0 && i == n)
             {
                 logger.Error(Settings.Default.Error_IDidntReadItAll);
-                Message.MyMessageBox.Show(Settings.Default.Error_IDidntReadItAll);
+                MyMessageBox.Show(Settings.Default.Error_IDidntReadItAll);
             }
             return tables;
         }
@@ -1230,7 +1231,7 @@ namespace Database
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error_connectToDbFailed);
-                Message.MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
+                MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return null;
             }
 
@@ -1264,7 +1265,7 @@ namespace Database
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                Message.MyMessageBox.Show(ex.Message);
+                MyMessageBox.Show(ex.Message);
             }
             return null;
         }
@@ -1278,14 +1279,14 @@ namespace Database
             if (values != null && tableInfo.Ids.Count() != values.Count())
             {
                 logger.Error("On a un problème");
-                Message.MyMessageBox.Show("On a un problème");
+                MyMessageBox.Show("On a un problème");
                 return -1;
             }
 
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error_connectToDbFailed);
-                Message.MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
+                MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return -1;
             }
 
@@ -1305,14 +1306,14 @@ namespace Database
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                Message.MyMessageBox.Show(ex.Message);
+                MyMessageBox.Show(ex.Message);
                 return -1;
             }
 
             if (ReadNext_new() != null)
             {
                 logger.Error("On a un problème");
-                Message.MyMessageBox.Show("On a un problème");
+                MyMessageBox.Show("On a un problème");
                 return -1;
             }
 
@@ -1324,7 +1325,7 @@ namespace Database
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error_connectToDbFailed);
-                Message.MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
+                MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return -1;
             }
 
@@ -1358,7 +1359,7 @@ namespace Database
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error_connectToDbFailed);
-                Message.MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
+                MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return false;
             }
 
@@ -1379,7 +1380,7 @@ namespace Database
             if (!IsConnected())
             {
                 logger.Error(Settings.Default.Error_connectToDbFailed);
-                Message.MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
+                MyMessageBox.Show(Settings.Default.Error_connectToDbFailed);
                 return null;
             }
 
@@ -1398,7 +1399,7 @@ namespace Database
             if (ids == null)
             {
                 logger.Error("On a un problème");
-                Message.MyMessageBox.Show("On a un problème");
+                MyMessageBox.Show("On a un problème");
                 return arg;
             }
 
@@ -1410,7 +1411,7 @@ namespace Database
             if (ids.Count() != values.Count())
             {
                 logger.Error("On a un problème");
-                Message.MyMessageBox.Show("On a un problème");
+                MyMessageBox.Show("On a un problème");
                 return arg;
             }
 
@@ -1431,7 +1432,7 @@ namespace Database
             if (values.Count() == 0)
             {
                 logger.Error(Settings.Default.Error08);
-                Message.MyMessageBox.Show(Settings.Default.Error08);
+                MyMessageBox.Show(Settings.Default.Error08);
                 return false;
             }
 
@@ -1448,7 +1449,7 @@ namespace Database
                     catch (Exception ex)
                     {
                         logger.Error(ex.Message);
-                        Message.MyMessageBox.Show(ex.Message);
+                        MyMessageBox.Show(ex.Message);
                         return false;
                     }
                 }

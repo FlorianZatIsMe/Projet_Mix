@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using Message;
 using NationalInstruments.DAQmx;
 
 namespace Driver_ColdTrap
@@ -42,7 +43,7 @@ namespace Driver_ColdTrap
             }
             catch (DaqException exception)
             {
-                Message.MyMessageBox.Show("DaqException: " + exception.Message);
+                MyMessageBox.Show("DaqException: " + exception.Message);
                 //dispose task
                 myTask.Dispose();
             }
@@ -61,14 +62,14 @@ namespace Driver_ColdTrap
             {
                 //dispose task
                 myTask.Dispose();
-                Message.MyMessageBox.Show("DaqException_2: " + exception.Message);
+                MyMessageBox.Show("DaqException_2: " + exception.Message);
             }
 
             catch (IndexOutOfRangeException exception)
             {
                 //dispose task
                 myTask.Dispose();
-                Message.MyMessageBox.Show("Error: You must specify eight lines in the channel string (i.e., 0:7). " + exception.Message);
+                MyMessageBox.Show("Error: You must specify eight lines in the channel string (i.e., 0:7). " + exception.Message);
             }
             return false;
         }

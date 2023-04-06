@@ -25,6 +25,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Drawing;
 using System.Printing;
+using Message;
 
 namespace Main
 {
@@ -416,7 +417,7 @@ namespace Main
 
             }
 
-            Message.MyMessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Et bah alors !");
+            MyMessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Et bah alors !");
             return -2;
         }
 
@@ -1086,7 +1087,7 @@ namespace Main
             if (cycleTableValues == null)
             {
                 logger.Error(Settings.Default.Report_Info_CycleInfoNotFound);
-                Message.MyMessageBox.Show(Settings.Default.Report_Info_CycleInfoNotFound);
+                MyMessageBox.Show(Settings.Default.Report_Info_CycleInfoNotFound);
                 return;
             }
 
@@ -1140,7 +1141,7 @@ namespace Main
                 if (cycleSeqValues == null)
                 {
                     logger.Error(Settings.Default.Report_Info_CycleInfoNotFound);
-                    Message.MyMessageBox.Show(Settings.Default.Report_Info_CycleInfoNotFound);
+                    MyMessageBox.Show(Settings.Default.Report_Info_CycleInfoNotFound);
                     return;
                 }
 
@@ -1199,7 +1200,7 @@ namespace Main
             if (dailyTestValues == null)
             {
                 logger.Error(Settings.Default.Report_Info_CycleInfoNotFound);
-                Message.MyMessageBox.Show(Settings.Default.Report_Info_CycleInfoNotFound);
+                MyMessageBox.Show(Settings.Default.Report_Info_CycleInfoNotFound);
                 return;
             }
 
@@ -1358,14 +1359,14 @@ namespace Main
                 result = PrintPaper(fileName);
                 if (result)
                 {
-                    boxResult = Message.MyMessageBox.Show("L'impression a été lancé, pouvez-vous confirimer ?", MessageBoxButton.YesNo);
+                    boxResult = MyMessageBox.Show("L'impression a été lancé, pouvez-vous confirimer ?", MessageBoxButton.YesNo);
                 }
 
             } while (result && boxResult == MessageBoxResult.No);
 
             if (!result)
             {
-                Message.MyMessageBox.Show("Impression échouée");
+                MyMessageBox.Show("Impression échouée");
             }
         }
 
@@ -1382,7 +1383,7 @@ namespace Main
 
                 if (!result)
                 {
-                    boxResult = Message.MyMessageBox.Show("L'impression a échoué, voulez-vous lancer une nouvelle impression ?", MessageBoxButton.YesNo);
+                    boxResult = MyMessageBox.Show("L'impression a échoué, voulez-vous lancer une nouvelle impression ?", MessageBoxButton.YesNo);
                 }
 
             } while (!result && boxResult == MessageBoxResult.Yes);
@@ -1462,7 +1463,7 @@ namespace Main
             //End:
             //Task.Delay(10000).Wait();
 
-            if (!result && Message.MyMessageBox.Show("L'impression a échoué, voulez-vous la relancer ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (!result && MyMessageBox.Show("L'impression a échoué, voulez-vous la relancer ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 return PrintPaperOnce(fileName);
             }
@@ -1471,7 +1472,7 @@ namespace Main
                 return false;
             }
 
-            MessageBoxResult boxResult = Message.MyMessageBox.Show("L'impression a été lancé, pouvez-vous confirmer ?", MessageBoxButton.YesNo);
+            MessageBoxResult boxResult = MyMessageBox.Show("L'impression a été lancé, pouvez-vous confirmer ?", MessageBoxButton.YesNo);
 
             if (!p.CloseMainWindow()) p.Kill();
 

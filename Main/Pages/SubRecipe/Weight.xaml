@@ -73,7 +73,7 @@
                              Grid.Column="1"
                              Height="30" 
                              VerticalContentAlignment="Center"
-                             LostFocus="TbProduct_LostFocus"
+                             LostFocus="TbProduct_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"
                              Style="{DynamicResource TextBoxStyle1}"/>
                     </Grid>
 
@@ -94,7 +94,7 @@
                              Margin="125,0,0,0" 
                              Width="200" 
                              Visibility="Hidden"
-                             LostFocus="TbBarcode_LostFocus"/>
+                             LostFocus="TbBarcode_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
                         <ToggleButton x:Name="cbIsBarcode" 
                                   Content="Contrôle du code barres" 
                                   IsChecked="False" 
@@ -144,7 +144,7 @@
                                 <TextBox x:Name="tbSetpoint" 
                                          Margin="10,0,0,0" 
                                          Width="100" 
-                                         LostFocus="TbSetpoint_LostFocus" 
+                                         LostFocus="TbSetpoint_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"
                                          Style="{DynamicResource TextBoxStyle1}"/>
                             </WrapPanel>
 
@@ -159,7 +159,7 @@
                                     <TextBox x:Name="tbRange" 
                                              Margin="10,0,0,0" 
                                              Width="100" 
-                                             LostFocus="TbRange_LostFocus"
+                                             LostFocus="TbRange_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"
                                              Style="{DynamicResource TextBoxStyle1}"/>
                                 </WrapPanel>
                             </StackPanel>

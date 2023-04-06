@@ -73,6 +73,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Nom du programme"
+                         Visibility="Collapsed"
                                    Margin="0,0,20,0"
                                    Grid.Column="0"
                                    FontFamily="{StaticResource MyFont1}" 
@@ -80,29 +81,31 @@
                                    VerticalAlignment="Center"/>
                 <TextBox x:Name="tbProgramName" 
                              Grid.Column="1"
+                         Text="N/A"
+                         Visibility="Collapsed"
                              Height="30" 
                              VerticalContentAlignment="Center"
                              LostFocus="TbProgramName_LostFocus"
                              Style="{DynamicResource TextBoxStyle1}"/>
             </Grid>
 
-            <StackPanel Grid.Column="1" Grid.Row="2">
+            <StackPanel Grid.Column="1" Grid.Row="2" VerticalAlignment="Top">
                 <WrapPanel>
                     <TextBlock Margin="0,10,0,0" Text="{Binding TextBlockAcceleration}"/>
-                    <TextBox x:Name="tbAcceleration" Margin="10,10,0,0" Width="200" LostFocus="TbAcceleration_LostFocus"/>
+                    <TextBox x:Name="tbAcceleration" Margin="10,10,0,0" Width="200" LostFocus="TbAcceleration_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
                 </WrapPanel>
-                <WrapPanel>
+                <WrapPanel Margin="0,10,0,0">
                     <TextBlock Margin="0,10,0,0" Text="{Binding TextBlockDeceleration}"/>
-                    <TextBox x:Name="tbDeceleration" Margin="10,10,0,0" Width="200" LostFocus="TbDeceleration_LostFocus"/>
+                    <TextBox x:Name="tbDeceleration" Margin="10,10,0,0" Width="200" LostFocus="TbDeceleration_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
                 </WrapPanel>
 
-                <Grid>
+                <Grid Margin="0,10,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30"/>
                     </Grid.RowDefinitions>
-                    <ToggleButton x:Name="cbVacuum" Width="130" VerticalAlignment="Center" HorizontalAlignment="Left" Content="Contrôle du vide" Style="{StaticResource ToggleButtonStyle1}"/>
+                    <ToggleButton x:Name="cbVacuum" IsChecked="True" Width="130" VerticalAlignment="Center" HorizontalAlignment="Left" Content="Contrôle du vide" Style="{StaticResource ToggleButtonStyle1}" Checked="cbVacuum_Checked" Unchecked="cbVacuum_Unchecked"/>
                     <WrapPanel VerticalAlignment="Center" HorizontalAlignment="Right">
-                        <TextBlock Margin="0,10,0,0" Text="Unité de la pression"/>
+                        <TextBlock x:Name="labelPressureUnit" Margin="0,10,0,0" Text="Unité de la pression"/>
                         <ComboBox Style="{DynamicResource ComboBoxStyle1}" Margin="10,0,0,0" x:Name="cbxPressureUnit" SelectedIndex="2" Width="70">
                             <ComboBoxItem Content="inHg"/>
                             <ComboBoxItem Content="Torr"/>
@@ -147,34 +150,34 @@
                         </WrapPanel>
                         <CheckBox Margin="0,10,0,0" x:Name="cbColdTrap_old" Content="Utilisation du piège froid"/>
                         -->
-                <ToggleButton x:Name="cbColdTrap" VerticalAlignment="Center" HorizontalAlignment="Left" Content="Utilisation du piège froid" Style="{StaticResource ToggleButtonStyle1}"/>
-                <WrapPanel>
+                <ToggleButton x:Name="cbColdTrap" Margin="0,10,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Content="Utilisation du piège froid" Style="{StaticResource ToggleButtonStyle1}"/>
+                <WrapPanel Margin="0,10,0,0">
                     <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" MaxWidth="130">
                         <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_SpeedMin_Label, Mode=OneWay}"/>
                         <Run Text="{Binding TextBlockSpeedRange, Mode=OneWay}"/>
                     </TextBlock>
-                    <TextBox x:Name="tbSpeedMin" Margin="23,10,0,0" Width="50" LostFocus="TbSpeedMin_LostFocus" MaxHeight="20"/>
+                    <TextBox x:Name="tbSpeedMin" Margin="23,10,0,0" Width="50" LostFocus="TbSpeedMin_LostFocus" MaxHeight="20" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
                     <TextBlock Margin="20,10,0,0" TextWrapping="Wrap" MaxWidth="130" VerticalAlignment="Center">
                         <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_SpeedMax_Label, Mode=OneWay}"/>
                         <Run Text="{Binding TextBlockSpeedRange, Mode=OneWay}"/>
                     </TextBlock>
-                    <TextBox x:Name="tbSpeedMax" Margin="15,10,0,0" Width="50" LostFocus="TbSpeedMax_LostFocus" MaxHeight="20"/>
+                    <TextBox x:Name="tbSpeedMax" Margin="15,10,0,0" Width="50" LostFocus="TbSpeedMax_LostFocus" MaxHeight="20" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
                 </WrapPanel>
                 <WrapPanel>
-                    <TextBlock Margin="0,10,0,0" TextWrapping="Wrap" MaxWidth="130">
+                    <TextBlock x:Name="labelPressureMin" Margin="0,10,0,0" TextWrapping="Wrap" MaxWidth="130">
                         <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_PressureMin_Label, Mode=OneWay}"/>
                         <Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/>
                         <Run Text=") "/>
                         <Run Text="{Binding TextBlockPressure, Mode=OneWay}"/>
                     </TextBlock>
-                    <TextBox x:Name="tbPressureMin" Margin="10,10,0,0" Width="50" LostFocus="TbPressureMin_LostFocus" Height="20"/>
-                    <TextBlock Margin="20,10,0,0" TextWrapping="Wrap" VerticalAlignment="Center">
+                    <TextBox x:Name="tbPressureMin" Margin="10,10,0,0" Width="50" LostFocus="TbPressureMin_LostFocus" Height="20" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
+                    <TextBlock x:Name="labelPressureMax" Margin="20,10,0,0" TextWrapping="Wrap" VerticalAlignment="Center">
                         <Run Text="Max ("/>
                         <Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/>
                         <Run Text=") "/>
                         <Run Text="{Binding TextBlockPressure, Mode=OneWay}"/>
                     </TextBlock>
-                    <TextBox x:Name="tbPressureMax" Margin="10,10,0,0" Width="50" LostFocus="TbPressureMax_LostFocus" Height="20"/>
+                    <TextBox x:Name="tbPressureMax" Margin="10,10,0,0" Width="50" LostFocus="TbPressureMax_LostFocus" Height="20" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
                 </WrapPanel>
             </StackPanel>
 
@@ -207,56 +210,56 @@
                     <Run Text="Temps (s)"/>
                     <Run Text="{Binding TextBlockTime, Mode=OneWay}"/>
                 </TextBlock>
-                <TextBlock Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock x:Name="labelPressure" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Run Text="Pression ("/>
                     <Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/>
                     <Run Text=") "/>
                     <Run Text="{Binding TextBlockPressure, Mode=OneWay}"/>
                 </TextBlock>
 
-                <ToggleButton x:Name="tgPhase00" Content="1" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible"/>
-                <ToggleButton x:Name="tgPhase01" Content="2" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="True" Visibility="Visible"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked"/>
-                <ToggleButton x:Name="tgPhase02" Content="3" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="True" Visibility="Visible"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked"/>
-                <ToggleButton x:Name="tgPhase03" Content="4" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="True" Visibility="Visible"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked"/>
-                <ToggleButton x:Name="tgPhase04" Content="5" Grid.Row="5" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="True" Visibility="Visible"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked"/>
-                <ToggleButton x:Name="tgPhase05" Content="6" Grid.Row="6" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="True" Visibility="Visible"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked"/>
-                <ToggleButton x:Name="tgPhase06" Content="7" Grid.Row="7" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="True" Visibility="Visible"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked"/>
-                <ToggleButton x:Name="tgPhase07" Content="8" Grid.Row="8" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="True" Visibility="Visible"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked"/>
-                <ToggleButton x:Name="tgPhase08" Content="9" Grid.Row="9" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="True" Visibility="Visible"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked"/>
-                <ToggleButton x:Name="tgPhase09" Content="10" Grid.Row="10" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="True" Visibility="Visible"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked"/>
+                <ToggleButton x:Name="tgPhase00" Content="1" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Style="{StaticResource ToggleButtonStyle1}"/>
+                <ToggleButton x:Name="tgPhase01" Content="2" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="True" Visibility="Visible"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked" Style="{StaticResource ToggleButtonStyle1}"/>
+                <ToggleButton x:Name="tgPhase02" Content="3" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked" Style="{StaticResource ToggleButtonStyle1}"/>
+                <ToggleButton x:Name="tgPhase03" Content="4" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked" Style="{StaticResource ToggleButtonStyle1}"/>
+                <ToggleButton x:Name="tgPhase04" Content="5" Grid.Row="5" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked" Style="{StaticResource ToggleButtonStyle1}"/>
+                <ToggleButton x:Name="tgPhase05" Content="6" Grid.Row="6" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked" Style="{StaticResource ToggleButtonStyle1}"/>
+                <ToggleButton x:Name="tgPhase06" Content="7" Grid.Row="7" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked" Style="{StaticResource ToggleButtonStyle1}"/>
+                <ToggleButton x:Name="tgPhase07" Content="8" Grid.Row="8" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked" Style="{StaticResource ToggleButtonStyle1}"/>
+                <ToggleButton x:Name="tgPhase08" Content="9" Grid.Row="9" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked" Style="{StaticResource ToggleButtonStyle1}"/>
+                <ToggleButton x:Name="tgPhase09" Content="10" Grid.Row="10" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed"  Checked="tgPhase_Checked" Unchecked="tgPhase_Unchecked" Style="{StaticResource ToggleButtonStyle1}"/>
 
-                <TextBox x:Name="tbSpeed00" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" LostFocus="TbSpeed_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
-                <TextBox x:Name="tbSpeed01" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbSpeed_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
-                <TextBox x:Name="tbSpeed02" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbSpeed_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
-                <TextBox x:Name="tbSpeed03" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbSpeed_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
-                <TextBox x:Name="tbSpeed04" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbSpeed_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
-                <TextBox x:Name="tbSpeed05" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbSpeed_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
-                <TextBox x:Name="tbSpeed06" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbSpeed_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
-                <TextBox x:Name="tbSpeed07" Grid.Row="8" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbSpeed_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
-                <TextBox x:Name="tbSpeed08" Grid.Row="9" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbSpeed_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
-                <TextBox x:Name="tbSpeed09" Grid.Row="10" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbSpeed_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbSpeed00" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" LostFocus="TbSpeed_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbSpeed01" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbSpeed_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbSpeed02" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" LostFocus="TbSpeed_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbSpeed03" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" LostFocus="TbSpeed_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbSpeed04" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" LostFocus="TbSpeed_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbSpeed05" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" LostFocus="TbSpeed_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbSpeed06" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" LostFocus="TbSpeed_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbSpeed07" Grid.Row="8" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" LostFocus="TbSpeed_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbSpeed08" Grid.Row="9" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" LostFocus="TbSpeed_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbSpeed09" Grid.Row="10" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" LostFocus="TbSpeed_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}"/>
 
-                <TextBox x:Name="tbTime00" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" LostFocus="TbTime_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
-                <TextBox x:Name="tbTime01" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbTime_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
-                <TextBox x:Name="tbTime02" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbTime_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
-                <TextBox x:Name="tbTime03" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbTime_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
-                <TextBox x:Name="tbTime04" Grid.Row="5" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbTime_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
-                <TextBox x:Name="tbTime05" Grid.Row="6" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbTime_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
-                <TextBox x:Name="tbTime06" Grid.Row="7" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbTime_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
-                <TextBox x:Name="tbTime07" Grid.Row="8" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbTime_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
-                <TextBox x:Name="tbTime08" Grid.Row="9" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbTime_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
-                <TextBox x:Name="tbTime09" Grid.Row="10" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbTime_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbTime00" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" LostFocus="TbTime_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbTime01" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" LostFocus="TbTime_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbTime02" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" LostFocus="TbTime_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbTime03" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" LostFocus="TbTime_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbTime04" Grid.Row="5" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" LostFocus="TbTime_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbTime05" Grid.Row="6" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" LostFocus="TbTime_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbTime06" Grid.Row="7" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" LostFocus="TbTime_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbTime07" Grid.Row="8" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" LostFocus="TbTime_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbTime08" Grid.Row="9" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" LostFocus="TbTime_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbTime09" Grid.Row="10" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" LostFocus="TbTime_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}"/>
 
-                <TextBox x:Name="tbPressure00" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" LostFocus="tbPressure_LostFocus" Style="{StaticResource TextBoxStyle1}"/>
-                <TextBox x:Name="tbPressure01" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50"  Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
-                <TextBox x:Name="tbPressure02" Grid.Row="3" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
-                <TextBox x:Name="tbPressure03" Grid.Row="4" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
-                <TextBox x:Name="tbPressure04" Grid.Row="5" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
-                <TextBox x:Name="tbPressure05" Grid.Row="6" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
-                <TextBox x:Name="tbPressure06" Grid.Row="7" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
-                <TextBox x:Name="tbPressure07" Grid.Row="8" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
-                <TextBox x:Name="tbPressure08" Grid.Row="9" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
-                <TextBox x:Name="tbPressure09" Grid.Row="10" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
+                <TextBox x:Name="tbPressure00" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" LostFocus="tbPressure_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}"/>
+                <TextBox x:Name="tbPressure01" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Visible" Width="50" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
+                <TextBox x:Name="tbPressure02" Grid.Row="3" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
+                <TextBox x:Name="tbPressure03" Grid.Row="4" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
+                <TextBox x:Name="tbPressure04" Grid.Row="5" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
+                <TextBox x:Name="tbPressure05" Grid.Row="6" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
+                <TextBox x:Name="tbPressure06" Grid.Row="7" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
+                <TextBox x:Name="tbPressure07" Grid.Row="8" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
+                <TextBox x:Name="tbPressure08" Grid.Row="9" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
+                <TextBox x:Name="tbPressure09" Grid.Row="10" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Visibility="Collapsed" Width="50" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{StaticResource TextBoxStyle1}" LostFocus="tbPressure_LostFocus"/>
 
             </Grid>
             <!--         

@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Globalization;
 using Main.Pages.SubCycle;
+using Message;
 
 namespace Main.Pages
 {
@@ -145,7 +146,7 @@ namespace Main.Pages
                     frameInfoCycle = frameInfoCycle_arg;
                     if(mainWindow == null)
                     {
-                        Message.MyMessageBox.Show("La fenêtre principale n'a pas été définie");
+                        MyMessageBox.Show("La fenêtre principale n'a pas été définie");
                         logger.Error("La fenêtre principale n'a pas été définie");
                         return;
                     }
@@ -207,20 +208,20 @@ namespace Main.Pages
             Task<object> t;
 
             if (recipeName == "") {
-                Message.MyMessageBox.Show(Settings.Default.Recipe_Request_FillRecipeName);
+                MyMessageBox.Show(Settings.Default.Recipe_Request_FillRecipeName);
                 return false;
             }
 
             if (finalWeightMin == "" || finalWeightMax == "")
             {
-                Message.MyMessageBox.Show("Gamme de la masse final incorrecte");
+                MyMessageBox.Show("Gamme de la masse final incorrecte");
                 return false;
             }
 
             if (new_version <= 0)
             {
                 logger.Error(Settings.Default.Recipe_Error_IncorrectVersion);
-                Message.MyMessageBox.Show(Settings.Default.Recipe_Error_IncorrectVersion);
+                MyMessageBox.Show(Settings.Default.Recipe_Error_IncorrectVersion);
                 return false;
             }
 
@@ -234,7 +235,7 @@ namespace Main.Pages
             if (new_version == 1 && 
                 isRecipeCreated &&
                 (int)(MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax_new(recipeInfo, recipeInfo.Ids[recipeInfo.Version], recipeValues); }).Result) != 0) {
-                Message.MyMessageBox.Show(Settings.Default.Recipe_Info_ExistingRecipe);
+                MyMessageBox.Show(Settings.Default.Recipe_Info_ExistingRecipe);
                 return false;
             }
 
@@ -275,7 +276,7 @@ namespace Main.Pages
 
             // Si toutes les séquences ne sont pas correctement renseignées, on sort de là
             if (!isFormatOk) {
-                Message.MyMessageBox.Show(Settings.Default.Recipe_Info_IncorrectFormat);
+                MyMessageBox.Show(Settings.Default.Recipe_Info_IncorrectFormat);
                 return false;
             }
 
@@ -294,7 +295,7 @@ namespace Main.Pages
                     for (int j = 0; j < seqInfoList[i].Ids.Count(); j++)
                     {
                         row = row + tSeqInfoList[i].Item1.Ids[j] + ": " + (tSeqInfoList[i].Item2[j] == null ? "N/A" : tSeqInfoList[i].Item2[j].ToString()) + " ";
-                        //Message.MyMessageBox.Show((tSeqInfoList[i].Item2[j] == null).ToString());
+                        //MyMessageBox.Show((tSeqInfoList[i].Item2[j] == null).ToString());
                     }
                     logger.Trace(row);
 
@@ -314,8 +315,8 @@ namespace Main.Pages
             if (isRecordOk) isRecordOk = (bool)MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(tSeqInfoList[0].Item1, tSeqInfoList[0].Item2); }).Result;
 
             if (isRecordOk) {
-                if (new_version == 1) Message.MyMessageBox.Show(Settings.Default.Recipe_Info_RecipeCreated);
-                else Message.MyMessageBox.Show(Settings.Default.Recipe_Info_RecipeModified);
+                if (new_version == 1) MyMessageBox.Show(Settings.Default.Recipe_Info_RecipeCreated);
+                else MyMessageBox.Show(Settings.Default.Recipe_Info_RecipeModified);
                 return true;
             }
             // S'il y a eu une erreur, on supprime les lignes qui ont été créés.
@@ -340,7 +341,7 @@ namespace Main.Pages
                 } while (tSeqInfoList[i].Item2[tSeqInfoList[i].Item1.NextSeqId] != null && tSeqInfoList[i].Item2[tSeqInfoList[i].Item1.NextSeqId].ToString() != "");
             }
 
-            Message.MyMessageBox.Show(Settings.Default.Recipe_Info_RecipeNotCreated);
+            MyMessageBox.Show(Settings.Default.Recipe_Info_RecipeNotCreated);
             return false;
         }
         private async void Display_Recipe(int id)
@@ -364,7 +365,7 @@ namespace Main.Pages
 
             if (recipeValues == null) // Si la requête envoyer ne contient qu'une seule ligne
             {
-                Message.MyMessageBox.Show(Settings.Default.Recipe_Error_RecipeNotFound);
+                MyMessageBox.Show(Settings.Default.Recipe_Error_RecipeNotFound);
                 return;
             }
 
@@ -439,13 +440,13 @@ namespace Main.Pages
                     }
                     else
                     {
-                        Message.MyMessageBox.Show(Settings.Default.Recipe_Error_IncorrectRecipe);
+                        MyMessageBox.Show(Settings.Default.Recipe_Error_IncorrectRecipe);
                         nextSeqID = null;
                     }
                 }
                 else
                 {
-                    Message.MyMessageBox.Show(Settings.Default.Recipe_Error_FrameNotSeen);
+                    MyMessageBox.Show(Settings.Default.Recipe_Error_FrameNotSeen);
                 }
             } //while (nextSeqID != null);
 
@@ -458,7 +459,7 @@ namespace Main.Pages
             if (seqType == null)
             {
                 logger.Error("Le type demandé est null");
-                Message.MyMessageBox.Show("Le type demandé est null");
+                MyMessageBox.Show("Le type demandé est null");
             }
 
             gridMain.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) });
@@ -507,7 +508,7 @@ namespace Main.Pages
             if (id == null)
             {
                 logger.Error("On a un problème");
-                Message.MyMessageBox.Show("On a un problème");
+                MyMessageBox.Show("On a un problème");
                 return;
             }
 
@@ -518,7 +519,7 @@ namespace Main.Pages
 
             if (recipeValues == null)
             {
-                Message.MyMessageBox.Show(Settings.Default.Recipe_Error_RecipeNotFound);
+                MyMessageBox.Show(Settings.Default.Recipe_Error_RecipeNotFound);
                 return;
             }
 
@@ -563,7 +564,7 @@ namespace Main.Pages
                 else
                 {
                     nextSeqType = null;
-                    Message.MyMessageBox.Show(Settings.Default.Recipe_Error_IncorrectRecipe);
+                    MyMessageBox.Show(Settings.Default.Recipe_Error_IncorrectRecipe);
                 }
             }
         }
@@ -628,7 +629,7 @@ namespace Main.Pages
             // A CORRIGER : IF RESULT IS FALSE
             if (labelStatus.Text == status[MyDatabase.GetRecipeStatus(RecipeStatus.PROD)])
             {
-                if (Message.MyMessageBox.Show(Settings.Default.Recipe_Request_UpdateProdRecipe, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MyMessageBox.Show(Settings.Default.Recipe_Request_UpdateProdRecipe, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     // Création d'une nouvelle recette, l'ancienne version sera obsolète
                     if (Create_NewRecipe(ProgramNames[currentIndex], int.Parse(labelVersion.Text) + 1, RecipeStatus.DRAFT, false))
@@ -646,9 +647,9 @@ namespace Main.Pages
             {
                 bool isStillDraft = false;
 
-                if (Message.MyMessageBox.Show(Settings.Default.Recipe_Request_UpdateDraftRecipe, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MyMessageBox.Show(Settings.Default.Recipe_Request_UpdateDraftRecipe, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
-                    if (Message.MyMessageBox.Show(Settings.Default.Recipe_Request_UpdateDraftRecipe_YOU_SURE, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    if (MyMessageBox.Show(Settings.Default.Recipe_Request_UpdateDraftRecipe_YOU_SURE, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
                         // Modification de la recette puis modification du status en draft
                         if (Create_NewRecipe(ProgramNames[currentIndex], int.Parse(labelVersion.Text), RecipeStatus.PROD, false))
@@ -681,7 +682,7 @@ namespace Main.Pages
                                 if (oldRecipeValues == null)
                                 {
                                     labelStatus.Text = "###";
-                                    Message.MyMessageBox.Show("Problème dans la création de la recette");
+                                    MyMessageBox.Show("Problème dans la création de la recette");
                                     return;
                                 }
 
@@ -722,7 +723,7 @@ namespace Main.Pages
             }
             else
             {
-                Message.MyMessageBox.Show(Settings.Default.Recipe_Error_IncorrectStatus);
+                MyMessageBox.Show(Settings.Default.Recipe_Error_IncorrectStatus);
             }
         }
         private void ButtonActDel_Click(object sender, RoutedEventArgs e)
@@ -742,7 +743,7 @@ namespace Main.Pages
 
             if (recipeValues == null)
             {
-                Message.MyMessageBox.Show(Settings.Default.Recipe_Error_RecipeNotFound);
+                MyMessageBox.Show(Settings.Default.Recipe_Error_RecipeNotFound);
                 return;
             }
 
@@ -751,7 +752,7 @@ namespace Main.Pages
             {
                 if (recipeValues[recipeInfo.Status].ToString() == MyDatabase.GetRecipeStatus(RecipeStatus.PROD).ToString())
                 {
-                    if (Message.MyMessageBox.Show(Settings.Default.Recipe_Request_DelProdRecipe1 +
+                    if (MyMessageBox.Show(Settings.Default.Recipe_Request_DelProdRecipe1 +
                         recipeInfo.Descriptions[recipeInfo.Name] + " " + recipeValues[recipeInfo.Name].ToString() + " " +
                         recipeInfo.Descriptions[recipeInfo.Version] + " " + recipeValues[recipeInfo.Version].ToString() + 
                         Settings.Default.Recipe_Request_DelProdRecipe2, 
@@ -767,12 +768,12 @@ namespace Main.Pages
                         ProgramNames.RemoveAt(currentIndex);
 
                         CbxAddDefaultText(cbxPgmToActDelete, currentIndex);
-                        Message.MyMessageBox.Show(Settings.Default.Recipe_Info_DelProdDone);
+                        MyMessageBox.Show(Settings.Default.Recipe_Info_DelProdDone);
                     }
                 }
                 else if (recipeValues[recipeInfo.Status].ToString() == MyDatabase.GetRecipeStatus(RecipeStatus.DRAFT).ToString())
                 {
-                    if (Message.MyMessageBox.Show(Settings.Default.Recipe_Request_DelDraftRecipe1 +
+                    if (MyMessageBox.Show(Settings.Default.Recipe_Request_DelDraftRecipe1 +
                         recipeInfo.Descriptions[recipeInfo.Name] + " " + recipeValues[recipeInfo.Name].ToString() + " " +
                         recipeInfo.Descriptions[recipeInfo.Version] + " " + recipeValues[recipeInfo.Version].ToString() + 
                         Settings.Default.Recipe_Request_DelDraftRecipe2, 
@@ -797,22 +798,22 @@ namespace Main.Pages
                         }
                         else
                         {
-                            Message.MyMessageBox.Show(Settings.Default.Recipe_Error_IncorrectVersion + ": " + recipeValues[recipeInfo.Version].ToString());
+                            MyMessageBox.Show(Settings.Default.Recipe_Error_IncorrectVersion + ": " + recipeValues[recipeInfo.Version].ToString());
                         }
 
                         // mettre ça dans une fonction et on recommence tout
                         CbxAddDefaultText(cbxPgmToActDelete, currentIndex);
-                        Message.MyMessageBox.Show(Settings.Default.Recipe_Info_DelDraftDone);
+                        MyMessageBox.Show(Settings.Default.Recipe_Info_DelDraftDone);
                     }
                 }
                 else
                 {
-                    Message.MyMessageBox.Show(Settings.Default.Recipe_Error_IncorrectStatus + ": " + status[(int)(recipeValues[recipeInfo.Status])]);
+                    MyMessageBox.Show(Settings.Default.Recipe_Error_IncorrectStatus + ": " + status[(int)(recipeValues[recipeInfo.Status])]);
                 }
             }
             else if ((bool)rbActivate.IsChecked)
             {
-                if (Message.MyMessageBox.Show(Settings.Default.Recipe_Request_ActRecipe1 + 
+                if (MyMessageBox.Show(Settings.Default.Recipe_Request_ActRecipe1 + 
                     recipeValues[recipeInfo.Name].ToString() + 
                     " version " + recipeValues[recipeInfo.Version].ToString() + 
                     Settings.Default.Recipe_Request_ActRecipe2, 
@@ -829,13 +830,13 @@ namespace Main.Pages
                     ProgramNames.RemoveAt(currentIndex);
 
                     CbxAddDefaultText(cbxPgmToActDelete, currentIndex);
-                    Message.MyMessageBox.Show(Settings.Default.Recipe_Info_ActDone);
+                    MyMessageBox.Show(Settings.Default.Recipe_Info_ActDone);
                 }
             }
             else
             {
                 logger.Error(Settings.Default.Recipe_DelAct_Error_NoRadiobt);
-                Message.MyMessageBox.Show(Settings.Default.Recipe_DelAct_Error_NoRadiobt);
+                MyMessageBox.Show(Settings.Default.Recipe_DelAct_Error_NoRadiobt);
             }
         }
         private void CbxAddDefaultText(ComboBox comboBox, int index)
@@ -907,11 +908,11 @@ namespace Main.Pages
 
             if (finalWeight == -1)
             {
-                Message.MyMessageBox.Show(Settings.Default.Cycle_Info_FinalWeightIncorrect);
+                MyMessageBox.Show(Settings.Default.Cycle_Info_FinalWeightIncorrect);
                 return;
             }
 
-            if (Message.MyMessageBox.Show(Settings.Default.Recipe_Request_TestRecipe, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (MyMessageBox.Show(Settings.Default.Recipe_Request_TestRecipe, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 int id = ProgramIDs[cbxPgmToModify.SelectedIndex];
                 CycleStartInfo info;

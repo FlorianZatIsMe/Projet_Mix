@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:Main.Pages.SubCycle"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="WeightBowl" Loaded="Page_Loaded">
+      Title="WeightBowl">
 
     <Grid>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -14,7 +14,7 @@
             <TextBlock x:Name="labelSetpoint" Text="" Visibility="Collapsed"  Margin="0,10,0,0" FontSize="25" Foreground="AliceBlue"/>
             <TextBlock x:Name="labelWeight" Text="" Margin="0,10,0,0" FontSize="25" Foreground="AliceBlue" Visibility="Collapsed"/>
             <TextBox x:Name="tbScan"  Margin="0,10,0,0" Width="200" Style="{DynamicResource TextBoxStyle1}" TextAlignment="Center" Visibility="Collapsed" LostFocus="tbScan_LostFocus" KeyDown="tbScan_KeyDown" IsVisibleChanged="tbScan_IsVisibleChanged"/>
-            <TextBox x:Name="tbWeight" Margin="0,10,0,0" Width="200" Style="{DynamicResource TextBoxStyle1}" TextAlignment="Center" Visibility="Collapsed"/>
+            <TextBox x:Name="tbWeight" Margin="0,10,0,0" Width="200" Style="{DynamicResource TextBoxStyle1}" TextAlignment="Center" Visibility="Collapsed" GotFocus="ShowKeyBoard" LostFocus="HideKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
         </StackPanel>
         
         <Button Content="Ok" x:Name="btNext" Margin="20" Height="30" Width="50" HorizontalAlignment="Right" Visibility="Collapsed" Click="Button_Click"/>

@@ -11,6 +11,7 @@ using Alarm_Management;
 using Database;
 using Driver_MODBUS.Properties;
 using EasyModbus;
+using Message;
 
 namespace Driver_MODBUS
 {
@@ -130,7 +131,7 @@ namespace Driver_MODBUS
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                Message.MyMessageBox.Show(ex.Message);
+                MyMessageBox.Show(ex.Message);
             }
         }
         public static bool IsConnected()
@@ -180,7 +181,7 @@ namespace Driver_MODBUS
             else
             {
                 logger.Error(Settings.Default.Error02);
-                Message.MyMessageBox.Show(Settings.Default.Error02);
+                MyMessageBox.Show(Settings.Default.Error02);
             }
             //SpeedMixer.WriteSingleRegister(3052, 0);    // S Curve, pas touche
 

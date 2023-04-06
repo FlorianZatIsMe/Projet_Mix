@@ -18,6 +18,7 @@ using Database;
 using Main.Properties;
 using System.Configuration;
 using System.Windows.Controls.Primitives;
+using Message;
 
 namespace Main.Pages.SubRecipe
 {
@@ -37,7 +38,6 @@ namespace Main.Pages.SubRecipe
         private readonly int PhasesNumber = Settings.Default.RecipeMix_MaxPhaseNumber; // Nombre maximum de phase pendant une séquence speedmixer
         private readonly int[] ControlsIDs;
         private readonly Frame parentFrame;
-        private readonly WrapPanel[] wrapPanels = new WrapPanel[Settings.Default.RecipeMix_MaxPhaseNumber];
         private readonly ToggleButton[] toggleButtons = new ToggleButton[Settings.Default.RecipeMix_MaxPhaseNumber];
         private readonly TextBox[] speeds = new TextBox[Settings.Default.RecipeMix_MaxPhaseNumber];
         private readonly TextBox[] times = new TextBox[Settings.Default.RecipeMix_MaxPhaseNumber];
@@ -65,7 +65,7 @@ namespace Main.Pages.SubRecipe
                 {
                     ControlsIDs[i] = -1;
                 }
-                //logger.Trace(i.ToString() + ": " + ControlsIDs[i].ToString());
+                logger.Trace(i.ToString() + ": " + ControlsIDs[i].ToString() + " - " + recipeSpeedMixerInfo.Ids[i]);
             }
 
             parentFrame = frame;
@@ -116,6 +116,7 @@ namespace Main.Pages.SubRecipe
             pressures[9] = tbPressure09;
 
             FormatControl[ControlsIDs[recipeSpeedMixerInfo.Scurve]] = true;
+            FormatControl[ControlsIDs[recipeSpeedMixerInfo.Name]] = true;
         }
         private void RadioButton_Click_1(object sender, RoutedEventArgs e)
         {
@@ -146,37 +147,37 @@ namespace Main.Pages.SubRecipe
             {
                 if (toggleButton == toggleButtons[i])
                 {
-                    id = i + 1;
+                    id = i;
                 }
             }
 
             try
             {
-                speeds[id - 1].IsEnabled = false;
-                times[id - 1].IsEnabled = false;
-                pressures[id - 1].IsEnabled = false;
+                speeds[id].IsEnabled = false;
+                times[id].IsEnabled = false;
+                pressures[id].IsEnabled = false;
 
-                speeds[id - 1].Text = "";
-                times[id - 1].Text = "";
-                pressures[id - 1].Text = "";
+                speeds[id].Text = "";
+                times[id].Text = "";
+                pressures[id].Text = "";
 
-                FormatControl[ControlsIDs[recipeSpeedMixerInfo.Speed00] + id - 1] = false;
-                FormatControl[ControlsIDs[recipeSpeedMixerInfo.Time00] + id - 1] = false;
-                FormatControl[ControlsIDs[recipeSpeedMixerInfo.Pressure00] + id - 1] = false;
+                FormatControl[ControlsIDs[recipeSpeedMixerInfo.Speed00 + 3 * id]] = false;
+                FormatControl[ControlsIDs[recipeSpeedMixerInfo.Time00 + 3 * id]] = false;
+                FormatControl[ControlsIDs[recipeSpeedMixerInfo.Pressure00 + 3 * id]] = false;
 
-                if (id != 10)
+                if (id < 9)
                 {
-                    speeds[id].Visibility = Visibility.Collapsed;
-                    times[id].Visibility = Visibility.Collapsed;
-                    pressures[id].Visibility = Visibility.Collapsed;
+                    speeds[id + 1].Visibility = Visibility.Hidden;
+                    times[id + 1].Visibility = Visibility.Hidden;
+                    pressures[id + 1].Visibility = Visibility.Hidden;
                     //wrapPanels[id].Visibility = Visibility.Collapsed;
-                    toggleButtons[id].Visibility = Visibility.Collapsed;
-                    toggleButtons[id].IsChecked = false;
+                    toggleButtons[id + 1].Visibility = Visibility.Hidden;
+                    toggleButtons[id + 1].IsChecked = false;
                 }
             }
             catch (Exception ex)
             {
-                Message.MyMessageBox.Show(ex.Message);
+                MyMessageBox.Show(ex.Message);
             }
         }
         private void tgPhase_Checked(object sender, RoutedEventArgs e)
@@ -190,12 +191,34 @@ namespace Main.Pages.SubRecipe
             {
                 if (toggleButton == toggleButtons[i])
                 {
-                    id = i + 1;
+                    id = i;
                 }
             }
 
             try
             {
+                speeds[id].IsEnabled = true;
+                times[id].IsEnabled = true;
+                pressures[id].IsEnabled = true;
+                speeds[id].Background = Brushes.White;
+                times[id].Background = Brushes.White;
+                pressures[id].Background = Brushes.White;
+
+                if (id < 9)
+                {
+                    toggleButtons[id + 1].Visibility = Visibility.Visible;
+                    toggleButtons[id + 1].IsEnabled = true;
+
+                    speeds[id + 1].IsEnabled = false;
+                    times[id + 1].IsEnabled = false;
+                    pressures[id + 1].IsEnabled = false;
+                    speeds[id + 1].Visibility = Visibility.Visible;
+                    times[id + 1].Visibility = Visibility.Visible;
+                    pressures[id + 1].Visibility = (bool)cbVacuum.IsChecked ? Visibility.Visible : Visibility.Hidden;
+                    //wrapPanels[id].Visibility = Visibility.Visible;
+                }
+
+                /*
                 speeds[id - 1].IsEnabled = true;
                 times[id - 1].IsEnabled = true;
                 pressures[id - 1].IsEnabled = true;
@@ -210,11 +233,11 @@ namespace Main.Pages.SubRecipe
                     pressures[id].Visibility = Visibility.Visible;
                     toggleButtons[id].Visibility = Visibility.Visible;
                     //wrapPanels[id].Visibility = Visibility.Visible;
-                }
+                }*/
             }
             catch (Exception ex)
             {
-                Message.MyMessageBox.Show(ex.Message);
+                MyMessageBox.Show(ex.Message);
             }
         }
         public void SetPage(object[] seqValues)
@@ -227,7 +250,7 @@ namespace Main.Pages.SubRecipe
             if (seqValues.Count() != recipeInfo.Ids.Count())
             {
                 logger.Error("On a un problème");
-                Message.MyMessageBox.Show("On a un problème");
+                MyMessageBox.Show("On a un problème");
                 return;
             }
 
@@ -314,7 +337,7 @@ namespace Main.Pages.SubRecipe
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                Message.MyMessageBox.Show(ex.Message);
+                MyMessageBox.Show(ex.Message);
                 recipeInfo = null;
             }
 
@@ -363,7 +386,7 @@ namespace Main.Pages.SubRecipe
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                Message.MyMessageBox.Show(ex.Message);
+                MyMessageBox.Show(ex.Message);
                 recipeValues = null;
             }
 
@@ -384,7 +407,7 @@ namespace Main.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //Message.MyMessageBox.Show(FormatControl[i].ToString());
+            MyMessageBox.Show(FormatControl[i].ToString() + ", i:" + i.ToString());
         }
         private void TbAcceleration_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -402,7 +425,7 @@ namespace Main.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //Message.MyMessageBox.Show(FormatControl[i].ToString());
+            //MyMessageBox.Show(FormatControl[i].ToString());
         }
         private void TbDeceleration_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -420,7 +443,7 @@ namespace Main.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //Message.MyMessageBox.Show(FormatControl[i].ToString());
+            //MyMessageBox.Show(FormatControl[i].ToString());
         }
         private void TbSCurve_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -437,7 +460,7 @@ namespace Main.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }*/
-            //Message.MyMessageBox.Show(FormatControl[i].ToString());
+            //MyMessageBox.Show(FormatControl[i].ToString());
 
             int i = ControlsIDs[recipeSpeedMixerInfo.Scurve];
             FormatControl[i] = true;
@@ -474,7 +497,7 @@ namespace Main.Pages.SubRecipe
 
             TextBox textBox = sender as TextBox;
             int i = ControlsIDs[recipeSpeedMixerInfo.Time00];
-            //Message.MyMessageBox.Show(i.ToString() + " - " + recipeSpeedMixerInfo.time00.ToString());
+            //MyMessageBox.Show(i.ToString() + " - " + recipeSpeedMixerInfo.time00.ToString());
             for (int j = 0; j < PhasesNumber; j++)
             {
                 if (textBox == times[j])
@@ -490,7 +513,7 @@ namespace Main.Pages.SubRecipe
                         {
                             FormatControl[i + 3 * j] = false;
                         }
-                        //Message.MyMessageBox.Show((i+j).ToString() + " - " + FormatControl[i + j].ToString());
+                        //MyMessageBox.Show((i+j).ToString() + " - " + FormatControl[i + j].ToString());
                     }
                 }
             }
@@ -538,7 +561,7 @@ namespace Main.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //Message.MyMessageBox.Show(FormatControl[i].ToString());
+            //MyMessageBox.Show(FormatControl[i].ToString());
         }
         private void TbSpeedMax_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -556,7 +579,7 @@ namespace Main.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //Message.MyMessageBox.Show(FormatControl[i].ToString());
+            //MyMessageBox.Show(FormatControl[i].ToString());
         }
         private void TbPressureMin_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -574,7 +597,7 @@ namespace Main.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //Message.MyMessageBox.Show(FormatControl[i].ToString());
+            //MyMessageBox.Show(FormatControl[i].ToString());
         }
         private void TbPressureMax_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -592,27 +615,80 @@ namespace Main.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //Message.MyMessageBox.Show(FormatControl[i].ToString());
+            //MyMessageBox.Show(FormatControl[i].ToString());
         }
         public bool IsFormatOk()
         {
             logger.Debug("IsFormatOk");
 
-            int n = 0;
-            int x = 0;
+            int nbGoodFormat = 0;
+            int nbNotRequiredFormat = 0;
 
             for (int i = 0; i < FormatControl.Length; i++)
             {
-                n += FormatControl[i] ? 1 : 0;
-                //Message.MyMessageBox.Show(i.ToString() + " - " + FormatControl[i].ToString());
+                nbGoodFormat += FormatControl[i] ? 1 : 0;
+                //logger.Trace(i.ToString() + " - " + FormatControl[i].ToString());
             }
+
+            int n = (bool)cbVacuum.IsChecked ? 0 : 1;
+            nbNotRequiredFormat = n;
 
             for (int i = 1; i < PhasesNumber; i++)
             {
-                x += (bool)toggleButtons[i].IsChecked ? 0 : 3; // Pour chaque checkbox décoché, on ajoutera 3 au score final
+                nbNotRequiredFormat += (bool)toggleButtons[i].IsChecked ? n : 3; // Pour chaque checkbox décoché, on ajoutera 3 au score final
             }
-            //Message.MyMessageBox.Show(n.ToString() + " + " + x.ToString() + " = " + (n+x).ToString() + " / " + FormatControl.Length.ToString());
-            return (n + x) == FormatControl.Length;
+            MyMessageBox.Show(nbGoodFormat.ToString() + " + " + nbNotRequiredFormat.ToString() + " = " + (nbGoodFormat+nbNotRequiredFormat).ToString() + " / " + FormatControl.Length.ToString());
+            return (nbGoodFormat + nbNotRequiredFormat) == FormatControl.Length;
+        }
+        private void ShowKeyBoard(object sender, RoutedEventArgs e)
+        {
+            General.ShowKeyBoard();
+        }
+
+        private void HideKeyBoard(object sender, RoutedEventArgs e)
+        {
+            General.HideKeyBoard();
+        }
+
+        private void HideKeyBoardIfEnter(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter || e.Key == Key.Escape)
+            {
+                General.HideKeyBoard();
+            }
+        }
+
+        void SetPressureVisibility(bool isVisible)
+        {
+            Visibility visibility = isVisible ? Visibility.Visible : Visibility.Hidden;
+
+            if (labelPressureUnit == null) return;
+
+            labelPressureUnit.Visibility = visibility;
+            cbxPressureUnit.Visibility = visibility;
+
+            labelPressureMin.Visibility = visibility;
+            tbPressureMin.Visibility = visibility;
+            labelPressureMax.Visibility = visibility;
+            tbPressureMax.Visibility = visibility;
+
+            labelPressure.Visibility = visibility;
+            pressures[0].Visibility = visibility;
+            pressures[1].Visibility = visibility;
+            for (int i = 2; i < pressures.Count(); i++)
+            {
+                if ((bool)toggleButtons[i - 1].IsChecked) pressures[i].Visibility = visibility;
+            }
+        }
+
+        private void cbVacuum_Checked(object sender, RoutedEventArgs e)
+        {
+            SetPressureVisibility(true);
+        }
+
+        private void cbVacuum_Unchecked(object sender, RoutedEventArgs e)
+        {
+            SetPressureVisibility(false);
         }
     }
 }

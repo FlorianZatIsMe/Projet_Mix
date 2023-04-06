@@ -1,6 +1,7 @@
 ﻿using Alarm_Management;
 using Database;
 using Main.Properties;
+using Message;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -94,7 +95,7 @@ namespace Main.Pages
             }
             else
             {
-                Message.MyMessageBox.Show(Settings.Default.Archiving_Request_SelectDate);
+                MyMessageBox.Show(Settings.Default.Archiving_Request_SelectDate);
             }
         }
 
@@ -114,14 +115,14 @@ namespace Main.Pages
 
             if (row == null)
             {
-                Message.MyMessageBox.Show("Il y a un problème");
+                MyMessageBox.Show("Il y a un problème");
                 logger.Error("Il y a un problème");
                 return false;
             }
 
             if (row.Count() != auditTrailInfo.Ids.Count())
             {
-                Message.MyMessageBox.Show("Il y a un problème");
+                MyMessageBox.Show("Il y a un problème");
                 logger.Error("Il y a un problème");
                 return false;
             }
@@ -135,7 +136,7 @@ namespace Main.Pages
             }
             catch (Exception ex)
             {
-                Message.MyMessageBox.Show(ex.Message);
+                MyMessageBox.Show(ex.Message);
                 logger.Error(ex.Message);
                 return false;
             }
@@ -220,7 +221,7 @@ namespace Main.Pages
                         {
                             isTransferSucceeded = false;
                             logger.Error("On a un problème " + fileName + ": " + row[0]);
-                            Message.MyMessageBox.Show("On a un problème " + fileName + ": " + row[0]);
+                            MyMessageBox.Show("On a un problème " + fileName + ": " + row[0]);
                         }
 
                         byte[] line_b = new UTF8Encoding(true).GetBytes(line_s + "\n");
@@ -232,7 +233,7 @@ namespace Main.Pages
                         {
                             isTransferSucceeded = false;
                             logger.Error(line_b + ex.Message);
-                            Message.MyMessageBox.Show(line_b + ex.Message);
+                            MyMessageBox.Show(line_b + ex.Message);
                         }
                     }
 
@@ -279,7 +280,7 @@ namespace Main.Pages
                         {
                             isTransferSucceeded = false;
                             logger.Error("On a un problème " + fileName + ": " + row[0]);
-                            Message.MyMessageBox.Show("On a un problème " + fileName + ": " + row[0]);
+                            MyMessageBox.Show("On a un problème " + fileName + ": " + row[0]);
                         }
 
                         byte[] line_b = new UTF8Encoding(true).GetBytes(line_s + "\n");
@@ -291,7 +292,7 @@ namespace Main.Pages
                         {
                             isTransferSucceeded = false;
                             logger.Error(line_b + ex.Message);
-                            Message.MyMessageBox.Show(line_b + ex.Message);
+                            MyMessageBox.Show(line_b + ex.Message);
                         }
                     }
 
@@ -320,7 +321,7 @@ namespace Main.Pages
             string arg6 = "\"" + dtTabInfo.Ids[dtTabInfo.DateTime] + "<'" + dateTimeColumnValue + "'" + "\"";
             string arg7 = archivingPath + lastArchiveFileName;
             string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5 + " " + arg6 + " " + arg7;
-            //Message.MyMessageBox.Show(command);
+            //MyMessageBox.Show(command);
             var processInfo = new ProcessStartInfo("cmd.exe", "/c " + command)
             {
                 CreateNoWindow = true,
@@ -367,7 +368,7 @@ namespace Main.Pages
 
                 General.count = maxArchiveCount;
 
-                Message.MyMessageBox.Show(Settings.Default.Archiving_archivingSuccessfull);
+                MyMessageBox.Show(Settings.Default.Archiving_archivingSuccessfull);
                 isArchiveSucceeded = true;
                 */
             }
@@ -377,7 +378,7 @@ namespace Main.Pages
 
                 // audit trail (idem partout)
 
-                Message.MyMessageBox.Show(Settings.Default.Archiving_archivingFailed);
+                MyMessageBox.Show(Settings.Default.Archiving_archivingFailed);
             }
             General.count = 0;
 
@@ -400,7 +401,7 @@ namespace Main.Pages
             string arg6 = "\"" + dateTimeColumnId + "<'" + dateTimeColumnValue + "'" + "\"";
             string arg7 = archivingPath + lastArchiveFileName;
             string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5 + " " + arg6 + " " + arg7;
-            //Message.MyMessageBox.Show(command);
+            //MyMessageBox.Show(command);
             var processInfo = new ProcessStartInfo("cmd.exe", "/c " + command)
             {
                 CreateNoWindow = true,
@@ -447,7 +448,7 @@ namespace Main.Pages
 
                 General.count = maxArchiveCount;
 
-                Message.MyMessageBox.Show(Settings.Default.Archiving_archivingSuccessfull);
+                MyMessageBox.Show(Settings.Default.Archiving_archivingSuccessfull);
                 isArchiveSucceeded = true;
                 */
             }
@@ -457,7 +458,7 @@ namespace Main.Pages
 
                 // audit trail (idem partout)
 
-                Message.MyMessageBox.Show(Settings.Default.Archiving_archivingFailed);
+                MyMessageBox.Show(Settings.Default.Archiving_archivingFailed);
             }
             General.count = 0;
 
@@ -483,7 +484,7 @@ namespace Main.Pages
             string arg5 = "\"" + auditTrailInfo.Ids[auditTrailInfo.DateTime] + "<'" + lastRecordDate_s + "'" + "\"";
             string arg6 = archivingPath + lastArchiveFileName;
             string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5 + " " + arg6;
-            //Message.MyMessageBox.Show(command);
+            //MyMessageBox.Show(command);
             var processInfo = new ProcessStartInfo("cmd.exe", "/c " + command)
             {
                 CreateNoWindow = true,
@@ -520,13 +521,13 @@ namespace Main.Pages
 
                 General.count = maxArchiveCount;
 
-                Message.MyMessageBox.Show(Settings.Default.Archiving_archivingSuccessfull);
+                MyMessageBox.Show(Settings.Default.Archiving_archivingSuccessfull);
                 isArchiveSucceeded = true;
             }
             else
             {
                 if (File.Exists(archivingPath + lastArchiveFileName)) File.Delete(archivingPath + lastArchiveFileName);
-                Message.MyMessageBox.Show(Settings.Default.Archiving_archivingFailed);
+                MyMessageBox.Show(Settings.Default.Archiving_archivingFailed);
             }
             General.count = 0;
 
@@ -544,7 +545,7 @@ namespace Main.Pages
 
                 if (!File.Exists(archivingPath + restoreFileName))
                 {
-                    Message.MyMessageBox.Show("Fichier " + archivingPath + restoreFileName + " n'existe pas");
+                    MyMessageBox.Show("Fichier " + archivingPath + restoreFileName + " n'existe pas");
                     UpdateBackupList();
                     return;
                 }
@@ -563,7 +564,7 @@ namespace Main.Pages
             }
             else
             {
-                Message.MyMessageBox.Show(Settings.Default.ArchBack_Request_SelectFile);
+                MyMessageBox.Show(Settings.Default.ArchBack_Request_SelectFile);
             }
         }
         public void ExecuteRestore(string username, string restoreFileName)
@@ -579,7 +580,7 @@ namespace Main.Pages
                 string arg4 = DatabaseSettings.ConnectionInfo.Db;// dbName;
                 string arg5 = archivingPath + restoreFileName;
                 string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5;
-                //Message.MyMessageBox.Show(command);    
+                //MyMessageBox.Show(command);    
                 var processInfo = new ProcessStartInfo("cmd.exe", "/c " + command)
                 {
                     CreateNoWindow = true,
@@ -611,11 +612,11 @@ namespace Main.Pages
                     Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTInfo, values); });
 
                     General.count = nLines;
-                    Message.MyMessageBox.Show(Settings.Default.ArchBack_restoreSuccessfull);
+                    MyMessageBox.Show(Settings.Default.ArchBack_restoreSuccessfull);
                 }
                 else
                 {
-                    Message.MyMessageBox.Show(Settings.Default.ArchBack_restoreFailed);
+                    MyMessageBox.Show(Settings.Default.ArchBack_restoreFailed);
                 }
                 General.count = 0;
                 General.text = "";
@@ -624,7 +625,7 @@ namespace Main.Pages
             }
             else
             {
-                Message.MyMessageBox.Show(Settings.Default.ArchBack_FileNotFound_1 + archivingPath + restoreFileName + Settings.Default.ArchBack_FileNotFound_2);
+                MyMessageBox.Show(Settings.Default.ArchBack_FileNotFound_1 + archivingPath + restoreFileName + Settings.Default.ArchBack_FileNotFound_2);
             }
         }
         private void progressBar_Loaded(object sender, RoutedEventArgs e)

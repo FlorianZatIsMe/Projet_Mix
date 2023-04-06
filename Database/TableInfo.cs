@@ -1,4 +1,5 @@
 ﻿using Database.Properties;
+using Message;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -951,7 +952,7 @@ namespace Database
             if (recipe.Length != (new RecipeWeightInfo()).Ids.Length)
             {
                 logger.Error(Settings.Default.ICycleSeqInfo_Error_RecipeIncorrect + ": " + recipe.GetType().ToString());
-                Message.MyMessageBox.Show(Settings.Default.ICycleSeqInfo_Error_RecipeIncorrect + ": " + recipe.GetType().ToString());
+                MyMessageBox.Show(Settings.Default.ICycleSeqInfo_Error_RecipeIncorrect + ": " + recipe.GetType().ToString());
                 return failReturn;
             }
 
@@ -974,7 +975,7 @@ namespace Database
             if (convRatio == 0)
             {
                 logger.Error(Settings.Default.ICycleSeqInfo_Error_convRatioIncorrect);
-                Message.MyMessageBox.Show(Settings.Default.ICycleSeqInfo_Error_convRatioIncorrect);
+                MyMessageBox.Show(Settings.Default.ICycleSeqInfo_Error_convRatioIncorrect);
                 return failReturn;
             }
 
@@ -999,7 +1000,7 @@ namespace Database
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                Message.MyMessageBox.Show(ex.Message);
+                MyMessageBox.Show(ex.Message);
             }
             return returnValues;
         }
@@ -1024,7 +1025,7 @@ namespace Database
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                Message.MyMessageBox.Show(ex.Message);
+                MyMessageBox.Show(ex.Message);
             }
 
             return convRatio * (setpoint - criteria) * finalWeight;
@@ -1045,7 +1046,7 @@ namespace Database
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                Message.MyMessageBox.Show(ex.Message);
+                MyMessageBox.Show(ex.Message);
             }
 
             return convRatio * (setpoint + criteria) * finalWeight;
@@ -1208,7 +1209,7 @@ namespace Database
             if (recipeValues.Length != recipeSpeedMixerInfo.Ids.Length)
             {
                 logger.Error(Settings.Default.ICycleSeqInfo_Error_RecipeIncorrect + ": " + recipeValues.Length.ToString());
-                Message.MyMessageBox.Show(Settings.Default.ICycleSeqInfo_Error_RecipeIncorrect + ": " + recipeValues.Length.ToString());
+                MyMessageBox.Show(Settings.Default.ICycleSeqInfo_Error_RecipeIncorrect + ": " + recipeValues.Length.ToString());
                 return failValue;
             }
 
@@ -1237,7 +1238,7 @@ namespace Database
                 catch (Exception ex)
                 {
                     logger.Error(ex.Message);
-                    Message.MyMessageBox.Show(ex.Message);
+                    MyMessageBox.Show(ex.Message);
                     return failValue;
                 }
             }
@@ -1259,7 +1260,7 @@ namespace Database
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                Message.MyMessageBox.Show(ex.Message);
+                MyMessageBox.Show(ex.Message);
                 returnValues = failValue;
             }
 

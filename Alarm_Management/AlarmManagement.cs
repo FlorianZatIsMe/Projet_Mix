@@ -6,6 +6,7 @@ using System.Configuration;
 using Alarm_Management.Properties;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using Message;
 
 namespace Alarm_Management
 {
@@ -149,7 +150,7 @@ namespace Alarm_Management
 
             if (!isInitialized) {
                 logger.Error(Settings.Default.Error01);
-                Message.MyMessageBox.Show(Settings.Default.Error01);
+                MyMessageBox.Show(Settings.Default.Error01);
             }
 
             int n = -1;
@@ -159,7 +160,7 @@ namespace Alarm_Management
             // Si l'alarme est active, le programmeur est nul
             if (!isAlarmNotActive) {
                 logger.Error(Settings.Default.Error02);
-                Message.MyMessageBox.Show(Settings.Default.Error02);
+                MyMessageBox.Show(Settings.Default.Error02);
                 return;
             }
 
@@ -186,11 +187,11 @@ namespace Alarm_Management
                 if (n != -1) ActiveAlarms.RemoveAt(n);
                 else {
                     logger.Error(Settings.Default.Error03);
-                    Message.MyMessageBox.Show(Settings.Default.Error03);
+                    MyMessageBox.Show(Settings.Default.Error03);
                 }
             }
 
-            Message.MyMessageBox.Show(GetAlarmDescription(id1, id2)); // Peut-être afficher la liste des alarmes actives à la place
+            MyMessageBox.Show(GetAlarmDescription(id1, id2)); // Peut-être afficher la liste des alarmes actives à la place
 
             //MyDatabase.Disconnect(mutex: mutexID);
         }
@@ -198,7 +199,7 @@ namespace Alarm_Management
         {
             if (!isInitialized) {
                 logger.Error(Settings.Default.Error01);
-                Message.MyMessageBox.Show(Settings.Default.Error01);
+                MyMessageBox.Show(Settings.Default.Error01);
             }
 
             int n = -1;
@@ -214,13 +215,13 @@ namespace Alarm_Management
 
             if (n == -1) {
                 logger.Error(Settings.Default.Error04);
-                Message.MyMessageBox.Show(Settings.Default.Error04);
+                MyMessageBox.Show(Settings.Default.Error04);
                 return;
             }
 
             if (Alarms[id1, id2].Status == AlarmStatus.INACTIVE) {
                 logger.Error(Settings.Default.Error05);
-                Message.MyMessageBox.Show(Settings.Default.Error05);
+                MyMessageBox.Show(Settings.Default.Error05);
                 return;
             }
 
@@ -240,7 +241,7 @@ namespace Alarm_Management
                 else
                 {
                     logger.Error(Settings.Default.Error06);
-                    Message.MyMessageBox.Show(Settings.Default.Error06);
+                    MyMessageBox.Show(Settings.Default.Error06);
                     return;
                 }
             }
@@ -251,7 +252,7 @@ namespace Alarm_Management
             else
             {
                 logger.Error(Settings.Default.Error07);
-                Message.MyMessageBox.Show(Settings.Default.Error07);
+                MyMessageBox.Show(Settings.Default.Error07);
                 return;
             }
 
@@ -278,7 +279,7 @@ namespace Alarm_Management
 
             if (!isInitialized) {
                 logger.Error(Settings.Default.Error01);
-                Message.MyMessageBox.Show(Settings.Default.Error01);
+                MyMessageBox.Show(Settings.Default.Error01);
             }
 
             int n = -1;
@@ -294,7 +295,7 @@ namespace Alarm_Management
 
             if (n == -1) {
                 logger.Error(Settings.Default.Error04);
-                Message.MyMessageBox.Show(Settings.Default.Error04);
+                MyMessageBox.Show(Settings.Default.Error04);
                 return;
             }
 
@@ -318,7 +319,7 @@ namespace Alarm_Management
             else
             {
                 logger.Error(Settings.Default.Error08);
-                Message.MyMessageBox.Show(Settings.Default.Error08);
+                MyMessageBox.Show(Settings.Default.Error08);
             }
 
             ActiveAlarms.RemoveAt(n);
@@ -351,7 +352,7 @@ namespace Alarm_Management
             foreach (Tuple<int, int> id in listId)
             {
                 UpdateAlarm(id.Item1, id.Item2, AlarmStatus.RAZ, Alarms[id.Item1, id.Item2].Status);
-                Message.MyMessageBox.Show(GetAlarmDescription(id.Item1, id.Item2));
+                MyMessageBox.Show(GetAlarmDescription(id.Item1, id.Item2));
             }
         }
         public static string GetAlarmType(AlarmType type)

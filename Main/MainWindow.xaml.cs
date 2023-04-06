@@ -32,6 +32,7 @@ using Driver_Ethernet;
 using Driver_Ethernet_Balance;
 using System.Speech.Synthesis;
 using System.Windows.Media;
+using Message;
 
 namespace Main
 {
@@ -59,7 +60,7 @@ namespace Main
         public MainWindow()
         {
 #if DEBUG
-            LogManager.Configuration.Variables["myLevel"] = "Trace";
+            LogManager.Configuration.Variables["myLevel"] = "Fatal";
             LogManager.Configuration.Variables["isRelease"] = "true";
 #else
             LogManager.Configuration.Variables["myLevel"] = "Error";
@@ -90,14 +91,14 @@ namespace Main
             ReportGeneration report = new ReportGeneration();
             report.GenerateCycleReport(646);
 
-            Message.MyMessageBox.Show("Fini je crois");
+            MyMessageBox.Show("Fini je crois");
             Environment.Exit(1);
             //*/
 
             InitializeComponent();
 
             MyMessageBox.SetParentWindow(this);
-            Message.MyMessageBox.SetParentWindow(this, this.Window_Deactivated);
+            MyMessageBox.SetParentWindow(this, this.Window_Deactivated);
             AlarmManagement.ActiveAlarmEvent += ActiveAlarmEvent;
             AlarmManagement.InactiveAlarmEvent += InactiveAlarmEvent;
 
@@ -141,7 +142,7 @@ namespace Main
             {
                 if (Pages.Sequence.list[i].subRecipeInfo.SeqType != i || Pages.Sequence.list[i].subCycleInfo.SeqType != i)
                 {
-                    Message.MyMessageBox.Show(Settings.Default.Recipe_Error_listIncorrect);
+                    MyMessageBox.Show(Settings.Default.Recipe_Error_listIncorrect);
                     logger.Error(Settings.Default.Recipe_Error_listIncorrect);
                     Environment.Exit(1);
                 }
@@ -166,7 +167,10 @@ namespace Main
 
             AlarmManagement.Initialize(new Alarm_Management.IniInfo() { AuditTrail_SystemUsername = Settings.Default.General_SystemUsername, Window = this });
 
-            Balance.Connect();
+            // We connect to the balance through a task to avoid a freeze of the application and allow the user to access the OS
+            Task connectBalanceTask = new Task(() => { Balance.Connect(); });
+            connectBalanceTask.Start();
+
             RS232Pump.Initialize(/*new Driver_RS232.IniInfo() { Window = this }*/);
             Driver_ColdTrap.ColdTrap.Initialize(new Driver_ColdTrap.IniInfo() { Window = this });
             UserManagement.Initialize(new User_Management.IniInfo() { Window = this });
@@ -193,7 +197,7 @@ namespace Main
 
             if (tableInfos == null || tableInfos.Count == 0)
             {
-                Message.MyMessageBox.Show("C'est pas bien de ne pas se connecter à la base de données");
+                MyMessageBox.Show("C'est pas bien de ne pas se connecter à la base de données");
                 logger.Error("C'est pas bien de ne pas se connecter à la base de données");
                 return;
             }
@@ -217,7 +221,7 @@ namespace Main
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                Message.MyMessageBox.Show(ex.Message);
+                MyMessageBox.Show(ex.Message);
                 return;
             }
         }
@@ -249,7 +253,7 @@ namespace Main
         }
         ~MainWindow()
         {
-            //Message.MyMessageBox.Show("Au revoir");
+            //MyMessageBox.Show("Au revoir");
         }
 
         private void CurrentTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
@@ -272,11 +276,11 @@ namespace Main
             if (nAuditTailRows > Settings.Default.Archive_RowNumberTrigger)
             {
                 logger.Debug(nAuditTailRows.ToString());
-                Message.MyMessageBox.Show(nAuditTailRows.ToString());
-                if (!Pages.Archiving.ExecuteFullArchive()) Message.MyMessageBox.Show("Archivage échoué, merci de contacter un administrateur du système");
+                MyMessageBox.Show(nAuditTailRows.ToString());
+                if (!Pages.Archiving.ExecuteFullArchive()) MyMessageBox.Show("Archivage échoué, merci de contacter un administrateur du système");
             }
 
-            if (General.currentRole != AccessTableInfo.NoneRole && DateTime.Now.AddMinutes(-1).CompareTo(General.lastActTime) > 0)
+            if (General.currentRole != AccessTableInfo.NoneRole && DateTime.Now.AddMinutes(-1 * Settings.Default.AutoLogOff_min).CompareTo(General.lastActTime) > 0)
             {
                 UserManagement.SetNoneAccess();
                 logger.Debug("Auto log off at " + DateTime.Now.ToString());
@@ -509,7 +513,7 @@ namespace Main
                 catch (Exception ex)
                 {
                     logger.Error(ex.Message);
-                    Message.MyMessageBox.Show(ex.Message);
+                    MyMessageBox.Show(ex.Message);
                     return;
                 }
 
@@ -518,7 +522,7 @@ namespace Main
                     bool[] accessTable = UserManagement.GetCurrentAccessTable();
                     if (accessTable[AccessTableInfo.DailyTest])
                     {
-                        if (Message.MyMessageBox.Show("Le dernier test journalier de la balance a été fait le " + lastSampling.ToString(Settings.Default.Date_Format_Read) + " à " + lastSampling.ToString(Settings.Default.Time_Format) + ", voulez-vous faire le test journalier ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                        if (MyMessageBox.Show("Le dernier test journalier de la balance a été fait le " + lastSampling.ToString(Settings.Default.Date_Format_Read) + " à " + lastSampling.ToString(Settings.Default.Time_Format) + ", voulez-vous faire le test journalier ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                         {
                             frameMain.Content = new Pages.SubCycle.CycleWeight(frameMain);
                             return;
@@ -526,7 +530,7 @@ namespace Main
                     }
                     else
                     {
-                        Message.MyMessageBox.Show("Le dernier test journalier de la balance a été fait le " + lastSampling.ToString(Settings.Default.Date_Format_Read) + " à " + lastSampling.ToString(Settings.Default.Time_Format) + " veuillez contacter une personne compétente pour faire le test journalier");
+                        MyMessageBox.Show("Le dernier test journalier de la balance a été fait le " + lastSampling.ToString(Settings.Default.Date_Format_Read) + " à " + lastSampling.ToString(Settings.Default.Time_Format) + " veuillez contacter une personne compétente pour faire le test journalier");
                         return;
                     }
 
@@ -632,15 +636,9 @@ namespace Main
 
         public async void Window_Deactivated(object sender, EventArgs e)
         {
-            this.Deactivated -= Window_Deactivated;
-            await Task.Delay(2000);
-
-            while (!this.IsActive)
-            {
-                this.Activate();
-                await Task.Delay(2000);
-            }
-            this.Deactivated += Window_Deactivated;
+            await Task.Delay(100);
+            logger.Debug("Window_Deactivated");
+            this.Activate();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -649,7 +647,7 @@ namespace Main
 
             if (!currentAccessTable[AccessTableInfo.ApplicationStop])
             {
-                Message.MyMessageBox.Show("C'est pas bien ça");
+                MyMessageBox.Show("C'est pas bien ça");
                 e.Cancel = true;
             }
         }

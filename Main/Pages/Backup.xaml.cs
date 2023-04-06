@@ -1,6 +1,7 @@
 ﻿using Alarm_Management;
 using Database;
 using Main.Properties;
+using Message;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -84,13 +85,13 @@ namespace Main.Pages
             if (task.Result)
             {
                 logger.Debug(Settings.Default.Backup_BackupSuccessfull);
-                Message.MyMessageBox.Show(Settings.Default.Backup_BackupSuccessfull);
+                MyMessageBox.Show(Settings.Default.Backup_BackupSuccessfull);
                 lbBackups.Items.Insert(0, new ListBoxItem() { Content = lastBackupFileName });
             }
             else
             {
                 logger.Error(Settings.Default.Backup_BackupFailed);
-                Message.MyMessageBox.Show(Settings.Default.Backup_BackupFailed);
+                MyMessageBox.Show(Settings.Default.Backup_BackupFailed);
             }
             lastBackupFileName = "";
         }
@@ -112,7 +113,7 @@ namespace Main.Pages
             string arg4 = DatabaseSettings.ConnectionInfo.Db;// dbName;
             string arg5 = backupPath + lastBackupFileName;
             string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5;
-            //Message.MyMessageBox.Show(command);    
+            //MyMessageBox.Show(command);    
             var processInfo = new ProcessStartInfo("cmd.exe", "/c " + command)
             {
                 CreateNoWindow = true,
@@ -196,7 +197,7 @@ namespace Main.Pages
 
                 if (!File.Exists(backupPath + restoreFileName))
                 {
-                    Message.MyMessageBox.Show("Fichier " + backupPath + restoreFileName + " n'existe pas");
+                    MyMessageBox.Show("Fichier " + backupPath + restoreFileName + " n'existe pas");
                     UpdateBackupList();
                     return;
                 }                
@@ -216,7 +217,7 @@ namespace Main.Pages
             }
             else
             {
-                Message.MyMessageBox.Show(Settings.Default.ArchBack_Request_SelectFile);
+                MyMessageBox.Show(Settings.Default.ArchBack_Request_SelectFile);
             }
         }
         private void ExecuteRestore(string username, string restoreFileName)
@@ -232,7 +233,7 @@ namespace Main.Pages
                 string arg4 = DatabaseSettings.ConnectionInfo.Db;// dbName;
                 string arg5 = backupPath + restoreFileName;
                 string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5;
-                //Message.MyMessageBox.Show(command);    
+                //MyMessageBox.Show(command);    
                 var processInfo = new ProcessStartInfo("cmd.exe", "/c " + command)
                 {
                     CreateNoWindow = true,
@@ -264,11 +265,11 @@ namespace Main.Pages
                     Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTInfo, values); });
 
                     General.count = nLines;
-                    Message.MyMessageBox.Show(Settings.Default.ArchBack_restoreSuccessfull);
+                    MyMessageBox.Show(Settings.Default.ArchBack_restoreSuccessfull);
                 }
                 else
                 {
-                    Message.MyMessageBox.Show(Settings.Default.ArchBack_restoreFailed);
+                    MyMessageBox.Show(Settings.Default.ArchBack_restoreFailed);
                 }
                 General.count = 0;
                 General.text = "";
@@ -277,7 +278,7 @@ namespace Main.Pages
             }
             else
             {
-                Message.MyMessageBox.Show(Settings.Default.ArchBack_FileNotFound_1 + backupPath + restoreFileName + Settings.Default.ArchBack_FileNotFound_2);
+                MyMessageBox.Show(Settings.Default.ArchBack_FileNotFound_1 + backupPath + restoreFileName + Settings.Default.ArchBack_FileNotFound_2);
             }
         }
         private void progressBar_Loaded(object sender, RoutedEventArgs e)

@@ -18,6 +18,7 @@ using Driver_Ethernet_Balance;
 using Database;
 using Main.Pages;
 using System.Timers;
+using Message;
 
 namespace Main.Pages.SubCycle
 {
@@ -137,7 +138,7 @@ namespace Main.Pages.SubCycle
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                Message.MyMessageBox.Show(ex.Message);
+                MyMessageBox.Show(ex.Message);
                 currentSetpoint = -1;
             }
 
@@ -178,7 +179,7 @@ namespace Main.Pages.SubCycle
                             catch (Exception ex)
                             {
                                 logger.Error(ex.Message);
-                                Message.MyMessageBox.Show(ex.Message);
+                                MyMessageBox.Show(ex.Message);
                                 currentSetpoint = -1;
                                 nextType = null;
                             }
@@ -232,7 +233,7 @@ namespace Main.Pages.SubCycle
             if (recipeWeightValues == null) // Si la commande a renvoyée une ligne
             {
                 logger.Error(Settings.Default.CycleWeight_Error_NoRecipe);
-                Message.MyMessageBox.Show(Settings.Default.CycleWeight_Error_NoRecipe);
+                MyMessageBox.Show(Settings.Default.CycleWeight_Error_NoRecipe);
                 return; // ou exit carrément
             }
 
@@ -350,7 +351,7 @@ namespace Main.Pages.SubCycle
                 while (!isBalanceFree)
                 {
                     // We ask the user if he wants to try to block the balance again
-                    if (Message.MyMessageBox.Show("La balance n'est pas disponible, voulez-vous attendre ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    if (MyMessageBox.Show("La balance n'est pas disponible, voulez-vous attendre ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
                         // If he wants to wait, we wait
                         if (Balance.IsFree())
@@ -368,16 +369,23 @@ namespace Main.Pages.SubCycle
                 }
 
                 // Connect the balance
-                Balance.Connect();
+                //Balance.Connect();
 
                 // While the balance is not connected or user give up
                 while (!Balance.IsConnected() && !isManual)
                 {
                     // We ask the user if he wants to try to connect to the balance again
-                    if (Message.MyMessageBox.Show("La balance n'est pas connecté, voulez-vous attendre ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    if (MyMessageBox.Show("La balance n'est pas connecté, voulez-vous attendre ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
+                        int count = 0;
+                        while (!Balance.IsConnected() && count < 10)
+                        {
+                            await Task.Delay(1000);
+                            count++;
+                        }
+
                         // If he wants to wait, we connect to the balance
-                        Balance.Connect();
+                        //Balance.Connect();
                     }
                     else
                     {
@@ -416,11 +424,11 @@ namespace Main.Pages.SubCycle
                 // if we are in manual mode, perform a manual tare
                 if (isManual)
                 {
-                    Message.MyMessageBox.Show("Veuillez retirer tout object sur la balance puis faites une tare de la balance manuellement. Cliquer sur le ok une fois terminé");
+                    MyMessageBox.Show("Veuillez retirer tout object sur la balance puis faites une tare de la balance manuellement. Cliquer sur le ok une fois terminé");
                 }
                 else
                 {
-                    Message.MyMessageBox.Show("Veuillez retirer tout object sur la balance. Cliquer sur le bouton une fois fait");
+                    MyMessageBox.Show("Veuillez retirer tout object sur la balance. Cliquer sur le bouton une fois fait");
                 }
 
                 labelWeight.Visibility = isManual ? Visibility.Collapsed : Visibility.Visible;
@@ -454,7 +462,7 @@ namespace Main.Pages.SubCycle
                     }
                     else
                     {
-                        if (Message.MyMessageBox.Show("Tare de la balance échouée, voulez-vous réessayer ?", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                        if (MyMessageBox.Show("Tare de la balance échouée, voulez-vous réessayer ?", MessageBoxButton.YesNo) == MessageBoxResult.No)
                         {
                             exeTare = false;
                             Stop();
@@ -501,7 +509,7 @@ namespace Main.Pages.SubCycle
                     if (waitingCounter > 10) // 5s
                     {
                         // On demande à l'opérateur s'il veut continuer à attendre
-                        if (Message.MyMessageBox.Show("Le poids n'est toujours pas stable, voulez-vous continuer à attendre ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                        if (MyMessageBox.Show("Le poids n'est toujours pas stable, voulez-vous continuer à attendre ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                         {
                             // S'il veut continuer à attendre, on continue à attendre
                             waitingCounter = 0;
@@ -531,7 +539,7 @@ namespace Main.Pages.SubCycle
                 }
                 else
                 {
-                    Message.MyMessageBox.Show("Format de la masse incorrect");
+                    MyMessageBox.Show("Format de la masse incorrect");
                     goto End;
                 }
             }
@@ -540,7 +548,7 @@ namespace Main.Pages.SubCycle
             {
                 if (!IsFinalWeightCorrect(validWeight, currentSetpoint))  //if (!IsWeightCorrect(validWeight))
                 {
-                    if (Message.MyMessageBox.Show("La masse du produit est incorrecte, voulez-vous continuer ?", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                    if (MyMessageBox.Show("La masse du produit est incorrecte, voulez-vous continuer ?", MessageBoxButton.YesNo) == MessageBoxResult.No)
                     {
                         StartTimer();
                         goto End;
@@ -558,7 +566,7 @@ namespace Main.Pages.SubCycle
                 // Sinon, message d'erreur qui propose de recommencer ou pas
                 if(!IsSampWeightCorrect(validWeight, currentSetpoint)) //if (!IsWeightCorrect(validWeight))
                 {
-                    if (Message.MyMessageBox.Show("La masse du poids étalon est incorrecte, voulez-vous continuer ?", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                    if (MyMessageBox.Show("La masse du poids étalon est incorrecte, voulez-vous continuer ?", MessageBoxButton.YesNo) == MessageBoxResult.No)
                     {
                         StartTimer();
                         goto End;
@@ -631,15 +639,15 @@ namespace Main.Pages.SubCycle
                         t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax_new(new DailyTestInfo(), dailyTestInfo.Ids[dailyTestInfo.Id]); });
                         ReportGeneration report = new ReportGeneration();
                         int id = ((int)t.Result);
-                        Message.MyMessageBox.Show("Test journalier " + (isSamplingPass ? "réussi" : "échoué"));
+                        MyMessageBox.Show("Test journalier " + (isSamplingPass ? "réussi" : "échoué"));
                         Task printReportTask = Task.Factory.StartNew(() => report.GenerateSamplingReport(id));
                         //printReportTask.Wait();
                         //report.GenerateSamplingReport(id);
-                        //Message.MyMessageBox.Show("Rapport généré");
+                        //MyMessageBox.Show("Rapport généré");
                     }
                     else
                     {
-                        Message.MyMessageBox.Show("L'étalonnage n'a pas être enregistrer");
+                        MyMessageBox.Show("L'étalonnage n'a pas être enregistrer");
                     }
                     frameMain.Content = new Pages.Status();
                 }
@@ -654,7 +662,7 @@ namespace Main.Pages.SubCycle
 
                 if (!isWeightCorrect)
                 {
-                    Message.MyMessageBox.Show(Settings.Default.CycleWeight_IncorrectWeight);
+                    MyMessageBox.Show(Settings.Default.CycleWeight_IncorrectWeight);
                     goto End;
                 }
                 else
@@ -791,9 +799,12 @@ namespace Main.Pages.SubCycle
             {
                 TextBox textbox = sender as TextBox;
 
-                await Task.Delay(500);
-                textbox.Text = "";
-                textbox.Focus();
+                while (!textbox.IsFocused)
+                {
+                    textbox.Text = "";
+                    textbox.Focus();
+                    await Task.Delay(500);
+                }
             }
         }
 
@@ -817,22 +828,32 @@ namespace Main.Pages.SubCycle
                     {
                         logger.Trace(recipeWeightValues[i].ToString());
                     }
-                    Message.MyMessageBox.Show(Settings.Default.CycleWeigh_IncorrectBarcode + " " + recipeWeightValues[recipeWeightInfo.Barcode].ToString());
+                    MyMessageBox.Show(Settings.Default.CycleWeigh_IncorrectBarcode + " " + recipeWeightValues[recipeWeightInfo.Barcode].ToString());
                 }
-            }
-        }
-
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (isScanningStep)
-            {
-                Message.MyMessageBox.Show(tbScan.Focus().ToString());
             }
         }
 
         private void tbScan_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             tbScan.Focus();
+        }
+
+        private void ShowKeyBoard(object sender, RoutedEventArgs e)
+        {
+            General.ShowKeyBoard();
+        }
+
+        private void HideKeyBoard(object sender, RoutedEventArgs e)
+        {
+            General.HideKeyBoard();
+        }
+
+        private void HideKeyBoardIfEnter(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter || e.Key == Key.Escape)
+            {
+                General.HideKeyBoard();
+            }
         }
     }
 }

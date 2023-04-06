@@ -695,5 +695,8 @@
           &lt;/IdDBControls&gt;
         </Value>
     </Setting>
+    <Setting Name="AutoLogOff_min" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

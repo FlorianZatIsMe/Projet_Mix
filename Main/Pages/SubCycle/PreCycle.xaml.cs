@@ -4,6 +4,7 @@ using Driver_RS232_Pump;
 using DRIVER_RS232_Weight;
 using Main.Pages.SubCycle;
 using Main.Properties;
+using Message;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -61,13 +62,13 @@ namespace Main.Pages.SubCycle
             {
                 if (int.Parse(tbFinalWeight.Text, NumberStyles.AllowThousands) < finalWeightMin || int.Parse(tbFinalWeight.Text, NumberStyles.AllowThousands) > finalWeightMax)
                 {
-                    Message.MyMessageBox.Show("C'est pas bien ce que tu fais. Min: " + finalWeightMin.ToString() + ", Max: " + finalWeightMax.ToString());
+                    MyMessageBox.Show("C'est pas bien ce que tu fais. Min: " + finalWeightMin.ToString() + ", Max: " + finalWeightMax.ToString());
                     return;
                 }
             }
             catch (Exception)
             {
-                Message.MyMessageBox.Show("C'est pas bien ce que tu fais. Min: " + finalWeightMin.ToString() + ", Max: " + finalWeightMax.ToString());
+                MyMessageBox.Show("C'est pas bien ce que tu fais. Min: " + finalWeightMin.ToString() + ", Max: " + finalWeightMax.ToString());
                 return;
             }
 
@@ -76,7 +77,7 @@ namespace Main.Pages.SubCycle
             {
                 if (cbxRecipeName.SelectedIndex == -1)
                 {
-                    Message.MyMessageBox.Show("Veuillez sélectionner un code produit");
+                    MyMessageBox.Show("Veuillez sélectionner un code produit");
                     return;
                 }
                 recipeIndex = cbxRecipeName.SelectedIndex;
@@ -94,14 +95,14 @@ namespace Main.Pages.SubCycle
                 }
                 if (!isRecipeOk)
                 {
-                    Message.MyMessageBox.Show("Code produit incorrect");
+                    MyMessageBox.Show("Code produit incorrect");
                     return;
                 }
             }
 
             if (recipeIndex == -1)
             {
-                Message.MyMessageBox.Show("Drôle d'erreur");
+                MyMessageBox.Show("Drôle d'erreur");
                 logger.Error("Drôle d'erreur");
                 return;
             }
@@ -116,7 +117,7 @@ namespace Main.Pages.SubCycle
             info.isTest = false;
             info.bowlWeight = "";
 
-            if (Message.MyMessageBox.Show(Settings.Default.PreCycle_Request_StartCycle, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (MyMessageBox.Show(Settings.Default.PreCycle_Request_StartCycle, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 info.frameMain.Content = new CycleWeight(info);
             }
@@ -129,7 +130,7 @@ namespace Main.Pages.SubCycle
 
             if (text.Length != Settings.Default.OFNumber_NbChar)
             {
-                Message.MyMessageBox.Show(messageRequiredFormat);
+                MyMessageBox.Show(messageRequiredFormat);
                 return false;
             }
 
@@ -141,7 +142,7 @@ namespace Main.Pages.SubCycle
                 }
                 catch (Exception)
                 {
-                    Message.MyMessageBox.Show(messageRequiredFormat);
+                    MyMessageBox.Show(messageRequiredFormat);
                     return false;
                 }
             }
@@ -162,11 +163,6 @@ namespace Main.Pages.SubCycle
             SetFinalWeightRangeFromComboBox();
         }
 
-        private void tbRecipeName_LostFocus(object sender, RoutedEventArgs e)
-        {
-            logger.Debug("tbRecipeName_LostFocus");
-            if(!SetFinalWeightRangeFromTextBox()) Message.MyMessageBox.Show("Code produit incorrect");
-        }
 
         private void SetFinalWeightRangeFromComboBox()
         {
@@ -192,6 +188,7 @@ namespace Main.Pages.SubCycle
             }
 
             SetFinalWeightRange(-1);
+            MyMessageBox.Show("Code produit incorrect");
             return false;
         }
 
@@ -217,7 +214,7 @@ namespace Main.Pages.SubCycle
             }
             catch (Exception ex)
             {
-                Message.MyMessageBox.Show("La recette ne précise pas de min et max pour la masse du produit" + recipeValues[recipeInfo.FinaleWeightMin].ToString() + " " + recipeValues[recipeInfo.FinaleWeightMax].ToString());
+                MyMessageBox.Show("La recette ne précise pas de min et max pour la masse du produit" + recipeValues[recipeInfo.FinaleWeightMin].ToString() + " " + recipeValues[recipeInfo.FinaleWeightMax].ToString());
                 finalWeightMin = 0;
                 finalWeightMax = 0;
             }
@@ -242,6 +239,56 @@ namespace Main.Pages.SubCycle
         private void tbOFnumber_LostFocus(object sender, RoutedEventArgs e)
         {
             VerifyFormatOF();
+            General.HideKeyBoard();
+        }
+        private void tbRecipeName_LostFocus(object sender, RoutedEventArgs e)
+        {
+            logger.Debug("tbRecipeName_LostFocus");
+            SetFinalWeightRangeFromTextBox();
+            //if (!SetFinalWeightRangeFromTextBox()) MyMessageBox.Show("Code produit incorrect");
+            General.HideKeyBoard();
+        }
+
+        private void ShowKeyBoard(object sender, RoutedEventArgs e)
+        {
+            General.ShowKeyBoard();
+        }
+
+        private void HideKeyBoard(object sender, RoutedEventArgs e)
+        {
+            General.HideKeyBoard();
+        }
+
+        private void HideKeyBoardIfEnter(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter || e.Key == Key.Escape)
+            {
+                TextBox textBox = sender as TextBox;
+                General.HideKeyBoard();
+
+                if (textBox == tbOFnumber)
+                {
+                    if (VerifyFormatOF())
+                    {
+                        tbRecipeName.Focus();
+                    }
+                    else
+                    {
+                        General.ShowKeyBoard();
+                    }
+                }
+                else if (textBox == tbRecipeName)
+                {
+                    if (SetFinalWeightRangeFromTextBox())
+                    {
+                        tbFinalWeight.Focus();
+                    }
+                    else
+                    {
+                        General.ShowKeyBoard();
+                    }
+                }
+            }
         }
     }
 }

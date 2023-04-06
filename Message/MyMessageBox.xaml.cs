@@ -23,6 +23,11 @@ namespace Message
         private static Window parentWindow = null;
         private static EventHandler windowDeactivatedEvent;
 
+        private static List<MyMessageBox> myMessageBoxes = new List<MyMessageBox>();
+        private int myMessageBoxId;
+
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private MyMessageBox()
         {
             InitializeComponent();
@@ -58,8 +63,15 @@ namespace Message
             messageBox.btOk.Visibility = button == MessageBoxButton.OK ? Visibility.Visible : Visibility.Collapsed;
             messageBox.btYes.Visibility = button == MessageBoxButton.YesNo ? Visibility.Visible : Visibility.Collapsed;
             messageBox.btNo.Visibility = button == MessageBoxButton.YesNo ? Visibility.Visible : Visibility.Collapsed;
+            messageBox.myMessageBoxId = myMessageBoxes.Count;
+            myMessageBoxes.Add(messageBox);
 
-            parentWindow.Deactivated -= windowDeactivatedEvent;
+            logger.Trace("Display: " + messageBoxText + ", myMessageBoxId = " + messageBox.myMessageBoxId.ToString());
+            if (parentWindow != null && messageBox.myMessageBoxId == 0)
+            {
+                logger.Trace("On retire le parent: " + parentWindow.ToString());
+                parentWindow.Deactivated -= windowDeactivatedEvent;
+            }
 
             messageBox.ShowDialog();
             return messageBox.resultButton;
@@ -85,21 +97,36 @@ namespace Message
 
         private async void Window_Deactivated(object sender, EventArgs e)
         {
-            this.Deactivated -= Window_Deactivated;
-            await Task.Delay(1000);
-
-            while (!this.IsActive)
+            await Task.Delay(100);
+            if (myMessageBoxes.Count == this.myMessageBoxId + 1)
             {
+                logger.Trace("Window_Deactivated " + this.myMessageBoxId.ToString());
                 this.Activate();
-                await Task.Delay(1000);
             }
-            this.Deactivated += Window_Deactivated;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            logger.Trace("Closing");
             this.Deactivated -= Window_Deactivated;
-            parentWindow.Deactivated += windowDeactivatedEvent;
+            myMessageBoxes.RemoveAt(this.myMessageBoxId);
+
+            for (int i = 0; i < myMessageBoxes.Count; i++)
+            {
+                logger.Trace(i.ToString() + ": " + myMessageBoxes[i].myMessageBoxId.ToString());
+            }
+
+            if (parentWindow != null && myMessageBoxes.Count == 0)
+            {
+                logger.Trace("On active papa");
+                parentWindow.Activate();
+                parentWindow.Deactivated += windowDeactivatedEvent;
+            }
+            else if (myMessageBoxes.Count > 0)
+            {
+                logger.Trace("On active la boîte " + (myMessageBoxes.Count - 1).ToString());
+                myMessageBoxes[myMessageBoxes.Count - 1].Activate();
+            }
         }
     }
 }

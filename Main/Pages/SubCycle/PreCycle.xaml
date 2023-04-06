@@ -26,15 +26,15 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row = "0" Grid.Column = "0" Text = "Numéro de lot" Margin = "10" HorizontalAlignment = "Left" VerticalAlignment = "Center"/>
-        <TextBox x:Name="tbOFnumber" Grid.Row = "0" Grid.Column = "1" Margin = "10" LostFocus="tbOFnumber_LostFocus"/>
+        <TextBox x:Name="tbOFnumber" Grid.Row = "0" Grid.Column = "1" Margin = "10" LostFocus="tbOFnumber_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
 
         <TextBlock Grid.Row = "1" Grid.Column = "0" Text = "Produit" Margin = "10" HorizontalAlignment = "Left" VerticalAlignment = "Center"/>
-        <TextBox x:Name="tbRecipeName" Grid.Row = "1" Grid.Column = "1" Margin = "10" LostFocus="tbRecipeName_LostFocus"/>
+        <TextBox x:Name="tbRecipeName" Grid.Row = "1" Grid.Column = "1" Margin = "10" LostFocus="tbRecipeName_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
         <ComboBox x:Name="cbxRecipeName" Style="{DynamicResource ComboBoxStyle1}" Grid.Row = "1" Grid.Column = "1" Margin="10" Width="Auto" IsSynchronizedWithCurrentItem="True" SelectionChanged="cbxProgramName_SelectionChanged" Visibility="Collapsed"/>
         <ToggleButton x:Name="tgBarcodeOption" Content="Liste" Grid.Row = "1" Grid.Column = "2" Margin="15" Click="tgBarcodeOption_Click"/>
 
         <TextBlock x:Name="lbFinalWeight" Grid.Row = "2" Grid.Column = "0" Text = "Masse cible (g) [0 ; 0]" Margin = "10" HorizontalAlignment = "Left" VerticalAlignment = "Center"/>
-        <TextBox x:Name="tbFinalWeight" Grid.Row = "2" Grid.Column = "1" Margin = "10"/>
+        <TextBox x:Name="tbFinalWeight" Grid.Row = "2" Grid.Column = "1" Margin = "10" GotFocus="ShowKeyBoard" LostFocus="HideKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
 
         <Button Grid.Row = "4" Grid.Column = "2" Content = "OK" Margin = "1" HorizontalAlignment = "Left" VerticalAlignment = "Center" Width = "80" Click="FxOK"/>
         <Button Grid.Row = "5" Grid.Column = "2" Content = "Annuler" Margin = "1" HorizontalAlignment = "Left" VerticalAlignment = "Center" Width = "80" Click="FxAnnuler"/>

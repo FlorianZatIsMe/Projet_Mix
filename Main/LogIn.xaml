@@ -15,11 +15,11 @@
     <StackPanel Margin="20">
         <WrapPanel>
             <TextBlock Text="Nom d'utilisateur" Margin="0,0,20,0"/>
-            <TextBox x:Name="username" Width="100"/>
+            <TextBox x:Name="username" Width="100" GotFocus="ShowKeyBoard" LostFocus="HideKeyBoard"/>
         </WrapPanel>
         <WrapPanel Margin="0,10,0,0">
             <TextBlock Text="Mot de passe" Margin="0,0,40,0"/>
-            <PasswordBox x:Name="password" Width="100"/>
+            <PasswordBox x:Name="password" Width="100" GotFocus="ShowKeyBoard" LostFocus="HideKeyBoard"/>
         </WrapPanel>
         <WrapPanel Margin="0,10,0,0" HorizontalAlignment="Right">
             <Button Content="Connexion" Width="Auto" Click="ButtonOk_Click"/>

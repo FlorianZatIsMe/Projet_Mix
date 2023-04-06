@@ -1,6 +1,7 @@
 ﻿using Alarm_Management;
 using Database;
 using Main.Properties;
+using Message;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,7 +74,7 @@ namespace Main.Pages.SubCycle
             if (info.Length != 4)
             {
                 logger.Error(Settings.Default.CycleInfo_Error01);
-                Message.MyMessageBox.Show(Settings.Default.CycleInfo_Error01);
+                MyMessageBox.Show(Settings.Default.CycleInfo_Error01);
                 return;
             }*/
 
@@ -158,7 +159,7 @@ namespace Main.Pages.SubCycle
             else
             {
                 logger.Error(Settings.Default.CycleInfo_Error03);
-                Message.MyMessageBox.Show(Settings.Default.CycleInfo_Error03);
+                MyMessageBox.Show(Settings.Default.CycleInfo_Error03);
             }
         }
         public void NewWeightInfo(object[] recipeWeight, decimal finalWeight)
@@ -168,7 +169,7 @@ namespace Main.Pages.SubCycle
             if (finalWeight == -1)
             {
                 logger.Error("Pas bien");
-                Message.MyMessageBox.Show("Pas bien");
+                MyMessageBox.Show("Pas bien");
             }
 
             CycleWeightInfo cycleWeightInfo = new CycleWeightInfo();

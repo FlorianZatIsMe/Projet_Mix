@@ -1,4 +1,5 @@
 ﻿using Main.Properties;
+using Message;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -66,7 +67,7 @@ namespace Main.Pages
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                Message.MyMessageBox.Show(ex.Message);
+                MyMessageBox.Show(ex.Message);
             }
             dpNextCalDateToUpdt = false;
         }

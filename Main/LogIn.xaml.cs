@@ -1,5 +1,6 @@
 ﻿using Database;
 using Main.Properties;
+using Message;
 using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
@@ -55,21 +56,21 @@ namespace Main
 
                     if (isCredentialValid)
                     {
-                        if (user.ToLower() == "julien.aquilon") Message.MyMessageBox.Show("Salut Chef");
+                        if (user.ToLower() == "julien.aquilon") MyMessageBox.Show("Salut Chef");
 
                         string role = UserManagement.UpdateAccessTable(user);
                         mainWindow.UpdateUser(user, role);
                     }
                     else
                     {
-                        Message.MyMessageBox.Show(Settings.Default.LogIn_Info_PswIncorrect);
+                        MyMessageBox.Show(Settings.Default.LogIn_Info_PswIncorrect);
                         return;
                     }
                 }
                 catch (Exception)
                 {
                     logger.Error("Problème de connexion avec l'active directory");
-                    Message.MyMessageBox.Show("Problème de connexion avec l'active directory");
+                    MyMessageBox.Show("Problème de connexion avec l'active directory");
                     return;
                 }
             }
@@ -106,10 +107,12 @@ namespace Main
 
             if (e.Key == Key.Enter)
             {
+                General.HideKeyBoard();
                 Click(username.Text);
             }
             else if (e.Key == Key.Escape)
             {
+                General.HideKeyBoard();
                 this.Close();
             }
         }
@@ -121,27 +124,31 @@ namespace Main
 
         public async void Window_Deactivated(object sender, EventArgs e)
         {
-            this.Deactivated -= Window_Deactivated;
-            await Task.Delay(2000);
-
-            while (!this.IsActive)
-            {
-                this.Activate();
-                await Task.Delay(2000);
-            }
-            this.Deactivated += Window_Deactivated;
+            await Task.Delay(100);
+            logger.Trace("Login");
+            this.Activate();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             this.Deactivated -= Window_Deactivated;
             mainWindow.Deactivated += windowDeactivatedEvent;
-            Message.MyMessageBox.SetParentWindow(mainWindow, windowDeactivatedEvent);
+            MyMessageBox.SetParentWindow(mainWindow, windowDeactivatedEvent);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Message.MyMessageBox.SetParentWindow(this, this.Window_Deactivated);
+            MyMessageBox.SetParentWindow(this, this.Window_Deactivated);
+        }
+
+        private void ShowKeyBoard(object sender, RoutedEventArgs e)
+        {
+            General.ShowKeyBoard();
+        }
+
+        private void HideKeyBoard(object sender, RoutedEventArgs e)
+        {
+            General.HideKeyBoard();
         }
     }
 }

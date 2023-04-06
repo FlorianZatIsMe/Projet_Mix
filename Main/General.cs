@@ -3,6 +3,7 @@ using Database;
 using Main.Pages;
 using Main.Pages.SubCycle;
 using Main.Properties;
+using Message;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -190,7 +191,7 @@ namespace Main
             if (tables.Count > 0 && tables[0].Count() != recipeInfo.Ids.Count())
             {
                 logger.Error("On a un problème");
-                Message.MyMessageBox.Show("On a un problème");
+                MyMessageBox.Show("On a un problème");
                 return;
             }
 
@@ -226,14 +227,14 @@ namespace Main
                 if (recipeValues == null || (int)recipeValues[recipeInfo.Id] != info.recipeID)
                 {
                     logger.Error(Settings.Default.Recipe_Error_RecipeNotFound);
-                    Message.MyMessageBox.Show(Settings.Default.Recipe_Error_RecipeNotFound);
+                    MyMessageBox.Show(Settings.Default.Recipe_Error_RecipeNotFound);
                     return;
                 }
             }
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                Message.MyMessageBox.Show(ex.Message);
+                MyMessageBox.Show(ex.Message);
                 return;
             }
             string recipe_name;
@@ -261,7 +262,7 @@ namespace Main
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                Message.MyMessageBox.Show(ex.Message);
+                MyMessageBox.Show(ex.Message);
                 return;
             }
 
@@ -319,7 +320,7 @@ namespace Main
                 }
                 else
                 {
-                    Message.MyMessageBox.Show(Settings.Default.Recipe_Error_IncorrectRecipe);
+                    MyMessageBox.Show(Settings.Default.Recipe_Error_IncorrectRecipe);
                     nextSeqID = null;
                 }
             }
@@ -413,7 +414,7 @@ namespace Main
             if (nextSeqInfo.previousSeqType < 0 || nextSeqInfo.previousSeqType >= Sequence.list.Count())
             {
                 logger.Error(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + nextSeqInfo.previousSeqType.ToString());
-                Message.MyMessageBox.Show(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + nextSeqInfo.previousSeqType.ToString());
+                MyMessageBox.Show(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + nextSeqInfo.previousSeqType.ToString());
                 return;
             }
 
@@ -443,7 +444,7 @@ namespace Main
                 if (nextRecipeSeqType < 0 || nextRecipeSeqType >= Sequence.list.Count())
                 {
                     logger.Error(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + nextRecipeSeqType.ToString());
-                    Message.MyMessageBox.Show(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + nextRecipeSeqType.ToString());
+                    MyMessageBox.Show(Settings.Default.Cycle_previousSeqTypeIncorrect + " " + nextRecipeSeqType.ToString());
                     return;
                 }
 
@@ -496,10 +497,10 @@ namespace Main
             General.CurrentCycleInfo.StopSequence();
             //Task printReportTask = Task.Factory.StartNew(() => General.PrintReport(nextSeqInfo.idCycle));
 
-            Message.MyMessageBox.Show(Settings.Default.Cycle_Info_CycleOver);
+            MyMessageBox.Show(Settings.Default.Cycle_Info_CycleOver);
             //printReportTask.Wait();
             General.PrintReport(nextSeqInfo.idCycle);
-            //Message.MyMessageBox.Show(Settings.Default.Cycle_Info_ReportGenerated);
+            //MyMessageBox.Show(Settings.Default.Cycle_Info_ReportGenerated);
 
             // On cache le panneau d'information
             General.CurrentCycleInfo.SetVisibility(false);

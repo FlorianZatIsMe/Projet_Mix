@@ -1,5 +1,6 @@
 ﻿using Database;
 using Main.Properties;
+using Message;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -105,7 +106,7 @@ namespace Main.Pages.SubRecipe
             if (seqValues.Count() != recipeInfo.Ids.Count())
             {
                 logger.Error("On a un problème");
-                Message.MyMessageBox.Show("On a un problème");
+                MyMessageBox.Show("On a un problème");
                 return;
             }
 
@@ -204,6 +205,8 @@ namespace Main.Pages.SubRecipe
             TextBox textBox = sender as TextBox;
             int i = ControlsIDs[recipeWeightInfo.Name];
 
+            General.HideKeyBoard();
+
             if (General.Verify_Format(textBox, isNotNull: true, isNumber: false, Settings.Default.RecipeWeight_Product_nCharMax))
             {
                 FormatControl[i] = true;
@@ -211,8 +214,9 @@ namespace Main.Pages.SubRecipe
             else
             {
                 FormatControl[i] = false;
+                //General.ShowKeyBoard();
             }
-            //Message.MyMessageBox.Show(FormatControl[i].ToString());
+            //MyMessageBox.Show(FormatControl[i].ToString());
         }
         private void TbBarcode_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -221,6 +225,8 @@ namespace Main.Pages.SubRecipe
             TextBox textBox = sender as TextBox;
             int i = ControlsIDs[recipeWeightInfo.Barcode];
 
+            General.HideKeyBoard();
+
             if (General.Verify_Format(textBox, isNotNull:true, isNumber: false, Settings.Default.RecipeWeight_Barcode_nCharMax))
             {
                 FormatControl[i] = true;
@@ -228,11 +234,12 @@ namespace Main.Pages.SubRecipe
             else
             {
                 FormatControl[i] = false;
+                //General.ShowKeyBoard();
             }
 
             CurrentFormatControl_tbBarcode = FormatControl[i];
 
-            //Message.MyMessageBox.Show(FormatControl[i].ToString());
+            //MyMessageBox.Show(FormatControl[i].ToString());
         }
         private void TbSetpoint_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -252,6 +259,7 @@ namespace Main.Pages.SubRecipe
                 n = 0;
             }*/
 
+            General.HideKeyBoard();
 
             if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: n, 
                 min: Settings.Default.RecipeWeight_Setpoint_Min, 
@@ -262,8 +270,9 @@ namespace Main.Pages.SubRecipe
             else
             {
                 FormatControl[i] = false;
+                //General.ShowKeyBoard();
             }
-            //Message.MyMessageBox.Show(FormatControl[i].ToString());
+            //MyMessageBox.Show(FormatControl[i].ToString());
         }
         private void TbRange_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -283,6 +292,7 @@ namespace Main.Pages.SubRecipe
             {
                 n = 0;
             }*/
+            General.HideKeyBoard();
 
 
             if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: n, 
@@ -293,8 +303,9 @@ namespace Main.Pages.SubRecipe
             else
             {
                 FormatControl[i] = false;
+                //General.ShowKeyBoard();
             }
-            //Message.MyMessageBox.Show(FormatControl[i].ToString());
+            //MyMessageBox.Show(FormatControl[i].ToString());
         }
         /*
         private void TbMax_LostFocus(object sender, RoutedEventArgs e)
@@ -325,7 +336,7 @@ namespace Main.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            //Message.MyMessageBox.Show(FormatControl[i].ToString());
+            //MyMessageBox.Show(FormatControl[i].ToString());
         }*/
         public bool IsFormatOk()
         {
@@ -340,8 +351,20 @@ namespace Main.Pages.SubRecipe
             }
 
             x = (bool)cbIsBarcode.IsChecked ? 0 : 1;
-            //Message.MyMessageBox.Show(((n + x) == FormatControl.Length).ToString() + " - " + (n + x).ToString() + " = " + n.ToString() + " + " + x.ToString() + " / " + FormatControl.Length.ToString()); //((n + x) == FormatControl.Length).ToString() + n.ToString + x.ToString() + FormatControl.Length.ToString()
+            //MyMessageBox.Show(((n + x) == FormatControl.Length).ToString() + " - " + (n + x).ToString() + " = " + n.ToString() + " + " + x.ToString() + " / " + FormatControl.Length.ToString()); //((n + x) == FormatControl.Length).ToString() + n.ToString + x.ToString() + FormatControl.Length.ToString()
             return (n+x) == FormatControl.Length;
+        }
+        private void ShowKeyBoard(object sender, RoutedEventArgs e)
+        {
+            General.ShowKeyBoard();
+        }
+
+        private void HideKeyBoardIfEnter(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter || e.Key == Key.Escape)
+            {
+                General.HideKeyBoard();
+            }
         }
     }
 }

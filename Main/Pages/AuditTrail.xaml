@@ -21,11 +21,11 @@
         <WrapPanel Grid.Row="0" VerticalAlignment="Center" Margin="20">
             <TextBlock Text="Date et heure de début:"/>
             <DatePicker x:Name="dpDateBefore" Margin="10,0,0,0" LayoutUpdated="DpDateBefore_LayoutUpdated" PreviewMouseDown="DpDateBefore_PreviewMouseDown"/>
-            <TextBox x:Name="tbTimeBefore" Text="00:00:00" Width="55" TextAlignment="Center" PreviewMouseLeftButtonDown="TbTimeBefore_PreviewMouseLeftButtonDown" LayoutUpdated="TbTimeBefore_LayoutUpdated" PreviewKeyDown="TbTimeBefore_PreviewKeyDown"/>
+            <TextBox x:Name="tbTimeBefore" Text="00:00:00" Width="55" TextAlignment="Center" PreviewMouseLeftButtonDown="TbTimeBefore_PreviewMouseLeftButtonDown" LayoutUpdated="TbTimeBefore_LayoutUpdated" PreviewKeyDown="TbTimeBefore_PreviewKeyDown" GotFocus="ShowKeyBoard" LostFocus="HideKeyBoard"/>
             
             <TextBlock Text="Date et heure de fin:" Margin="20,0,0,0"/>
             <DatePicker x:Name="dpDateAfter" Margin="10,0,0,0" PreviewMouseDown="DpDateAfter_PreviewMouseDown" LayoutUpdated="DpDateAfter_LayoutUpdated"/>
-            <TextBox x:Name="tbTimeAfter" Text="00:00:00" Width="55" TextAlignment="Center" PreviewMouseLeftButtonDown="TbTimeAfter_PreviewMouseLeftButtonDown" LayoutUpdated="TbTimeAfter_LayoutUpdated" PreviewKeyDown="TbTimeAfter_PreviewKeyDown"/>
+            <TextBox x:Name="tbTimeAfter" Text="00:00:00" Width="55" TextAlignment="Center" PreviewMouseLeftButtonDown="TbTimeAfter_PreviewMouseLeftButtonDown" LayoutUpdated="TbTimeAfter_LayoutUpdated" PreviewKeyDown="TbTimeAfter_PreviewKeyDown" GotFocus="ShowKeyBoard" LostFocus="HideKeyBoard"/>
             
             <TextBlock Text="Type d'évenements"  Margin="20,0,0,0" Foreground="#D3D7DC"/>
             <CheckBox x:Name="cbEvent" Margin="10,0,0,0" Content="Evènements" Foreground="#D3D7DC"/>

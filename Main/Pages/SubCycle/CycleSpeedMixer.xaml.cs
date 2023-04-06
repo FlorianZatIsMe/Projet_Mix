@@ -22,6 +22,7 @@ using System.Reflection;
 using Alarm_Management;
 using Main.Properties;
 using Main.Pages.SubCycle;
+using Message;
 
 namespace Main.Pages.SubCycle
 {
@@ -157,7 +158,7 @@ namespace Main.Pages.SubCycle
             if (currentRecipeValues == null) // S'il n'y a pas eu d'erreur...
             {
                 logger.Error(Settings.Default.CycleMix_Erro01);
-                Message.MyMessageBox.Show(Settings.Default.CycleMix_Erro01);
+                MyMessageBox.Show(Settings.Default.CycleMix_Erro01);
                 return;
             }
 
@@ -261,13 +262,13 @@ namespace Main.Pages.SubCycle
             logger.Debug("~CycleSpeedMixer");
 
             Dispose(disposing: false);
-            Message.MyMessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Disconnection done");
+            MyMessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Disconnection done");
         }
         private async void SequenceController()
         {
             if (subCycle.prevSeqInfo.SeqType != cycleSpeedMixerInfo.SeqType) // Si la prochaine séquence est une séquence speedmixer
             {
-                Message.MyMessageBox.Show(Settings.Default.CycleMix_Request_PutProduct);
+                MyMessageBox.Show(Settings.Default.CycleMix_Request_PutProduct);
             }
 
             while (!isSequenceOver) // tant que le cycle est en cours
@@ -294,13 +295,13 @@ namespace Main.Pages.SubCycle
                 // Si on n'a pas encore démarré mais que le capot n'est pas fermé (Safety not OK)
                 if (!hasSequenceStarted && !status[SpeedMixerSettings.MixerStatusId_SafetyOK])
                 {
-                    if (countBeforeStart > 3 && Message.MyMessageBox.Show("Voulez-vous arrêter le cycle ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    if (countBeforeStart > 3 && MyMessageBox.Show("Voulez-vous arrêter le cycle ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
                         StopCycle();
                     }
                     else
                     {
-                        Message.MyMessageBox.Show(Settings.Default.CycleMix_Request_CloseLid);
+                        MyMessageBox.Show(Settings.Default.CycleMix_Request_CloseLid);
                         countBeforeStart++;
                     }
                 }
@@ -313,7 +314,7 @@ namespace Main.Pages.SubCycle
                     {
                         if (!status[SpeedMixerSettings.MixerStatusId_MixerError])
                         {
-                            Message.MyMessageBox.Show(Settings.Default.CycleMix_Request_StartMix); // Peut-être retirer ça s'il y a plusieurs cycle
+                            MyMessageBox.Show(Settings.Default.CycleMix_Request_StartMix); // Peut-être retirer ça s'il y a plusieurs cycle
                             SpeedMixerModbus.RunProgram();
 
                             this.Dispatcher.Invoke(() =>
@@ -345,7 +346,7 @@ namespace Main.Pages.SubCycle
                         pumpNotFreeTimer.Start();
 
                         // Il faut vite fermer cette message box sinon le cycle va s'arrêter, 
-                        Message.MyMessageBox.Show("Démarrage du timer_2: LA POMPE N'EST PAS DISPO, VITE ! RENDS LA DISPONIBLE OU LE CYCLE VA S'ARRETER POUR TOUJOURS !!!");
+                        MyMessageBox.Show("Démarrage du timer_2: LA POMPE N'EST PAS DISPO, VITE ! RENDS LA DISPONIBLE OU LE CYCLE VA S'ARRETER POUR TOUJOURS !!!");
                     }
                     else if (pumpNotFreeSince != 0 && RS232Pump.IsOpen())
                     {
@@ -359,7 +360,7 @@ namespace Main.Pages.SubCycle
                 }
 
                 await Task.Delay(timeSeqController);
-                //Message.MyMessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - GO");
+                //MyMessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - GO");
             }
 
             if (currentPhaseTime >= 0) // Si la séquence s'est pas arrêtée avant la fin, on arrête le cycle
@@ -405,7 +406,7 @@ namespace Main.Pages.SubCycle
                     {
                         tempControlTimer.Stop();
                         logger.Error(Settings.Default.CycleMix_Error_TempTooHot);
-                        Message.MyMessageBox.Show(Settings.Default.CycleMix_Error_TempTooHot);
+                        MyMessageBox.Show(Settings.Default.CycleMix_Error_TempTooHot);
                         StopCycle();
                     }
                 }
@@ -416,7 +417,7 @@ namespace Main.Pages.SubCycle
                         tempControlTimer.Stop();
 
                         logger.Error(Settings.Default.CycleMix_Error_TempTooHot);
-                        Message.MyMessageBox.Show(Settings.Default.CycleMix_Error_TempTooHot);
+                        MyMessageBox.Show(Settings.Default.CycleMix_Error_TempTooHot);
                         StopCycle();
                     }
                 }
@@ -482,12 +483,12 @@ namespace Main.Pages.SubCycle
                     if (hasSequenceStarted)
                     {
                         logger.Error(Settings.Default.CycleMix_Error_PumpOutBefCyle);
-                        Message.MyMessageBox.Show(Settings.Default.CycleMix_Error_PumpOutBefCyle);
+                        MyMessageBox.Show(Settings.Default.CycleMix_Error_PumpOutBefCyle);
                     }
                     else
                     {
                         logger.Error(Settings.Default.CycleMix_Error_PumpOutDurCyle);
-                        Message.MyMessageBox.Show(Settings.Default.CycleMix_Error_PumpOutDurCyle);
+                        MyMessageBox.Show(Settings.Default.CycleMix_Error_PumpOutDurCyle);
                         StopCycle();
                     }
                 }
@@ -521,13 +522,13 @@ namespace Main.Pages.SubCycle
             else if (currentPhaseTime == -timeoutSequenceTooLong)
             {
                 logger.Error(Settings.Default.CycleMix_Error_MixTooLong);
-                Message.MyMessageBox.Show(Settings.Default.CycleMix_Error_MixTooLong);
+                MyMessageBox.Show(Settings.Default.CycleMix_Error_MixTooLong);
                 StopCycle();
             }
             else if (currentPhaseTime == -timeoutSequenceBlocked)
             {
                 logger.Error(Settings.Default.CycleMix_Error_MixerBlocked);
-                Message.MyMessageBox.Show(Settings.Default.CycleMix_Error_MixerBlocked);
+                MyMessageBox.Show(Settings.Default.CycleMix_Error_MixerBlocked);
                 isSequenceOver = true;
             }
 
@@ -589,7 +590,7 @@ namespace Main.Pages.SubCycle
             while (sequenceTimer.Enabled) ;
             while (tempControlTimer.Enabled) ;
             while (pumpNotFreeTimer.Enabled) ;
-            //Message.MyMessageBox.Show("2");
+            //MyMessageBox.Show("2");
 
             General.CurrentCycleInfo.UpdateCurrentSpeedMixerInfo(new string[] { Settings.Default.CycleInfo_Mix_StatusEnded });
 
@@ -658,7 +659,7 @@ namespace Main.Pages.SubCycle
             }
             else
             {
-                Message.MyMessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Je ne sais pas, je ne sais plus, je suis perdu");
+                MyMessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Je ne sais pas, je ne sais plus, je suis perdu");
             }
 
             NextSeqInfo nextSeqInfo = new NextSeqInfo(

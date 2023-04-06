@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Main.Pages
 {
@@ -156,6 +157,10 @@ namespace Main.Pages
                 MoveTimeCursor(textbox, true);
                 tbBefSelToUpdate = true;
             }
+            else if (e.Key == Key.Enter || e.Key == Key.Escape)
+            {
+                General.HideKeyBoard();
+            }
             else if (textbox.Text.Length == 7)
             {
                 tbBefFull = true;
@@ -183,7 +188,7 @@ namespace Main.Pages
                 tbAftFull = false;
             }
         }
-        private void TbTimeAfter_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void TbTimeAfter_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             logger.Debug("TbTimeAfter_PreviewKeyDown");
 
@@ -198,6 +203,10 @@ namespace Main.Pages
             {
                 MoveTimeCursor(textbox, true);
                 tbAftSelToUpdate = true;
+            }
+            else if (e.Key == Key.Enter || e.Key == Key.Escape)
+            {
+                General.HideKeyBoard();
             }
             else if (textbox.Text.Length == 7)
             {
@@ -312,7 +321,16 @@ namespace Main.Pages
                 //updateAlarmTimer.Dispose();
                 //Dispose(disposing: true); // Il va peut-être falloir sortir ça du "if"
             }
+        }
 
+        private void ShowKeyBoard(object sender, RoutedEventArgs e)
+        {
+            General.ShowKeyBoard();
+        }
+
+        private void HideKeyBoard(object sender, RoutedEventArgs e)
+        {
+            General.HideKeyBoard();
         }
     }
 }

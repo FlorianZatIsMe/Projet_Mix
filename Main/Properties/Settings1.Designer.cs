@@ -2022,5 +2022,17 @@ namespace Main.Properties {
                 return ((global::Main.Pages.IdDBControls)(this["RecipeWeight_IdDBControls"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        public int AutoLogOff_min {
+            get {
+                return ((int)(this["AutoLogOff_min"]));
+            }
+            set {
+                this["AutoLogOff_min"] = value;
+            }
+        }
     }
 }

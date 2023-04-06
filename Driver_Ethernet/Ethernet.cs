@@ -147,7 +147,7 @@ namespace Driver_Ethernet
             Task<int> task = client.ReceiveAsync(buffer, SocketFlags.None);
             task.Wait(msWaitTime);
             
-            //Message.MyMessageBox.Show("Alors");
+            //MyMessageBox.Show("Alors");
 
             int receivedDataLength;
             if (task.IsCompleted)
