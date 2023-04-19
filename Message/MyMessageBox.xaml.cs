@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Message
 {
@@ -43,21 +45,45 @@ namespace Message
         {
             MessageBoxResult result = MessageBoxResult.None;
 
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                result = Display(messageBoxText, button);
+            });
+
+            return result;
+            /*
+            //return MessageBox.Show(messageBoxText, "", button);
+            MessageBoxResult result = MessageBoxResult.None;
+            return Display(messageBoxText, button);
+
             if (parentWindow == null)
             {
                 result = Display(messageBoxText + " C'est bizarre tout ça, vraiment bizarre", button);
             }
+            
             else
             {
-                parentWindow.Dispatcher.Invoke(() =>
+                return Display(messageBoxText, button);
+                //Thread backgroundThread = new Thread(new ThreadStart(MyDatabase.testTask));
+                //backgroundThread.Name = "backgroundThread";
+                //backgroundThread.Priority = ThreadPriority.Highest;
+                //backgroundThread.Start();
+
+                //parentWindow.Dispatcher.Invoke(() =>
+                Application.Current.Dispatcher.Invoke(() =>
                 {
-                    result = Display(messageBoxText, button);
+                    return MessageBox.Show(messageBoxText, "", button);
+                    //result = Display(messageBoxText, button);
                 });
+
             }
+            return MessageBoxResult.None;
             return result;
+            */
         }
         private static MessageBoxResult Display(string messageBoxText, MessageBoxButton button = MessageBoxButton.OK)
         {
+            //return MessageBox.Show(messageBoxText + " Display", "", button);
             MyMessageBox messageBox = new MyMessageBox();
             messageBox.labelMessage.Text = messageBoxText;
             messageBox.btOk.Visibility = button == MessageBoxButton.OK ? Visibility.Visible : Visibility.Collapsed;
@@ -75,6 +101,7 @@ namespace Message
 
             messageBox.ShowDialog();
             return messageBox.resultButton;
+
         }
 
         private void ButtonOk_Click(object sender, RoutedEventArgs e)
@@ -101,7 +128,7 @@ namespace Message
             if (myMessageBoxes.Count == this.myMessageBoxId + 1)
             {
                 logger.Trace("Window_Deactivated " + this.myMessageBoxId.ToString());
-                this.Activate();
+                //this.Activate();
             }
         }
 

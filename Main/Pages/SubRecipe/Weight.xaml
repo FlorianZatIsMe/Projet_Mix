@@ -8,17 +8,16 @@
       mc:Ignorable="d" 
       d:DesignHeight="350" d:DesignWidth="1400"
       Title="Weight"
-      Background="Transparent"
-      Foreground="{StaticResource MyFont1_Foreground}">
+      Background="Transparent">
 
     <Page.DataContext>
         <local:WeightViewModel/>
     </Page.DataContext>
 
-    <Border Background="#524E4F" BorderThickness="5" BorderBrush="Green" CornerRadius="15" Margin="5">
+    <Border Background="{DynamicResource Backgroup_Sequence}" BorderThickness="0" BorderBrush="Green" CornerRadius="15" Margin="5">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="130"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             
@@ -32,16 +31,14 @@
                        Grid.Column="0"
                        Grid.RowSpan="2"
                        Text="#" 
-                       Foreground="{StaticResource MyFont1_Foreground}"
-                       FontFamily="{StaticResource MyFont1}"
-                       FontSize="{StaticResource FontSize0}"
+                       Style="{DynamicResource Label1}"
                        HorizontalAlignment="Center"/>
                 <Button Grid.Column="0"
-                    Grid.RowSpan="2"
-                    Content="Supprimer"
-                    Margin="0,10,0,0"
-                    Height="20"
-                    Width="70" Click="Button_Click"/>
+                        Grid.RowSpan="2"
+                        Content="Supprimer"
+                        Style="{DynamicResource ButtonStyle1}"
+                        Margin="0,10,0,0"
+                        Click="Button_Click"/>
             </StackPanel>
             
             <WrapPanel Grid.Column="1" Grid.Row="0" Margin="0,10,0,0" VerticalAlignment="Top">
@@ -66,12 +63,10 @@
                         <TextBlock Text="Produit"
                                    Grid.Column="0"
                                    Margin="0,0,20,0"
-                                   FontFamily="{StaticResource MyFont1}" 
-                                   FontSize="{StaticResource FontSize1}"
+                                   Style="{DynamicResource Label1}"
                                    VerticalAlignment="Center"/>
                         <TextBox x:Name="tbProduct" 
                              Grid.Column="1"
-                             Height="30" 
                              VerticalContentAlignment="Center"
                              LostFocus="TbProduct_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"
                              Style="{DynamicResource TextBoxStyle1}"/>
@@ -87,18 +82,17 @@
                     <Grid Margin="25,0,0,0" HorizontalAlignment="Left" >
                         <TextBox x:Name="tbBarcode" 
                              HorizontalContentAlignment="Left" 
-                             Style="{DynamicResource TextBoxStyle2}" 
-                             Height="30" 
+                             Style="{DynamicResource TextBoxStyle2}"  
                              BorderThickness="1"
                              BorderBrush="{StaticResource Color_SubS_rbOn}"
                              Margin="125,0,0,0" 
-                             Width="200" 
+                             Width="400" 
                              Visibility="Hidden"
                              LostFocus="TbBarcode_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
                         <ToggleButton x:Name="cbIsBarcode" 
                                   Content="Contrôle du code barres" 
                                   IsChecked="False" 
-                                  Width="150"
+                                  Width="180"
                                   HorizontalAlignment="Left" 
                                   Style="{DynamicResource ToggleButtonStyle1}" 
                                   Checked="CbIsBarcode_Checked" 
@@ -110,7 +104,7 @@
 
                     <Border Width="600" 
                         Height="150" 
-                        BorderBrush="Green" 
+                        Background="{DynamicResource Backgroup_SubSequence}" 
                         BorderThickness="2"
                         CornerRadius="10"
                         HorizontalAlignment="Left"
@@ -129,16 +123,12 @@
                                        Margin="5,5,0,0" 
                                        Grid.ColumnSpan="2"
                                        Grid.Row="0"
-                                       Foreground="{StaticResource MyFont1_Foreground}"
-                                       FontFamily="{StaticResource MyFont1}"
-                                       FontSize="{StaticResource FontSize1}"
+                                       Style="{DynamicResource Label1}"
                                        HorizontalAlignment="Center"/>
 
                             <WrapPanel Grid.Column="0" Grid.Row="1" VerticalAlignment="Center">
                                 <TextBlock Margin="0,0,0,0" 
-                                           Foreground="{StaticResource MyFont1_Foreground}"
-                                           FontFamily="{StaticResource MyFont1}"
-                                           FontSize="{StaticResource FontSize2}"
+                                           Style="{DynamicResource Label1}"
                                            Text="{Binding TextBlockSetpoint}"
                                            VerticalAlignment="Center"/>
                                 <TextBox x:Name="tbSetpoint" 
@@ -151,9 +141,7 @@
                             <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Center">
                                 <WrapPanel>
                                     <TextBlock Margin="0,0,0,0" 
-                                               Foreground="{StaticResource MyFont1_Foreground}"
-                                               FontFamily="{StaticResource MyFont1}"
-                                               FontSize="{StaticResource FontSize2}"
+                                               Style="{DynamicResource Label1}"
                                                Text="{Binding TextBlockRange}"
                                                VerticalAlignment="Center"/>
                                     <TextBox x:Name="tbRange" 

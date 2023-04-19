@@ -506,16 +506,16 @@
       <Value Profile="(Default)">Décelération (RPM/s)</Value>
     </Setting>
     <Setting Name="RecipeMix_SpeedMin_Label" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Vitesse - Min (RPM)</Value>
+      <Value Profile="(Default)">Minimum</Value>
     </Setting>
     <Setting Name="RecipeMix_SpeedMax_Label" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Max (RPM)</Value>
+      <Value Profile="(Default)">Maximum</Value>
     </Setting>
     <Setting Name="RecipeMix_PressureMin_Label" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Pression - Min (</Value>
+      <Value Profile="(Default)">Minimum</Value>
     </Setting>
     <Setting Name="RecipeMix_PressureMax_Label" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Max</Value>
+      <Value Profile="(Default)">Maximum</Value>
     </Setting>
     <Setting Name="LastWeightRatio" Type="System.Decimal" Scope="Application">
       <Value Profile="(Default)">0.1</Value>
@@ -637,6 +637,192 @@
     <Setting Name="Report_Print_Delay2_MaxCount" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">30</Value>
     </Setting>
+    <Setting Name="AutoLogOff_min" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="PreCycle_BatchNumber_Field" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Numéro de lot</Value>
+    </Setting>
+    <Setting Name="PreCycle_ProductCode_Field" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Code produit</Value>
+    </Setting>
+    <Setting Name="PreCycle_FinalWeigh_Field" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Masse cible (g) [</Value>
+    </Setting>
+    <Setting Name="PreCycle_TbList_List" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Liste</Value>
+    </Setting>
+    <Setting Name="PreCycle_TbList_TextBox" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Scan</Value>
+    </Setting>
+    <Setting Name="CycleInfo_OF_Field" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Numéro OF: </Value>
+    </Setting>
+    <Setting Name="CycleInfo_FinalWeight_Field" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Masse produit final: </Value>
+    </Setting>
+    <Setting Name="CycleInfo_Product_Field" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Code Produit: </Value>
+    </Setting>
+    <Setting Name="CycleInfo_RevRecipe_Field" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Révision recette: </Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_PhaseNumber_Field" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Phase n°</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_PhaseTime_Field" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Phase Time: </Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_Temperature_Field" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Température: </Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_Pressure_Field1" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Pression (</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_Pressure_Field2" Type="System.String" Scope="User">
+      <Value Profile="(Default)">): </Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_Speed_Field" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Vitesse (RPM): </Value>
+    </Setting>
+    <Setting Name="OkButton_Content" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Ok</Value>
+    </Setting>
+    <Setting Name="SpeedMixer_DelSequenceButton_Content" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Supprimer</Value>
+    </Setting>
+    <Setting Name="Recipe_SeqName_Weight" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Pesée</Value>
+    </Setting>
+    <Setting Name="Recipe_SeqName_SpeedMixer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SpeedMixer</Value>
+    </Setting>
+    <Setting Name="RecipeMix_Speed_Label" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Vitesse (RPM)</Value>
+    </Setting>
+    <Setting Name="RecipeMix_Pressure_Label" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Pression (</Value>
+    </Setting>
+    <Setting Name="SpeedMixer_VacuumButton_Field" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Contrôle du vide</Value>
+    </Setting>
+    <Setting Name="SpeedMixer_VacuumLabel_Field" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Unité de la pression</Value>
+    </Setting>
+    <Setting Name="SpeedMixer_ColdTrapButton" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Utilisation du piège froid</Value>
+    </Setting>
+    <Setting Name="ActiveAlarm_AckButton" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Tout aquitter</Value>
+    </Setting>
+    <Setting Name="Archiving_ArchiveButton" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Archiver</Value>
+    </Setting>
+    <Setting Name="Archiving_DateLabel" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Date du dernier enregistrement à archiver: </Value>
+    </Setting>
+    <Setting Name="Archiving_RestoreButton" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Faire un restore</Value>
+    </Setting>
+    <Setting Name="AuditTrail_StartDateTime" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Date et heure de début:</Value>
+    </Setting>
+    <Setting Name="AuditTrail_DefaultTime" Type="System.String" Scope="User">
+      <Value Profile="(Default)">00:00:00</Value>
+    </Setting>
+    <Setting Name="AuditTrail_EndDateTime" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Date et heure de fin:</Value>
+    </Setting>
+    <Setting Name="AuditTrail_EventType_Field" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Type d'évenements</Value>
+    </Setting>
+    <Setting Name="AuditTrail_EventType_Event" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Evènements</Value>
+    </Setting>
+    <Setting Name="AuditTrail_EventType_Alarm" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Alarmes</Value>
+    </Setting>
+    <Setting Name="AuditTrail_EventType_Warning" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Alertes</Value>
+    </Setting>
+    <Setting Name="AuditTrail_FilterButton" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Filtrer</Value>
+    </Setting>
+    <Setting Name="ArchBackup_Status_Field" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Statut:</Value>
+    </Setting>
+    <Setting Name="Backup_Backup_Button" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Faire un backup</Value>
+    </Setting>
+    <Setting Name="Backup_Restore_Button" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Faire un restore</Value>
+    </Setting>
+    <Setting Name="Parameters_Title" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Paramètres</Value>
+    </Setting>
+    <Setting Name="Parameters_NextCalibration_Field" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Prochaine calibration: </Value>
+    </Setting>
+    <Setting Name="Recipe_New_Name" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Nom de la recette</Value>
+    </Setting>
+    <Setting Name="Recipe_NewSequence_Button" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Nouvelle séquence</Value>
+    </Setting>
+    <Setting Name="Recipe_FinalWeight_Min" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Masse cible min (g)</Value>
+    </Setting>
+    <Setting Name="Recipe_FinalWeight_Max" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Masse cible max (g)</Value>
+    </Setting>
+    <Setting Name="Recipe_New_Create_Button" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Créer recette</Value>
+    </Setting>
+    <Setting Name="Recipe_Version_Field" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Version: </Value>
+    </Setting>
+    <Setting Name="Recipe_Status_Field" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Statut: </Value>
+    </Setting>
+    <Setting Name="Recipe_Test_Field" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Tester recette</Value>
+    </Setting>
+    <Setting Name="Recipe_Test_FinalProduct" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Masse produit final (g)</Value>
+    </Setting>
+    <Setting Name="Recipe_Test_Button" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Tester</Value>
+    </Setting>
+    <Setting Name="Recipe_Copy_Name" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Nom de la recette à copier</Value>
+    </Setting>
+    <Setting Name="Recipe_Copy_Button" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Copier recette</Value>
+    </Setting>
+    <Setting Name="Recipe_Activate_Field" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Activer recette</Value>
+    </Setting>
+    <Setting Name="Recipe_Deactivate_Field" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Désactiver/Supprimer recette</Value>
+    </Setting>
+    <Setting Name="LogIn_UserName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Nom d'utilisateur</Value>
+    </Setting>
+    <Setting Name="LogIn_Password" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Mot de passe</Value>
+    </Setting>
+    <Setting Name="LogIn_Connexion" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Connexion</Value>
+    </Setting>
+    <Setting Name="LogIn_Deconnexion" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Déconnexion</Value>
+    </Setting>
+    <Setting Name="Cancel_Button" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Annuler</Value>
+    </Setting>
+    <Setting Name="Recipe_Info_NoSubRecipe" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Veuillez créer une séquence</Value>
+    </Setting>
     <Setting Name="RecipeMix_IdDBControls" Type="Main.Pages.IdDBControls" Scope="Application">
       <Value Profile="(Default)">
           &lt;IdDBControls xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
@@ -695,8 +881,8 @@
           &lt;/IdDBControls&gt;
         </Value>
     </Setting>
-    <Setting Name="AutoLogOff_min" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">15</Value>
+    <Setting Name="Status_timer_Interval" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1000</Value>
     </Setting>
   </Settings>
 </SettingsFile>

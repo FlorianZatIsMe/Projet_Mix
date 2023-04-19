@@ -4,10 +4,10 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Main.Pages"
+      xmlns:p="clr-namespace:Main.Properties"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Parameters"
-      Foreground="AliceBlue">
+      Title="Parameters">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -15,11 +15,23 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Paramètres" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=Parameters_Title, Mode=OneWay}" 
+                   FontSize="{DynamicResource FontSize_Title1}" 
+                   Style="{DynamicResource Label1}" 
+                   VerticalAlignment="Center" 
+                   HorizontalAlignment="Center"/>
 
         <WrapPanel Grid.Row="1">
-            <TextBlock Text="Prochaine calibration: "/>
-            <DatePicker x:Name="dpNextCalibDate" Margin="10,0,0,0" PreviewMouseDown="dpNextCalibDate_PreviewMouseDown" LayoutUpdated="dpNextCalibDate_LayoutUpdated" PreviewKeyDown="dpNextCalibDate_PreviewKeyDown"/>
+            <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=Parameters_NextCalibration_Field, Mode=OneWay}"
+                       VerticalAlignment="Center"
+                       Style="{DynamicResource Label1}" />
+            <DatePicker x:Name="dpNextCalibDate" 
+                       VerticalAlignment="Center"
+                        Margin="10,0,0,0" 
+                        FontSize="{DynamicResource FontSize_DatePicker1}"
+                        PreviewMouseDown="dpNextCalibDate_PreviewMouseDown" 
+                        LayoutUpdated="dpNextCalibDate_LayoutUpdated" 
+                        PreviewKeyDown="dpNextCalibDate_PreviewKeyDown"/>
         </WrapPanel>
     </Grid>
 </Page>

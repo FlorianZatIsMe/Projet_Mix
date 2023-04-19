@@ -9,6 +9,43 @@
       Title="Status" Background="Transparent">
 
     <Grid>
-        <TextBlock FontSize="20" Foreground="White" Text="Bonjour et bienvenue, maintenant appuie sur le bouton vert" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <WrapPanel>
+                <TextBlock Text="Statut speedmixer: " 
+                           FontSize="{DynamicResource FontSize_Label2}"
+                           Style="{DynamicResource Label1}"/>
+                <TextBlock x:Name="labelSpeedmixerStatus" 
+                           Text="#" 
+                           FontSize="{DynamicResource FontSize_Label2}"
+                           Style="{DynamicResource Label1}"/>
+            </WrapPanel>
+            <WrapPanel Margin="0,7,0,0">
+                <TextBlock Text="Statut balance: " 
+                           FontSize="{DynamicResource FontSize_Label2}"
+                           Style="{DynamicResource Label1}"/>
+                <TextBlock x:Name="labelBalanceStatus" 
+                           Text="#" 
+                           FontSize="{DynamicResource FontSize_Label2}"
+                           Style="{DynamicResource Label1}"/>
+            </WrapPanel>
+            <WrapPanel Margin="0,7,0,0">
+                <TextBlock Text="Statut pompe: " 
+                           FontSize="{DynamicResource FontSize_Label2}"
+                           Style="{DynamicResource Label1}"/>
+                <TextBlock x:Name="labelPumpStatus" 
+                           Text="#" 
+                           FontSize="{DynamicResource FontSize_Label2}"
+                           Style="{DynamicResource Label1}"/>
+            </WrapPanel>
+<!--            <WrapPanel Margin="0,7,0,0">
+                <TextBlock Text="Statut piège froid: " 
+                           FontSize="{DynamicResource FontSize_Label2}"
+                           Style="{DynamicResource Label1}"/>
+                <TextBlock x:Name="labelColdTrapStatus" 
+                           Text="#" 
+                           FontSize="{DynamicResource FontSize_Label2}"
+                           Style="{DynamicResource Label1}"/>
+            </WrapPanel> -->
+        </StackPanel>
     </Grid>
 </Page>

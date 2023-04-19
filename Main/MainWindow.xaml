@@ -3,16 +3,17 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:p="clr-namespace:Main.Properties"
         mc:Ignorable="d"
         Title="MainWindow"
         WindowState= "Maximized"
         ResizeMode="NoResize"
         Height="650"
-        Width="1500"
+        Width="1900"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         AllowsTransparency="True"
-        Background="#524E4F" Loaded="Window_Loaded" MouseMove="Window_MouseMove" Deactivated="Window_Deactivated" Closing="Window_Closing">
+        Background="{DynamicResource Backgroup_Main}" Loaded="Window_Loaded" MouseMove="Window_MouseMove" Deactivated="Window_Deactivated" Closing="Window_Closing">
 
 
     <Window.Resources>
@@ -25,25 +26,25 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type MenuItem}">
                         <Border x:Name="border"
-                                Background="#363435"
+                                Background="{DynamicResource Backgroup_SubMain1}"
                                 BorderThickness="0">
                             <Grid>
                                 <!--// Icon //-->
                                 <ContentPresenter ContentSource="Icon"
                                                   HorizontalAlignment="Left"
                                                   VerticalAlignment="Center"
-                                                  Height="22"
-                                                  Width="22"
+                                                  Height="30"
+                                                  Width="30"
                                                   Margin="10,0,0,0" />
                                 <!--// Text //-->
                                 <ContentPresenter x:Name="header"
                                                   ContentSource="Header"
-                                                  TextBlock.Foreground="#D3D7DC"
-                                                  TextBlock.FontFamily="Rubik Medium"
-                                                  TextBlock.FontSize="15"
+                                                  TextBlock.Foreground="{DynamicResource MyFont1_Foreground}"
+                                                  TextBlock.FontFamily="{DynamicResource MyFont1}"
+                                                  TextBlock.FontSize="{DynamicResource FontSize_Menu}"
                                                   HorizontalAlignment="Left"
                                                   VerticalAlignment="Center"
-                                                  Margin="40,0,13,0" />
+                                                  Margin="50,0,13,0" />
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -51,14 +52,14 @@
                                      Value="True">
                                 <Setter Property="Background"
                                         TargetName="border"
-                                        Value="#524E4F" />
+                                        Value="{DynamicResource Backgroup_MenuHighlighted}" />
                             </Trigger>
 
                             <Trigger Property="IsEnabled"
                                      Value="False">
                                 <Setter Property="TextBlock.Foreground"
                                         TargetName="header"
-                                        Value="#6D6769" />
+                                        Value="{DynamicResource Backgroup_MenuDisabled}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -68,13 +69,14 @@
 
         <Style x:Key="Main_MenuItem_With_Dropdown"
                TargetType="MenuItem">
+            <Setter Property="Height" Value="30"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type MenuItem}">
                         <Border x:Name="border"
-                                Background="#363435"
+                                Background="{DynamicResource Backgroup_SubMain1}"
                                 BorderThickness="0"
-                                Height="30">
+                                Height="{Binding Path=Height}">
                             <DockPanel LastChildFill = "True">
 
                                 <!--// Icon //-->
@@ -88,9 +90,9 @@
                                 <!--// Text //-->
                                 <ContentPresenter x:Name="header" 
                                                   ContentSource="Header"
-                                                  TextBlock.Foreground="#D3D7DC"
-                                                  TextBlock.FontFamily="Rubik Medium"
-                                                  TextBlock.FontSize="15"
+                                                  TextBlock.Foreground="{DynamicResource MyFont1_Foreground}"
+                                                  TextBlock.FontFamily="{DynamicResource MyFont1}"
+                                                  TextBlock.FontSize="{DynamicResource FontSize_Menu}"
                                                   VerticalAlignment="Center"
                                                   DockPanel.Dock = "Left"
                                                   Margin="10,0,0,0"/>
@@ -125,14 +127,14 @@
                                      Value="True">
                                 <Setter Property="Background"
                                         TargetName="border"
-                                        Value="#524E4F" />
+                                        Value="{DynamicResource Backgroup_MenuHighlighted}" />
                             </Trigger>
                             
                             <Trigger Property="IsEnabled"
                                      Value="False">
                                 <Setter Property="TextBlock.Foreground"
                                         TargetName="header"
-                                        Value="#6D6769" />
+                                        Value="{DynamicResource Backgroup_MenuDisabled}" />
                                 <Setter Property="Visibility"
                                         TargetName="dropdownIcon"
                                         Value="Hidden"/>
@@ -150,7 +152,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type MenuItem}">
                         <Border x:Name="border"
-                                Background="#363435"
+                                Background="{DynamicResource Backgroup_SubMain1}"
                                 BorderThickness="0">
                             <Grid>
                                 <!--// Icon //-->
@@ -162,20 +164,12 @@
                                                   Margin="8,0,0,0" />
                                 <!--// Text //-->
                                 <ContentPresenter ContentSource="Header"
-                                                  TextBlock.Foreground="#D3D7DC"
-                                                  TextBlock.FontFamily="Rubik Medium"
-                                                  TextBlock.FontSize="15"
+                                                  TextBlock.Foreground="{DynamicResource MyFont1_Foreground}"
+                                                  TextBlock.FontFamily="{DynamicResource MyFont1}"
+                                                  TextBlock.FontSize="{DynamicResource FontSize_Menu}"
                                                   HorizontalAlignment="Left"
                                                   VerticalAlignment="Center"
                                                   Margin="35,0,40,0" />
-
-                                <Grid x:Name="Highlighter"
-                                      Height="35"
-                                      Width="2"
-                                      Background="#FFFFFF"
-                                      HorizontalAlignment="Left"
-                                      VerticalAlignment="Center"
-                                      Visibility="Collapsed" />
 
                             </Grid>
                         </Border>
@@ -184,13 +178,10 @@
                                      Value="True">
                                 <Setter Property="Background"
                                         TargetName="border"
-                                        Value="#3E3C3D" />
+                                        Value="{DynamicResource Backgroup_SubMenuHighlighted}" />
                                 <Setter Property="BorderBrush"
                                         TargetName="border"
-                                        Value="#3E3C3D" />
-                                <Setter Property="Visibility"
-                                        TargetName="Highlighter"
-                                        Value="Visible" />
+                                        Value="{DynamicResource Backgroup_SubMenuHighlighted}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -202,21 +193,18 @@
 
         <ImageBrush x:Key="close_def"
                     ImageSource="Resources/img_shutdown_def.png"
-                    Stretch="None" />
+                    Stretch="UniformToFill" />
 
         <ImageBrush x:Key="close_mo"
                     ImageSource="Resources/img_shutdown_mo.png"
-                    Stretch="None" />
+                    Stretch="UniformToFill" />
 
         <Style x:Key="CloseAppStyle"
                TargetType="{x:Type Button}">
 
-            <Setter Property="Height"
-                    Value="25" />
-            <Setter Property="Width"
-                    Value="25" />
-            <Setter Property="Margin"
-                    Value="0,0,10,0" />
+            <Setter Property="Height" Value="25" />
+            <Setter Property="Width" Value="25" />
+            <Setter Property="Margin" Value="0,0,10,0" />
 
             <Setter Property="Template">
 
@@ -259,184 +247,193 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="80" />
+            <RowDefinition Height="{DynamicResource HeightMenu}" />
 
             <RowDefinition Height="1*" />
 
-            <RowDefinition Height="40" />
+            <RowDefinition Height="{DynamicResource HeightFooter}" />
         </Grid.RowDefinitions>
 
         <!--// Menu Border //-->
 
         <Grid Grid.Row="0" Margin="20">
-            <Border Background="#363435"
-                    BorderBrush="#363435"
+            <Border Background="{DynamicResource Backgroup_SubMain1}"
+                    BorderBrush="{DynamicResource Backgroup_SubMain1}"
                     BorderThickness="3"
                     CornerRadius="5" />
 
-            <!--// Menu //-->
-            <Menu HorizontalAlignment="Left"
-                  Background="#363435"
-                  Margin="5">
+            <Grid x:Name="gridMenu" Margin="5">
+                <!--// Menu //-->
+                <Menu HorizontalAlignment="Left"
+                  Background="{DynamicResource Backgroup_SubMain1}"
+                  Margin="0">
 
-                <!--// Home //-->
-                <MenuItem x:Name="menuItemHome" Header="GENERAL"
+                    <!--// GENERAL //-->
+                    <MenuItem x:Name="menuItemHome" Header="GENERAL"
                           Style="{StaticResource Main_MenuItem}"
+                          Height="{Binding ElementName=gridMenu, Path=ActualHeight}"
                           Click = "FxSystemStatus">
-                    <MenuItem.Icon>
-                        <Image Source="Resources/img_home_en.png"
+                        <MenuItem.Icon>
+                            <Image Source="Resources/img_home_en.png"
                                Stretch="Uniform" />
-                    </MenuItem.Icon>
-                </MenuItem>
+                        </MenuItem.Icon>
+                    </MenuItem>
 
-                <!--// About Us //-->
-                <MenuItem x:Name="menuItemStart" Header="DEMARRER" Width="129"
+                    <!--// DEMARRER //-->
+                    <MenuItem x:Name="menuItemStart" Header="DEMARRER" Width="Auto"
                           Style="{StaticResource Main_MenuItem}"
                           Click = "FxCycleStart">
-                    <MenuItem.Icon>
-                        <Image Source="Resources/img_start_en.png"
-                               Stretch="Uniform" />
-                    </MenuItem.Icon>
-                </MenuItem>
-
-                <!--// Services //-->
-                <MenuItem x:Name="menuItemRecipes" Header="RECETTE"
-                          Style="{StaticResource Main_MenuItem_With_Dropdown}">
-                    <MenuItem.Icon>
-                        <Image Source="Resources/img_recipes_en.png"
-                               Stretch="Uniform" />
-                    </MenuItem.Icon>
-
-                    <MenuItem Header="Nouveau"
-                              Height="35"
-                              Style="{StaticResource Sub_MenuItem}"
-                              Click = "FxProgramNew">
                         <MenuItem.Icon>
-                            <Image Source="Resources/img_new_en.png"
-                                   Stretch="Uniform" />
+                            <Image Source="Resources/img_start_en.png"
+                               Stretch="Uniform" />
                         </MenuItem.Icon>
                     </MenuItem>
 
-                    <MenuItem Header="Modifier"
-                              Height="35"
-                              Style="{StaticResource Sub_MenuItem}"
-                              Click = "FxProgramModify">
+                    <!--// RECETTE //-->
+                    <MenuItem x:Name="menuItemRecipes" Header="RECETTE"
+                              Style="{StaticResource Main_MenuItem_With_Dropdown}"
+                              Height="{Binding ElementName=gridMenu, Path=ActualHeight}">
                         <MenuItem.Icon>
-                            <Image Source="Resources/img_modify_en.png"
-                                   Stretch="Uniform" />
+                            <Image Source="Resources/img_recipes_en.png"
+                               Stretch="Uniform" />
                         </MenuItem.Icon>
-                    </MenuItem>
 
-                    <MenuItem Header="Copier"
-                              Height="35"
+                        <MenuItem Header="Nouveau"
+                                  Height="{DynamicResource HeightSubMenu}"
+                                  Style="{StaticResource Sub_MenuItem}"
+                                  Click = "FxProgramNew">
+                            <MenuItem.Icon>
+                                <Image Source="Resources/img_new_en.png"
+                                       Stretch="Uniform" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+
+                        <MenuItem Header="Modifier"
+                                  Height="{Binding ElementName=gridMenu, Path=ActualHeight}"
+                                  Style="{StaticResource Sub_MenuItem}"
+                                  Click = "FxProgramModify">
+                            <MenuItem.Icon>
+                                <Image Source="Resources/img_modify_en.png"
+                                   Stretch="Uniform" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+
+                        <MenuItem Header="Copier"
+                              Height="{Binding ElementName=gridMenu, Path=ActualHeight}"
                               Style="{StaticResource Sub_MenuItem}"
                               Click = "FxProgramCopy">
-                        <MenuItem.Icon>
-                            <Image Source="Resources/img_copy_en.png"
+                            <MenuItem.Icon>
+                                <Image Source="Resources/img_copy_en.png"
                                    Stretch="Uniform" />
-                        </MenuItem.Icon>
-                    </MenuItem>
+                            </MenuItem.Icon>
+                        </MenuItem>
 
-                    <MenuItem Header="Supprimer"
-                              Height="35"
+                        <MenuItem Header="Supprimer"
+                              Height="{Binding ElementName=gridMenu, Path=ActualHeight}"
                               Style="{StaticResource Sub_MenuItem}"
                               Click = "FxProgramDelete">
-                        <MenuItem.Icon>
-                            <Image Source="Resources/img_delete_en.png"
+                            <MenuItem.Icon>
+                                <Image Source="Resources/img_delete_en.png"
                                    Stretch="Uniform" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </MenuItem>
+
+
+                    <!--// AUDIT TRAIL //-->
+                    <MenuItem x:Name="menuItemAuditTrail" Header="AUDIT TRAIL"
+                              Height="{Binding ElementName=gridMenu, Path=ActualHeight}"
+                              Style="{StaticResource Main_MenuItem}" 
+                              Click="FxAuditTrail">
+                        <MenuItem.Icon>
+                            <Image Source="Resources/img_audit_trail_en.png"
+                               Stretch="Uniform" />
                         </MenuItem.Icon>
                     </MenuItem>
-                </MenuItem>
 
-
-                <!--// AUDIT TRAIL //-->
-                <MenuItem x:Name="menuItemAuditTrail" Header="AUDIT TRAIL"
-                          Style="{StaticResource Main_MenuItem}" 
-                          Click="FxAuditTrail">
-                    <MenuItem.Icon>
-                        <Image Source="Resources/img_audit_trail_en.png"
+                    <!--// ALARME //-->
+                    <MenuItem x:Name="menuItemAlarm" 
+                              Header="ALARME"
+                              Height="{Binding ElementName=gridMenu, Path=ActualHeight}"
+                              Style="{StaticResource Main_MenuItem}" 
+                              Click="FxAlarms">
+                        <MenuItem.Icon>
+                            <Image Source="Resources/img_alarm_en.png"
                                Stretch="Uniform" />
-                    </MenuItem.Icon>
-                </MenuItem>
+                        </MenuItem.Icon>
+                    </MenuItem>
 
-                <!--// ALARME //-->
-                <MenuItem x:Name="menuItemAlarm" 
-                          Header="ALARME"
-                          Style="{StaticResource Main_MenuItem}" 
-                          Click="FxAlarms">
-                    <MenuItem.Icon>
-                        <Image Source="Resources/img_alarm_en.png"
+                    <!--// BACKUP AND ARCHIVING //-->
+                    <MenuItem x:Name="menuItemBackup" Header="BACKUP ET ARCHIVAGE"
+                              Height="{Binding ElementName=gridMenu, Path=ActualHeight}"
+                              Style="{StaticResource Main_MenuItem_With_Dropdown}">
+                        <MenuItem.Icon>
+                            <Image Source="Resources/img_backup_archive_en.png"
                                Stretch="Uniform" />
-                    </MenuItem.Icon>
-                </MenuItem>
+                        </MenuItem.Icon>
 
-                <!--// BACKUP AND ARCHIVING //-->
-                <MenuItem x:Name="menuItemBackup" Header="BACKUP ET ARCHIVAGE"
-                          Style="{StaticResource Main_MenuItem_With_Dropdown}">
-                    <MenuItem.Icon>
-                        <Image Source="Resources/img_backup_archive_en.png"
-                               Stretch="Uniform" />
-                    </MenuItem.Icon>
-
-                    <MenuItem Header="Backup"
-                              Height="35"
+                        <MenuItem Header="Backup"
+                              Height="{Binding ElementName=gridMenu, Path=ActualHeight}"
                               Style="{StaticResource Sub_MenuItem}"
                               Click = "FxBackup">
-                        <MenuItem.Icon>
-                            <Image Source="Resources/img_new_en.png"
+                            <MenuItem.Icon>
+                                <Image Source="Resources/img_backup_en.png"
                                    Stretch="Uniform" />
-                        </MenuItem.Icon>
-                    </MenuItem>
+                            </MenuItem.Icon>
+                        </MenuItem>
 
-                    <MenuItem Header="Archivage"
-                              Height="35"
+                        <MenuItem Header="Archivage"
+                              Height="{Binding ElementName=gridMenu, Path=ActualHeight}"
                               Style="{StaticResource Sub_MenuItem}"
                               Click = "FxArchiving">
-                        <MenuItem.Icon>
-                            <Image Source="Resources/img_modify_en.png"
+                            <MenuItem.Icon>
+                                <Image Source="Resources/img_archive_en.png"
                                    Stretch="Uniform" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </MenuItem>
+
+                    <!--// PARAMETERS //-->
+                    <MenuItem x:Name="menuItemParameters" Header="PARAMETRE"
+                              Height="{Binding ElementName=gridMenu, Path=ActualHeight}"
+                              Style="{StaticResource Main_MenuItem}"
+                              Click = "FxParameters">
+                        <MenuItem.Icon>
+                            <Image Source="Resources/img_parameter_en.png"
+                               Stretch="Uniform" />
                         </MenuItem.Icon>
                     </MenuItem>
-                </MenuItem>
 
-                <!--// PARAMETERS //-->
-                <MenuItem x:Name="menuItemParameters" Header="PARAMETRE"
-                          Style="{StaticResource Main_MenuItem}"
-                          Click = "FxParameters">
-                    <MenuItem.Icon>
-                        <Image Source="Resources/img_parameter_en.png"
+                    <!--// ETALONNAGE //-->
+                    <MenuItem x:Name="menuItemDailyTest" Header="ETALONNAGE"
+                              Height="{Binding ElementName=gridMenu, Path=ActualHeight}"
+                              Style="{StaticResource Main_MenuItem}"
+                              Click = "FxSampling">
+                        <MenuItem.Icon>
+                            <Image Source="Resources/img_daily_test_en.png"
                                Stretch="Uniform" />
-                    </MenuItem.Icon>
-                </MenuItem>
+                        </MenuItem.Icon>
+                    </MenuItem>
 
-                <!--// ETALONNAGE //-->
-                <MenuItem x:Name="menuItemDailyTest" Header="ETALONNAGE"
-                          Style="{StaticResource Main_MenuItem}"
-                          Click = "FxSampling">
-                    <MenuItem.Icon>
-                        <Image Source="Resources/img_daily_test_en.png"
+                    <!--// CONNEXION //-->
+                    <MenuItem Header="CONNEXION"
+                              Height="{Binding ElementName=gridMenu, Path=ActualHeight}"
+                              Style="{StaticResource Main_MenuItem}"
+                              Click = "FxUserLogInOut">
+                        <MenuItem.Icon>
+                            <Image Source="Resources/img_log_in_en.png"
                                Stretch="Uniform" />
-                    </MenuItem.Icon>
-                </MenuItem>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </Menu>
+            </Grid>
 
-                <!--// CONNEXION //-->
-                <MenuItem Header="CONNEXION"
-                          Style="{StaticResource Main_MenuItem}"
-                          Click = "FxUserLogInOut">
-                    <MenuItem.Icon>
-                        <Image Source="Resources/img_log_in_en.png"
-                               Stretch="Uniform" />
-                    </MenuItem.Icon>
-                </MenuItem>
-            </Menu>
 
 
             <WrapPanel HorizontalAlignment="Right" VerticalAlignment="Center">
                 <TextBlock x:Name="labelUser"
                            Text="User name, Access Group"
-                           Foreground="#D3D7DC"
-                           FontFamily="Rubik"
-                           FontSize="13"
+                           Style="{DynamicResource Label1}"
                            VerticalAlignment="Center"
                            Margin="0,0,10,0" />
 
@@ -452,40 +449,34 @@
 
         <Grid Grid.Row="1" Margin="20,0,20,15">
 
-            <Border Background="#363435"
-                    BorderBrush="#363435"
+            <Border Background="{DynamicResource Backgroup_SubMain1}"
+                    BorderBrush="{DynamicResource Backgroup_SubMain1}"
                     BorderThickness="3"
                     CornerRadius="5">
 
                 <DockPanel LastChildFill = "True">
-                    <Frame DockPanel.Dock = "Left" x:Name="frameInfoCycle" NavigationUIVisibility="Hidden" Margin="5" Visibility="Collapsed" Width="600"/>
+                    <Frame DockPanel.Dock = "Left" x:Name="frameInfoCycle" NavigationUIVisibility="Hidden" Margin="5" Visibility="Collapsed" Width="{DynamicResource WidthFrameInfoCycle}"/>
                     <Frame x:Name="frameMain" NavigationUIVisibility="Hidden" Margin="5" ContentRendered="frameMain_ContentRendered"/>
                 </DockPanel>
             </Border>
         </Grid>
 
         <Grid Grid.Row="2">
-            <Border Background="#363435" />
+            <Border Background="{DynamicResource Backgroup_SubMain1}" />
             <TextBlock x:Name="labelSoftwareName"
-                           Text="Software name and version"
-                           Foreground="#D3D7DC"
-                           FontFamily="Rubik"
-                           FontSize="13"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Left"
-                           Margin="20,0,0,5" />
+                       Text="Software name and version"
+                       Style="{DynamicResource Label1}"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Left"
+                       Margin="20,0,0,5" />
             <TextBlock x:Name="labelCalibration"
                        Text=""
-                       Foreground="Orange"
-                       FontFamily="Rubik"
-                       FontSize="13"
+                       Style="{DynamicResource Label1}"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"/>
             <TextBlock x:Name="labelDateTime" 
                            Text="Date and time"
-                           Foreground="#D3D7DC"
-                           FontFamily="Rubik"
-                           FontSize="13"
+                       Style="{DynamicResource Label1}"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Right"
                            Margin="0,0,20,5" />

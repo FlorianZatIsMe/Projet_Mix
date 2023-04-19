@@ -88,7 +88,6 @@ namespace Main.Pages.SubCycle
         private readonly CycleWeightInfo cycleWeightInfo = new CycleWeightInfo();
         private readonly object[] cycleWeightValues;
 
-
         // Constructor to measure the mass of the empty bowl at the start of a cycle
         public CycleWeight(CycleStartInfo info_arg)
         {
@@ -96,7 +95,6 @@ namespace Main.Pages.SubCycle
             info = info_arg;
             frameMain = info.frameMain;
             message1 = message1EmptyBowl;
-
 
             /*
             info.frameMain.ContentRendered += new EventHandler(FrameMain_ContentRendered);
@@ -793,10 +791,11 @@ namespace Main.Pages.SubCycle
 
         private async void tbScan_LostFocus(object sender, RoutedEventArgs e)
         {
-            logger.Debug("TbScan_LostFocusAsync");
+            logger.Debug("TbScan_LostFocusAsync " + isScanningStep);
 
             if (isScanningStep)
             {
+                tbScan.LostFocus -= tbScan_LostFocus;
                 TextBox textbox = sender as TextBox;
 
                 while (!textbox.IsFocused)
@@ -805,16 +804,17 @@ namespace Main.Pages.SubCycle
                     textbox.Focus();
                     await Task.Delay(500);
                 }
+                tbScan.LostFocus += tbScan_LostFocus;
             }
         }
 
-        private void tbScan_KeyDown(object sender, KeyEventArgs e)
+        private async void tbScan_KeyDown(object sender, KeyEventArgs e)
         {
             logger.Debug("TbScan_KeyDown");
 
             TextBox textbox = sender as TextBox;
 
-            if (e.Key == Key.Enter)
+            if (e.Key == Key.Tab)
             {
                 if (recipeWeightValues[recipeWeightInfo.Barcode].ToString() == textbox.Text)
                 {
@@ -829,6 +829,18 @@ namespace Main.Pages.SubCycle
                         logger.Trace(recipeWeightValues[i].ToString());
                     }
                     MyMessageBox.Show(Settings.Default.CycleWeigh_IncorrectBarcode + " " + recipeWeightValues[recipeWeightInfo.Barcode].ToString());
+
+                    while (!frameMain.IsFocused)
+                    {
+                        frameMain.Focus();
+                        await Task.Delay(100);
+                    }
+
+                    while (!this.IsFocused)
+                    {
+                        this.Focus();
+                        await Task.Delay(100);
+                    }
                 }
             }
         }

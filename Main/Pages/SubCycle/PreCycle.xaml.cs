@@ -35,6 +35,7 @@ namespace Main.Pages.SubCycle
         private int finalWeightMin = 0;
         private int finalWeightMax = 0;
         private MainWindow mainWindow;
+        private bool test;
 
         private readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -49,27 +50,29 @@ namespace Main.Pages.SubCycle
             InitializeComponent();
             
             General.Update_RecipeNames(cbxRecipeName, ProgramNames, ProgramIDs, RecipeStatus.PROD);
+            SetFinalWeightRange(-1);
             isCbxRecipeAvailable = true;
             //MyDatabase.Disconnect();
         }
         private void FxOK(object sender, RoutedEventArgs e)
         {
             logger.Debug("FxOK");
+            tbOk.IsEnabled = false;
 
-            if (!VerifyFormatOF()) return;
+            if (!VerifyFormatOF()) goto End;
 
             try
             {
                 if (int.Parse(tbFinalWeight.Text, NumberStyles.AllowThousands) < finalWeightMin || int.Parse(tbFinalWeight.Text, NumberStyles.AllowThousands) > finalWeightMax)
                 {
                     MyMessageBox.Show("C'est pas bien ce que tu fais. Min: " + finalWeightMin.ToString() + ", Max: " + finalWeightMax.ToString());
-                    return;
+                    goto End;
                 }
             }
             catch (Exception)
             {
                 MyMessageBox.Show("C'est pas bien ce que tu fais. Min: " + finalWeightMin.ToString() + ", Max: " + finalWeightMax.ToString());
-                return;
+                goto End;
             }
 
             int recipeIndex = -1;
@@ -78,7 +81,7 @@ namespace Main.Pages.SubCycle
                 if (cbxRecipeName.SelectedIndex == -1)
                 {
                     MyMessageBox.Show("Veuillez sélectionner un code produit");
-                    return;
+                    goto End;
                 }
                 recipeIndex = cbxRecipeName.SelectedIndex;
             }
@@ -96,7 +99,7 @@ namespace Main.Pages.SubCycle
                 if (!isRecipeOk)
                 {
                     MyMessageBox.Show("Code produit incorrect");
-                    return;
+                    goto End;
                 }
             }
 
@@ -104,7 +107,7 @@ namespace Main.Pages.SubCycle
             {
                 MyMessageBox.Show("Drôle d'erreur");
                 logger.Error("Drôle d'erreur");
-                return;
+                goto End;
             }
 
 
@@ -121,6 +124,8 @@ namespace Main.Pages.SubCycle
             {
                 info.frameMain.Content = new CycleWeight(info);
             }
+        End:
+            tbOk.IsEnabled = true;
         }
 
         private bool VerifyFormatOF()
@@ -176,7 +181,7 @@ namespace Main.Pages.SubCycle
             }
         }
 
-        private bool SetFinalWeightRangeFromTextBox()
+        private bool SetFinalWeightRangeFromTextBox(bool informUser = true)
         {
             for (int i = 0; i < ProgramNames.Count; i++)
             {
@@ -188,7 +193,7 @@ namespace Main.Pages.SubCycle
             }
 
             SetFinalWeightRange(-1);
-            MyMessageBox.Show("Code produit incorrect");
+            if(informUser) MyMessageBox.Show("Code produit incorrect");
             return false;
         }
 
@@ -200,7 +205,7 @@ namespace Main.Pages.SubCycle
             {
                 finalWeightMin = 0;
                 finalWeightMax = 0;
-                lbFinalWeight.Text = "Masse cible (g) [" + finalWeightMin + " ; " + finalWeightMax + "]";
+                lbFinalWeight.Text = Settings.Default.PreCycle_FinalWeigh_Field + finalWeightMin + " ; " + finalWeightMax + "]";
                 return;
             }
 
@@ -218,7 +223,7 @@ namespace Main.Pages.SubCycle
                 finalWeightMin = 0;
                 finalWeightMax = 0;
             }
-            lbFinalWeight.Text = "Masse cible (g) [" + finalWeightMin + " ; " + finalWeightMax + "]";
+            lbFinalWeight.Text = Settings.Default.PreCycle_FinalWeigh_Field + finalWeightMin + " ; " + finalWeightMax + "]";
         }
 
         private void tgBarcodeOption_Click(object sender, RoutedEventArgs e)
@@ -229,10 +234,12 @@ namespace Main.Pages.SubCycle
             if ((bool)tgBarcodeOption.IsChecked)
             {
                 SetFinalWeightRangeFromComboBox();
+                tgBarcodeOption.Content = Settings.Default.PreCycle_TbList_TextBox;
             }
             else
             {
-                SetFinalWeightRangeFromTextBox();
+                SetFinalWeightRangeFromTextBox(false);
+                tgBarcodeOption.Content = Settings.Default.PreCycle_TbList_List;
             }
         }
 

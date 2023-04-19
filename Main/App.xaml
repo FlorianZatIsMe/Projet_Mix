@@ -2,40 +2,121 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Main"
-             xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib" 
+             xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
 
+        <!-- Colors -->
         <SolidColorBrush x:Key="Color_MouseOver" Color="#2D532D" />
-        <SolidColorBrush x:Key="Color_SubS_rbOn" Color="Green" />
-        <SolidColorBrush x:Key="Color_SubS_rbOff" Color="#3F3F3F" />
+        <SolidColorBrush x:Key="Color_SubS_rbOn" Color="#01A552" /> <!-- ToggleButtonStyle1, ButtonStyle1 -->
+        <SolidColorBrush x:Key="Color_SubS_rbOff" Color="#CECECE" /> <!-- ToggleButtonStyle1, ButtonStyle1 -->
+        <SolidColorBrush x:Key="FontColor_ButtonDisabled" Color="#7E7E7E" />
 
+        <SolidColorBrush x:Key="Backgroup_Main" Color="#EEF2F3"/>
+        <SolidColorBrush x:Key="Backgroup_SubMain1" Color="#E1E2E3"/>
+
+        <SolidColorBrush x:Key="Backgroup_Sequence" Color="#DBEED5"/>
+        <SolidColorBrush x:Key="Backgroup_SubSequence" Color="#CDE8C4"/>
+
+        <SolidColorBrush x:Key="Backgroup_MenuHighlighted" Color="#CECECE"/>
+        <SolidColorBrush x:Key="Backgroup_MenuDisabled" Color="#6D6769"/>
+        <SolidColorBrush x:Key="Backgroup_SubMenuHighlighted" Color="#CECECE"/>
+
+        <SolidColorBrush x:Key="MyFont1_Foreground" Color="#FF363435" />
+        <SolidColorBrush x:Key="ButtonForeground" Color="#EEF2F3" /> <!-- ToggleButtonStyle1, ButtonStyle1 -->
+
+        <SolidColorBrush x:Key="FontColor_Warning" Color="DarkOrange"/>
+        <SolidColorBrush x:Key="FontColor_Alarm" Color="DarkRed"/>
+
+        <SolidColorBrush x:Key="FontColor_Connected" Color="Green"/>
+        <SolidColorBrush x:Key="FontColor_Disconnected" Color="Red"/>
+
+        <SolidColorBrush x:Key="FontColor_BeforeChoice" Color="#EEF2F3"/>
+
+        <!-- Fonts -->
         <FontFamily x:Key="MyFont1">"Rubik Medium"</FontFamily>
-        <SolidColorBrush x:Key="MyFont1_Foreground" Color="#D3D7DC" />
-        <sys:Double x:Key="FontSize0">20</sys:Double>
-        <sys:Double x:Key="FontSize1">15</sys:Double>
-        <sys:Double x:Key="FontSize2">12</sys:Double>
 
-        <sys:Double x:Key="Radius1">5</sys:Double>
+        <sys:Double x:Key="FontSize_Title1">20</sys:Double>
+        <sys:Double x:Key="FontSize_Menu">20</sys:Double>
+
+        <sys:Double x:Key="FontSize_Label1">17</sys:Double>
+        <sys:Double x:Key="FontSize_Label2">25</sys:Double>
+        <sys:Double x:Key="FontSize_ListBox1">17</sys:Double>
+        <sys:Double x:Key="FontSize_DatePicker1">17</sys:Double>
+        <sys:Double x:Key="FontSize_CheckBox1">17</sys:Double> 
+        <sys:Double x:Key="FontSize_ComboBox1">17</sys:Double>
+        <sys:Double x:Key="FontSize_SubSeqRadioButton">17</sys:Double>
+        <sys:Double x:Key="FontSize_ToggleButtonStyle1">17</sys:Double>
+        <sys:Double x:Key="FontSize_ButtonStyle1">17</sys:Double>
+        <sys:Double x:Key="FontSize_TextBoxStyle1">17</sys:Double>
+        <sys:Double x:Key="FontSize_DataGrid1">17</sys:Double>
+        <sys:Double x:Key="FontSize_RadioButton1">17</sys:Double> 
+
+        <!-- Radius -->
+        <sys:Double x:Key="Radius1">5</sys:Double> <!-- TextBox -->
         <CornerRadius x:Key="CornerRadius1"  TopLeft="{StaticResource Radius1}" TopRight="{StaticResource Radius1}" BottomLeft="{StaticResource Radius1}" BottomRight="{StaticResource Radius1}"/>
 
-        <sys:Double x:Key="Radius2">15</sys:Double>
+        <sys:Double x:Key="Radius2">20</sys:Double>
         <CornerRadius x:Key="CornerRadius2"  TopLeft="{StaticResource Radius2}" TopRight="{StaticResource Radius2}" BottomLeft="{StaticResource Radius2}" BottomRight="{StaticResource Radius2}"/>
+
+        <!-- Numbers -->
+        <sys:Double x:Key="HeightBox1">40</sys:Double> <!-- ToggleButtonStyle1, ButtonStyle1 -->
+        <sys:Double x:Key="HeightSubMenu">45</sys:Double>
+        <GridLength x:Key="HeightMenu">95</GridLength>
+        <GridLength x:Key="HeightFooter">50</GridLength>
+        <sys:Double x:Key="WidthFrameInfoCycle">750</sys:Double> 
 
         <SolidColorBrush x:Key="TextBox.Static.Border" Color="Transparent"/>
         <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA"/>
         <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF569DE5"/>
         <SolidColorBrush x:Key="TextBox.Foreground" Color="Black"/>
-        <SolidColorBrush x:Key="TextBox.Correct.Background" Color="Transparent"/>
-        <SolidColorBrush x:Key="TextBox.Correct.Foreground" Color="White"/>
-        <SolidColorBrush x:Key="TextBox.Incorrect.Background" Color="Red"/>
-        <SolidColorBrush x:Key="TextBox.Incorrect.Foreground" Color="Yellow"/>
+        <SolidColorBrush x:Key="TextBox.Correct.Background" Color="White"/>
+        <SolidColorBrush x:Key="TextBox.Correct.Foreground" Color="#363435"/>
+        <SolidColorBrush x:Key="TextBox.Incorrect.Background" Color="White"/>
+        <SolidColorBrush x:Key="TextBox.Incorrect.Foreground" Color="#363435"/>
+        
         <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
         <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
         <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
 
         <SolidColorBrush x:Key="ComboBoxBackground" Color="White"/>
 
+        <Style x:Key="ButtonStyle1" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="{StaticResource Color_SubS_rbOn}"/>
+            <Setter Property="Foreground" Value="{StaticResource ButtonForeground}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Height" Value="{StaticResource HeightBox1}"/>
+            <Setter Property="FontSize" Value="{StaticResource FontSize_ButtonStyle1}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="{StaticResource CornerRadius2}" Height="{TemplateBinding Height}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="20, 0, 20, 0" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Color_SubS_rbOff}"/>
+                                <Setter Property="Foreground" Value="{StaticResource FontColor_ButtonDisabled}"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsEnabled" Value="True"/>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Color_MouseOver}"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style x:Key="FocusVisual1">
             <Setter Property="Control.Template">
                 <Setter.Value>
@@ -48,16 +129,17 @@
         
         <Style x:Key="SubSeqRadioButton" TargetType="{x:Type RadioButton}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual1}"/>
+            <Setter Property="Height" Value="{StaticResource HeightBox1}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type RadioButton}">
-                        <Border x:Name="border" BorderThickness="0" CornerRadius="{StaticResource CornerRadius2}" Height="30" Margin="0" MinWidth="70">
+                        <Border x:Name="border" BorderThickness="0" CornerRadius="{StaticResource CornerRadius2}" Height="{TemplateBinding Height}" Margin="0" MinWidth="70">
                             <Grid>
                                 <ContentPresenter x:Name="contentPresenter" 
-                                                  TextBlock.Foreground="{StaticResource MyFont1_Foreground}" 
+                                                  TextBlock.Foreground="{StaticResource ButtonForeground}" 
                                                   TextBlock.FontFamily="{StaticResource MyFont1}"
                                                   Focusable="False" 
-                                                  TextBlock.FontSize="{StaticResource FontSize1}" 
+                                                  TextBlock.FontSize="{StaticResource FontSize_SubSeqRadioButton}" 
                                                   HorizontalAlignment="Center" 
                                                   RecognizesAccessKey="True" 
                                                   SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
@@ -71,6 +153,7 @@
                             </Trigger>
                             <Trigger Property="IsChecked" Value="False">
                                 <Setter Property="Background" TargetName="border" Value="{StaticResource Color_SubS_rbOff}"/>
+                                <Setter TargetName="contentPresenter" Property="TextBlock.Foreground" Value="{StaticResource FontColor_ButtonDisabled}"/>
                             </Trigger>
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
@@ -89,11 +172,68 @@
             <Setter Property="IsChecked" Value="True"/>
         </Style>
 
+        <SolidColorBrush x:Key="TextBox.Static.Border1" Color="#FFABAdB3"/>
+        <SolidColorBrush x:Key="TextBox.MouseOver.Border1" Color="#FF7EB4EA"/>
+        <SolidColorBrush x:Key="TextBox.Focus.Border1" Color="#FF569DE5"/>
+        <Style x:Key="PasswordBoxStyle1" TargetType="{x:Type PasswordBox}">
+            <Setter Property="PasswordChar" Value="●"/>
+            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBox.Foreground}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height" Value="{StaticResource HeightBox1}"/>
+            <Setter Property="FontFamily" Value="{StaticResource MyFont1}"/>
+            <Setter Property="FontSize" Value="{StaticResource FontSize_TextBoxStyle1}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type PasswordBox}">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{StaticResource CornerRadius1}"
+                                SnapsToDevicePixels="True">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="5" Focusable="false" VerticalAlignment="Center" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.MouseOver.Border1}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.Focus.Border1}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
+                        <Condition Property="IsSelectionActive" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="Label1" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontFamily" Value="{StaticResource MyFont1}"/>
+            <Setter Property="FontSize" Value="{StaticResource FontSize_Label1}"/>
+            <Setter Property="Foreground" Value="{StaticResource MyFont1_Foreground}"/>
+        </Style>
+
         <Style x:Key="TextBoxStyle1" TargetType="{x:Type TextBox}">
             <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
             <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
             <Setter Property="Foreground" Value="{StaticResource TextBox.Foreground}"/>
             <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height" Value="{StaticResource HeightBox1}"/>
+            <Setter Property="FontFamily" Value="{StaticResource MyFont1}"/>
+            <Setter Property="FontSize" Value="{StaticResource FontSize_TextBoxStyle1}"/>
 
             <Setter Property="Template">
                 <Setter.Value>
@@ -104,7 +244,7 @@
                                 BorderThickness="{TemplateBinding BorderThickness}" 
                                 CornerRadius="{StaticResource CornerRadius1}"
                                 SnapsToDevicePixels="True">
-                            <ScrollViewer x:Name="PART_ContentHost" Margin="5" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="5" Focusable="false" VerticalAlignment="Center" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsEnabled" Value="false">
@@ -135,13 +275,15 @@
             <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
             <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
             <Setter Property="Foreground" Value="{StaticResource TextBox.Foreground}"/>
+            <Setter Property="Height" Value="{StaticResource HeightBox1}"/>
+            <Setter Property="FontSize" Value="{StaticResource FontSize_TextBoxStyle1}"/>
             <Setter Property="BorderThickness" Value="1"/>
 
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBoxBase}">
                         <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{StaticResource CornerRadius1}" SnapsToDevicePixels="True">
-                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" Margin="30,5,5,5" VerticalScrollBarVisibility="Hidden"/>
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" Margin="60,5,5,5" VerticalScrollBarVisibility="Hidden"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsEnabled" Value="false">
@@ -171,25 +313,27 @@
         <Style x:Key="ToggleButtonStyle1" TargetType="{x:Type ToggleButton}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual1}"/>
             <Setter Property="Background" Value="{StaticResource Color_SubS_rbOff}"/>
-            <Setter Property="Foreground" Value="{StaticResource MyFont1_Foreground}"/>
+            <Setter Property="Foreground" Value="{StaticResource FontColor_ButtonDisabled}"/>
             <Setter Property="FontFamily" Value="{StaticResource MyFont1}"/>
-            <Setter Property="FontSize" Value="{StaticResource FontSize2}"/>
+            <Setter Property="FontSize" Value="{StaticResource FontSize_ToggleButtonStyle1}"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Height" Value="30"/>
+            <Setter Property="Height" Value="{StaticResource HeightBox1}"/>
+            <Setter Property="MinWidth" Value="{StaticResource HeightBox1}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ToggleButton}">
-                        <Border x:Name="border" MinWidth="0" Height="{TemplateBinding Height}" CornerRadius="{StaticResource CornerRadius2}" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" SnapsToDevicePixels="true">
+                        <Border x:Name="border" MinWidth="{TemplateBinding MinWidth}" Height="{TemplateBinding Height}" CornerRadius="{StaticResource CornerRadius2}" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" SnapsToDevicePixels="true">
                             <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="10,0,10,0" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="true">
                                 <Setter Property="Background" TargetName="border" Value="{StaticResource Color_SubS_rbOn}"/>
+                                <Setter Property="Foreground" Value="{StaticResource ButtonForeground}"/>
                             </Trigger>
-                            <!--  <Trigger Property="IsMouseOver" Value="true">
-                              <Setter Property="Background" TargetName="border" Value="{StaticResource Color_MouseOver}"/> 
+                            <!--<Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Color_MouseOver}"/>
                             </Trigger> -->
                             <Trigger Property="IsEnabled" Value="false">
                                 <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
@@ -201,13 +345,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-
-
-
-
-
-
 
         <LinearGradientBrush x:Key="ComboBox.Static.Background" EndPoint="0,1" StartPoint="0,0">
             <GradientStop Color="#FFF0F0F0" Offset="0.0"/>
@@ -394,7 +531,7 @@
                                     <Condition Binding="{Binding SelectedValue, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="{x:Null}"/>
                                 </MultiDataTrigger.Conditions>
                                 <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource Color_SubS_rbOn}"/>
-                                <Setter Property="Foreground" Value="{StaticResource MyFont1_Foreground}"/>
+                                <Setter Property="Foreground" Value="{StaticResource FontColor_BeforeChoice}"/>
                                 <Setter Property="Fill" TargetName="arrow" Value="{StaticResource MyFont1_Foreground}"/>
                                 <Setter Property="BorderBrush" TargetName="templateRoot"  Value="Transparent"/>
                             </MultiDataTrigger>
@@ -405,7 +542,7 @@
                                     <Condition Binding="{Binding SelectedValue, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="{x:Null}"/>
                                 </MultiDataTrigger.Conditions>
                                 <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource Color_MouseOver}"/>
-                                <Setter Property="Foreground" Value="{StaticResource MyFont1_Foreground}"/>
+                                <Setter Property="Foreground" Value="{StaticResource FontColor_BeforeChoice}"/>
                                 <Setter Property="Fill" TargetName="arrow" Value="White"/>
                                 <Setter Property="BorderBrush" TargetName="templateRoot"  Value="Transparent"/>
                             </MultiDataTrigger>
@@ -515,7 +652,7 @@
 
         <Style x:Key="ComboBoxStyle1" TargetType="{x:Type ComboBox}">
 
-            <Setter Property="Height" Value="30"/>
+            <Setter Property="Height" Value="{StaticResource HeightBox1}"/>
 
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
             <Setter Property="Background" Value="{StaticResource ComboBoxBackground}"/>
@@ -528,6 +665,7 @@
             <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
             <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
             <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="FontSize" Value="{StaticResource FontSize_ComboBox1}"/>
             <Setter Property="Template" Value="{StaticResource ComboBoxTemplate}"/>
             <Style.Triggers>
                 <Trigger Property="IsEditable" Value="true">

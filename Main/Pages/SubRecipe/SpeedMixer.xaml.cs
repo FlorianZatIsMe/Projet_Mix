@@ -167,11 +167,11 @@ namespace Main.Pages.SubRecipe
 
                 if (id < 9)
                 {
-                    speeds[id + 1].Visibility = Visibility.Hidden;
-                    times[id + 1].Visibility = Visibility.Hidden;
-                    pressures[id + 1].Visibility = Visibility.Hidden;
+                    speeds[id + 1].Visibility = Visibility.Collapsed;
+                    times[id + 1].Visibility = Visibility.Collapsed;
+                    pressures[id + 1].Visibility = Visibility.Collapsed;
                     //wrapPanels[id].Visibility = Visibility.Collapsed;
-                    toggleButtons[id + 1].Visibility = Visibility.Hidden;
+                    toggleButtons[id + 1].Visibility = Visibility.Collapsed;
                     toggleButtons[id + 1].IsChecked = false;
                 }
             }
@@ -214,7 +214,7 @@ namespace Main.Pages.SubRecipe
                     pressures[id + 1].IsEnabled = false;
                     speeds[id + 1].Visibility = Visibility.Visible;
                     times[id + 1].Visibility = Visibility.Visible;
-                    pressures[id + 1].Visibility = (bool)cbVacuum.IsChecked ? Visibility.Visible : Visibility.Hidden;
+                    pressures[id + 1].Visibility = (bool)cbVacuum.IsChecked ? Visibility.Visible : Visibility.Collapsed;
                     //wrapPanels[id].Visibility = Visibility.Visible;
                 }
 
@@ -660,17 +660,18 @@ namespace Main.Pages.SubRecipe
 
         void SetPressureVisibility(bool isVisible)
         {
-            Visibility visibility = isVisible ? Visibility.Visible : Visibility.Hidden;
+            Visibility visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
 
             if (labelPressureUnit == null) return;
 
             labelPressureUnit.Visibility = visibility;
             cbxPressureUnit.Visibility = visibility;
 
-            labelPressureMin.Visibility = visibility;
-            tbPressureMin.Visibility = visibility;
-            labelPressureMax.Visibility = visibility;
-            tbPressureMax.Visibility = visibility;
+            gridPressure.Visibility = visibility;
+            //labelPressureMin.Visibility = visibility;
+            //tbPressureMin.Visibility = visibility;
+            //labelPressureMax.Visibility = visibility;
+            //tbPressureMax.Visibility = visibility;
 
             labelPressure.Visibility = visibility;
             pressures[0].Visibility = visibility;

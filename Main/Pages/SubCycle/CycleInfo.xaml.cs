@@ -182,14 +182,14 @@ namespace Main.Pages.SubCycle
 
             TextBlock productName = new TextBlock
             {
-                Foreground = Brushes.Wheat,
+                Style = (Style)this.FindResource("Label1"),
                 Text = cycleWeightInfo.Descriptions[cycleWeightInfo.Product] + ": " +
                 recipeWeight[recipeWeightInfo.Name].ToString()
             };
 
             TextBlock min = new TextBlock
             {
-                Foreground = Brushes.Wheat,
+                Style = (Style)this.FindResource("Label1"),
                 Margin = new Thickness(20, 0, 0, 0),
                 Text = cycleWeightInfo.Descriptions[cycleWeightInfo.Min] + ": " + 
                 Math.Round(cycleWeightInfo.GetMin(recipeWeight, finalWeight), 
@@ -199,7 +199,7 @@ namespace Main.Pages.SubCycle
 
             TextBlock max = new TextBlock
             {
-                Foreground = Brushes.Wheat,
+                Style = (Style)this.FindResource("Label1"),
                 Margin = new Thickness(20, 0, 0, 0),
                 Text = cycleWeightInfo.Descriptions[cycleWeightInfo.Max] + ": " +
                 Math.Round(cycleWeightInfo.GetMax(recipeWeight, finalWeight),
@@ -209,7 +209,7 @@ namespace Main.Pages.SubCycle
 
             TextBlock actualWeight = new TextBlock
             {
-                Foreground = Brushes.Wheat,
+                Style = (Style)this.FindResource("Label1"),
                 Margin = new Thickness(20, 0, 0, 0),
                 Text = cycleWeightInfo.Descriptions[cycleWeightInfo.ActualValue] + ": -"
             };
@@ -237,13 +237,13 @@ namespace Main.Pages.SubCycle
 
             TextBlock programName = new TextBlock
             {
-                Foreground = Brushes.Wheat,
+                Style = (Style)this.FindResource("Label1"),
                 Text = cycleSpeedMixerInfo.Descriptions[cycleSpeedMixerInfo.Name] + ": " + recipe[recipeSpeedMixerInfo.Name].ToString()
             };
 
             TextBlock status = new TextBlock
             {
-                Foreground = Brushes.Wheat,
+                Style = (Style)this.FindResource("Label1"),
                 Margin = new Thickness(20, 0, 0, 0),
                 Text = Settings.Default.CycleInfo_Mix_StatusField + ": " + Settings.Default.CycleInfo_Mix_StatusWaiting
             };
@@ -280,7 +280,7 @@ namespace Main.Pages.SubCycle
 
             TextBlock actualWeight = new TextBlock
             {
-                Foreground = Brushes.Wheat,
+                Style = (Style)this.FindResource("Label1"),
                 //            actualWeight.Margin = new Thickness(0, 10, 0, 0);
                 Text = rowText
             };

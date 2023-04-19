@@ -44,7 +44,7 @@ namespace Main.Pages
             updateAlarmTimer = new System.Timers.Timer
             {
                 Interval = Settings.Default.ActiveAlarms_updateAlarmTimer_Interval,
-                AutoReset = false
+                AutoReset = true
             };
 
             updateAlarmTimer.Elapsed += UpdateAlarmTimer_OnTimedEvent;
@@ -134,6 +134,7 @@ namespace Main.Pages
             if (frameMain.Content != this)
             {
                 frameMain.ContentRendered -= FrameMain_ContentRendered;
+                updateAlarmTimer.Stop();
                 updateAlarmTimer.Dispose();
             }
 
@@ -143,7 +144,7 @@ namespace Main.Pages
             logger.Debug("UpdateAlarmTimer_OnTimedEvent");
 
             LoadAlarms();
-            if(updateAlarmTimer != null) updateAlarmTimer.Enabled = true;
+            //if(updateAlarmTimer != null) updateAlarmTimer.Enabled = true;
         }
     }
 }

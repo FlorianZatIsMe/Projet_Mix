@@ -1474,7 +1474,15 @@ namespace Main
 
             MessageBoxResult boxResult = MyMessageBox.Show("L'impression a été lancé, pouvez-vous confirmer ?", MessageBoxButton.YesNo);
 
-            if (!p.CloseMainWindow()) p.Kill();
+            try
+            {
+                if (!p.CloseMainWindow()) p.Kill();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+                MyMessageBox.Show(ex.Message);
+            }
 
             if (boxResult == MessageBoxResult.No)
             {

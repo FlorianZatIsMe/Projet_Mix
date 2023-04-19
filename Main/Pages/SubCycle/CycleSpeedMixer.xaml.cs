@@ -26,6 +26,19 @@ using Message;
 
 namespace Main.Pages.SubCycle
 {
+    public class CycleSpeedMixerViewModel : DependencyObject
+    {
+        public static readonly DependencyProperty pressureUnitProperty =
+            DependencyProperty.Register("pressureUnit", typeof(string), typeof(CycleSpeedMixerViewModel), new PropertyMetadata(string.Empty));
+
+        public string pressureUnit
+        {
+            get { return (string)GetValue(pressureUnitProperty); }
+            set { SetValue(pressureUnitProperty, value); }
+        }
+    }
+
+
     /* class CycleSpeedMixer
      * 
      * Description: Classe contrôlant une séquence de SpeedMixer
@@ -80,6 +93,7 @@ namespace Main.Pages.SubCycle
         private bool disposedValue;
         private bool[] status = new bool[8];
         private CycleSpeedMixerInfo cycleSpeedMixerInfo = new CycleSpeedMixerInfo();
+        private readonly CycleSpeedMixerViewModel viewModel = new CycleSpeedMixerViewModel();
 
         private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -142,6 +156,7 @@ namespace Main.Pages.SubCycle
             General.CurrentCycleInfo.UpdateSequenceNumber();
 
             InitializeComponent();
+            this.DataContext = viewModel;
 
             // On affiche sur le panneau d'information que la séquence est en cours
             General.CurrentCycleInfo.UpdateCurrentSpeedMixerInfo(new string[] { Settings.Default.CycleInfo_Mix_StatusOnGoing });
@@ -154,6 +169,8 @@ namespace Main.Pages.SubCycle
             // A CORRIGER : IF RESULT IS FALSE
             t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow_new(new RecipeSpeedMixerInfo(), subCycle.id); });
             currentRecipeValues = (object[])t.Result;
+
+            viewModel.pressureUnit = currentRecipeValues[cycleSpeedMixerInfo.PressureUnit].ToString();
 
             if (currentRecipeValues == null) // S'il n'y a pas eu d'erreur...
             {

@@ -53,14 +53,18 @@ namespace Main
         private bool isCycleStarted = false;
         private bool isAlarmActive = false;
         private bool wasActTimeUpdated = false;
+        private int archiveCount = 0;
         private readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private bool flag = false;
+        private void test()
+        {
+            MyMessageBox.Show("test-1");
+        }
 
         public MainWindow()
         {
 #if DEBUG
-            LogManager.Configuration.Variables["myLevel"] = "Fatal";
+            LogManager.Configuration.Variables["myLevel"] = "Trace";
             LogManager.Configuration.Variables["isRelease"] = "true";
 #else
             LogManager.Configuration.Variables["myLevel"] = "Error";
@@ -99,8 +103,49 @@ namespace Main
 
             MyMessageBox.SetParentWindow(this);
             MyMessageBox.SetParentWindow(this, this.Window_Deactivated);
+
+            MyDatabase.Initialize(new Database.IniInfo()
+            {
+                CycleFinalWeight_g_Unit = Settings.Default.CycleFinalWeight_g_Unit,
+                CycleFinalWeight_g_Conversion = Settings.Default.CycleFinalWeight_g_Conversion,
+                RecipeWeight_mgG_Unit = Settings.Default.RecipeWeight_mgG_Unit,
+                RecipeWeight_mgG_Conversion = Settings.Default.RecipeWeight_mgG_Conversion,
+                RecipeWeight_gG_Unit = Settings.Default.RecipeWeight_gG_Unit,
+                RecipeWeight_gG_Conversion = Settings.Default.RecipeWeight_gG_Conversion,
+                Window = this
+            });
+
             AlarmManagement.ActiveAlarmEvent += ActiveAlarmEvent;
             AlarmManagement.InactiveAlarmEvent += InactiveAlarmEvent;
+            /*
+            Thread.CurrentThread.Name = "Main";
+            MyDatabase.test();
+            var task = Task.Run(() => MyDatabase.test());
+            //task.ContinueWith(_ => MessageBox.Show("Salut"), TaskScheduler.FromCurrentSynchronizationContext());
+
+
+
+            //Task task = new Task(() => MyDatabase.test());
+            //task.Start();
+            MessageBox.Show("Salut " + Thread.CurrentThread.Name);
+            
+            while(true)
+            {
+                Thread.Sleep(500);
+            }*/
+
+            /*
+            Task task = new Task(() =>
+            {
+                Task t = new Task(() =>
+                {
+                    MyMessageBox.Show("Task2");
+                    test();
+                });
+                t.Start();
+            });
+            task.Start();
+            MyMessageBox.Show("Salut");//*/
 
             try
             {
@@ -154,17 +199,6 @@ namespace Main
         {
             while (!isWindowLoaded) await Task.Delay(Settings.Default.Main_WaitPageLoadedDelay);
 
-            MyDatabase.Initialize(new Database.IniInfo()
-            {
-                CycleFinalWeight_g_Unit = Settings.Default.CycleFinalWeight_g_Unit,
-                CycleFinalWeight_g_Conversion = Settings.Default.CycleFinalWeight_g_Conversion,
-                RecipeWeight_mgG_Unit = Settings.Default.RecipeWeight_mgG_Unit,
-                RecipeWeight_mgG_Conversion = Settings.Default.RecipeWeight_mgG_Conversion,
-                RecipeWeight_gG_Unit = Settings.Default.RecipeWeight_gG_Unit,
-                RecipeWeight_gG_Conversion = Settings.Default.RecipeWeight_gG_Conversion,
-                Window = this
-            });
-
             AlarmManagement.Initialize(new Alarm_Management.IniInfo() { AuditTrail_SystemUsername = Settings.Default.General_SystemUsername, Window = this });
 
             // We connect to the balance through a task to avoid a freeze of the application and allow the user to access the OS
@@ -194,7 +228,7 @@ namespace Main
 
             Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetRows_new(readInfo, values, 1); });
             List<object[]> tableInfos = (List<object[]>)t.Result;
-
+                        
             if (tableInfos == null || tableInfos.Count == 0)
             {
                 MyMessageBox.Show("C'est pas bien de ne pas se connecter à la base de données");
@@ -270,15 +304,19 @@ namespace Main
                 if (ExecuteBackupAuto()) General.NextBackupTime = General.NextBackupTime.AddDays(1);
             }
 
-            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetRowCount((new AuditTrailInfo()).TabName); });
-            int nAuditTailRows = (int)t.Result;
-
-            if (nAuditTailRows > Settings.Default.Archive_RowNumberTrigger)
+            if (archiveCount == 0)
             {
-                logger.Debug(nAuditTailRows.ToString());
-                MyMessageBox.Show(nAuditTailRows.ToString());
-                if (!Pages.Archiving.ExecuteFullArchive()) MyMessageBox.Show("Archivage échoué, merci de contacter un administrateur du système");
+                Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetRowCount((new AuditTrailInfo()).TabName); });
+                int nAuditTailRows = (int)t.Result;
+
+                if (nAuditTailRows > Settings.Default.Archive_RowNumberTrigger)
+                {
+                    logger.Debug(nAuditTailRows.ToString());
+                    MyMessageBox.Show(nAuditTailRows.ToString());
+                    if (!Pages.Archiving.ExecuteFullArchive()) MyMessageBox.Show("Archivage échoué, merci de contacter un administrateur du système");
+                }
             }
+            archiveCount = (archiveCount + 1) % 3600;
 
             if (General.currentRole != AccessTableInfo.NoneRole && DateTime.Now.AddMinutes(-1 * Settings.Default.AutoLogOff_min).CompareTo(General.lastActTime) > 0)
             {
@@ -303,7 +341,7 @@ namespace Main
                             if (labelCalibration.Text != "Calibration de La balance expirée depuis le " + nextCalibDate.ToString(Settings.Default.Date_Format_Read))
                             {
                                 labelCalibration.Text = "Calibration de La balance expirée depuis le " + nextCalibDate.ToString(Settings.Default.Date_Format_Read);
-                                labelCalibration.Foreground = Brushes.Orange;
+                                labelCalibration.Foreground = (SolidColorBrush)Application.Current.FindResource("FontColor_Alarm");// Brushes.Orange;
                             }
                         }
                         else if (nextCalibDate.CompareTo(DateTime.Now.AddDays(15)) < 0)
@@ -311,7 +349,7 @@ namespace Main
                             if (labelCalibration.Text != "La balance devra être calibrée avant le " + nextCalibDate.ToString(Settings.Default.Date_Format_Read))
                             {
                                 labelCalibration.Text = "La balance devra être calibrée avant le " + nextCalibDate.ToString(Settings.Default.Date_Format_Read);
-                                labelCalibration.Foreground = Brushes.Yellow;
+                                labelCalibration.Foreground = (SolidColorBrush)Application.Current.FindResource("FontColor_Warning"); //Brushes.Yellow;
                             }
                         }
                         else
@@ -638,7 +676,7 @@ namespace Main
         {
             await Task.Delay(100);
             logger.Debug("Window_Deactivated");
-            this.Activate();
+            //this.Activate();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

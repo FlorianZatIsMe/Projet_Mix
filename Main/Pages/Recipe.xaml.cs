@@ -274,6 +274,12 @@ namespace Main.Pages
                 }
             }
 
+            if (seqInfoList.Count == 1)
+            {
+                MyMessageBox.Show(Settings.Default.Recipe_Info_NoSubRecipe);
+                return false;
+            }
+
             // Si toutes les séquences ne sont pas correctement renseignées, on sort de là
             if (!isFormatOk) {
                 MyMessageBox.Show(Settings.Default.Recipe_Info_IncorrectFormat);
@@ -312,7 +318,11 @@ namespace Main.Pages
                 else break;
             }
             //if (isRecordOk) isRecordOk = (bool)MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(seqInfoList[0]); }).Result;
-            if (isRecordOk) isRecordOk = (bool)MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(tSeqInfoList[0].Item1, tSeqInfoList[0].Item2); }).Result;
+            if (isRecordOk)
+            {
+                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(tSeqInfoList[0].Item1, tSeqInfoList[0].Item2); });
+                isRecordOk = (bool)t.Result;
+            }
 
             if (isRecordOk) {
                 if (new_version == 1) MyMessageBox.Show(Settings.Default.Recipe_Info_RecipeCreated);
@@ -595,8 +605,10 @@ namespace Main.Pages
         private void ButtonCreate_Click(object sender, RoutedEventArgs e)
         {
             logger.Debug("ButtonCreate_Click");
-
+            Button button = sender as Button;
+            button.IsEnabled = false;
             Create_NewRecipe(tbRecipeNameNew.Text, 1, RecipeStatus.DRAFT);
+            button.IsEnabled = true;
         }
         private async void CbxPgmToModify_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -622,6 +634,8 @@ namespace Main.Pages
         private void ButtonModify_Click(object sender, RoutedEventArgs e)
         {
             logger.Debug("ButtonModify_Click");
+            Button button = sender as Button;
+            button.IsEnabled = false;
 
             int currentIndex = cbxPgmToModify.SelectedIndex;
             Task<object> t;
@@ -725,10 +739,13 @@ namespace Main.Pages
             {
                 MyMessageBox.Show(Settings.Default.Recipe_Error_IncorrectStatus);
             }
+            button.IsEnabled = true;
         }
         private void ButtonActDel_Click(object sender, RoutedEventArgs e)
         {
             logger.Debug("ButtonActDel_Click");
+            Button button = sender as Button;
+            button.IsEnabled = false;
 
             int currentIndex = cbxPgmToActDelete.SelectedIndex;
             RecipeInfo recipeInfo = new RecipeInfo();
@@ -838,6 +855,7 @@ namespace Main.Pages
                 logger.Error(Settings.Default.Recipe_DelAct_Error_NoRadiobt);
                 MyMessageBox.Show(Settings.Default.Recipe_DelAct_Error_NoRadiobt);
             }
+            button.IsEnabled = true;
         }
         private void CbxAddDefaultText(ComboBox comboBox, int index)
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Main.Properties;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Driver_MODBUS;
+using Driver_Ethernet_Balance;
+using Driver_RS232_Pump;
+using Driver_ColdTrap;
 
 namespace Main.Pages
 {
@@ -20,10 +25,49 @@ namespace Main.Pages
     /// </summary>
     public partial class Status : Page
     {
-        public int test = 42;
+        private readonly System.Timers.Timer timer;
+
         public Status()
         {
             InitializeComponent();
+            UpdateLabels();
+
+            // Initialisation des timers
+            timer = new System.Timers.Timer
+            {
+                Interval = Settings.Default.Status_timer_Interval,
+                AutoReset = true
+            };
+            timer.Elapsed += Timer_OnTimedEvent;
+            timer.Start();
+        }
+
+        private void Timer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                UpdateLabels();
+            });
+        }
+
+        private void UpdateLabels()
+        {
+            labelSpeedmixerStatus.Text = SpeedMixerModbus.IsConnected() ? "Connecté" : "Déconnecté";
+            labelBalanceStatus.Text = Balance.IsConnected() ? "Connecté" : "Déconnecté";
+            labelPumpStatus.Text = RS232Pump.IsOpen() ? "Connecté" : "Déconnecté";
+            //labelColtTrapStatus.Text = ColdTrap.IsConnected() ? "Connecté" : "Déconnecté";
+
+            labelSpeedmixerStatus.Foreground = SpeedMixerModbus.IsConnected() ?
+            (SolidColorBrush)Application.Current.FindResource("FontColor_Connected") :
+            (SolidColorBrush)Application.Current.FindResource("FontColor_Disconnected");
+
+            labelBalanceStatus.Foreground = Balance.IsConnected() ?
+            (SolidColorBrush)Application.Current.FindResource("FontColor_Connected") :
+            (SolidColorBrush)Application.Current.FindResource("FontColor_Disconnected");
+
+            labelPumpStatus.Foreground = RS232Pump.IsOpen() ?
+            (SolidColorBrush)Application.Current.FindResource("FontColor_Connected") :
+            (SolidColorBrush)Application.Current.FindResource("FontColor_Disconnected");
         }
     }
 }

@@ -102,6 +102,11 @@ namespace Alarm_Management
 
         //private static Window mainWindow;
 
+        static void test()
+        {
+            logger.Fatal("test alarm");
+        }
+
         static AlarmManagement()
         {
             logger.Debug("Start");
