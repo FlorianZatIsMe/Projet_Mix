@@ -9,18 +9,24 @@ using System.Windows;
 
 namespace Driver_RS232
 {
+    public struct IniInfo
+    {
+        public Window Window;
+    }
+
     public class RS232
     {
         private readonly SerialPort serialPort;
         //private string data;
         private string lastCommand;
-        private bool isFree;
         private readonly int nAlarms = 1;
         private bool[] areAlarmActive;
         private bool isRS232Active;
         private readonly System.Timers.Timer scanAlarmTimer;
         private readonly int alarmConnectId1;
         private readonly int alarmConnectId2;
+        private readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
 
         public RS232(SerialPort serialPort_arg, int alarmConnectId1_arg, int alarmConnectId2_arg, SerialDataReceivedEventHandler target)
         {
@@ -30,7 +36,6 @@ namespace Driver_RS232
 
             areAlarmActive = new bool[nAlarms];
             isRS232Active = false;
-            isFree = true;
 
             serialPort.DataReceived += target;
 
@@ -63,14 +68,12 @@ namespace Driver_RS232
 
             scanAlarmTimer.Enabled = true;
         }
-        public void Initialize()
+        public void Initialize(/*IniInfo info_arg*/)
         {
             Open();
+            //info = info_arg;
             isRS232Active = true;
         }
-        public void BlockUse() { isFree = false; }
-        public void FreeUse() { isFree = true; }
-        public bool IsFree() { return isFree; }
         private void Open()
         {
             try { serialPort.Open(); }
@@ -85,37 +88,16 @@ namespace Driver_RS232
             bool result = false;
             try
             {
-                if (!isFree)
-                {
-                    lastCommand = command;
-                    serialPort.WriteLine(command);
-                    result = true;
-                }
-                else
-                {
-                    MessageBox.Show("Connexion bloqué");
-                }
+                lastCommand = command;
+                serialPort.WriteLine(command);
+                result = true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                logger.Error(ex.Message);
             }
             return result;
         }
         public string GetLastCommand() { return lastCommand; }
-/*        public string GetData()
-        {
-            return data;
-        }
-        private void RecivedData(object sender, SerialDataReceivedEventArgs e)
-        {
-            data = serialPort.ReadLine();
-
-            if (lastCommand == "!C802 0" || lastCommand == "!C802 1")
-            {
-                // Il va falloir faire quelque chose s'il y une erreur: data != *C802 0
-                //MessageBox.Show(data);
-            }
-        }*/
     }
 }

@@ -1,0 +1,505 @@
+### YamlMime:ManagedReference
+items:
+- uid: Database.Column
+  commentId: T:Database.Column
+  id: Column
+  parent: Database
+  children:
+  - Database.Column.#ctor(System.String,System.String)
+  - Database.Column.DisplayName
+  - Database.Column.Id
+  - Database.Column.Value
+  langs:
+  - csharp
+  - vb
+  name: Column
+  nameWithType: Column
+  fullName: Database.Column
+  type: Class
+  source:
+    id: Column
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 12
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nClass containing the information of a column of a database table\n<p>Creation revision: 001</p>\n"
+  example: []
+  syntax:
+    content: public class Column
+    content.vb: Public Class Column
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Database.Column.Id
+  commentId: P:Database.Column.Id
+  id: Id
+  parent: Database.Column
+  langs:
+  - csharp
+  - vb
+  name: Id
+  nameWithType: Column.Id
+  fullName: Database.Column.Id
+  type: Property
+  source:
+    id: Id
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 15
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public string Id { get; }
+    parameters: []
+    return:
+      type: System.String
+      description: Name of the column (readonly)
+    content.vb: Public ReadOnly Property Id As String
+  overload: Database.Column.Id*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.Column.DisplayName
+  commentId: P:Database.Column.DisplayName
+  id: DisplayName
+  parent: Database.Column
+  langs:
+  - csharp
+  - vb
+  name: DisplayName
+  nameWithType: Column.DisplayName
+  fullName: Database.Column.DisplayName
+  type: Property
+  source:
+    id: DisplayName
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 17
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public string DisplayName { get; }
+    parameters: []
+    return:
+      type: System.String
+      description: Name of the colummn to be displayed by the application (readonly)
+    content.vb: Public ReadOnly Property DisplayName As String
+  overload: Database.Column.DisplayName*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.Column.Value
+  commentId: P:Database.Column.Value
+  id: Value
+  parent: Database.Column
+  langs:
+  - csharp
+  - vb
+  name: Value
+  nameWithType: Column.Value
+  fullName: Database.Column.Value
+  type: Property
+  source:
+    id: Value
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 19
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public string Value { get; set; }
+    parameters: []
+    return:
+      type: System.String
+      description: Value of the row
+    content.vb: Public Property Value As String
+  overload: Database.Column.Value*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Database.Column.#ctor(System.String,System.String)
+  commentId: M:Database.Column.#ctor(System.String,System.String)
+  id: '#ctor(System.String,System.String)'
+  parent: Database.Column
+  langs:
+  - csharp
+  - vb
+  name: Column(String, String)
+  nameWithType: Column.Column(String, String)
+  fullName: Database.Column.Column(System.String, System.String)
+  type: Constructor
+  source:
+    id: .ctor
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 25
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nSets the value of the name and display name.\n"
+  example: []
+  syntax:
+    content: public Column(string Id_arg = null, string DisplayName_arg = null)
+    parameters:
+    - id: Id_arg
+      type: System.String
+      description: Value of the name of the column to be set
+    - id: DisplayName_arg
+      type: System.String
+      description: Value of the display name of the column to be set
+    content.vb: Public Sub New(Id_arg As String = Nothing, DisplayName_arg As String = Nothing)
+  overload: Database.Column.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Database
+  commentId: N:Database
+  name: Database
+  nameWithType: Database
+  fullName: Database
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Database.Column.Id*
+  commentId: Overload:Database.Column.Id
+  name: Id
+  nameWithType: Column.Id
+  fullName: Database.Column.Id
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Database.Column.DisplayName*
+  commentId: Overload:Database.Column.DisplayName
+  name: DisplayName
+  nameWithType: Column.DisplayName
+  fullName: Database.Column.DisplayName
+- uid: Database.Column.Value*
+  commentId: Overload:Database.Column.Value
+  name: Value
+  nameWithType: Column.Value
+  fullName: Database.Column.Value
+- uid: Database.Column.#ctor*
+  commentId: Overload:Database.Column.#ctor
+  name: Column
+  nameWithType: Column.Column
+  fullName: Database.Column.Column

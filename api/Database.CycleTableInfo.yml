@@ -1,0 +1,1558 @@
+### YamlMime:ManagedReference
+items:
+- uid: Database.CycleTableInfo
+  commentId: T:Database.CycleTableInfo
+  id: CycleTableInfo
+  parent: Database
+  children:
+  - Database.CycleTableInfo.#ctor
+  - Database.CycleTableInfo.BatchNumber
+  - Database.CycleTableInfo.bowlWeight
+  - Database.CycleTableInfo.Columns
+  - Database.CycleTableInfo.Comment
+  - Database.CycleTableInfo.DateTimeEndCycle
+  - Database.CycleTableInfo.DateTimeStartCycle
+  - Database.CycleTableInfo.EquipmentName
+  - Database.CycleTableInfo.FinalWeight
+  - Database.CycleTableInfo.FinalWeightUnit
+  - Database.CycleTableInfo.FirstAlarmId
+  - Database.CycleTableInfo.Id
+  - Database.CycleTableInfo.Ids
+  - Database.CycleTableInfo.IsItATest
+  - Database.CycleTableInfo.ItemNumber
+  - Database.CycleTableInfo.JobNumber
+  - Database.CycleTableInfo.LastAlarmId
+  - Database.CycleTableInfo.lastWeightEff
+  - Database.CycleTableInfo.lastWeightTh
+  - Database.CycleTableInfo.NextSeqId
+  - Database.CycleTableInfo.NextSeqType
+  - Database.CycleTableInfo.RecipeName
+  - Database.CycleTableInfo.RecipeVersion
+  - Database.CycleTableInfo.SeqType
+  - Database.CycleTableInfo.TabName
+  - Database.CycleTableInfo.Username
+  langs:
+  - csharp
+  - vb
+  name: CycleTableInfo
+  nameWithType: CycleTableInfo
+  fullName: Database.CycleTableInfo
+  type: Class
+  source:
+    id: CycleTableInfo
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 666
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nClass containing the infomration of the cycle database table. The table must contain at least the following colummns: \nid, \nnextSeqType, \nnextSeqId, \njobNumber, \nbatchNumber, \nquantityValue, \nquantityUnit, \nitemNumber, \nrecipeName, \nrecipeVersion, \nequipmentName, \ndateTimeStartCycle, \ndateTimeEndCycle, \nusername, \nfirstAlarmId, \nlastAlarmId, \ncomment, \nisItATest\n<p>Creation revision: 001</p>\n"
+  remarks: The information related to a cycle is separated in different rows of sequencetial tables based on ISeqTabInfo interface. The database table related to this class is the first sequence of the cycle information
+  example: []
+  syntax:
+    content: 'public class CycleTableInfo : ISeqTabInfo, IComTabInfo, IBasTabInfo'
+    content.vb: >-
+      Public Class CycleTableInfo
+
+          Implements ISeqTabInfo, IComTabInfo, IBasTabInfo
+  inheritance:
+  - System.Object
+  implements:
+  - Database.ISeqTabInfo
+  - Database.IComTabInfo
+  - Database.IBasTabInfo
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Database.CycleTableInfo.#ctor
+  commentId: M:Database.CycleTableInfo.#ctor
+  id: '#ctor'
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: CycleTableInfo()
+  nameWithType: CycleTableInfo.CycleTableInfo()
+  fullName: Database.CycleTableInfo.CycleTableInfo()
+  type: Constructor
+  source:
+    id: .ctor
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 671
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nSets all the variables of the class except the values of the variable Columns\n"
+  example: []
+  syntax:
+    content: public CycleTableInfo()
+    content.vb: Public Sub New
+  overload: Database.CycleTableInfo.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Database.CycleTableInfo.TabName
+  commentId: P:Database.CycleTableInfo.TabName
+  id: TabName
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: TabName
+  nameWithType: CycleTableInfo.TabName
+  fullName: Database.CycleTableInfo.TabName
+  type: Property
+  source:
+    id: TabName
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 709
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public string TabName { get; }
+    parameters: []
+    return:
+      type: System.String
+      description: Name of the database table. From IBasTabInfo interface
+    content.vb: Public ReadOnly Property TabName As String
+  overload: Database.CycleTableInfo.TabName*
+  implements:
+  - Database.IBasTabInfo.TabName
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleTableInfo.Columns
+  commentId: P:Database.CycleTableInfo.Columns
+  id: Columns
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: Columns
+  nameWithType: CycleTableInfo.Columns
+  fullName: Database.CycleTableInfo.Columns
+  type: Property
+  source:
+    id: Columns
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 712
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public List<Column> Columns { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{Database.Column}
+      description: Columns of the database table. From IBasTabInfo interface
+    content.vb: Public Property Columns As List(Of Column)
+  overload: Database.CycleTableInfo.Columns*
+  implements:
+  - Database.IBasTabInfo.Columns
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Database.CycleTableInfo.Ids
+  commentId: P:Database.CycleTableInfo.Ids
+  id: Ids
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: Ids
+  nameWithType: CycleTableInfo.Ids
+  fullName: Database.CycleTableInfo.Ids
+  type: Property
+  source:
+    id: Ids
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 715
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public string[] Ids { get; set; }
+    parameters: []
+    return:
+      type: System.String[]
+      description: Name of the columns of the database table. From IBasTabInfo interface
+    content.vb: Public Property Ids As String()
+  overload: Database.CycleTableInfo.Ids*
+  implements:
+  - Database.IBasTabInfo.Ids
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Database.CycleTableInfo.SeqType
+  commentId: P:Database.CycleTableInfo.SeqType
+  id: SeqType
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: SeqType
+  nameWithType: CycleTableInfo.SeqType
+  fullName: Database.CycleTableInfo.SeqType
+  type: Property
+  source:
+    id: SeqType
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 718
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int SeqType { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Identification number of the current sequential table. From ISeqTabInfo interface
+    content.vb: Public ReadOnly Property SeqType As Integer
+  overload: Database.CycleTableInfo.SeqType*
+  implements:
+  - Database.ISeqTabInfo.SeqType
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleTableInfo.Id
+  commentId: P:Database.CycleTableInfo.Id
+  id: Id
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: Id
+  nameWithType: CycleTableInfo.Id
+  fullName: Database.CycleTableInfo.Id
+  type: Property
+  source:
+    id: Id
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 721
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int Id { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: 'Index of the id column (usually the first one: 0). This column <code>must be</code> an integer, usually automatically incremented. From IComTabInfo interface'
+    content.vb: Public ReadOnly Property Id As Integer
+  overload: Database.CycleTableInfo.Id*
+  implements:
+  - Database.IComTabInfo.Id
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleTableInfo.NextSeqType
+  commentId: P:Database.CycleTableInfo.NextSeqType
+  id: NextSeqType
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: NextSeqType
+  nameWithType: CycleTableInfo.NextSeqType
+  fullName: Database.CycleTableInfo.NextSeqType
+  type: Property
+  source:
+    id: NextSeqType
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 723
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int NextSeqType { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the next sequential type column. The type is a variable used to identify the next sequential table. From ISeqTabInfo interface
+    content.vb: Public ReadOnly Property NextSeqType As Integer
+  overload: Database.CycleTableInfo.NextSeqType*
+  implements:
+  - Database.ISeqTabInfo.NextSeqType
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleTableInfo.NextSeqId
+  commentId: P:Database.CycleTableInfo.NextSeqId
+  id: NextSeqId
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: NextSeqId
+  nameWithType: CycleTableInfo.NextSeqId
+  fullName: Database.CycleTableInfo.NextSeqId
+  type: Property
+  source:
+    id: NextSeqId
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 726
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int NextSeqId { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the next sequential id column. This column contains the id (see Id from IComTabInfo) of the row of the next sequential table. From ISeqTabInfo interface
+    content.vb: Public ReadOnly Property NextSeqId As Integer
+  overload: Database.CycleTableInfo.NextSeqId*
+  implements:
+  - Database.ISeqTabInfo.NextSeqId
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleTableInfo.JobNumber
+  commentId: P:Database.CycleTableInfo.JobNumber
+  id: JobNumber
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: JobNumber
+  nameWithType: CycleTableInfo.JobNumber
+  fullName: Database.CycleTableInfo.JobNumber
+  type: Property
+  source:
+    id: JobNumber
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 729
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int JobNumber { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the job number column. This column contains the job number of the cycle
+    content.vb: Public ReadOnly Property JobNumber As Integer
+  overload: Database.CycleTableInfo.JobNumber*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleTableInfo.BatchNumber
+  commentId: P:Database.CycleTableInfo.BatchNumber
+  id: BatchNumber
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: BatchNumber
+  nameWithType: CycleTableInfo.BatchNumber
+  fullName: Database.CycleTableInfo.BatchNumber
+  type: Property
+  source:
+    id: BatchNumber
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 732
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int BatchNumber { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the batch number column. This column contains the batch number of the cycle
+    content.vb: Public ReadOnly Property BatchNumber As Integer
+  overload: Database.CycleTableInfo.BatchNumber*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleTableInfo.FinalWeight
+  commentId: P:Database.CycleTableInfo.FinalWeight
+  id: FinalWeight
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: FinalWeight
+  nameWithType: CycleTableInfo.FinalWeight
+  fullName: Database.CycleTableInfo.FinalWeight
+  type: Property
+  source:
+    id: FinalWeight
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 735
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int FinalWeight { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the final weight column. This column contains wight of the final product at the end of the cycle
+    content.vb: Public ReadOnly Property FinalWeight As Integer
+  overload: Database.CycleTableInfo.FinalWeight*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleTableInfo.FinalWeightUnit
+  commentId: P:Database.CycleTableInfo.FinalWeightUnit
+  id: FinalWeightUnit
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: FinalWeightUnit
+  nameWithType: CycleTableInfo.FinalWeightUnit
+  fullName: Database.CycleTableInfo.FinalWeightUnit
+  type: Property
+  source:
+    id: FinalWeightUnit
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 738
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int FinalWeightUnit { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the final weight unit column. This column contains unit of the final weight
+    content.vb: Public ReadOnly Property FinalWeightUnit As Integer
+  overload: Database.CycleTableInfo.FinalWeightUnit*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleTableInfo.ItemNumber
+  commentId: P:Database.CycleTableInfo.ItemNumber
+  id: ItemNumber
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: ItemNumber
+  nameWithType: CycleTableInfo.ItemNumber
+  fullName: Database.CycleTableInfo.ItemNumber
+  type: Property
+  source:
+    id: ItemNumber
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 741
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int ItemNumber { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the item number column. This column contains the item number of the cycle
+    content.vb: Public ReadOnly Property ItemNumber As Integer
+  overload: Database.CycleTableInfo.ItemNumber*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleTableInfo.RecipeName
+  commentId: P:Database.CycleTableInfo.RecipeName
+  id: RecipeName
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: RecipeName
+  nameWithType: CycleTableInfo.RecipeName
+  fullName: Database.CycleTableInfo.RecipeName
+  type: Property
+  source:
+    id: RecipeName
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 744
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int RecipeName { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the recipe name column. This column contains the name of the recipe executed during the cycle
+    content.vb: Public ReadOnly Property RecipeName As Integer
+  overload: Database.CycleTableInfo.RecipeName*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleTableInfo.RecipeVersion
+  commentId: P:Database.CycleTableInfo.RecipeVersion
+  id: RecipeVersion
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: RecipeVersion
+  nameWithType: CycleTableInfo.RecipeVersion
+  fullName: Database.CycleTableInfo.RecipeVersion
+  type: Property
+  source:
+    id: RecipeVersion
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 747
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int RecipeVersion { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the recipe version column. This column contains the version of the executed recipe
+    content.vb: Public ReadOnly Property RecipeVersion As Integer
+  overload: Database.CycleTableInfo.RecipeVersion*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleTableInfo.EquipmentName
+  commentId: P:Database.CycleTableInfo.EquipmentName
+  id: EquipmentName
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: EquipmentName
+  nameWithType: CycleTableInfo.EquipmentName
+  fullName: Database.CycleTableInfo.EquipmentName
+  type: Property
+  source:
+    id: EquipmentName
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 750
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int EquipmentName { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the equipment name column. This column contains the name of the equipment which performed the cycle
+    content.vb: Public ReadOnly Property EquipmentName As Integer
+  overload: Database.CycleTableInfo.EquipmentName*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleTableInfo.DateTimeStartCycle
+  commentId: P:Database.CycleTableInfo.DateTimeStartCycle
+  id: DateTimeStartCycle
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: DateTimeStartCycle
+  nameWithType: CycleTableInfo.DateTimeStartCycle
+  fullName: Database.CycleTableInfo.DateTimeStartCycle
+  type: Property
+  source:
+    id: DateTimeStartCycle
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 753
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int DateTimeStartCycle { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the start date and time column. This column contains date and time of the start of the cycle
+    content.vb: Public ReadOnly Property DateTimeStartCycle As Integer
+  overload: Database.CycleTableInfo.DateTimeStartCycle*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleTableInfo.DateTimeEndCycle
+  commentId: P:Database.CycleTableInfo.DateTimeEndCycle
+  id: DateTimeEndCycle
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: DateTimeEndCycle
+  nameWithType: CycleTableInfo.DateTimeEndCycle
+  fullName: Database.CycleTableInfo.DateTimeEndCycle
+  type: Property
+  source:
+    id: DateTimeEndCycle
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 756
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int DateTimeEndCycle { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the end date and time column. This column contains date and time of the end of the cycle
+    content.vb: Public ReadOnly Property DateTimeEndCycle As Integer
+  overload: Database.CycleTableInfo.DateTimeEndCycle*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleTableInfo.Username
+  commentId: P:Database.CycleTableInfo.Username
+  id: Username
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: Username
+  nameWithType: CycleTableInfo.Username
+  fullName: Database.CycleTableInfo.Username
+  type: Property
+  source:
+    id: Username
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 759
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int Username { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the username column. This column contains name of the user who started the cycle
+    content.vb: Public ReadOnly Property Username As Integer
+  overload: Database.CycleTableInfo.Username*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleTableInfo.FirstAlarmId
+  commentId: P:Database.CycleTableInfo.FirstAlarmId
+  id: FirstAlarmId
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: FirstAlarmId
+  nameWithType: CycleTableInfo.FirstAlarmId
+  fullName: Database.CycleTableInfo.FirstAlarmId
+  type: Property
+  source:
+    id: FirstAlarmId
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 762
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int FirstAlarmId { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the first alarm id column. This column contains value of the id column of the audit trail for the fist active alarm or the last audit trail event
+    content.vb: Public ReadOnly Property FirstAlarmId As Integer
+  overload: Database.CycleTableInfo.FirstAlarmId*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleTableInfo.LastAlarmId
+  commentId: P:Database.CycleTableInfo.LastAlarmId
+  id: LastAlarmId
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: LastAlarmId
+  nameWithType: CycleTableInfo.LastAlarmId
+  fullName: Database.CycleTableInfo.LastAlarmId
+  type: Property
+  source:
+    id: LastAlarmId
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 765
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int LastAlarmId { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the last alarm id column. This column contains value of the id column of the audit trail for the last audit trail event
+    content.vb: Public ReadOnly Property LastAlarmId As Integer
+  overload: Database.CycleTableInfo.LastAlarmId*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleTableInfo.Comment
+  commentId: P:Database.CycleTableInfo.Comment
+  id: Comment
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: Comment
+  nameWithType: CycleTableInfo.Comment
+  fullName: Database.CycleTableInfo.Comment
+  type: Property
+  source:
+    id: Comment
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 768
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int Comment { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the comment column. This column contains the comment logged during the test
+    content.vb: Public ReadOnly Property Comment As Integer
+  overload: Database.CycleTableInfo.Comment*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleTableInfo.IsItATest
+  commentId: P:Database.CycleTableInfo.IsItATest
+  id: IsItATest
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: IsItATest
+  nameWithType: CycleTableInfo.IsItATest
+  fullName: Database.CycleTableInfo.IsItATest
+  type: Property
+  source:
+    id: IsItATest
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 771
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int IsItATest { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the is a test column. This column informs if the cycle was executed during production circumpstance or not
+    content.vb: Public ReadOnly Property IsItATest As Integer
+  overload: Database.CycleTableInfo.IsItATest*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleTableInfo.bowlWeight
+  commentId: P:Database.CycleTableInfo.bowlWeight
+  id: bowlWeight
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: bowlWeight
+  nameWithType: CycleTableInfo.bowlWeight
+  fullName: Database.CycleTableInfo.bowlWeight
+  type: Property
+  source:
+    id: bowlWeight
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 774
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int bowlWeight { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the bowl weight column. This column contains the weight of the empty bowl
+    content.vb: Public ReadOnly Property bowlWeight As Integer
+  overload: Database.CycleTableInfo.bowlWeight*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleTableInfo.lastWeightTh
+  commentId: P:Database.CycleTableInfo.lastWeightTh
+  id: lastWeightTh
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: lastWeightTh
+  nameWithType: CycleTableInfo.lastWeightTh
+  fullName: Database.CycleTableInfo.lastWeightTh
+  type: Property
+  source:
+    id: lastWeightTh
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 777
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int lastWeightTh { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the theoritical last weight column. This column contains the expected weight the empty bowl and product at the end of the mix
+    content.vb: Public ReadOnly Property lastWeightTh As Integer
+  overload: Database.CycleTableInfo.lastWeightTh*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleTableInfo.lastWeightEff
+  commentId: P:Database.CycleTableInfo.lastWeightEff
+  id: lastWeightEff
+  parent: Database.CycleTableInfo
+  langs:
+  - csharp
+  - vb
+  name: lastWeightEff
+  nameWithType: CycleTableInfo.lastWeightEff
+  fullName: Database.CycleTableInfo.lastWeightEff
+  type: Property
+  source:
+    id: lastWeightEff
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 780
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int lastWeightEff { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the actual last weighcolumn. This column contains the actual weight the empty bowl and product at the end of the mix
+    content.vb: Public ReadOnly Property lastWeightEff As Integer
+  overload: Database.CycleTableInfo.lastWeightEff*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+references:
+- uid: Database
+  commentId: N:Database
+  name: Database
+  nameWithType: Database
+  fullName: Database
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Database.ISeqTabInfo
+  commentId: T:Database.ISeqTabInfo
+  parent: Database
+  name: ISeqTabInfo
+  nameWithType: ISeqTabInfo
+  fullName: Database.ISeqTabInfo
+- uid: Database.IComTabInfo
+  commentId: T:Database.IComTabInfo
+  parent: Database
+  name: IComTabInfo
+  nameWithType: IComTabInfo
+  fullName: Database.IComTabInfo
+- uid: Database.IBasTabInfo
+  commentId: T:Database.IBasTabInfo
+  parent: Database
+  name: IBasTabInfo
+  nameWithType: IBasTabInfo
+  fullName: Database.IBasTabInfo
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Database.CycleTableInfo.#ctor*
+  commentId: Overload:Database.CycleTableInfo.#ctor
+  name: CycleTableInfo
+  nameWithType: CycleTableInfo.CycleTableInfo
+  fullName: Database.CycleTableInfo.CycleTableInfo
+- uid: Database.CycleTableInfo.TabName*
+  commentId: Overload:Database.CycleTableInfo.TabName
+  name: TabName
+  nameWithType: CycleTableInfo.TabName
+  fullName: Database.CycleTableInfo.TabName
+- uid: Database.IBasTabInfo.TabName
+  commentId: P:Database.IBasTabInfo.TabName
+  parent: Database.IBasTabInfo
+  name: TabName
+  nameWithType: IBasTabInfo.TabName
+  fullName: Database.IBasTabInfo.TabName
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Database.CycleTableInfo.Columns*
+  commentId: Overload:Database.CycleTableInfo.Columns
+  name: Columns
+  nameWithType: CycleTableInfo.Columns
+  fullName: Database.CycleTableInfo.Columns
+- uid: Database.IBasTabInfo.Columns
+  commentId: P:Database.IBasTabInfo.Columns
+  parent: Database.IBasTabInfo
+  name: Columns
+  nameWithType: IBasTabInfo.Columns
+  fullName: Database.IBasTabInfo.Columns
+- uid: System.Collections.Generic.List{Database.Column}
+  commentId: T:System.Collections.Generic.List{Database.Column}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<Column>
+  nameWithType: List<Column>
+  fullName: System.Collections.Generic.List<Database.Column>
+  nameWithType.vb: List(Of Column)
+  fullName.vb: System.Collections.Generic.List(Of Database.Column)
+  name.vb: List(Of Column)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Database.Column
+    name: Column
+    nameWithType: Column
+    fullName: Database.Column
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Database.Column
+    name: Column
+    nameWithType: Column
+    fullName: Database.Column
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: Database.CycleTableInfo.Ids*
+  commentId: Overload:Database.CycleTableInfo.Ids
+  name: Ids
+  nameWithType: CycleTableInfo.Ids
+  fullName: Database.CycleTableInfo.Ids
+- uid: Database.IBasTabInfo.Ids
+  commentId: P:Database.IBasTabInfo.Ids
+  parent: Database.IBasTabInfo
+  name: Ids
+  nameWithType: IBasTabInfo.Ids
+  fullName: Database.IBasTabInfo.Ids
+- uid: System.String[]
+  isExternal: true
+  name: String[]
+  nameWithType: String[]
+  fullName: System.String[]
+  nameWithType.vb: String()
+  fullName.vb: System.String()
+  name.vb: String()
+  spec.csharp:
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: Database.CycleTableInfo.SeqType*
+  commentId: Overload:Database.CycleTableInfo.SeqType
+  name: SeqType
+  nameWithType: CycleTableInfo.SeqType
+  fullName: Database.CycleTableInfo.SeqType
+- uid: Database.ISeqTabInfo.SeqType
+  commentId: P:Database.ISeqTabInfo.SeqType
+  parent: Database.ISeqTabInfo
+  name: SeqType
+  nameWithType: ISeqTabInfo.SeqType
+  fullName: Database.ISeqTabInfo.SeqType
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Database.CycleTableInfo.Id*
+  commentId: Overload:Database.CycleTableInfo.Id
+  name: Id
+  nameWithType: CycleTableInfo.Id
+  fullName: Database.CycleTableInfo.Id
+- uid: Database.IComTabInfo.Id
+  commentId: P:Database.IComTabInfo.Id
+  parent: Database.IComTabInfo
+  name: Id
+  nameWithType: IComTabInfo.Id
+  fullName: Database.IComTabInfo.Id
+- uid: Database.CycleTableInfo.NextSeqType*
+  commentId: Overload:Database.CycleTableInfo.NextSeqType
+  name: NextSeqType
+  nameWithType: CycleTableInfo.NextSeqType
+  fullName: Database.CycleTableInfo.NextSeqType
+- uid: Database.ISeqTabInfo.NextSeqType
+  commentId: P:Database.ISeqTabInfo.NextSeqType
+  parent: Database.ISeqTabInfo
+  name: NextSeqType
+  nameWithType: ISeqTabInfo.NextSeqType
+  fullName: Database.ISeqTabInfo.NextSeqType
+- uid: Database.CycleTableInfo.NextSeqId*
+  commentId: Overload:Database.CycleTableInfo.NextSeqId
+  name: NextSeqId
+  nameWithType: CycleTableInfo.NextSeqId
+  fullName: Database.CycleTableInfo.NextSeqId
+- uid: Database.ISeqTabInfo.NextSeqId
+  commentId: P:Database.ISeqTabInfo.NextSeqId
+  parent: Database.ISeqTabInfo
+  name: NextSeqId
+  nameWithType: ISeqTabInfo.NextSeqId
+  fullName: Database.ISeqTabInfo.NextSeqId
+- uid: Database.CycleTableInfo.JobNumber*
+  commentId: Overload:Database.CycleTableInfo.JobNumber
+  name: JobNumber
+  nameWithType: CycleTableInfo.JobNumber
+  fullName: Database.CycleTableInfo.JobNumber
+- uid: Database.CycleTableInfo.BatchNumber*
+  commentId: Overload:Database.CycleTableInfo.BatchNumber
+  name: BatchNumber
+  nameWithType: CycleTableInfo.BatchNumber
+  fullName: Database.CycleTableInfo.BatchNumber
+- uid: Database.CycleTableInfo.FinalWeight*
+  commentId: Overload:Database.CycleTableInfo.FinalWeight
+  name: FinalWeight
+  nameWithType: CycleTableInfo.FinalWeight
+  fullName: Database.CycleTableInfo.FinalWeight
+- uid: Database.CycleTableInfo.FinalWeightUnit*
+  commentId: Overload:Database.CycleTableInfo.FinalWeightUnit
+  name: FinalWeightUnit
+  nameWithType: CycleTableInfo.FinalWeightUnit
+  fullName: Database.CycleTableInfo.FinalWeightUnit
+- uid: Database.CycleTableInfo.ItemNumber*
+  commentId: Overload:Database.CycleTableInfo.ItemNumber
+  name: ItemNumber
+  nameWithType: CycleTableInfo.ItemNumber
+  fullName: Database.CycleTableInfo.ItemNumber
+- uid: Database.CycleTableInfo.RecipeName*
+  commentId: Overload:Database.CycleTableInfo.RecipeName
+  name: RecipeName
+  nameWithType: CycleTableInfo.RecipeName
+  fullName: Database.CycleTableInfo.RecipeName
+- uid: Database.CycleTableInfo.RecipeVersion*
+  commentId: Overload:Database.CycleTableInfo.RecipeVersion
+  name: RecipeVersion
+  nameWithType: CycleTableInfo.RecipeVersion
+  fullName: Database.CycleTableInfo.RecipeVersion
+- uid: Database.CycleTableInfo.EquipmentName*
+  commentId: Overload:Database.CycleTableInfo.EquipmentName
+  name: EquipmentName
+  nameWithType: CycleTableInfo.EquipmentName
+  fullName: Database.CycleTableInfo.EquipmentName
+- uid: Database.CycleTableInfo.DateTimeStartCycle*
+  commentId: Overload:Database.CycleTableInfo.DateTimeStartCycle
+  name: DateTimeStartCycle
+  nameWithType: CycleTableInfo.DateTimeStartCycle
+  fullName: Database.CycleTableInfo.DateTimeStartCycle
+- uid: Database.CycleTableInfo.DateTimeEndCycle*
+  commentId: Overload:Database.CycleTableInfo.DateTimeEndCycle
+  name: DateTimeEndCycle
+  nameWithType: CycleTableInfo.DateTimeEndCycle
+  fullName: Database.CycleTableInfo.DateTimeEndCycle
+- uid: Database.CycleTableInfo.Username*
+  commentId: Overload:Database.CycleTableInfo.Username
+  name: Username
+  nameWithType: CycleTableInfo.Username
+  fullName: Database.CycleTableInfo.Username
+- uid: Database.CycleTableInfo.FirstAlarmId*
+  commentId: Overload:Database.CycleTableInfo.FirstAlarmId
+  name: FirstAlarmId
+  nameWithType: CycleTableInfo.FirstAlarmId
+  fullName: Database.CycleTableInfo.FirstAlarmId
+- uid: Database.CycleTableInfo.LastAlarmId*
+  commentId: Overload:Database.CycleTableInfo.LastAlarmId
+  name: LastAlarmId
+  nameWithType: CycleTableInfo.LastAlarmId
+  fullName: Database.CycleTableInfo.LastAlarmId
+- uid: Database.CycleTableInfo.Comment*
+  commentId: Overload:Database.CycleTableInfo.Comment
+  name: Comment
+  nameWithType: CycleTableInfo.Comment
+  fullName: Database.CycleTableInfo.Comment
+- uid: Database.CycleTableInfo.IsItATest*
+  commentId: Overload:Database.CycleTableInfo.IsItATest
+  name: IsItATest
+  nameWithType: CycleTableInfo.IsItATest
+  fullName: Database.CycleTableInfo.IsItATest
+- uid: Database.CycleTableInfo.bowlWeight*
+  commentId: Overload:Database.CycleTableInfo.bowlWeight
+  name: bowlWeight
+  nameWithType: CycleTableInfo.bowlWeight
+  fullName: Database.CycleTableInfo.bowlWeight
+- uid: Database.CycleTableInfo.lastWeightTh*
+  commentId: Overload:Database.CycleTableInfo.lastWeightTh
+  name: lastWeightTh
+  nameWithType: CycleTableInfo.lastWeightTh
+  fullName: Database.CycleTableInfo.lastWeightTh
+- uid: Database.CycleTableInfo.lastWeightEff*
+  commentId: Overload:Database.CycleTableInfo.lastWeightEff
+  name: lastWeightEff
+  nameWithType: CycleTableInfo.lastWeightEff
+  fullName: Database.CycleTableInfo.lastWeightEff

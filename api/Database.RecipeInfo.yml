@@ -1,0 +1,1051 @@
+### YamlMime:ManagedReference
+items:
+- uid: Database.RecipeInfo
+  commentId: T:Database.RecipeInfo
+  id: RecipeInfo
+  parent: Database
+  children:
+  - Database.RecipeInfo.#ctor
+  - Database.RecipeInfo.Columns
+  - Database.RecipeInfo.FinaleWeightMax
+  - Database.RecipeInfo.FinaleWeightMin
+  - Database.RecipeInfo.Id
+  - Database.RecipeInfo.Ids
+  - Database.RecipeInfo.Name
+  - Database.RecipeInfo.NextSeqId
+  - Database.RecipeInfo.NextSeqType
+  - Database.RecipeInfo.SeqType
+  - Database.RecipeInfo.Status
+  - Database.RecipeInfo.TabName
+  - Database.RecipeInfo.Version
+  langs:
+  - csharp
+  - vb
+  name: RecipeInfo
+  nameWithType: RecipeInfo
+  fullName: Database.RecipeInfo
+  type: Class
+  source:
+    id: RecipeInfo
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 298
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nClass containing the infomration of the recipe database table. The table must contain at least the following colummns: \nid, \nfirstSeqType, \nfirstSeqId, \nrecipeName, \nversion, \nstatus\n<p>Creation revision: 001</p>\n"
+  remarks: Recipes are sequences of rows of sequencetial tables based on ISeqTabInfo interface
+  example: []
+  syntax:
+    content: 'public class RecipeInfo : ISeqTabInfo, IComTabInfo, IBasTabInfo'
+    content.vb: >-
+      Public Class RecipeInfo
+
+          Implements ISeqTabInfo, IComTabInfo, IBasTabInfo
+  inheritance:
+  - System.Object
+  implements:
+  - Database.ISeqTabInfo
+  - Database.IComTabInfo
+  - Database.IBasTabInfo
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Database.RecipeInfo.#ctor
+  commentId: M:Database.RecipeInfo.#ctor
+  id: '#ctor'
+  parent: Database.RecipeInfo
+  langs:
+  - csharp
+  - vb
+  name: RecipeInfo()
+  nameWithType: RecipeInfo.RecipeInfo()
+  fullName: Database.RecipeInfo.RecipeInfo()
+  type: Constructor
+  source:
+    id: .ctor
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 303
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nSets all the variables of the class except the values of the variable Columns\n"
+  example: []
+  syntax:
+    content: public RecipeInfo()
+    content.vb: Public Sub New
+  overload: Database.RecipeInfo.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Database.RecipeInfo.TabName
+  commentId: P:Database.RecipeInfo.TabName
+  id: TabName
+  parent: Database.RecipeInfo
+  langs:
+  - csharp
+  - vb
+  name: TabName
+  nameWithType: RecipeInfo.TabName
+  fullName: Database.RecipeInfo.TabName
+  type: Property
+  source:
+    id: TabName
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 330
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public string TabName { get; }
+    parameters: []
+    return:
+      type: System.String
+      description: Name of the database table. From IBasTabInfo interface
+    content.vb: Public ReadOnly Property TabName As String
+  overload: Database.RecipeInfo.TabName*
+  implements:
+  - Database.IBasTabInfo.TabName
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.RecipeInfo.Columns
+  commentId: P:Database.RecipeInfo.Columns
+  id: Columns
+  parent: Database.RecipeInfo
+  langs:
+  - csharp
+  - vb
+  name: Columns
+  nameWithType: RecipeInfo.Columns
+  fullName: Database.RecipeInfo.Columns
+  type: Property
+  source:
+    id: Columns
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 333
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public List<Column> Columns { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{Database.Column}
+      description: Columns of the database table. From IBasTabInfo interface
+    content.vb: Public Property Columns As List(Of Column)
+  overload: Database.RecipeInfo.Columns*
+  implements:
+  - Database.IBasTabInfo.Columns
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Database.RecipeInfo.Ids
+  commentId: P:Database.RecipeInfo.Ids
+  id: Ids
+  parent: Database.RecipeInfo
+  langs:
+  - csharp
+  - vb
+  name: Ids
+  nameWithType: RecipeInfo.Ids
+  fullName: Database.RecipeInfo.Ids
+  type: Property
+  source:
+    id: Ids
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 336
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public string[] Ids { get; set; }
+    parameters: []
+    return:
+      type: System.String[]
+      description: Name of the columns of the database table. From IBasTabInfo interface
+    content.vb: Public Property Ids As String()
+  overload: Database.RecipeInfo.Ids*
+  implements:
+  - Database.IBasTabInfo.Ids
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Database.RecipeInfo.SeqType
+  commentId: P:Database.RecipeInfo.SeqType
+  id: SeqType
+  parent: Database.RecipeInfo
+  langs:
+  - csharp
+  - vb
+  name: SeqType
+  nameWithType: RecipeInfo.SeqType
+  fullName: Database.RecipeInfo.SeqType
+  type: Property
+  source:
+    id: SeqType
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 339
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int SeqType { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Identification number of the current sequential table. From ISeqTabInfo interface
+    content.vb: Public ReadOnly Property SeqType As Integer
+  overload: Database.RecipeInfo.SeqType*
+  implements:
+  - Database.ISeqTabInfo.SeqType
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.RecipeInfo.Id
+  commentId: P:Database.RecipeInfo.Id
+  id: Id
+  parent: Database.RecipeInfo
+  langs:
+  - csharp
+  - vb
+  name: Id
+  nameWithType: RecipeInfo.Id
+  fullName: Database.RecipeInfo.Id
+  type: Property
+  source:
+    id: Id
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 342
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int Id { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: 'Index of the id column (usually the first one: 0). This column <code>must be</code> an integer, usually automatically incremented. From IComTabInfo interface'
+    content.vb: Public ReadOnly Property Id As Integer
+  overload: Database.RecipeInfo.Id*
+  implements:
+  - Database.IComTabInfo.Id
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.RecipeInfo.NextSeqType
+  commentId: P:Database.RecipeInfo.NextSeqType
+  id: NextSeqType
+  parent: Database.RecipeInfo
+  langs:
+  - csharp
+  - vb
+  name: NextSeqType
+  nameWithType: RecipeInfo.NextSeqType
+  fullName: Database.RecipeInfo.NextSeqType
+  type: Property
+  source:
+    id: NextSeqType
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 345
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int NextSeqType { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the next sequential type column. The type is a variable used to identify the next sequential table. From ISeqTabInfo interface
+    content.vb: Public ReadOnly Property NextSeqType As Integer
+  overload: Database.RecipeInfo.NextSeqType*
+  implements:
+  - Database.ISeqTabInfo.NextSeqType
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.RecipeInfo.NextSeqId
+  commentId: P:Database.RecipeInfo.NextSeqId
+  id: NextSeqId
+  parent: Database.RecipeInfo
+  langs:
+  - csharp
+  - vb
+  name: NextSeqId
+  nameWithType: RecipeInfo.NextSeqId
+  fullName: Database.RecipeInfo.NextSeqId
+  type: Property
+  source:
+    id: NextSeqId
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 348
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int NextSeqId { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the next sequential id column. This column contains the id (see Id from IComTabInfo) of the row of the next sequential table. From ISeqTabInfo interface
+    content.vb: Public ReadOnly Property NextSeqId As Integer
+  overload: Database.RecipeInfo.NextSeqId*
+  implements:
+  - Database.ISeqTabInfo.NextSeqId
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.RecipeInfo.Name
+  commentId: P:Database.RecipeInfo.Name
+  id: Name
+  parent: Database.RecipeInfo
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: RecipeInfo.Name
+  fullName: Database.RecipeInfo.Name
+  type: Property
+  source:
+    id: Name
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 351
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int Name { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the name column. This column is the name of the recipe
+    content.vb: Public ReadOnly Property Name As Integer
+  overload: Database.RecipeInfo.Name*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.RecipeInfo.Version
+  commentId: P:Database.RecipeInfo.Version
+  id: Version
+  parent: Database.RecipeInfo
+  langs:
+  - csharp
+  - vb
+  name: Version
+  nameWithType: RecipeInfo.Version
+  fullName: Database.RecipeInfo.Version
+  type: Property
+  source:
+    id: Version
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 354
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int Version { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the version column. This column is the version of the recipe
+    content.vb: Public ReadOnly Property Version As Integer
+  overload: Database.RecipeInfo.Version*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.RecipeInfo.Status
+  commentId: P:Database.RecipeInfo.Status
+  id: Status
+  parent: Database.RecipeInfo
+  langs:
+  - csharp
+  - vb
+  name: Status
+  nameWithType: RecipeInfo.Status
+  fullName: Database.RecipeInfo.Status
+  type: Property
+  source:
+    id: Status
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 357
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int Status { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the status column. This column is the status of the recipe (e.g. draft, production, obsolete)
+    content.vb: Public ReadOnly Property Status As Integer
+  overload: Database.RecipeInfo.Status*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.RecipeInfo.FinaleWeightMin
+  commentId: P:Database.RecipeInfo.FinaleWeightMin
+  id: FinaleWeightMin
+  parent: Database.RecipeInfo
+  langs:
+  - csharp
+  - vb
+  name: FinaleWeightMin
+  nameWithType: RecipeInfo.FinaleWeightMin
+  fullName: Database.RecipeInfo.FinaleWeightMin
+  type: Property
+  source:
+    id: FinaleWeightMin
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 360
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int FinaleWeightMin { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the final weight min column. This column contains the minimum acceptable final weight of the product
+    content.vb: Public ReadOnly Property FinaleWeightMin As Integer
+  overload: Database.RecipeInfo.FinaleWeightMin*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.RecipeInfo.FinaleWeightMax
+  commentId: P:Database.RecipeInfo.FinaleWeightMax
+  id: FinaleWeightMax
+  parent: Database.RecipeInfo
+  langs:
+  - csharp
+  - vb
+  name: FinaleWeightMax
+  nameWithType: RecipeInfo.FinaleWeightMax
+  fullName: Database.RecipeInfo.FinaleWeightMax
+  type: Property
+  source:
+    id: FinaleWeightMax
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 363
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int FinaleWeightMax { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the final weight max column. This column contains the maximum acceptable final weight of the product
+    content.vb: Public ReadOnly Property FinaleWeightMax As Integer
+  overload: Database.RecipeInfo.FinaleWeightMax*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+references:
+- uid: Database
+  commentId: N:Database
+  name: Database
+  nameWithType: Database
+  fullName: Database
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Database.ISeqTabInfo
+  commentId: T:Database.ISeqTabInfo
+  parent: Database
+  name: ISeqTabInfo
+  nameWithType: ISeqTabInfo
+  fullName: Database.ISeqTabInfo
+- uid: Database.IComTabInfo
+  commentId: T:Database.IComTabInfo
+  parent: Database
+  name: IComTabInfo
+  nameWithType: IComTabInfo
+  fullName: Database.IComTabInfo
+- uid: Database.IBasTabInfo
+  commentId: T:Database.IBasTabInfo
+  parent: Database
+  name: IBasTabInfo
+  nameWithType: IBasTabInfo
+  fullName: Database.IBasTabInfo
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Database.RecipeInfo.#ctor*
+  commentId: Overload:Database.RecipeInfo.#ctor
+  name: RecipeInfo
+  nameWithType: RecipeInfo.RecipeInfo
+  fullName: Database.RecipeInfo.RecipeInfo
+- uid: Database.RecipeInfo.TabName*
+  commentId: Overload:Database.RecipeInfo.TabName
+  name: TabName
+  nameWithType: RecipeInfo.TabName
+  fullName: Database.RecipeInfo.TabName
+- uid: Database.IBasTabInfo.TabName
+  commentId: P:Database.IBasTabInfo.TabName
+  parent: Database.IBasTabInfo
+  name: TabName
+  nameWithType: IBasTabInfo.TabName
+  fullName: Database.IBasTabInfo.TabName
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Database.RecipeInfo.Columns*
+  commentId: Overload:Database.RecipeInfo.Columns
+  name: Columns
+  nameWithType: RecipeInfo.Columns
+  fullName: Database.RecipeInfo.Columns
+- uid: Database.IBasTabInfo.Columns
+  commentId: P:Database.IBasTabInfo.Columns
+  parent: Database.IBasTabInfo
+  name: Columns
+  nameWithType: IBasTabInfo.Columns
+  fullName: Database.IBasTabInfo.Columns
+- uid: System.Collections.Generic.List{Database.Column}
+  commentId: T:System.Collections.Generic.List{Database.Column}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<Column>
+  nameWithType: List<Column>
+  fullName: System.Collections.Generic.List<Database.Column>
+  nameWithType.vb: List(Of Column)
+  fullName.vb: System.Collections.Generic.List(Of Database.Column)
+  name.vb: List(Of Column)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Database.Column
+    name: Column
+    nameWithType: Column
+    fullName: Database.Column
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Database.Column
+    name: Column
+    nameWithType: Column
+    fullName: Database.Column
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: Database.RecipeInfo.Ids*
+  commentId: Overload:Database.RecipeInfo.Ids
+  name: Ids
+  nameWithType: RecipeInfo.Ids
+  fullName: Database.RecipeInfo.Ids
+- uid: Database.IBasTabInfo.Ids
+  commentId: P:Database.IBasTabInfo.Ids
+  parent: Database.IBasTabInfo
+  name: Ids
+  nameWithType: IBasTabInfo.Ids
+  fullName: Database.IBasTabInfo.Ids
+- uid: System.String[]
+  isExternal: true
+  name: String[]
+  nameWithType: String[]
+  fullName: System.String[]
+  nameWithType.vb: String()
+  fullName.vb: System.String()
+  name.vb: String()
+  spec.csharp:
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: Database.RecipeInfo.SeqType*
+  commentId: Overload:Database.RecipeInfo.SeqType
+  name: SeqType
+  nameWithType: RecipeInfo.SeqType
+  fullName: Database.RecipeInfo.SeqType
+- uid: Database.ISeqTabInfo.SeqType
+  commentId: P:Database.ISeqTabInfo.SeqType
+  parent: Database.ISeqTabInfo
+  name: SeqType
+  nameWithType: ISeqTabInfo.SeqType
+  fullName: Database.ISeqTabInfo.SeqType
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Database.RecipeInfo.Id*
+  commentId: Overload:Database.RecipeInfo.Id
+  name: Id
+  nameWithType: RecipeInfo.Id
+  fullName: Database.RecipeInfo.Id
+- uid: Database.IComTabInfo.Id
+  commentId: P:Database.IComTabInfo.Id
+  parent: Database.IComTabInfo
+  name: Id
+  nameWithType: IComTabInfo.Id
+  fullName: Database.IComTabInfo.Id
+- uid: Database.RecipeInfo.NextSeqType*
+  commentId: Overload:Database.RecipeInfo.NextSeqType
+  name: NextSeqType
+  nameWithType: RecipeInfo.NextSeqType
+  fullName: Database.RecipeInfo.NextSeqType
+- uid: Database.ISeqTabInfo.NextSeqType
+  commentId: P:Database.ISeqTabInfo.NextSeqType
+  parent: Database.ISeqTabInfo
+  name: NextSeqType
+  nameWithType: ISeqTabInfo.NextSeqType
+  fullName: Database.ISeqTabInfo.NextSeqType
+- uid: Database.RecipeInfo.NextSeqId*
+  commentId: Overload:Database.RecipeInfo.NextSeqId
+  name: NextSeqId
+  nameWithType: RecipeInfo.NextSeqId
+  fullName: Database.RecipeInfo.NextSeqId
+- uid: Database.ISeqTabInfo.NextSeqId
+  commentId: P:Database.ISeqTabInfo.NextSeqId
+  parent: Database.ISeqTabInfo
+  name: NextSeqId
+  nameWithType: ISeqTabInfo.NextSeqId
+  fullName: Database.ISeqTabInfo.NextSeqId
+- uid: Database.RecipeInfo.Name*
+  commentId: Overload:Database.RecipeInfo.Name
+  name: Name
+  nameWithType: RecipeInfo.Name
+  fullName: Database.RecipeInfo.Name
+- uid: Database.RecipeInfo.Version*
+  commentId: Overload:Database.RecipeInfo.Version
+  name: Version
+  nameWithType: RecipeInfo.Version
+  fullName: Database.RecipeInfo.Version
+- uid: Database.RecipeInfo.Status*
+  commentId: Overload:Database.RecipeInfo.Status
+  name: Status
+  nameWithType: RecipeInfo.Status
+  fullName: Database.RecipeInfo.Status
+- uid: Database.RecipeInfo.FinaleWeightMin*
+  commentId: Overload:Database.RecipeInfo.FinaleWeightMin
+  name: FinaleWeightMin
+  nameWithType: RecipeInfo.FinaleWeightMin
+  fullName: Database.RecipeInfo.FinaleWeightMin
+- uid: Database.RecipeInfo.FinaleWeightMax*
+  commentId: Overload:Database.RecipeInfo.FinaleWeightMax
+  name: FinaleWeightMax
+  nameWithType: RecipeInfo.FinaleWeightMax
+  fullName: Database.RecipeInfo.FinaleWeightMax

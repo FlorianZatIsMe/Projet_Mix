@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -7,8 +7,14 @@ using System.Threading.Tasks;
 
 namespace Database.Configuration_old
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class DB_Features : ConfigurationElement
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [ConfigurationProperty("Server", DefaultValue = "", IsRequired = true)]
         public string Server
         {
@@ -60,4 +66,4 @@ namespace Database.Configuration_old
             }
         }
     }
-}
+}*/

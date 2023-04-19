@@ -1,0 +1,534 @@
+### YamlMime:ManagedReference
+items:
+- uid: Main.CycleStartInfo
+  commentId: T:Main.CycleStartInfo
+  id: CycleStartInfo
+  parent: Main
+  children:
+  - Main.CycleStartInfo.bowlWeight
+  - Main.CycleStartInfo.finalWeight
+  - Main.CycleStartInfo.frameInfoCycle
+  - Main.CycleStartInfo.frameMain
+  - Main.CycleStartInfo.isTest
+  - Main.CycleStartInfo.OFnumber
+  - Main.CycleStartInfo.recipeID
+  langs:
+  - csharp
+  - vb
+  name: CycleStartInfo
+  nameWithType: CycleStartInfo
+  fullName: Main.CycleStartInfo
+  type: Struct
+  source:
+    id: CycleStartInfo
+    path: C:\Temp\MixingApplication\Main\General.cs
+    startLine: 27
+  assemblies:
+  - MixingApplication
+  namespace: Main
+  syntax:
+    content: public struct CycleStartInfo
+    content.vb: Public Structure CycleStartInfo
+  inheritedMembers:
+  - System.ValueType.Equals(System.Object)
+  - System.ValueType.GetHashCode
+  - System.ValueType.ToString
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetType
+  modifiers.csharp:
+  - public
+  - struct
+  modifiers.vb:
+  - Public
+  - Structure
+- uid: Main.CycleStartInfo.recipeID
+  commentId: F:Main.CycleStartInfo.recipeID
+  id: recipeID
+  parent: Main.CycleStartInfo
+  langs:
+  - csharp
+  - vb
+  name: recipeID
+  nameWithType: CycleStartInfo.recipeID
+  fullName: Main.CycleStartInfo.recipeID
+  type: Field
+  source:
+    id: recipeID
+    path: C:\Temp\MixingApplication\Main\General.cs
+    startLine: 29
+  assemblies:
+  - MixingApplication
+  namespace: Main
+  syntax:
+    content: public string recipeID
+    return:
+      type: System.String
+    content.vb: Public recipeID As String
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Main.CycleStartInfo.OFnumber
+  commentId: F:Main.CycleStartInfo.OFnumber
+  id: OFnumber
+  parent: Main.CycleStartInfo
+  langs:
+  - csharp
+  - vb
+  name: OFnumber
+  nameWithType: CycleStartInfo.OFnumber
+  fullName: Main.CycleStartInfo.OFnumber
+  type: Field
+  source:
+    id: OFnumber
+    path: C:\Temp\MixingApplication\Main\General.cs
+    startLine: 30
+  assemblies:
+  - MixingApplication
+  namespace: Main
+  syntax:
+    content: public string OFnumber
+    return:
+      type: System.String
+    content.vb: Public OFnumber As String
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Main.CycleStartInfo.finalWeight
+  commentId: F:Main.CycleStartInfo.finalWeight
+  id: finalWeight
+  parent: Main.CycleStartInfo
+  langs:
+  - csharp
+  - vb
+  name: finalWeight
+  nameWithType: CycleStartInfo.finalWeight
+  fullName: Main.CycleStartInfo.finalWeight
+  type: Field
+  source:
+    id: finalWeight
+    path: C:\Temp\MixingApplication\Main\General.cs
+    startLine: 31
+  assemblies:
+  - MixingApplication
+  namespace: Main
+  syntax:
+    content: public string finalWeight
+    return:
+      type: System.String
+    content.vb: Public finalWeight As String
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Main.CycleStartInfo.frameMain
+  commentId: F:Main.CycleStartInfo.frameMain
+  id: frameMain
+  parent: Main.CycleStartInfo
+  langs:
+  - csharp
+  - vb
+  name: frameMain
+  nameWithType: CycleStartInfo.frameMain
+  fullName: Main.CycleStartInfo.frameMain
+  type: Field
+  source:
+    id: frameMain
+    path: C:\Temp\MixingApplication\Main\General.cs
+    startLine: 32
+  assemblies:
+  - MixingApplication
+  namespace: Main
+  syntax:
+    content: public Frame frameMain
+    return:
+      type: System.Windows.Controls.Frame
+    content.vb: Public frameMain As Frame
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Main.CycleStartInfo.frameInfoCycle
+  commentId: F:Main.CycleStartInfo.frameInfoCycle
+  id: frameInfoCycle
+  parent: Main.CycleStartInfo
+  langs:
+  - csharp
+  - vb
+  name: frameInfoCycle
+  nameWithType: CycleStartInfo.frameInfoCycle
+  fullName: Main.CycleStartInfo.frameInfoCycle
+  type: Field
+  source:
+    id: frameInfoCycle
+    path: C:\Temp\MixingApplication\Main\General.cs
+    startLine: 33
+  assemblies:
+  - MixingApplication
+  namespace: Main
+  syntax:
+    content: public Frame frameInfoCycle
+    return:
+      type: System.Windows.Controls.Frame
+    content.vb: Public frameInfoCycle As Frame
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Main.CycleStartInfo.isTest
+  commentId: F:Main.CycleStartInfo.isTest
+  id: isTest
+  parent: Main.CycleStartInfo
+  langs:
+  - csharp
+  - vb
+  name: isTest
+  nameWithType: CycleStartInfo.isTest
+  fullName: Main.CycleStartInfo.isTest
+  type: Field
+  source:
+    id: isTest
+    path: C:\Temp\MixingApplication\Main\General.cs
+    startLine: 34
+  assemblies:
+  - MixingApplication
+  namespace: Main
+  syntax:
+    content: public bool isTest
+    return:
+      type: System.Boolean
+    content.vb: Public isTest As Boolean
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Main.CycleStartInfo.bowlWeight
+  commentId: F:Main.CycleStartInfo.bowlWeight
+  id: bowlWeight
+  parent: Main.CycleStartInfo
+  langs:
+  - csharp
+  - vb
+  name: bowlWeight
+  nameWithType: CycleStartInfo.bowlWeight
+  fullName: Main.CycleStartInfo.bowlWeight
+  type: Field
+  source:
+    id: bowlWeight
+    path: C:\Temp\MixingApplication\Main\General.cs
+    startLine: 35
+  assemblies:
+  - MixingApplication
+  namespace: Main
+  syntax:
+    content: public string bowlWeight
+    return:
+      type: System.String
+    content.vb: Public bowlWeight As String
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Main
+  commentId: N:Main
+  name: Main
+  nameWithType: Main
+  fullName: Main
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: ValueType.Equals(Object)
+  fullName: System.ValueType.Equals(System.Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    nameWithType: ValueType.Equals
+    fullName: System.ValueType.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    nameWithType: ValueType.Equals
+    fullName: System.ValueType.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    nameWithType: ValueType.GetHashCode
+    fullName: System.ValueType.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    nameWithType: ValueType.GetHashCode
+    fullName: System.ValueType.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    nameWithType: ValueType.ToString
+    fullName: System.ValueType.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    nameWithType: ValueType.ToString
+    fullName: System.ValueType.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: System.Windows.Controls.Frame
+  commentId: T:System.Windows.Controls.Frame
+  parent: System.Windows.Controls
+  isExternal: true
+  name: Frame
+  nameWithType: Frame
+  fullName: System.Windows.Controls.Frame
+- uid: System.Windows.Controls
+  commentId: N:System.Windows.Controls
+  isExternal: true
+  name: System.Windows.Controls
+  nameWithType: System.Windows.Controls
+  fullName: System.Windows.Controls
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean

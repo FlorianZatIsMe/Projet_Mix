@@ -153,7 +153,7 @@ namespace DRIVER_RS232_Weight
             }
             else
             {
-                //MessageBox.Show(isRS232Active.ToString() + IsOpen().ToString() + areAlarmActive[0].ToString());
+                //MyMessageBox.Show(isRS232Active.ToString() + IsOpen().ToString() + areAlarmActive[0].ToString());
             }
 
             if (isRS232Active && !IsOpen())
@@ -161,7 +161,7 @@ namespace DRIVER_RS232_Weight
                 Open();
             }
 
-            //MessageBox.Show("Salut");
+            //MyMessageBox.Show("Salut");
             scanAlarmTimer.Enabled = true;
         }
         public static void Initialize()
@@ -187,7 +187,7 @@ namespace DRIVER_RS232_Weight
                 }
                 else
                 {
-                    //MessageBox.Show(isRS232Active.ToString() + IsOpen().ToString() + areAlarmActive[0].ToString());
+                    //MyMessageBox.Show(isRS232Active.ToString() + IsOpen().ToString() + areAlarmActive[0].ToString());
                 }
 
                 if (isRS232Active && !IsOpen())
@@ -230,12 +230,12 @@ namespace DRIVER_RS232_Weight
                 }
                 else
                 {
-                    MessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Connexion bloqué");
+                    MyMessageBox.Show(MethodBase.GetCurrentMethod().Name + " - Connexion bloqué");
                 }
             }
             else
             {
-                MessageBox.Show("La balance n'est pas connectée");
+                MyMessageBox.Show("La balance n'est pas connectée");
             }
         }
         public static string GetData()
@@ -253,7 +253,7 @@ namespace DRIVER_RS232_Weight
         private static void WeightReceivedData(object sender, SerialDataReceivedEventArgs e)
         {
             receivedData = scaleConnection.ReadLine();
-            //MessageBox.Show(data);
+            //MyMessageBox.Show(data);
 
             if (lastCommand == "SIR" || lastCommand == "S")
             {

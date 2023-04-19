@@ -23,170 +23,157 @@ namespace Alarm_Management.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Alarme")]
         public string AlarmType_Alarm {
             get {
                 return ((string)(this["AlarmType_Alarm"]));
             }
-            set {
-                this["AlarmType_Alarm"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Alerte")]
         public string AlarmType_Warning {
             get {
                 return ((string)(this["AlarmType_Warning"]));
             }
-            set {
-                this["AlarmType_Warning"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string AlarmType_None {
             get {
                 return ((string)(this["AlarmType_None"]));
             }
-            set {
-                this["AlarmType_None"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("La classe n\'est pas initialisée")]
         public string Error01 {
             get {
                 return ((string)(this["Error01"]));
             }
-            set {
-                this["Error01"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("L\'alarme est déjà active")]
         public string Error02 {
             get {
                 return ((string)(this["Error02"]));
             }
-            set {
-                this["Error02"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("L\'alarme est inactive mais ne fait pas parti des alarmes actives")]
         public string Error03 {
             get {
                 return ((string)(this["Error03"]));
             }
-            set {
-                this["Error03"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("L\'alarme ne fait pas parti des alarmes actives")]
         public string Error04 {
             get {
                 return ((string)(this["Error04"]));
             }
-            set {
-                this["Error04"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("L\'alarme est déjà inactive")]
         public string Error05 {
             get {
                 return ((string)(this["Error05"]));
             }
-            set {
-                this["Error05"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Statut de l\'alarme avant inactivation ou aquittement incorrect")]
         public string Error06 {
             get {
                 return ((string)(this["Error06"]));
             }
-            set {
-                this["Error06"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Type d\'alarme incorrect")]
         public string Error07 {
             get {
                 return ((string)(this["Error07"]));
             }
-            set {
-                this["Error07"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Je ne te crois pas, c\'est impossible")]
         public string Error08 {
             get {
                 return ((string)(this["Error08"]));
             }
-            set {
-                this["Error08"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\r\n          <ConfigAlarms xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=" +
-            "\"http://www.w3.org/2001/XMLSchema-instance\">\r\n            <configAlarms>\r\n      " +
-            "        <ConfigAlarm>\r\n                <id1>0</id1>\r\n                <id2>0</id2" +
-            ">\r\n                <description>Connexion à la balance échouée</description>\r\n  " +
-            "              <type>Alarm</type>\r\n              </ConfigAlarm>\r\n              <C" +
-            "onfigAlarm>\r\n                <id1>1</id1>\r\n                <id2>0</id2>\r\n       " +
-            "         <description>Connexion au SpeedMixer échouée</description>\r\n           " +
-            "     <type>Alarm</type>\r\n              </ConfigAlarm>\r\n              <ConfigAlar" +
-            "m>\r\n                <id1>1</id1>\r\n                <id2>1</id2>\r\n                " +
-            "<description>Erreur du speedmixer pendant un cycle</description>\r\n              " +
-            "  <type>Alarm</type>\r\n              </ConfigAlarm>\r\n              <ConfigAlarm>\r" +
-            "\n                <id1>2</id1>\r\n                <id2>0</id2>\r\n                <de" +
-            "scription>Connexion à la pompe à vide échouée</description>\r\n                <ty" +
-            "pe>Alarm</type>\r\n              </ConfigAlarm>\r\n              <ConfigAlarm>\r\n    " +
-            "            <id1>3</id1>\r\n                <id2>0</id2>\r\n                <descrip" +
-            "tion>Connexion au piège froid échouée</description>\r\n                <type>Alarm" +
-            "</type>\r\n              </ConfigAlarm>\r\n              <ConfigAlarm>\r\n            " +
-            "    <id1>3</id1>\r\n                <id2>1</id2>\r\n                <description>Tem" +
-            "pérature trop haute pendant le cycle</description>\r\n                <type>Alarm<" +
-            "/type>\r\n              </ConfigAlarm>\r\n              <ConfigAlarm>\r\n             " +
-            "   <id1>4</id1>\r\n                <id2>0</id2>\r\n                <description>Back" +
-            "up automatique complet de la base de données échoué aprés 3 tentatives</descript" +
-            "ion>\r\n                <type>Warning</type>\r\n              </ConfigAlarm>\r\n      " +
-            "      </configAlarms>\r\n          </ConfigAlarms>\r\n        ")]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ConfigAlarms xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <configAlarms>
+    <ConfigAlarm>
+      <id1>0</id1>
+      <id2>0</id2>
+      <description>Connexion à la balance échouée</description>
+      <type>Alarm</type>
+    </ConfigAlarm>
+    <ConfigAlarm>
+      <id1>1</id1>
+      <id2>0</id2>
+      <description>Connexion au SpeedMixer échouée</description>
+      <type>Alarm</type>
+    </ConfigAlarm>
+    <ConfigAlarm>
+      <id1>1</id1>
+      <id2>1</id2>
+      <description>Erreur du speedmixer pendant un cycle</description>
+      <type>Alarm</type>
+    </ConfigAlarm>
+    <ConfigAlarm>
+      <id1>2</id1>
+      <id2>0</id2>
+      <description>Connexion à la pompe à vide échouée</description>
+      <type>Alarm</type>
+    </ConfigAlarm>
+    <ConfigAlarm>
+      <id1>3</id1>
+      <id2>0</id2>
+      <description>Connexion au piège froid échouée</description>
+      <type>Alarm</type>
+    </ConfigAlarm>
+    <ConfigAlarm>
+      <id1>3</id1>
+      <id2>1</id2>
+      <description>Température trop haute pendant le cycle</description>
+      <type>Alarm</type>
+    </ConfigAlarm>
+    <ConfigAlarm>
+      <id1>4</id1>
+      <id2>0</id2>
+      <description>Backup automatique complet de la base de données échoué aprés 3 tentatives</description>
+      <type>Warning</type>
+    </ConfigAlarm>
+  </configAlarms>
+</ConfigAlarms>")]
         public global::Alarm_Management.ConfigAlarms Alarms {
             get {
                 return ((global::Alarm_Management.ConfigAlarms)(this["Alarms"]));
-            }
-            set {
-                this["Alarms"] = value;
             }
         }
     }

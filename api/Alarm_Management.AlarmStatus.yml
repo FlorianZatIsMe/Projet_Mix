@@ -1,0 +1,218 @@
+### YamlMime:ManagedReference
+items:
+- uid: Alarm_Management.AlarmStatus
+  commentId: T:Alarm_Management.AlarmStatus
+  id: AlarmStatus
+  parent: Alarm_Management
+  children:
+  - Alarm_Management.AlarmStatus.ACK
+  - Alarm_Management.AlarmStatus.ACTIVE
+  - Alarm_Management.AlarmStatus.INACTIVE
+  - Alarm_Management.AlarmStatus.None
+  - Alarm_Management.AlarmStatus.RAZ
+  - Alarm_Management.AlarmStatus.RAZACK
+  langs:
+  - csharp
+  - vb
+  name: AlarmStatus
+  nameWithType: AlarmStatus
+  fullName: Alarm_Management.AlarmStatus
+  type: Enum
+  source:
+    id: AlarmStatus
+    path: C:\Temp\MixingApplication\Alarm_Management\AlarmManagement.cs
+    startLine: 41
+  assemblies:
+  - Alarm_Management
+  namespace: Alarm_Management
+  summary: "\n\n"
+  example: []
+  syntax:
+    content: public enum AlarmStatus
+    content.vb: Public Enum AlarmStatus
+  modifiers.csharp:
+  - public
+  - enum
+  modifiers.vb:
+  - Public
+  - Enum
+- uid: Alarm_Management.AlarmStatus.RAZ
+  commentId: F:Alarm_Management.AlarmStatus.RAZ
+  id: RAZ
+  parent: Alarm_Management.AlarmStatus
+  langs:
+  - csharp
+  - vb
+  name: RAZ
+  nameWithType: AlarmStatus.RAZ
+  fullName: Alarm_Management.AlarmStatus.RAZ
+  type: Field
+  source:
+    id: RAZ
+    path: C:\Temp\MixingApplication\Alarm_Management\AlarmManagement.cs
+    startLine: 43
+  assemblies:
+  - Alarm_Management
+  namespace: Alarm_Management
+  syntax:
+    content: RAZ = 0
+    return:
+      type: Alarm_Management.AlarmStatus
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Alarm_Management.AlarmStatus.RAZACK
+  commentId: F:Alarm_Management.AlarmStatus.RAZACK
+  id: RAZACK
+  parent: Alarm_Management.AlarmStatus
+  langs:
+  - csharp
+  - vb
+  name: RAZACK
+  nameWithType: AlarmStatus.RAZACK
+  fullName: Alarm_Management.AlarmStatus.RAZACK
+  type: Field
+  source:
+    id: RAZACK
+    path: C:\Temp\MixingApplication\Alarm_Management\AlarmManagement.cs
+    startLine: 44
+  assemblies:
+  - Alarm_Management
+  namespace: Alarm_Management
+  syntax:
+    content: RAZACK = 1
+    return:
+      type: Alarm_Management.AlarmStatus
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Alarm_Management.AlarmStatus.ACTIVE
+  commentId: F:Alarm_Management.AlarmStatus.ACTIVE
+  id: ACTIVE
+  parent: Alarm_Management.AlarmStatus
+  langs:
+  - csharp
+  - vb
+  name: ACTIVE
+  nameWithType: AlarmStatus.ACTIVE
+  fullName: Alarm_Management.AlarmStatus.ACTIVE
+  type: Field
+  source:
+    id: ACTIVE
+    path: C:\Temp\MixingApplication\Alarm_Management\AlarmManagement.cs
+    startLine: 45
+  assemblies:
+  - Alarm_Management
+  namespace: Alarm_Management
+  syntax:
+    content: ACTIVE = 2
+    return:
+      type: Alarm_Management.AlarmStatus
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Alarm_Management.AlarmStatus.INACTIVE
+  commentId: F:Alarm_Management.AlarmStatus.INACTIVE
+  id: INACTIVE
+  parent: Alarm_Management.AlarmStatus
+  langs:
+  - csharp
+  - vb
+  name: INACTIVE
+  nameWithType: AlarmStatus.INACTIVE
+  fullName: Alarm_Management.AlarmStatus.INACTIVE
+  type: Field
+  source:
+    id: INACTIVE
+    path: C:\Temp\MixingApplication\Alarm_Management\AlarmManagement.cs
+    startLine: 46
+  assemblies:
+  - Alarm_Management
+  namespace: Alarm_Management
+  syntax:
+    content: INACTIVE = 3
+    return:
+      type: Alarm_Management.AlarmStatus
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Alarm_Management.AlarmStatus.ACK
+  commentId: F:Alarm_Management.AlarmStatus.ACK
+  id: ACK
+  parent: Alarm_Management.AlarmStatus
+  langs:
+  - csharp
+  - vb
+  name: ACK
+  nameWithType: AlarmStatus.ACK
+  fullName: Alarm_Management.AlarmStatus.ACK
+  type: Field
+  source:
+    id: ACK
+    path: C:\Temp\MixingApplication\Alarm_Management\AlarmManagement.cs
+    startLine: 47
+  assemblies:
+  - Alarm_Management
+  namespace: Alarm_Management
+  syntax:
+    content: ACK = 4
+    return:
+      type: Alarm_Management.AlarmStatus
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Alarm_Management.AlarmStatus.None
+  commentId: F:Alarm_Management.AlarmStatus.None
+  id: None
+  parent: Alarm_Management.AlarmStatus
+  langs:
+  - csharp
+  - vb
+  name: None
+  nameWithType: AlarmStatus.None
+  fullName: Alarm_Management.AlarmStatus.None
+  type: Field
+  source:
+    id: None
+    path: C:\Temp\MixingApplication\Alarm_Management\AlarmManagement.cs
+    startLine: 48
+  assemblies:
+  - Alarm_Management
+  namespace: Alarm_Management
+  syntax:
+    content: None = 5
+    return:
+      type: Alarm_Management.AlarmStatus
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+references:
+- uid: Alarm_Management
+  commentId: N:Alarm_Management
+  name: Alarm_Management
+  nameWithType: Alarm_Management
+  fullName: Alarm_Management
+- uid: Alarm_Management.AlarmStatus
+  commentId: T:Alarm_Management.AlarmStatus
+  parent: Alarm_Management
+  name: AlarmStatus
+  nameWithType: AlarmStatus
+  fullName: Alarm_Management.AlarmStatus

@@ -23,39 +23,30 @@ namespace User_Management.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("MixingApplication_Operator")]
         public string Group_operator {
             get {
                 return ((string)(this["Group_operator"]));
             }
-            set {
-                this["Group_operator"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("MixingApplication_Supervisor")]
         public string Group_supervisor {
             get {
                 return ((string)(this["Group_supervisor"]));
             }
-            set {
-                this["Group_supervisor"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("MixingApplication_Administrator")]
         public string Group_administrator {
             get {
                 return ((string)(this["Group_administrator"]));
-            }
-            set {
-                this["Group_administrator"] = value;
             }
         }
     }

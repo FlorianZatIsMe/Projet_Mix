@@ -23,6 +23,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -117,6 +119,7 @@
     <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.5.0.5\lib\net46\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -188,6 +191,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlarmManagement.cs" />
@@ -202,6 +206,10 @@
     <ProjectReference Include="..\Database\Database.csproj">
       <Project>{9DA604D9-06C8-4EFF-9688-E9934CE25F40}</Project>
       <Name>Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Message\Message.csproj">
+      <Project>{77b11b88-ceda-40c3-8b83-e2ef31bce0b3}</Project>
+      <Name>Message</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

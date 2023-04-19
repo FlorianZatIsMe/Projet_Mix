@@ -1,0 +1,1035 @@
+### YamlMime:ManagedReference
+items:
+- uid: Alarm_Management.AlarmManagement
+  commentId: T:Alarm_Management.AlarmManagement
+  id: AlarmManagement
+  parent: Alarm_Management
+  children:
+  - Alarm_Management.AlarmManagement.AcknowledgeAlarm(System.Int32,System.Int32)
+  - Alarm_Management.AlarmManagement.ActiveAlarmEvent
+  - Alarm_Management.AlarmManagement.ActiveAlarms
+  - Alarm_Management.AlarmManagement.Alarms
+  - Alarm_Management.AlarmManagement.GetAlarmDescription(System.Int32,System.Int32)
+  - Alarm_Management.AlarmManagement.GetAlarmType(Alarm_Management.AlarmType)
+  - Alarm_Management.AlarmManagement.InactivateAlarm(System.Int32,System.Int32)
+  - Alarm_Management.AlarmManagement.InactiveAlarmEvent
+  - Alarm_Management.AlarmManagement.info
+  - Alarm_Management.AlarmManagement.Initialize(Alarm_Management.IniInfo)
+  - Alarm_Management.AlarmManagement.NewAlarm(System.Int32,System.Int32)
+  - Alarm_Management.AlarmManagement.RAZalarms
+  - Alarm_Management.AlarmManagement.UpdateAlarms
+  langs:
+  - csharp
+  - vb
+  name: AlarmManagement
+  nameWithType: AlarmManagement
+  fullName: Alarm_Management.AlarmManagement
+  type: Class
+  source:
+    id: AlarmManagement
+    path: C:\Temp\MixingApplication\Alarm_Management\AlarmManagement.cs
+    startLine: 84
+  assemblies:
+  - Alarm_Management
+  namespace: Alarm_Management
+  syntax:
+    content: public class AlarmManagement
+    content.vb: Public Class AlarmManagement
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Alarm_Management.AlarmManagement.ActiveAlarms
+  commentId: P:Alarm_Management.AlarmManagement.ActiveAlarms
+  id: ActiveAlarms
+  parent: Alarm_Management.AlarmManagement
+  langs:
+  - csharp
+  - vb
+  name: ActiveAlarms
+  nameWithType: AlarmManagement.ActiveAlarms
+  fullName: Alarm_Management.AlarmManagement.ActiveAlarms
+  type: Property
+  source:
+    id: ActiveAlarms
+    path: C:\Temp\MixingApplication\Alarm_Management\AlarmManagement.cs
+    startLine: 86
+  assemblies:
+  - Alarm_Management
+  namespace: Alarm_Management
+  syntax:
+    content: public static List<Tuple<int, int>> ActiveAlarms { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{System.Tuple{System.Int32,System.Int32}}
+    content.vb: Public Shared ReadOnly Property ActiveAlarms As List(Of Tuple(Of Integer, Integer))
+  overload: Alarm_Management.AlarmManagement.ActiveAlarms*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Alarm_Management.AlarmManagement.RAZalarms
+  commentId: F:Alarm_Management.AlarmManagement.RAZalarms
+  id: RAZalarms
+  parent: Alarm_Management.AlarmManagement
+  langs:
+  - csharp
+  - vb
+  name: RAZalarms
+  nameWithType: AlarmManagement.RAZalarms
+  fullName: Alarm_Management.AlarmManagement.RAZalarms
+  type: Field
+  source:
+    id: RAZalarms
+    path: C:\Temp\MixingApplication\Alarm_Management\AlarmManagement.cs
+    startLine: 87
+  assemblies:
+  - Alarm_Management
+  namespace: Alarm_Management
+  syntax:
+    content: public static List<int> RAZalarms
+    return:
+      type: System.Collections.Generic.List{System.Int32}
+    content.vb: Public Shared RAZalarms As List(Of Integer)
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Alarm_Management.AlarmManagement.Alarms
+  commentId: P:Alarm_Management.AlarmManagement.Alarms
+  id: Alarms
+  parent: Alarm_Management.AlarmManagement
+  langs:
+  - csharp
+  - vb
+  name: Alarms
+  nameWithType: AlarmManagement.Alarms
+  fullName: Alarm_Management.AlarmManagement.Alarms
+  type: Property
+  source:
+    id: Alarms
+    path: C:\Temp\MixingApplication\Alarm_Management\AlarmManagement.cs
+    startLine: 88
+  assemblies:
+  - Alarm_Management
+  namespace: Alarm_Management
+  syntax:
+    content: public static Alarm[, ] Alarms { get; }
+    parameters: []
+    return:
+      type: Alarm_Management.Alarm[,]
+    content.vb: Public Shared ReadOnly Property Alarms As Alarm(,)
+  overload: Alarm_Management.AlarmManagement.Alarms*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Alarm_Management.AlarmManagement.ActiveAlarmEvent
+  commentId: E:Alarm_Management.AlarmManagement.ActiveAlarmEvent
+  id: ActiveAlarmEvent
+  parent: Alarm_Management.AlarmManagement
+  langs:
+  - csharp
+  - vb
+  name: ActiveAlarmEvent
+  nameWithType: AlarmManagement.ActiveAlarmEvent
+  fullName: Alarm_Management.AlarmManagement.ActiveAlarmEvent
+  type: Event
+  source:
+    id: ActiveAlarmEvent
+    path: C:\Temp\MixingApplication\Alarm_Management\AlarmManagement.cs
+    startLine: 96
+  assemblies:
+  - Alarm_Management
+  namespace: Alarm_Management
+  syntax:
+    content: public static event Action ActiveAlarmEvent
+    return:
+      type: System.Action
+    content.vb: Public Shared Event ActiveAlarmEvent As Action
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Alarm_Management.AlarmManagement.InactiveAlarmEvent
+  commentId: E:Alarm_Management.AlarmManagement.InactiveAlarmEvent
+  id: InactiveAlarmEvent
+  parent: Alarm_Management.AlarmManagement
+  langs:
+  - csharp
+  - vb
+  name: InactiveAlarmEvent
+  nameWithType: AlarmManagement.InactiveAlarmEvent
+  fullName: Alarm_Management.AlarmManagement.InactiveAlarmEvent
+  type: Event
+  source:
+    id: InactiveAlarmEvent
+    path: C:\Temp\MixingApplication\Alarm_Management\AlarmManagement.cs
+    startLine: 97
+  assemblies:
+  - Alarm_Management
+  namespace: Alarm_Management
+  syntax:
+    content: public static event Action InactiveAlarmEvent
+    return:
+      type: System.Action
+    content.vb: Public Shared Event InactiveAlarmEvent As Action
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Alarm_Management.AlarmManagement.info
+  commentId: F:Alarm_Management.AlarmManagement.info
+  id: info
+  parent: Alarm_Management.AlarmManagement
+  langs:
+  - csharp
+  - vb
+  name: info
+  nameWithType: AlarmManagement.info
+  fullName: Alarm_Management.AlarmManagement.info
+  type: Field
+  source:
+    id: info
+    path: C:\Temp\MixingApplication\Alarm_Management\AlarmManagement.cs
+    startLine: 99
+  assemblies:
+  - Alarm_Management
+  namespace: Alarm_Management
+  syntax:
+    content: public static IniInfo info
+    return:
+      type: Alarm_Management.IniInfo
+    content.vb: Public Shared info As IniInfo
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Alarm_Management.AlarmManagement.Initialize(Alarm_Management.IniInfo)
+  commentId: M:Alarm_Management.AlarmManagement.Initialize(Alarm_Management.IniInfo)
+  id: Initialize(Alarm_Management.IniInfo)
+  parent: Alarm_Management.AlarmManagement
+  langs:
+  - csharp
+  - vb
+  name: Initialize(IniInfo)
+  nameWithType: AlarmManagement.Initialize(IniInfo)
+  fullName: Alarm_Management.AlarmManagement.Initialize(Alarm_Management.IniInfo)
+  type: Method
+  source:
+    id: Initialize
+    path: C:\Temp\MixingApplication\Alarm_Management\AlarmManagement.cs
+    startLine: 145
+  assemblies:
+  - Alarm_Management
+  namespace: Alarm_Management
+  summary: "\nInitialize\n"
+  example: []
+  syntax:
+    content: public static void Initialize(IniInfo info_arg)
+    parameters:
+    - id: info_arg
+      type: Alarm_Management.IniInfo
+      description: ''
+    content.vb: Public Shared Sub Initialize(info_arg As IniInfo)
+  overload: Alarm_Management.AlarmManagement.Initialize*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Alarm_Management.AlarmManagement.NewAlarm(System.Int32,System.Int32)
+  commentId: M:Alarm_Management.AlarmManagement.NewAlarm(System.Int32,System.Int32)
+  id: NewAlarm(System.Int32,System.Int32)
+  parent: Alarm_Management.AlarmManagement
+  langs:
+  - csharp
+  - vb
+  name: NewAlarm(Int32, Int32)
+  nameWithType: AlarmManagement.NewAlarm(Int32, Int32)
+  fullName: Alarm_Management.AlarmManagement.NewAlarm(System.Int32, System.Int32)
+  type: Method
+  source:
+    id: NewAlarm
+    path: C:\Temp\MixingApplication\Alarm_Management\AlarmManagement.cs
+    startLine: 159
+  assemblies:
+  - Alarm_Management
+  namespace: Alarm_Management
+  syntax:
+    content: public static void NewAlarm(int id1, int id2)
+    parameters:
+    - id: id1
+      type: System.Int32
+    - id: id2
+      type: System.Int32
+    content.vb: Public Shared Sub NewAlarm(id1 As Integer, id2 As Integer)
+  overload: Alarm_Management.AlarmManagement.NewAlarm*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Alarm_Management.AlarmManagement.InactivateAlarm(System.Int32,System.Int32)
+  commentId: M:Alarm_Management.AlarmManagement.InactivateAlarm(System.Int32,System.Int32)
+  id: InactivateAlarm(System.Int32,System.Int32)
+  parent: Alarm_Management.AlarmManagement
+  langs:
+  - csharp
+  - vb
+  name: InactivateAlarm(Int32, Int32)
+  nameWithType: AlarmManagement.InactivateAlarm(Int32, Int32)
+  fullName: Alarm_Management.AlarmManagement.InactivateAlarm(System.Int32, System.Int32)
+  type: Method
+  source:
+    id: InactivateAlarm
+    path: C:\Temp\MixingApplication\Alarm_Management\AlarmManagement.cs
+    startLine: 211
+  assemblies:
+  - Alarm_Management
+  namespace: Alarm_Management
+  syntax:
+    content: public static void InactivateAlarm(int id1, int id2)
+    parameters:
+    - id: id1
+      type: System.Int32
+    - id: id2
+      type: System.Int32
+    content.vb: Public Shared Sub InactivateAlarm(id1 As Integer, id2 As Integer)
+  overload: Alarm_Management.AlarmManagement.InactivateAlarm*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Alarm_Management.AlarmManagement.AcknowledgeAlarm(System.Int32,System.Int32)
+  commentId: M:Alarm_Management.AlarmManagement.AcknowledgeAlarm(System.Int32,System.Int32)
+  id: AcknowledgeAlarm(System.Int32,System.Int32)
+  parent: Alarm_Management.AlarmManagement
+  langs:
+  - csharp
+  - vb
+  name: AcknowledgeAlarm(Int32, Int32)
+  nameWithType: AlarmManagement.AcknowledgeAlarm(Int32, Int32)
+  fullName: Alarm_Management.AlarmManagement.AcknowledgeAlarm(System.Int32, System.Int32)
+  type: Method
+  source:
+    id: AcknowledgeAlarm
+    path: C:\Temp\MixingApplication\Alarm_Management\AlarmManagement.cs
+    startLine: 289
+  assemblies:
+  - Alarm_Management
+  namespace: Alarm_Management
+  syntax:
+    content: public static void AcknowledgeAlarm(int id1, int id2)
+    parameters:
+    - id: id1
+      type: System.Int32
+    - id: id2
+      type: System.Int32
+    content.vb: Public Shared Sub AcknowledgeAlarm(id1 As Integer, id2 As Integer)
+  overload: Alarm_Management.AlarmManagement.AcknowledgeAlarm*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Alarm_Management.AlarmManagement.UpdateAlarms
+  commentId: M:Alarm_Management.AlarmManagement.UpdateAlarms
+  id: UpdateAlarms
+  parent: Alarm_Management.AlarmManagement
+  langs:
+  - csharp
+  - vb
+  name: UpdateAlarms()
+  nameWithType: AlarmManagement.UpdateAlarms()
+  fullName: Alarm_Management.AlarmManagement.UpdateAlarms()
+  type: Method
+  source:
+    id: UpdateAlarms
+    path: C:\Temp\MixingApplication\Alarm_Management\AlarmManagement.cs
+    startLine: 356
+  assemblies:
+  - Alarm_Management
+  namespace: Alarm_Management
+  syntax:
+    content: public static void UpdateAlarms()
+    content.vb: Public Shared Sub UpdateAlarms
+  overload: Alarm_Management.AlarmManagement.UpdateAlarms*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Alarm_Management.AlarmManagement.GetAlarmType(Alarm_Management.AlarmType)
+  commentId: M:Alarm_Management.AlarmManagement.GetAlarmType(Alarm_Management.AlarmType)
+  id: GetAlarmType(Alarm_Management.AlarmType)
+  parent: Alarm_Management.AlarmManagement
+  langs:
+  - csharp
+  - vb
+  name: GetAlarmType(AlarmType)
+  nameWithType: AlarmManagement.GetAlarmType(AlarmType)
+  fullName: Alarm_Management.AlarmManagement.GetAlarmType(Alarm_Management.AlarmType)
+  type: Method
+  source:
+    id: GetAlarmType
+    path: C:\Temp\MixingApplication\Alarm_Management\AlarmManagement.cs
+    startLine: 370
+  assemblies:
+  - Alarm_Management
+  namespace: Alarm_Management
+  syntax:
+    content: public static string GetAlarmType(AlarmType type)
+    parameters:
+    - id: type
+      type: Alarm_Management.AlarmType
+    return:
+      type: System.String
+    content.vb: Public Shared Function GetAlarmType(type As AlarmType) As String
+  overload: Alarm_Management.AlarmManagement.GetAlarmType*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Alarm_Management.AlarmManagement.GetAlarmDescription(System.Int32,System.Int32)
+  commentId: M:Alarm_Management.AlarmManagement.GetAlarmDescription(System.Int32,System.Int32)
+  id: GetAlarmDescription(System.Int32,System.Int32)
+  parent: Alarm_Management.AlarmManagement
+  langs:
+  - csharp
+  - vb
+  name: GetAlarmDescription(Int32, Int32)
+  nameWithType: AlarmManagement.GetAlarmDescription(Int32, Int32)
+  fullName: Alarm_Management.AlarmManagement.GetAlarmDescription(System.Int32, System.Int32)
+  type: Method
+  source:
+    id: GetAlarmDescription
+    path: C:\Temp\MixingApplication\Alarm_Management\AlarmManagement.cs
+    startLine: 385
+  assemblies:
+  - Alarm_Management
+  namespace: Alarm_Management
+  syntax:
+    content: public static string GetAlarmDescription(int id1, int id2)
+    parameters:
+    - id: id1
+      type: System.Int32
+    - id: id2
+      type: System.Int32
+    return:
+      type: System.String
+    content.vb: Public Shared Function GetAlarmDescription(id1 As Integer, id2 As Integer) As String
+  overload: Alarm_Management.AlarmManagement.GetAlarmDescription*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+references:
+- uid: Alarm_Management
+  commentId: N:Alarm_Management
+  name: Alarm_Management
+  nameWithType: Alarm_Management
+  fullName: Alarm_Management
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Alarm_Management.AlarmManagement.ActiveAlarms*
+  commentId: Overload:Alarm_Management.AlarmManagement.ActiveAlarms
+  name: ActiveAlarms
+  nameWithType: AlarmManagement.ActiveAlarms
+  fullName: Alarm_Management.AlarmManagement.ActiveAlarms
+- uid: System.Collections.Generic.List{System.Tuple{System.Int32,System.Int32}}
+  commentId: T:System.Collections.Generic.List{System.Tuple{System.Int32,System.Int32}}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<Tuple<Int32, Int32>>
+  nameWithType: List<Tuple<Int32, Int32>>
+  fullName: System.Collections.Generic.List<System.Tuple<System.Int32, System.Int32>>
+  nameWithType.vb: List(Of Tuple(Of Int32, Int32))
+  fullName.vb: System.Collections.Generic.List(Of System.Tuple(Of System.Int32, System.Int32))
+  name.vb: List(Of Tuple(Of Int32, Int32))
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Tuple`2
+    name: Tuple
+    nameWithType: Tuple
+    fullName: System.Tuple
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Tuple`2
+    name: Tuple
+    nameWithType: Tuple
+    fullName: System.Tuple
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: System.Collections.Generic.List{System.Int32}
+  commentId: T:System.Collections.Generic.List{System.Int32}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<Int32>
+  nameWithType: List<Int32>
+  fullName: System.Collections.Generic.List<System.Int32>
+  nameWithType.vb: List(Of Int32)
+  fullName.vb: System.Collections.Generic.List(Of System.Int32)
+  name.vb: List(Of Int32)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Alarm_Management.AlarmManagement.Alarms*
+  commentId: Overload:Alarm_Management.AlarmManagement.Alarms
+  name: Alarms
+  nameWithType: AlarmManagement.Alarms
+  fullName: Alarm_Management.AlarmManagement.Alarms
+- uid: Alarm_Management.Alarm[,]
+  isExternal: true
+  name: Alarm[,]
+  nameWithType: Alarm[,]
+  fullName: Alarm_Management.Alarm[,]
+  nameWithType.vb: Alarm(,)
+  fullName.vb: Alarm_Management.Alarm(,)
+  name.vb: Alarm(,)
+  spec.csharp:
+  - uid: Alarm_Management.Alarm
+    name: Alarm
+    nameWithType: Alarm
+    fullName: Alarm_Management.Alarm
+  - name: '[,]'
+    nameWithType: '[,]'
+    fullName: '[,]'
+  spec.vb:
+  - uid: Alarm_Management.Alarm
+    name: Alarm
+    nameWithType: Alarm
+    fullName: Alarm_Management.Alarm
+  - name: (,)
+    nameWithType: (,)
+    fullName: (,)
+- uid: System.Action
+  commentId: T:System.Action
+  parent: System
+  isExternal: true
+  name: Action
+  nameWithType: Action
+  fullName: System.Action
+- uid: Alarm_Management.IniInfo
+  commentId: T:Alarm_Management.IniInfo
+  parent: Alarm_Management
+  name: IniInfo
+  nameWithType: IniInfo
+  fullName: Alarm_Management.IniInfo
+- uid: Alarm_Management.AlarmManagement.Initialize*
+  commentId: Overload:Alarm_Management.AlarmManagement.Initialize
+  name: Initialize
+  nameWithType: AlarmManagement.Initialize
+  fullName: Alarm_Management.AlarmManagement.Initialize
+- uid: Alarm_Management.AlarmManagement.NewAlarm*
+  commentId: Overload:Alarm_Management.AlarmManagement.NewAlarm
+  name: NewAlarm
+  nameWithType: AlarmManagement.NewAlarm
+  fullName: Alarm_Management.AlarmManagement.NewAlarm
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Alarm_Management.AlarmManagement.InactivateAlarm*
+  commentId: Overload:Alarm_Management.AlarmManagement.InactivateAlarm
+  name: InactivateAlarm
+  nameWithType: AlarmManagement.InactivateAlarm
+  fullName: Alarm_Management.AlarmManagement.InactivateAlarm
+- uid: Alarm_Management.AlarmManagement.AcknowledgeAlarm*
+  commentId: Overload:Alarm_Management.AlarmManagement.AcknowledgeAlarm
+  name: AcknowledgeAlarm
+  nameWithType: AlarmManagement.AcknowledgeAlarm
+  fullName: Alarm_Management.AlarmManagement.AcknowledgeAlarm
+- uid: Alarm_Management.AlarmManagement.UpdateAlarms*
+  commentId: Overload:Alarm_Management.AlarmManagement.UpdateAlarms
+  name: UpdateAlarms
+  nameWithType: AlarmManagement.UpdateAlarms
+  fullName: Alarm_Management.AlarmManagement.UpdateAlarms
+- uid: Alarm_Management.AlarmManagement.GetAlarmType*
+  commentId: Overload:Alarm_Management.AlarmManagement.GetAlarmType
+  name: GetAlarmType
+  nameWithType: AlarmManagement.GetAlarmType
+  fullName: Alarm_Management.AlarmManagement.GetAlarmType
+- uid: Alarm_Management.AlarmType
+  commentId: T:Alarm_Management.AlarmType
+  parent: Alarm_Management
+  name: AlarmType
+  nameWithType: AlarmType
+  fullName: Alarm_Management.AlarmType
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Alarm_Management.AlarmManagement.GetAlarmDescription*
+  commentId: Overload:Alarm_Management.AlarmManagement.GetAlarmDescription
+  name: GetAlarmDescription
+  nameWithType: AlarmManagement.GetAlarmDescription
+  fullName: Alarm_Management.AlarmManagement.GetAlarmDescription

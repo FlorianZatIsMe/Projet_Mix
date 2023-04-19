@@ -1,0 +1,46 @@
+### YamlMime:ManagedReference
+items:
+- uid: Main.Pages.SubCycle
+  commentId: N:Main.Pages.SubCycle
+  id: Main.Pages.SubCycle
+  children:
+  - Main.Pages.SubCycle.CycleInfo
+  - Main.Pages.SubCycle.CycleSpeedMixer
+  - Main.Pages.SubCycle.CycleWeight
+  - Main.Pages.SubCycle.CycleWeight_old
+  - Main.Pages.SubCycle.PreCycle
+  langs:
+  - csharp
+  - vb
+  name: Main.Pages.SubCycle
+  nameWithType: Main.Pages.SubCycle
+  fullName: Main.Pages.SubCycle
+  type: Namespace
+  assemblies:
+  - MixingApplication
+references:
+- uid: Main.Pages.SubCycle.CycleWeight
+  commentId: T:Main.Pages.SubCycle.CycleWeight
+  name: CycleWeight
+  nameWithType: CycleWeight
+  fullName: Main.Pages.SubCycle.CycleWeight
+- uid: Main.Pages.SubCycle.CycleInfo
+  commentId: T:Main.Pages.SubCycle.CycleInfo
+  name: CycleInfo
+  nameWithType: CycleInfo
+  fullName: Main.Pages.SubCycle.CycleInfo
+- uid: Main.Pages.SubCycle.CycleSpeedMixer
+  commentId: T:Main.Pages.SubCycle.CycleSpeedMixer
+  name: CycleSpeedMixer
+  nameWithType: CycleSpeedMixer
+  fullName: Main.Pages.SubCycle.CycleSpeedMixer
+- uid: Main.Pages.SubCycle.CycleWeight_old
+  commentId: T:Main.Pages.SubCycle.CycleWeight_old
+  name: CycleWeight_old
+  nameWithType: CycleWeight_old
+  fullName: Main.Pages.SubCycle.CycleWeight_old
+- uid: Main.Pages.SubCycle.PreCycle
+  commentId: T:Main.Pages.SubCycle.PreCycle
+  name: PreCycle
+  nameWithType: PreCycle
+  fullName: Main.Pages.SubCycle.PreCycle

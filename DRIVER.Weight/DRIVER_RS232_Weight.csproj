@@ -23,6 +23,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -200,6 +202,10 @@
     <ProjectReference Include="..\Driver_RS232\Driver_RS232.csproj">
       <Project>{995498BD-68E4-4DAD-98C3-42563DBD79D8}</Project>
       <Name>Driver_RS232</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Message\Message.csproj">
+      <Project>{77b11b88-ceda-40c3-8b83-e2ef31bce0b3}</Project>
+      <Name>Message</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
