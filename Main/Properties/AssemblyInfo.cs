@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Integra")]
 [assembly: AssemblyProduct("MixingApplication")]
-[assembly: AssemblyCopyright("Copyright © Integra 2022")]
+[assembly: AssemblyCopyright("Copyright © Integra 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

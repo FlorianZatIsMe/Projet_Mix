@@ -8,10 +8,10 @@
         mc:Ignorable="d"
         Title="Connexion" 
         Height="Auto" 
-        Width="Auto" 
+        Width="418" 
         SizeToContent="WidthAndHeight" 
         ResizeMode="NoResize" 
-        WindowStartupLocation="CenterScreen" 
+        WindowStartupLocation="Manual" 
         Background="{DynamicResource Backgroup_Main}"
         PreviewKeyDown="Window_PreviewKeyDown" Deactivated="Window_Deactivated" Closing="Window_Closing" Loaded="Window_Loaded">
     <StackPanel Margin="20">

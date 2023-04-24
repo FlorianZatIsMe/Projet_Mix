@@ -2053,7 +2053,7 @@ namespace Database.Properties {
 <ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
   <Server>localhost</Server>
   <UserID>root</UserID>
-  <Password>Integra2022/</Password>
+  <Password>fDdViXrfIK0s3nNIFU4UAyKljiDYdMzCkJ2cyXi8kGM=</Password>
   <Db>db1</Db>
 </ConnectionInfo>")]
         public global::Database.ConnectionInfo ConnectionInfo {

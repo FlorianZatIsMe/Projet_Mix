@@ -2690,50 +2690,58 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"
-          <IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-            <list>
-              <int>3</int>
-              <int>4</int>
-              <int>5</int>
-              <int>10</int>
-              <int>12</int>
-              <int>13</int>
-              <int>14</int>
-              <int>15</int>
-              <int>16</int>
-              <int>17</int>
-              <int>18</int>
-              <int>19</int>
-              <int>20</int>
-              <int>21</int>
-              <int>22</int>
-              <int>23</int>
-              <int>24</int>
-              <int>25</int>
-              <int>26</int>
-              <int>27</int>
-              <int>28</int>
-              <int>29</int>
-              <int>30</int>
-              <int>31</int>
-              <int>32</int>
-              <int>33</int>
-              <int>34</int>
-              <int>35</int>
-              <int>36</int>
-              <int>37</int>
-              <int>38</int>
-              <int>39</int>
-              <int>40</int>
-              <int>41</int>
-              <int>42</int>
-              <int>43</int>
-              <int>44</int>
-              <int>45</int>
-            </list>
-          </IdDBControls>
-        ")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int Status_timer_Interval {
+            get {
+                return ((int)(this["Status_timer_Interval"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <list>
+    <int>3</int>
+    <int>4</int>
+    <int>5</int>
+    <int>10</int>
+    <int>12</int>
+    <int>13</int>
+    <int>14</int>
+    <int>15</int>
+    <int>16</int>
+    <int>17</int>
+    <int>18</int>
+    <int>19</int>
+    <int>20</int>
+    <int>21</int>
+    <int>22</int>
+    <int>23</int>
+    <int>24</int>
+    <int>25</int>
+    <int>26</int>
+    <int>27</int>
+    <int>28</int>
+    <int>29</int>
+    <int>30</int>
+    <int>31</int>
+    <int>32</int>
+    <int>33</int>
+    <int>34</int>
+    <int>35</int>
+    <int>36</int>
+    <int>37</int>
+    <int>38</int>
+    <int>39</int>
+    <int>40</int>
+    <int>41</int>
+    <int>42</int>
+    <int>43</int>
+    <int>44</int>
+    <int>45</int>
+  </list>
+</IdDBControls>")]
         public global::Main.Pages.IdDBControls RecipeMix_IdDBControls {
             get {
                 return ((global::Main.Pages.IdDBControls)(this["RecipeMix_IdDBControls"]));
@@ -2742,16 +2750,15 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"
-          <IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-            <list>
-              <int>3</int>
-              <int>5</int>
-              <int>8</int>
-              <int>9</int>
-            </list>
-          </IdDBControls>
-        ")]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <list>
+    <int>3</int>
+    <int>5</int>
+    <int>8</int>
+    <int>9</int>
+  </list>
+</IdDBControls>")]
         public global::Main.Pages.IdDBControls RecipeWeight_IdDBControls {
             get {
                 return ((global::Main.Pages.IdDBControls)(this["RecipeWeight_IdDBControls"]));
@@ -2760,10 +2767,76 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
-        public int Status_timer_Interval {
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int LastDailyTest_Days {
             get {
-                return ((int)(this["Status_timer_Interval"]));
+                return ((int)(this["LastDailyTest_Days"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int LastDailyTest_Hours {
+            get {
+                return ((int)(this["LastDailyTest_Hours"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5.661")]
+        public decimal DailyTest_Weight1 {
+            get {
+                return ((decimal)(this["DailyTest_Weight1"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("12.764")]
+        public decimal DailyTest_Weight2 {
+            get {
+                return ((decimal)(this["DailyTest_Weight2"]));
+            }
+            set {
+                this["DailyTest_Weight2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public decimal DailyTest_Weight3 {
+            get {
+                return ((decimal)(this["DailyTest_Weight3"]));
+            }
+            set {
+                this["DailyTest_Weight3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public decimal DailyTest_Weight4 {
+            get {
+                return ((decimal)(this["DailyTest_Weight4"]));
+            }
+            set {
+                this["DailyTest_Weight4"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public decimal Paramètre {
+            get {
+                return ((decimal)(this["Paramètre"]));
+            }
+            set {
+                this["Paramètre"] = value;
             }
         }
     }

@@ -56,18 +56,14 @@ namespace Main
         private int archiveCount = 0;
         private readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private void test()
-        {
-            MyMessageBox.Show("test-1");
-        }
-
         public MainWindow()
         {
 #if DEBUG
             LogManager.Configuration.Variables["myLevel"] = "Trace";
-            LogManager.Configuration.Variables["isRelease"] = "true";
+            LogManager.Configuration.Variables["isDebug"] = "true";
 #else
             LogManager.Configuration.Variables["myLevel"] = "Error";
+            LogManager.Configuration.Variables["isDebug"] = "false";
 #endif
             LogManager.ReconfigExistingLoggers(); // Explicit refresh of Layouts and updates active Logger-objects
             General.Initialize(new IniInfo() { Window = this });
@@ -92,8 +88,14 @@ namespace Main
             //synth.SelectVoiceByHints(VoiceGender.Male, VoiceAge.Senior);
             //synth.Speak("Oh... You're sweet, thank you. I don't love you, but it's nice to know that someone loves me. Who wouldn't anyway ?");
 
-            ReportGeneration report = new ReportGeneration();
-            report.GenerateCycleReport(646);
+            string plainText = "Integra2022/";
+            string key = "J'aime le chocolat";
+
+            //string cipherText = Encrypt(plainText, key); // fDdViXrfIK0s3nNIFU4UAyKljiDYdMzCkJ2cyXi8kGM= 
+
+            //MyMessageBox.Show(cipherText);
+            //MyMessageBox.Show(Decrypt(cipherText, key));
+
 
             MyMessageBox.Show("Fini je crois");
             Environment.Exit(1);
@@ -117,35 +119,6 @@ namespace Main
 
             AlarmManagement.ActiveAlarmEvent += ActiveAlarmEvent;
             AlarmManagement.InactiveAlarmEvent += InactiveAlarmEvent;
-            /*
-            Thread.CurrentThread.Name = "Main";
-            MyDatabase.test();
-            var task = Task.Run(() => MyDatabase.test());
-            //task.ContinueWith(_ => MessageBox.Show("Salut"), TaskScheduler.FromCurrentSynchronizationContext());
-
-
-
-            //Task task = new Task(() => MyDatabase.test());
-            //task.Start();
-            MessageBox.Show("Salut " + Thread.CurrentThread.Name);
-            
-            while(true)
-            {
-                Thread.Sleep(500);
-            }*/
-
-            /*
-            Task task = new Task(() =>
-            {
-                Task t = new Task(() =>
-                {
-                    MyMessageBox.Show("Task2");
-                    test();
-                });
-                t.Start();
-            });
-            task.Start();
-            MyMessageBox.Show("Salut");//*/
 
             try
             {
@@ -195,6 +168,69 @@ namespace Main
 
             Initialize();
         }
+        /*
+        public static string Encrypt(string plainText, string keyString)
+        {
+            byte[] plainBytes = Encoding.Unicode.GetBytes(plainText);
+            byte[] keyBytes = Encoding.Unicode.GetBytes(keyString);
+
+            using (RijndaelManaged cipher = new RijndaelManaged())
+            {
+                cipher.KeySize = 256;
+                cipher.BlockSize = 128;
+                cipher.Padding = PaddingMode.PKCS7;
+
+                using (var key = new Rfc2898DeriveBytes(keyBytes, new byte[] { 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8 }, 1000))
+                {
+                    cipher.Key = key.GetBytes(cipher.KeySize / 8);
+                    cipher.IV = key.GetBytes(cipher.BlockSize / 8);
+                }
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    using (var cryptoStream = new CryptoStream(memoryStream, cipher.CreateEncryptor(), CryptoStreamMode.Write))
+                    {
+                        cryptoStream.Write(plainBytes, 0, plainBytes.Length);
+                        cryptoStream.FlushFinalBlock();
+
+                        return Convert.ToBase64String(memoryStream.ToArray());
+                    }
+                }
+            }
+        }
+
+        public static string Decrypt(string cipherText, string keyString)
+        {
+            byte[] cipherBytes = Convert.FromBase64String(cipherText);
+            byte[] keyBytes = Encoding.Unicode.GetBytes(keyString);
+
+            using (RijndaelManaged cipher = new RijndaelManaged())
+            {
+                cipher.KeySize = 256;
+                cipher.BlockSize = 128;
+                cipher.Padding = PaddingMode.PKCS7;
+
+                using (var key = new Rfc2898DeriveBytes(keyBytes, new byte[] { 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8 }, 1000))
+                {
+                    cipher.Key = key.GetBytes(cipher.KeySize / 8);
+                    cipher.IV = key.GetBytes(cipher.BlockSize / 8);
+                }
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    using (var cryptoStream = new CryptoStream(memoryStream, cipher.CreateDecryptor(), CryptoStreamMode.Write))
+                    {
+                        cryptoStream.Write(cipherBytes, 0, cipherBytes.Length);
+                        cryptoStream.FlushFinalBlock();
+
+                        byte[] plainBytes = memoryStream.ToArray();
+
+                        return Encoding.Unicode.GetString(plainBytes, 0, plainBytes.Length);
+                    }
+                }
+            }
+        }
+        */
         private async void Initialize()
         {
             while (!isWindowLoaded) await Task.Delay(Settings.Default.Main_WaitPageLoadedDelay);
@@ -292,11 +328,13 @@ namespace Main
 
         private void CurrentTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
+            // We show the current date and time
             this.Dispatcher.Invoke(() =>
             {
                 labelDateTime.Text = DateTime.Now.ToString("dd MMMM yyyy HH:mm:ss");
             });
 
+            // We see if we perform an automatic backup
             if (!wasAutoBackupStarted && General.NextBackupTime.CompareTo(DateTime.Now) < 0)
             {
                 wasAutoBackupStarted = true;
@@ -304,6 +342,7 @@ namespace Main
                 if (ExecuteBackupAuto()) General.NextBackupTime = General.NextBackupTime.AddDays(1);
             }
 
+            // We see if we perform an archiving
             if (archiveCount == 0)
             {
                 Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetRowCount((new AuditTrailInfo()).TabName); });
@@ -318,16 +357,18 @@ namespace Main
             }
             archiveCount = (archiveCount + 1) % 3600;
 
+            // We see if we perform an auto log off
             if (General.currentRole != AccessTableInfo.NoneRole && DateTime.Now.AddMinutes(-1 * Settings.Default.AutoLogOff_min).CompareTo(General.lastActTime) > 0)
             {
                 UserManagement.SetNoneAccess();
-                logger.Debug("Auto log off at " + DateTime.Now.ToString());
+                logger.Info("Auto log off at " + DateTime.Now.ToString());
 
                 this.Dispatcher.Invoke(() => {
                     UpdateUser("aucun utilisateur", AccessTableInfo.NoneRole);
                 });
             }
 
+            // We see if we inform the user of the calibration state
             if (Settings.Default.Main_IsCalibMonitored)
             {
                 ConfigurationManager.RefreshSection("appSettings");
@@ -543,10 +584,10 @@ namespace Main
                 t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow_new(dailyTestInfo, id); });
                 dailyTestValues = (object[])t.Result;
 
-                DateTime lastSampling;
+                DateTime lastDailyTest;
                 try
                 {
-                    lastSampling = Convert.ToDateTime(dailyTestValues[dailyTestInfo.DateTime]);
+                    lastDailyTest = Convert.ToDateTime(dailyTestValues[dailyTestInfo.DateTime]);
                 }
                 catch (Exception ex)
                 {
@@ -555,12 +596,13 @@ namespace Main
                     return;
                 }
 
-                if (lastSampling.CompareTo(DateTime.Now.AddDays(-1)) < 0)
+                DateTime lastAllowedDailyTest = DateTime.Now.AddDays(-Settings.Default.LastDailyTest_Days).AddHours(-Settings.Default.LastDailyTest_Hours);
+                if (lastDailyTest.CompareTo(lastAllowedDailyTest) < 0)
                 {
                     bool[] accessTable = UserManagement.GetCurrentAccessTable();
                     if (accessTable[AccessTableInfo.DailyTest])
                     {
-                        if (MyMessageBox.Show("Le dernier test journalier de la balance a été fait le " + lastSampling.ToString(Settings.Default.Date_Format_Read) + " à " + lastSampling.ToString(Settings.Default.Time_Format) + ", voulez-vous faire le test journalier ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                        if (MyMessageBox.Show("Le dernier test journalier de la balance a été fait le " + lastDailyTest.ToString(Settings.Default.Date_Format_Read) + " à " + lastDailyTest.ToString(Settings.Default.Time_Format) + ", voulez-vous faire le test journalier ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                         {
                             frameMain.Content = new Pages.SubCycle.CycleWeight(frameMain);
                             return;
@@ -568,7 +610,7 @@ namespace Main
                     }
                     else
                     {
-                        MyMessageBox.Show("Le dernier test journalier de la balance a été fait le " + lastSampling.ToString(Settings.Default.Date_Format_Read) + " à " + lastSampling.ToString(Settings.Default.Time_Format) + " veuillez contacter une personne compétente pour faire le test journalier");
+                        MyMessageBox.Show("Le dernier test journalier de la balance a été fait le " + lastDailyTest.ToString(Settings.Default.Date_Format_Read) + " à " + lastDailyTest.ToString(Settings.Default.Time_Format) + " veuillez contacter une personne compétente pour faire le test journalier");
                         return;
                     }
 
@@ -676,7 +718,27 @@ namespace Main
         {
             await Task.Delay(100);
             logger.Debug("Window_Deactivated");
-            //this.Activate();
+
+            this.Activate();
+            await Task.Delay(100);
+
+            /*
+Oui, il existe une autre méthode pour verrouiller un ordinateur et empêcher l'accès à d'autres programmes. Cette méthode consiste à créer un "shell personnalisé" pour Windows. En d'autres termes, vous pouvez remplacer l'interface graphique habituelle de Windows (explorer.exe) par votre propre application. Voici les étapes à suivre :
+
+    Ouvrez l'éditeur de registre en appuyant sur la touche Windows + R, tapez "regedit" et appuyez sur Entrée.
+
+    Accédez à la clé de registre suivante : HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon.
+
+    Créez une nouvelle chaîne de valeur nommée "Shell" (si elle n'existe pas déjà).
+
+    Définissez la valeur de la chaîne Shell sur le chemin complet de votre programme (par exemple, "C:\MonProgramme.exe").
+
+    Redémarrez l'ordinateur.
+
+Lorsque l'ordinateur redémarre, votre application s'exécutera automatiquement et remplacera l'interface graphique habituelle de Windows. Cela signifie que les utilisateurs ne pourront pas accéder à d'autres programmes ou au bureau, car ils n'auront pas accès à l'interface graphique habituelle de Windows.
+
+Il est important de noter que cette méthode est assez radicale et peut rendre l'ordinateur inutilisable si votre application plante ou ne fonctionne pas correctement. Il est donc recommandé de tester soigneusement votre application avant de la déployer sur un ordinateur de production.
+            */
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

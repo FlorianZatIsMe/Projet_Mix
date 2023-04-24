@@ -36,6 +36,8 @@ namespace Main
             windowDeactivatedEvent = windowDeactivatedEvent_arg;
             mainWindow.Deactivated -= windowDeactivatedEvent;
             InitializeComponent();
+            Left = (System.Windows.SystemParameters.WorkArea.Width - Width) / 2;
+            Top = 100;
         }
         private void Click(string user = null)
         {

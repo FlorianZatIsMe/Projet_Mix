@@ -850,7 +850,7 @@
 &lt;ConnectionInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
   &lt;Server&gt;localhost&lt;/Server&gt;
   &lt;UserID&gt;root&lt;/UserID&gt;
-  &lt;Password&gt;Integra2022/&lt;/Password&gt;
+  &lt;Password&gt;fDdViXrfIK0s3nNIFU4UAyKljiDYdMzCkJ2cyXi8kGM=&lt;/Password&gt;
   &lt;Db&gt;db1&lt;/Db&gt;
 &lt;/ConnectionInfo&gt;</Value>
     </Setting>

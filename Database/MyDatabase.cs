@@ -10,6 +10,9 @@ using Database.Properties;
 using Message;
 using System.Threading;
 //using System.Windows.Threading;
+using System.Security.Cryptography;
+using System.Text;
+using System.IO;
 
 // CONFIURE "yyyy-MM-dd HH:mm:ss" SOME DAY, PLEASE
 
@@ -209,7 +212,9 @@ namespace Database
         private static readonly Queue<Task<object>> taskQueue = new Queue<Task<object>>(); // Queue of tasks to be executed. Note: to execute a public method of this class, it must be added to the queue
         private static readonly System.Timers.Timer QueueEmptyTimer;        // Timer used to remove the connection to the database if the task queue is empty for too long
         private static readonly System.Timers.Timer IsQueueAvailableTimer;  // Timer used to execute the next task on the queue
-        private static int QueueEmptyCount = 0;                             // Counter which increments when the task queue is empty          
+        private static int QueueEmptyCount = 0;                             // Counter which increments when the task queue is empty
+
+        private static readonly string key = "J'aime le chocolat";
 
         //private static Window mainWindow;   // Main window of the application (used to attach the MessageBoxes to it)
 
@@ -217,17 +222,6 @@ namespace Database
         /// Variable initialized by other projects
         /// </value>
         public static IniInfo info;
-
-        //
-        // MAYBE TO DELETE
-        //
-
-        //private readonly static List<int> mutexIDs = new List<int>();
-        //private static ManualResetEvent signal = new ManualResetEvent(true);
-        //private static int lastMutexID = 0;
-        //public static List<int> AlarmListID = new List<int>();
-        //public static List<string> AlarmListDescription = new List<string>();
-        //public static List<string> AlarmListStatus = new List<string>();
 
         // Constructor of the class called automatically
         static MyDatabase()
@@ -264,11 +258,6 @@ namespace Database
         public static void MessageBoxShow(string messageBoxText, MessageBoxButton button = MessageBoxButton.OK)
         {
             MessageBox.Show(messageBoxText, "", button);
-            /*
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                MyMessageBox.Show(messageBoxText, button);
-            });*/
         }
 
 
@@ -314,15 +303,7 @@ namespace Database
                 QueueEmptyCount = 0;                // Initialize the empty queue counter
                 lastTask = taskQueue.Dequeue();     // Get the next task and remove it from the queue
                 lastTask.Start();                   // Execute the task
-
-                //MessageBox.Show("Bonjour Monsieur");
-
-                while (false)//!lastTask.IsCompleted)
-                {
-                    await Task.Delay(Settings.Default.TaskDeQueue_Wait);
-                }
-
-                //lastTask.Wait();                    // Wait for the task to end
+                lastTask.Wait();                    // Wait for the task to end
 
                 if (taskQueue.Count == 0) await Task.Delay(Settings.Default.TaskDeQueue_Wait); // If the executed task was the last of the queue then the program waits few ms
                 TaskDeQueue();  // Execute the next task
@@ -399,7 +380,7 @@ namespace Database
             {
                 Server = Settings.Default.ConnectionInfo.Server,        // Setting of the server to connect to
                 UserID = Settings.Default.ConnectionInfo.UserID,        // Setting of the user ID
-                Password = Settings.Default.ConnectionInfo.Password,    // Setting of the password of the used user ID
+                Password = Decrypt(Settings.Default.ConnectionInfo.Password, key),    // Setting of the password of the used user ID
                 Database = Settings.Default.ConnectionInfo.Db,          // Setting of the database to use
                 AllowZeroDateTime = true,                               // Allow zero date and time (00.00.0000 00:00:00)
                 Pooling = true,                                         // I forgot ;-P
@@ -1494,6 +1475,38 @@ namespace Database
                     return 2;
                 default:
                     return -1;
+            }
+        }
+
+        private static string Decrypt(string cipherText, string keyString)
+        {
+            byte[] cipherBytes = Convert.FromBase64String(cipherText);
+            byte[] keyBytes = Encoding.Unicode.GetBytes(keyString);
+
+            using (RijndaelManaged cipher = new RijndaelManaged())
+            {
+                cipher.KeySize = 256;
+                cipher.BlockSize = 128;
+                cipher.Padding = PaddingMode.PKCS7;
+
+                using (var key = new Rfc2898DeriveBytes(keyBytes, new byte[] { 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8 }, 1000))
+                {
+                    cipher.Key = key.GetBytes(cipher.KeySize / 8);
+                    cipher.IV = key.GetBytes(cipher.BlockSize / 8);
+                }
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    using (var cryptoStream = new CryptoStream(memoryStream, cipher.CreateDecryptor(), CryptoStreamMode.Write))
+                    {
+                        cryptoStream.Write(cipherBytes, 0, cipherBytes.Length);
+                        cryptoStream.FlushFinalBlock();
+
+                        byte[] plainBytes = memoryStream.ToArray();
+
+                        return Encoding.Unicode.GetString(plainBytes, 0, plainBytes.Length);
+                    }
+                }
             }
         }
     }

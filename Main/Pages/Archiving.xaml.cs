@@ -315,7 +315,7 @@ namespace Main.Pages
             string batchFile = Settings.Default.Archiving_Archive_batchFile;// @".\Resources\DB_backup_part_table";
             string arg1 = "\"" + DatabaseSettings.DBAppFolder + "\"";// @"C:\Program Files\MariaDB 10.9\bin" + "\"";
             string arg2 = DatabaseSettings.ConnectionInfo.UserID;// "root";
-            string arg3 = DatabaseSettings.ConnectionInfo.Password;// "Integra2022/";
+            string arg3 = General.Decrypt(DatabaseSettings.ConnectionInfo.Password, General.key);// "Integra2022/";
             string arg4 = DatabaseSettings.ConnectionInfo.Db;// dbName;
             string arg5 = dtTabInfo.TabName;
             string arg6 = "\"" + dtTabInfo.Ids[dtTabInfo.DateTime] + "<'" + dateTimeColumnValue + "'" + "\"";
@@ -395,7 +395,7 @@ namespace Main.Pages
             string batchFile = Settings.Default.Archiving_Archive_batchFile;// @".\Resources\DB_backup_part_table";
             string arg1 = "\"" + DatabaseSettings.DBAppFolder + "\"";// @"C:\Program Files\MariaDB 10.9\bin" + "\"";
             string arg2 = DatabaseSettings.ConnectionInfo.UserID;// "root";
-            string arg3 = DatabaseSettings.ConnectionInfo.Password;// "Integra2022/";
+            string arg3 = General.Decrypt(DatabaseSettings.ConnectionInfo.Password, General.key);// "Integra2022/";
             string arg4 = DatabaseSettings.ConnectionInfo.Db;// dbName;
             string arg5 = tableName;
             string arg6 = "\"" + dateTimeColumnId + "<'" + dateTimeColumnValue + "'" + "\"";
@@ -479,7 +479,7 @@ namespace Main.Pages
             string batchFile = Settings.Default.Archiving_Archive_batchFile;// @".\Resources\DB_backup_part_table";
             string arg1 = "\"" + DatabaseSettings.DBAppFolder + "\"";// @"C:\Program Files\MariaDB 10.9\bin" + "\"";
             string arg2 = DatabaseSettings.ConnectionInfo.UserID;// "root";
-            string arg3 = DatabaseSettings.ConnectionInfo.Password;// "Integra2022/";
+            string arg3 = General.Decrypt(DatabaseSettings.ConnectionInfo.Password, General.key);// "Integra2022/";
             string arg4 = DatabaseSettings.ConnectionInfo.Db;// dbName;
             string arg5 = "\"" + auditTrailInfo.Ids[auditTrailInfo.DateTime] + "<'" + lastRecordDate_s + "'" + "\"";
             string arg6 = archivingPath + lastArchiveFileName;
@@ -576,7 +576,7 @@ namespace Main.Pages
                 string batchFile = Settings.Default.Archiving_Restore_batchFile;// @".\Resources\DB_restore";
                 string arg1 = "\"" + DatabaseSettings.DBAppFolder + "\"";// @"C:\Program Files\MariaDB 10.9\bin" + "\"";
                 string arg2 = DatabaseSettings.ConnectionInfo.UserID;// "root";
-                string arg3 = DatabaseSettings.ConnectionInfo.Password;// "Integra2022/";
+                string arg3 = General.Decrypt(DatabaseSettings.ConnectionInfo.Password, General.key);// "Integra2022/";
                 string arg4 = DatabaseSettings.ConnectionInfo.Db;// dbName;
                 string arg5 = archivingPath + restoreFileName;
                 string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5;

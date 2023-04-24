@@ -13,7 +13,11 @@
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         AllowsTransparency="True"
-        Background="{DynamicResource Backgroup_Main}" Loaded="Window_Loaded" MouseMove="Window_MouseMove" Deactivated="Window_Deactivated" Closing="Window_Closing">
+        Background="{DynamicResource Backgroup_Main}" 
+        Loaded="Window_Loaded" 
+        MouseMove="Window_MouseMove" 
+        Deactivated="Window_Deactivated"      
+        Closing="Window_Closing">
 
 
     <Window.Resources>
@@ -404,8 +408,8 @@
                         </MenuItem.Icon>
                     </MenuItem>
 
-                    <!--// ETALONNAGE //-->
-                    <MenuItem x:Name="menuItemDailyTest" Header="ETALONNAGE"
+                    <!--// DAILY TEST //-->
+                    <MenuItem x:Name="menuItemDailyTest" Header="TEST JOURNALIER"
                               Height="{Binding ElementName=gridMenu, Path=ActualHeight}"
                               Style="{StaticResource Main_MenuItem}"
                               Click = "FxSampling">

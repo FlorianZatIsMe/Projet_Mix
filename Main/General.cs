@@ -17,6 +17,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Security.Cryptography;
+using System.Text;
+using System.IO;
 
 namespace Main
 {
@@ -80,6 +83,7 @@ namespace Main
         public static string text;
         public static DateTime NextBackupTime;
         private static Process keyBoardProcess;
+        public static readonly string key = "J'aime le chocolat";
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         public static IniInfo info;
 
@@ -548,6 +552,68 @@ namespace Main
 
             }
 
+        }
+
+        public static string Encrypt(string plainText, string keyString)
+        {
+            byte[] plainBytes = Encoding.Unicode.GetBytes(plainText);
+            byte[] keyBytes = Encoding.Unicode.GetBytes(keyString);
+
+            using (RijndaelManaged cipher = new RijndaelManaged())
+            {
+                cipher.KeySize = 256;
+                cipher.BlockSize = 128;
+                cipher.Padding = PaddingMode.PKCS7;
+
+                using (var key = new Rfc2898DeriveBytes(keyBytes, new byte[] { 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8 }, 1000))
+                {
+                    cipher.Key = key.GetBytes(cipher.KeySize / 8);
+                    cipher.IV = key.GetBytes(cipher.BlockSize / 8);
+                }
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    using (var cryptoStream = new CryptoStream(memoryStream, cipher.CreateEncryptor(), CryptoStreamMode.Write))
+                    {
+                        cryptoStream.Write(plainBytes, 0, plainBytes.Length);
+                        cryptoStream.FlushFinalBlock();
+
+                        return Convert.ToBase64String(memoryStream.ToArray());
+                    }
+                }
+            }
+        }
+
+        public static string Decrypt(string cipherText, string keyString)
+        {
+            byte[] cipherBytes = Convert.FromBase64String(cipherText);
+            byte[] keyBytes = Encoding.Unicode.GetBytes(keyString);
+
+            using (RijndaelManaged cipher = new RijndaelManaged())
+            {
+                cipher.KeySize = 256;
+                cipher.BlockSize = 128;
+                cipher.Padding = PaddingMode.PKCS7;
+
+                using (var key = new Rfc2898DeriveBytes(keyBytes, new byte[] { 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8 }, 1000))
+                {
+                    cipher.Key = key.GetBytes(cipher.KeySize / 8);
+                    cipher.IV = key.GetBytes(cipher.BlockSize / 8);
+                }
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    using (var cryptoStream = new CryptoStream(memoryStream, cipher.CreateDecryptor(), CryptoStreamMode.Write))
+                    {
+                        cryptoStream.Write(cipherBytes, 0, cipherBytes.Length);
+                        cryptoStream.FlushFinalBlock();
+
+                        byte[] plainBytes = memoryStream.ToArray();
+
+                        return Encoding.Unicode.GetString(plainBytes, 0, plainBytes.Length);
+                    }
+                }
+            }
         }
     }
 }

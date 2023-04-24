@@ -128,7 +128,7 @@ namespace Message
             if (myMessageBoxes.Count == this.myMessageBoxId + 1)
             {
                 logger.Trace("Window_Deactivated " + this.myMessageBoxId.ToString());
-                //this.Activate();
+                this.Activate();
             }
         }
 

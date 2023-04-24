@@ -12,13 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Security.Cryptography;
 
 namespace Main.Pages
 {
@@ -35,6 +29,7 @@ namespace Main.Pages
         private static readonly int nDaysBefDelBackup = Settings.Default.Backup_nDaysBefDelBackup;// 10;
         private static string lastBackupFileName;
         private static int nLines;
+        private readonly string key = "J'aime le chocolat";
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public Backup()
@@ -109,7 +104,7 @@ namespace Main.Pages
             string batchFile = Settings.Default.Backup_Backup_batchFile;// @".\Resources\DB_backup";
             string arg1 = "\"" + DatabaseSettings.DBAppFolder + "\"";// @"C:\Program Files\MariaDB 10.9\bin" + "\"";
             string arg2 = DatabaseSettings.ConnectionInfo.UserID;// "root";
-            string arg3 = DatabaseSettings.ConnectionInfo.Password;// "Integra2022/";
+            string arg3 = General.Decrypt(DatabaseSettings.ConnectionInfo.Password, General.key);// "Integra2022/";
             string arg4 = DatabaseSettings.ConnectionInfo.Db;// dbName;
             string arg5 = backupPath + lastBackupFileName;
             string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5;
@@ -229,7 +224,7 @@ namespace Main.Pages
                 string batchFile = Settings.Default.Backup_Restore_batchFile;// @".\Resources\DB_restore";
                 string arg1 = "\"" + DatabaseSettings.DBAppFolder + "\"";// @"C:\Program Files\MariaDB 10.9\bin" + "\"";
                 string arg2 = DatabaseSettings.ConnectionInfo.UserID;// "root";
-                string arg3 = DatabaseSettings.ConnectionInfo.Password;// "Integra2022/";
+                string arg3 = General.Decrypt(DatabaseSettings.ConnectionInfo.Password, General.key);// "Integra2022/";
                 string arg4 = DatabaseSettings.ConnectionInfo.Db;// dbName;
                 string arg5 = backupPath + restoreFileName;
                 string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5;

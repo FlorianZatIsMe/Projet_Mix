@@ -62,8 +62,8 @@ namespace Main.Pages.SubCycle
         private int timerInterval = 100;
 
         // Sampling variables
-        private bool isSampling = false;
-        private decimal[] referenceMasses = { (decimal)5.661, (decimal)12.764 };
+        private bool isDailyTest = false;
+        private decimal[] refWeights;
         private decimal[] measuredMasses;
         private int sampleNumber;
         private bool isSamplingPass = true;
@@ -75,16 +75,8 @@ namespace Main.Pages.SubCycle
         private readonly int previousSeqId;
         private readonly RecipeWeightInfo recipeWeightInfo = new RecipeWeightInfo();
         private readonly object[] recipeWeightValues;
-        //private readonly decimal setpoint;
-        //private readonly decimal min;
-        //private readonly decimal max;
         private bool isScanningStep;
-        //private bool isSequenceOver;
-        //private readonly System.Timers.Timer getWeightTimer;
-        //private bool wasBalanceFreeOnce;
         private bool isWeightCorrect;
-        //private bool disposedValue;
-        //private decimal currentWeight;
         private readonly CycleWeightInfo cycleWeightInfo = new CycleWeightInfo();
         private readonly object[] cycleWeightValues;
 
@@ -96,20 +88,8 @@ namespace Main.Pages.SubCycle
             frameMain = info.frameMain;
             message1 = message1EmptyBowl;
 
-            /*
-            info.frameMain.ContentRendered += new EventHandler(FrameMain_ContentRendered);
-
-            getWeightTimer = new Timer
-            {
-                AutoReset = true,
-                Interval = timerInterval
-            };
-            getWeightTimer.Elapsed += GetWeightTimer_Elapsed;
-            //*/
-
             InitializeComponent();
             Initialize();
-            //labelMessage.Text = tareOnGoing;
         }
 
         // Constructor to measure the mass of the bowl at the end of a cycle
@@ -198,11 +178,19 @@ namespace Main.Pages.SubCycle
         public CycleWeight(Frame frame)
         {
             frameMain = frame;
-            isSampling = true;
+            isDailyTest = true;
             sampleNumber = 0;
-            currentSetpoint = referenceMasses[sampleNumber];
+            List<decimal> refWeightsList = new List<decimal>();
+            refWeightsList.Add(Settings.Default.DailyTest_Weight1);
+            if (Settings.Default.DailyTest_Weight2 != 0) refWeightsList.Add(Settings.Default.DailyTest_Weight2);
+            if (Settings.Default.DailyTest_Weight3 != 0) refWeightsList.Add(Settings.Default.DailyTest_Weight3);
+            if (Settings.Default.DailyTest_Weight4 != 0) refWeightsList.Add(Settings.Default.DailyTest_Weight4);
+            refWeights = refWeightsList.ToArray();
+
+            currentSetpoint = refWeights[sampleNumber];
             currentRatio = Settings.Default.SamplingRatio;
-            measuredMasses = new decimal[referenceMasses.Length];
+                        
+            measuredMasses = new decimal[refWeights.Length];
             message1 = message1Sampling;
             InitializeComponent();
             Initialize();
@@ -312,7 +300,7 @@ namespace Main.Pages.SubCycle
                         labelWeight.Text = weight.value + "g";
                         //logger.Error(labelWeight.Text + weight.value);
 
-                        if (isFinalWeight || isSampling)
+                        if (isFinalWeight || isDailyTest)
                         {
                             labelWeight.Foreground = IsWeightCorrect(weight.value) ? Brushes.AliceBlue : Brushes.Red;
                             //labelWeight.Foreground = (Math.Abs(weight.value - currentSetpoint) < currentSetpoint * currentRatio) ? Brushes.AliceBlue : Brushes.Red;
@@ -440,7 +428,7 @@ namespace Main.Pages.SubCycle
                         labelMessage.Text = message1;
                         btNext.Visibility = Visibility.Visible;
 
-                        if (isFinalWeight || isSampling || isCycle)
+                        if (isFinalWeight || isDailyTest || isCycle)
                         {
                             labelSetpoint.Visibility = Visibility.Visible;
                             string setpoint = "#";
@@ -557,7 +545,7 @@ namespace Main.Pages.SubCycle
                 if (!Balance.IsFree()) Balance.FreeUse();
                 EndCycle(validWeight);
             }
-            else if (isSampling)
+            else if (isDailyTest)
             {
                 // On contrôle la mesure
                 // Si c'est bon, on continue
@@ -576,17 +564,17 @@ namespace Main.Pages.SubCycle
                     }
                 }
 
-                if (sampleNumber < referenceMasses.Length)
+                if (sampleNumber < refWeights.Length)
                 {
                     // On stocke la measure du poids
                     measuredMasses[sampleNumber] = validWeight;
                     sampleNumber++;
                 }
 
-                if (sampleNumber < referenceMasses.Length)
+                if (sampleNumber < refWeights.Length)
                 {
                     // On met à jour la cible
-                    currentSetpoint = referenceMasses[sampleNumber];
+                    currentSetpoint = refWeights[sampleNumber];
                     labelSetpoint.Text = setpointText1 + currentSetpoint.ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
 
                     tbWeight.Text = "";
@@ -607,9 +595,9 @@ namespace Main.Pages.SubCycle
                     object[] dailyTestValues = new object[dailyTestInfo.Ids.Count()];
                     dailyTestValues[dailyTestInfo.Username] = General.loggedUsername;
                     dailyTestValues[dailyTestInfo.EquipmentName] = General.equipement_name;
-                    for (int i = 0; i < referenceMasses.Length; i++)
+                    for (int i = 0; i < refWeights.Length; i++)
                     {
-                        dailyTestValues[dailyTestInfo.Setpoint1 + i] = referenceMasses[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
+                        dailyTestValues[dailyTestInfo.Setpoint1 + i] = refWeights[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
                         dailyTestValues[dailyTestInfo.Measure1 + i] = measuredMasses[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
                     }
                     dailyTestValues[dailyTestInfo.Status] = isSamplingPass ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
@@ -618,9 +606,9 @@ namespace Main.Pages.SubCycle
 
                     // Même chose dans l'audit trail
                     string description = "Test journalier " + (isSamplingPass ? "réussi" : "échoué");
-                    for (int i = 0; i < referenceMasses.Length; i++)
+                    for (int i = 0; i < refWeights.Length; i++)
                     {
-                        description += "\n" + dailyTestInfo.Descriptions[dailyTestInfo.Setpoint1 + i] + ": " + referenceMasses[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal) + "g - ";
+                        description += "\n" + dailyTestInfo.Descriptions[dailyTestInfo.Setpoint1 + i] + ": " + refWeights[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal) + "g - ";
                         description += dailyTestInfo.Descriptions[dailyTestInfo.Measure1 + i] + ": " + measuredMasses[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal) + "g";
                     }
 
@@ -705,7 +693,7 @@ namespace Main.Pages.SubCycle
 
             if (!Balance.IsFree()) Balance.FreeUse();
 
-            if (isSampling)
+            if (isDailyTest)
             {
                 frameMain.Content = new Status();
             }
