@@ -592,10 +592,10 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Temp\\Archives\\")]
-        public string Archiving_archivingPath {
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\chlocgxp001\\gxp_validated\\ENDEXO\\MixingApplication\\Database\\Archive\\SQL\\")]
+        public string Archiving_sqlPath {
             get {
-                return ((string)(this["Archiving_archivingPath"]));
+                return ((string)(this["Archiving_sqlPath"]));
             }
         }
         
@@ -763,7 +763,7 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Temp\\Backups\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\chlocgxp001\\gxp_validated\\ENDEXO\\MixingApplication\\Database\\Backups\\")]
         public string Backup_backupPath {
             get {
                 return ((string)(this["Backup_backupPath"]));
@@ -1166,7 +1166,7 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Mxxxxx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("M15237")]
         public string General_equipement_name {
             get {
                 return ((string)(this["General_equipement_name"]));
@@ -1382,7 +1382,7 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Temp\\Reports\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\chlocgxp001\\gxp_validated\\ENDEXO\\MixingApplication\\Reports\\Cycle_Reports\\")]
         public string Report_Path {
             get {
                 return ((string)(this["Report_Path"]));
@@ -1581,15 +1581,15 @@ namespace Main.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0.01")]
-        public decimal SamplingRatio {
+        public decimal DailyTestRatio {
             get {
-                return ((decimal)(this["SamplingRatio"]));
+                return ((decimal)(this["DailyTestRatio"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Temp\\Balance_Daily_Test\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\chlocgxp001\\gxp_validated\\ENDEXO\\MixingApplication\\Reports\\DailyTest_Reports\\")]
         public string Sampling_Path {
             get {
                 return ((string)(this["Sampling_Path"]));
@@ -1871,7 +1871,7 @@ namespace Main.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Temp\\CSV\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\chlocgxp001\\gxp_validated\\ENDEXO\\MixingApplication\\Database\\Archive\\CSV\\")]
         public string Archiving_csvPath {
             get {
                 return ((string)(this["Archiving_csvPath"]));
@@ -2699,74 +2699,6 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-  <list>
-    <int>3</int>
-    <int>4</int>
-    <int>5</int>
-    <int>10</int>
-    <int>12</int>
-    <int>13</int>
-    <int>14</int>
-    <int>15</int>
-    <int>16</int>
-    <int>17</int>
-    <int>18</int>
-    <int>19</int>
-    <int>20</int>
-    <int>21</int>
-    <int>22</int>
-    <int>23</int>
-    <int>24</int>
-    <int>25</int>
-    <int>26</int>
-    <int>27</int>
-    <int>28</int>
-    <int>29</int>
-    <int>30</int>
-    <int>31</int>
-    <int>32</int>
-    <int>33</int>
-    <int>34</int>
-    <int>35</int>
-    <int>36</int>
-    <int>37</int>
-    <int>38</int>
-    <int>39</int>
-    <int>40</int>
-    <int>41</int>
-    <int>42</int>
-    <int>43</int>
-    <int>44</int>
-    <int>45</int>
-  </list>
-</IdDBControls>")]
-        public global::Main.Pages.IdDBControls RecipeMix_IdDBControls {
-            get {
-                return ((global::Main.Pages.IdDBControls)(this["RecipeMix_IdDBControls"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-  <list>
-    <int>3</int>
-    <int>5</int>
-    <int>8</int>
-    <int>9</int>
-  </list>
-</IdDBControls>")]
-        public global::Main.Pages.IdDBControls RecipeWeight_IdDBControls {
-            get {
-                return ((global::Main.Pages.IdDBControls)(this["RecipeWeight_IdDBControls"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public int LastDailyTest_Days {
             get {
@@ -2837,6 +2769,74 @@ namespace Main.Properties {
             }
             set {
                 this["Paramètre"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <list>
+    <int>3</int>
+    <int>4</int>
+    <int>5</int>
+    <int>10</int>
+    <int>12</int>
+    <int>13</int>
+    <int>14</int>
+    <int>15</int>
+    <int>16</int>
+    <int>17</int>
+    <int>18</int>
+    <int>19</int>
+    <int>20</int>
+    <int>21</int>
+    <int>22</int>
+    <int>23</int>
+    <int>24</int>
+    <int>25</int>
+    <int>26</int>
+    <int>27</int>
+    <int>28</int>
+    <int>29</int>
+    <int>30</int>
+    <int>31</int>
+    <int>32</int>
+    <int>33</int>
+    <int>34</int>
+    <int>35</int>
+    <int>36</int>
+    <int>37</int>
+    <int>38</int>
+    <int>39</int>
+    <int>40</int>
+    <int>41</int>
+    <int>42</int>
+    <int>43</int>
+    <int>44</int>
+    <int>45</int>
+  </list>
+</IdDBControls>")]
+        public global::Main.Pages.IdDBControls RecipeMix_IdDBControls {
+            get {
+                return ((global::Main.Pages.IdDBControls)(this["RecipeMix_IdDBControls"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <list>
+    <int>3</int>
+    <int>5</int>
+    <int>8</int>
+    <int>9</int>
+  </list>
+</IdDBControls>")]
+        public global::Main.Pages.IdDBControls RecipeWeight_IdDBControls {
+            get {
+                return ((global::Main.Pages.IdDBControls)(this["RecipeWeight_IdDBControls"]));
             }
         }
     }

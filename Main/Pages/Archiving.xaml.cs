@@ -29,7 +29,7 @@ namespace Main.Pages
     {
         private readonly AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
         //private readonly string dbName = DatabaseSettings.ConnectionInfo.db;
-        private readonly static string archivingPath = Settings.Default.Archiving_archivingPath;// @"C:\Temp\Archives\";
+        private readonly static string archivingPath = Settings.Default.Archiving_sqlPath;// @"C:\Temp\Archives\";
         private readonly static string csvPath = Settings.Default.Archiving_csvPath;// @"C:\Temp\CSV\"; 
         private readonly static string archiveExtFile = Settings.Default.ArchBack_ExtFile;// ".sql";
         private readonly static string csvExtFile = Settings.Default.CsvExtFile;// ".csv";

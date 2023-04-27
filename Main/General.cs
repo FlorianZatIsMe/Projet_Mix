@@ -18,8 +18,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Security.Cryptography;
-using System.Text;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Security;
 
 namespace Main
 {
@@ -86,6 +87,27 @@ namespace Main
         public static readonly string key = "J'aime le chocolat";
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         public static IniInfo info;
+
+
+
+        /*
+        private static WindowsImpersonationContext _context;
+
+        private static string _username;
+        public static string username
+        {
+            get { return "unauthorized"; }
+            set { _username = value; }
+        }
+
+        private static SecureString _password;
+        public static SecureString password
+        {
+            get { return null; }
+            set { _password = value; }
+        }*/
+
+
 
         public static void ResetLastActTime()
         {
@@ -543,7 +565,7 @@ namespace Main
             {
                 if (keyBoardProcess != null)
                 {
-                    info.Window.Activate();
+                    //info.Window.Activate();
                     keyBoardProcess.Kill();
                 }
             }
@@ -615,5 +637,33 @@ namespace Main
                 }
             }
         }
+
+        public static void Impersonate()
+        {/*
+            IntPtr token = IntPtr.Zero;
+            bool success = LogonUser(_username, null, "password", 2, 0, out token);
+
+            if (!success)
+            {
+                int error = Marshal.GetLastWin32Error();
+                throw new Exception($"Impossible de se connecter avec les informations d'identification fournies. Code d'erreur : {error}");
+            }
+
+            // Obtenir l'identité de l'utilisateur connecté
+            WindowsIdentity identity = new WindowsIdentity(token);
+
+            // Commencer l'impersonation
+            _context = identity.Impersonate();            
+            */
+        }
+
+        public static void Depersonate()
+        {
+            //_context?.Undo();
+        }
+
+        [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        private static extern bool LogonUser(string lpszUsername, string lpszDomain, string lpszPassword,
+            int dwLogonType, int dwLogonProvider, out IntPtr phToken);
     }
 }

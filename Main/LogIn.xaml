@@ -37,7 +37,8 @@
                          LostFocus="HideKeyBoard"/>
         </WrapPanel>
         <WrapPanel Margin="0,30,0,0" HorizontalAlignment="Right">
-            <Button Content="{Binding Source={x:Static p:Settings.Default}, Path=LogIn_Connexion, Mode=OneWay}" 
+            <Button Name="btConnect" 
+                    Content="{Binding Source={x:Static p:Settings.Default}, Path=LogIn_Connexion, Mode=OneWay}" 
                     Style="{DynamicResource ButtonStyle1}"
                     Click="ButtonOk_Click"/>
             <Button Content="{Binding Source={x:Static p:Settings.Default}, Path=LogIn_Deconnexion, Mode=OneWay}" 

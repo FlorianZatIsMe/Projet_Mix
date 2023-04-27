@@ -17,7 +17,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Runtime.InteropServices;
 using User_Management;
+using System.Security;
 
 namespace Main
 {
@@ -29,12 +31,23 @@ namespace Main
         private MainWindow mainWindow = null;
         private EventHandler windowDeactivatedEvent;
         private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
+
+
+
+        //private WindowsImpersonationContext _context;
+
+
+
+
+
         public LogIn(MainWindow parent, EventHandler windowDeactivatedEvent_arg)
         {
             logger.Debug("Start");
             mainWindow = parent;
             windowDeactivatedEvent = windowDeactivatedEvent_arg;
             mainWindow.Deactivated -= windowDeactivatedEvent;
+            MyMessageBox.SetParentWindow(this);
             InitializeComponent();
             Left = (System.Windows.SystemParameters.WorkArea.Width - Width) / 2;
             Top = 100;
@@ -42,6 +55,9 @@ namespace Main
         private void Click(string user = null)
         {
             logger.Debug("Click");
+            btConnect.IsEnabled = false;
+            //this.PreviewKeyDown -= Window_PreviewKeyDown;
+            //MyMessageBox.Show("go");
 
             if (user == null)
             {
@@ -60,20 +76,53 @@ namespace Main
                     {
                         if (user.ToLower() == "julien.aquilon") MyMessageBox.Show("Salut Chef");
 
-                        string role = UserManagement.UpdateAccessTable(user);
+                        string role = UserManagement.UpdateAccessTable(user, password.Password);
                         mainWindow.UpdateUser(user, role);
+
+
+
+
+                        //General.username = user;
+                        //General.password = password.SecurePassword;
+
+                        /*
+
+                        
+                        IntPtr token = IntPtr.Zero;
+                        bool success = LogonUser(user, null, password.Password, 2, 0, out token);
+
+                        if (!success)
+                        {
+                            int error = Marshal.GetLastWin32Error();
+                            throw new Exception($"Impossible de se connecter avec les informations d'identification fournies. Code d'erreur : {error}");
+                        }
+
+                        // Obtenir l'identité de l'utilisateur connecté
+                        WindowsIdentity identity = new WindowsIdentity(token);
+
+                        // Commencer l'impersonation
+                        _context = identity.Impersonate();
+
+                        */
+
+
+
+
+
+
+
                     }
                     else
                     {
                         MyMessageBox.Show(Settings.Default.LogIn_Info_PswIncorrect);
-                        return;
+                        goto End;
                     }
                 }
                 catch (Exception)
                 {
                     logger.Error("Problème de connexion avec l'active directory");
                     MyMessageBox.Show("Problème de connexion avec l'active directory");
-                    return;
+                    goto End;
                 }
             }
 
@@ -90,11 +139,13 @@ namespace Main
             }
 
             this.Close();
+        End:
+            btConnect.IsEnabled = true;
+            //this.PreviewKeyDown += Window_PreviewKeyDown;
         }
         private void ButtonOk_Click(object sender, RoutedEventArgs e)
         {
             logger.Debug("ButtonOk_Click");
-
             Click(username.Text);
         }
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)
@@ -122,12 +173,15 @@ namespace Main
         private void ButtonLogOff_Click(object sender, RoutedEventArgs e)
         {
             Click();
+
+            // Terminer l'impersonation
+            //_context?.Undo();
         }
 
         public async void Window_Deactivated(object sender, EventArgs e)
         {
             await Task.Delay(100);
-            logger.Trace("Login");
+            logger.Trace("Window_Deactivated");
             this.Activate();
         }
 
@@ -152,5 +206,9 @@ namespace Main
         {
             General.HideKeyBoard();
         }
+
+        [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        private static extern bool LogonUser(string lpszUsername, string lpszDomain, string lpszPassword,
+            int dwLogonType, int dwLogonProvider, out IntPtr phToken);
     }
 }

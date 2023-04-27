@@ -11,6 +11,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using User_Management.Properties;
+using System.DirectoryServices;
+using System.DirectoryServices.ActiveDirectory;
+using Message;
 
 namespace User_Management
 {
@@ -51,18 +54,13 @@ namespace User_Management
         /// Update the access table variable
         /// </summary>
         /// <param name="username">Name a windows account</param>
+        /// <param name="password">Password of the windows account</param>
         /// <returns>The name of role of the windows account username</returns>
-        public static string UpdateAccessTable(string username)
+        public static string UpdateAccessTable(string username = null, string password = null)
         {
             // Debug log
             logger.Debug("UpdateAccessTable");
 
-            // Represents the active directory
-            DirectoryEntry localMachine = new DirectoryEntry("WinNT://" + Environment.MachineName + ",Computer");
-            // Temporary group variable
-            DirectoryEntry currentGroup;
-            // Temporary members variable which contains the members of the temporary group
-            object members;
             // array containing:
             // [x, 0] windows groups names
             // [x, 1] application (and database) group names 
@@ -72,6 +70,79 @@ namespace User_Management
                 { Settings.Default.Group_administrator, AccessTableInfo.AdministratorRole }};
             // Variable to be returned
             string role = null;
+            PrincipalContext ctx;
+            try
+            {
+                if (username == null)
+                {
+                    ctx = new PrincipalContext(ContextType.Domain, "integra-ls.com");
+
+                }
+                else if (password != null)
+                {
+                    ctx = new PrincipalContext(ContextType.Domain, "integra-ls.com", username, password);
+                }
+                else
+                {
+                    logger.Fatal("Faute du programmeur, virez le tout de suite");
+                    MyMessageBox.Show("Faute du programmeur, virez le tout de suite");
+                    goto End;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+                MessageBox.Show(ex.Message);
+                goto End;
+            }
+
+            UserPrincipal user;
+            if (username == null)
+            {
+                user = UserPrincipal.FindByIdentity(ctx, UserPrincipal.Current.UserPrincipalName);
+            }
+            else
+            {
+                user = UserPrincipal.FindByIdentity(ctx, username);
+            }
+
+            // find a user
+
+            if (user != null)
+            {
+                // For each group in the variable appGroups 
+                for (int i = 0; i < appGroups.GetLength(0); i++)
+                {
+                    GroupPrincipal group = GroupPrincipal.FindByIdentity(ctx, appGroups[i, 0]);
+
+                    // check if user is member of that group
+                    if (user.IsMemberOf(group))
+                    {
+                        // If role wasn't updated then role = applicable application group name
+                        if (role == null) { role = appGroups[i, 1]; logger.Debug(appGroups[i, 1]); }
+                        // If role was already updated then role = guest application group name
+                        else { role = AccessTableInfo.NoneRole; logger.Debug(appGroups[i, 1]); }
+                    }
+                }
+            }
+
+        End:
+            // If role wasn't updated at the end of the loop, role = guest application group name
+            if (role == null) role = AccessTableInfo.NoneRole;
+            SetAccess(role);
+            // Return the application group name
+            return role;
+            /*
+
+
+            MessageBox.Show("Madame");
+
+            // Represents the active directory
+            DirectoryEntry localMachine = new DirectoryEntry("WinNT://" + Environment.MachineName + ",Computer");
+            // Temporary group variable
+            DirectoryEntry currentGroup;
+            // Temporary members variable which contains the members of the temporary group
+            object members;
 
             // For each group in the variable appGroups 
             for (int i = 0; i < appGroups.GetLength(0); i++)
@@ -90,9 +161,9 @@ namespace User_Management
                     if (member.Name.ToLower() == username.ToLower())
                     {
                         // If role wasn't updated then role = applicable application group name
-                        if (role == null) role = appGroups[i, 1];
+                        if (role == null) { role = appGroups[i, 1]; logger.Debug(appGroups[i, 1]); }
                         // If role was already updated then role = guest application group name
-                        else role = AccessTableInfo.NoneRole;
+                        else {role = AccessTableInfo.NoneRole; logger.Debug(appGroups[i, 1]); }
                     }
                 }
             }
@@ -112,7 +183,7 @@ namespace User_Management
             CurrentAccessTable = (bool[])t.Result;
             */
             // Return the application group name
-            return role;
+       /*     return role;*/
         }
 
         /// <summary>
@@ -126,6 +197,7 @@ namespace User_Management
 
         private static void SetAccess(string role)
         {
+            logger.Debug("SetAccess " + role);
             // Update of access table variable...
             // accessTable contains the information of the database table access_table
             AccessTableInfo accessTable = new AccessTableInfo();

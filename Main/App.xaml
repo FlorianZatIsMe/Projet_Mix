@@ -15,6 +15,7 @@
 
         <SolidColorBrush x:Key="Backgroup_Main" Color="#EEF2F3"/>
         <SolidColorBrush x:Key="Backgroup_SubMain1" Color="#E1E2E3"/>
+        <SolidColorBrush x:Key="Backgroup_CycleInfo" Color="#D1D2D3"/>
 
         <SolidColorBrush x:Key="Backgroup_Sequence" Color="#DBEED5"/>
         <SolidColorBrush x:Key="Backgroup_SubSequence" Color="#CDE8C4"/>
@@ -31,6 +32,8 @@
 
         <SolidColorBrush x:Key="FontColor_Connected" Color="Green"/>
         <SolidColorBrush x:Key="FontColor_Disconnected" Color="Red"/>
+
+        <SolidColorBrush x:Key="FontColor_Incorrect" Color="Red"/>
 
         <SolidColorBrush x:Key="FontColor_BeforeChoice" Color="#EEF2F3"/>
 

@@ -20,7 +20,9 @@
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Column="0" Grid.Row="0" Margin="20,20,0,0">
+        <StackPanel Grid.Column="0" Grid.Row="0" 
+                    Margin="20,20,0,0"
+                    Visibility="Hidden">
             <Button Style="{DynamicResource ButtonStyle1}" 
                     Content="{Binding Source={x:Static p:Settings.Default}, Path=Archiving_ArchiveButton, Mode=OneWay}" 
                     VerticalAlignment="Top" 

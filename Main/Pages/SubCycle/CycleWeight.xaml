@@ -49,6 +49,12 @@
                      PreviewKeyDown="HideKeyBoardIfEnter"/>
         </StackPanel>
 
-        <Button x:Name="btNext" Content="{Binding Source={x:Static p:Settings.Default}, Path=OkButton_Content}" Style="{DynamicResource ButtonStyle1}" Margin="20" HorizontalAlignment="Right" Visibility="Visible" Click="Button_Click"/>
+        <Button x:Name="btNext" 
+                Content="{Binding Source={x:Static p:Settings.Default}, Path=OkButton_Content}" 
+                Style="{DynamicResource ButtonStyle1}" 
+                Margin="20" 
+                HorizontalAlignment="Right"
+                Visibility="Hidden" 
+                Click="Button_Click"/>
     </Grid>
 </Page>

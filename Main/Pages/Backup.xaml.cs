@@ -108,7 +108,8 @@ namespace Main.Pages
             string arg4 = DatabaseSettings.ConnectionInfo.Db;// dbName;
             string arg5 = backupPath + lastBackupFileName;
             string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5;
-            //MyMessageBox.Show(command);    
+            //MyMessageBox.Show(command);
+            
             var processInfo = new ProcessStartInfo("cmd.exe", "/c " + command)
             {
                 CreateNoWindow = true,
@@ -117,6 +118,7 @@ namespace Main.Pages
                 RedirectStandardOutput = true
             };
             var process = Process.Start(processInfo);
+            
             process.OutputDataReceived += (object sender, DataReceivedEventArgs e) => {
                 General.count++;
                 General.text = e.Data;
@@ -128,6 +130,7 @@ namespace Main.Pages
                 General.text = e.Data;
             };
             process.BeginErrorReadLine();
+            
             process.WaitForExit();
 
             if (process.ExitCode == 0)
@@ -178,8 +181,8 @@ namespace Main.Pages
             }
             General.count = 0;
             General.text = "";
-
             process.Close();
+
             return isBackupSucceeded;
         }
         private async void Restore_Click(object sender, RoutedEventArgs e)

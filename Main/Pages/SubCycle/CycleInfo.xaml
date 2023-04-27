@@ -6,25 +6,27 @@
       xmlns:local="clr-namespace:Main.Pages.SubCycle"
       xmlns:p="clr-namespace:Main.Properties"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="450" d:DesignWidth="750"
       Title="CycleInfo"
       Background="Transparent">
 
     <Grid>
-        <StackPanel x:Name="StackMain" Margin="20">
-            <WrapPanel>
-                <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=CycleInfo_OF_Field}" Style="{DynamicResource Label1}"/>
-                <TextBlock x:Name="labelOFNumber" Text="#" Style="{DynamicResource Label1}"/>
-                <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=CycleInfo_FinalWeight_Field}" Margin="20,0,0,0" Style="{DynamicResource Label1}"/>
-                <TextBlock Name="labelFinalWeight" Text="#" Style="{DynamicResource Label1}"/>
-            </WrapPanel>
-            <WrapPanel>
-                <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=CycleInfo_Product_Field}" Style="{DynamicResource Label1}"/>
-                <TextBlock x:Name="labelRecipeName" Text="#" Style="{DynamicResource Label1}" Margin="10,0,0,0"/>
-                <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=CycleInfo_RevRecipe_Field}" Margin="20,0,0,0" Style="{DynamicResource Label1}"/>
-                <TextBlock x:Name="labelRecipeVersion" Text="#" Style="{DynamicResource Label1}"/>
-            </WrapPanel>
-        </StackPanel>
+        <Border CornerRadius="10, 0, 0, 10" Background="{DynamicResource Backgroup_CycleInfo}">
+            <StackPanel x:Name="StackMain" Margin="20">
+                <WrapPanel>
+                    <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=CycleInfo_OF_Field}" Style="{DynamicResource Label1}"/>
+                    <TextBlock x:Name="labelOFNumber" Text="#" Style="{DynamicResource Label1}"/>
+                    <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=CycleInfo_FinalWeight_Field}" Margin="20,0,0,0" Style="{DynamicResource Label1}"/>
+                    <TextBlock Name="labelFinalWeight" Text="#" Style="{DynamicResource Label1}"/>
+                </WrapPanel>
+                <WrapPanel>
+                    <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=CycleInfo_Product_Field}" Style="{DynamicResource Label1}"/>
+                    <TextBlock x:Name="labelRecipeName" Text="#" Style="{DynamicResource Label1}" Margin="10,0,0,0"/>
+                    <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=CycleInfo_RevRecipe_Field}" Margin="20,0,0,0" Style="{DynamicResource Label1}"/>
+                    <TextBlock x:Name="labelRecipeVersion" Text="#" Style="{DynamicResource Label1}"/>
+                </WrapPanel>
+            </StackPanel>
+        </Border>
 
     </Grid>
 </Page>

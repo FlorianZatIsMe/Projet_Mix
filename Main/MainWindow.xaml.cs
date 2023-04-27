@@ -77,25 +77,18 @@ namespace Main
                 Thread.CurrentThread.CurrentUICulture = culture;
             }
 
-            /*
             AlarmManagement.Initialize(new Alarm_Management.IniInfo() { AuditTrail_SystemUsername = Settings.Default.General_SystemUsername, Window = this });
             InitializeComponent();
             AlarmManagement.ActiveAlarmEvent += ActiveAlarmEvent;
             AlarmManagement.InactiveAlarmEvent += InactiveAlarmEvent;
 
+            /*
 
             SpeechSynthesizer synth = new SpeechSynthesizer();
             //synth.SelectVoiceByHints(VoiceGender.Male, VoiceAge.Senior);
             //synth.Speak("Oh... You're sweet, thank you. I don't love you, but it's nice to know that someone loves me. Who wouldn't anyway ?");
 
-            string plainText = "Integra2022/";
-            string key = "J'aime le chocolat";
-
-            //string cipherText = Encrypt(plainText, key); // fDdViXrfIK0s3nNIFU4UAyKljiDYdMzCkJ2cyXi8kGM= 
-
-            //MyMessageBox.Show(cipherText);
-            //MyMessageBox.Show(Decrypt(cipherText, key));
-
+            General.PrintReport(1);
 
             MyMessageBox.Show("Fini je crois");
             Environment.Exit(1);
@@ -123,7 +116,7 @@ namespace Main
             try
             {
                 UpdateUser(username: UserPrincipal.Current.DisplayName.ToLower(),
-                    role: UserManagement.UpdateAccessTable(UserPrincipal.Current.DisplayName));
+                    role: UserManagement.UpdateAccessTable());//UserPrincipal.Current.DisplayName););
             }
             catch (Exception)
             {
@@ -168,69 +161,6 @@ namespace Main
 
             Initialize();
         }
-        /*
-        public static string Encrypt(string plainText, string keyString)
-        {
-            byte[] plainBytes = Encoding.Unicode.GetBytes(plainText);
-            byte[] keyBytes = Encoding.Unicode.GetBytes(keyString);
-
-            using (RijndaelManaged cipher = new RijndaelManaged())
-            {
-                cipher.KeySize = 256;
-                cipher.BlockSize = 128;
-                cipher.Padding = PaddingMode.PKCS7;
-
-                using (var key = new Rfc2898DeriveBytes(keyBytes, new byte[] { 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8 }, 1000))
-                {
-                    cipher.Key = key.GetBytes(cipher.KeySize / 8);
-                    cipher.IV = key.GetBytes(cipher.BlockSize / 8);
-                }
-
-                using (var memoryStream = new MemoryStream())
-                {
-                    using (var cryptoStream = new CryptoStream(memoryStream, cipher.CreateEncryptor(), CryptoStreamMode.Write))
-                    {
-                        cryptoStream.Write(plainBytes, 0, plainBytes.Length);
-                        cryptoStream.FlushFinalBlock();
-
-                        return Convert.ToBase64String(memoryStream.ToArray());
-                    }
-                }
-            }
-        }
-
-        public static string Decrypt(string cipherText, string keyString)
-        {
-            byte[] cipherBytes = Convert.FromBase64String(cipherText);
-            byte[] keyBytes = Encoding.Unicode.GetBytes(keyString);
-
-            using (RijndaelManaged cipher = new RijndaelManaged())
-            {
-                cipher.KeySize = 256;
-                cipher.BlockSize = 128;
-                cipher.Padding = PaddingMode.PKCS7;
-
-                using (var key = new Rfc2898DeriveBytes(keyBytes, new byte[] { 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8 }, 1000))
-                {
-                    cipher.Key = key.GetBytes(cipher.KeySize / 8);
-                    cipher.IV = key.GetBytes(cipher.BlockSize / 8);
-                }
-
-                using (var memoryStream = new MemoryStream())
-                {
-                    using (var cryptoStream = new CryptoStream(memoryStream, cipher.CreateDecryptor(), CryptoStreamMode.Write))
-                    {
-                        cryptoStream.Write(cipherBytes, 0, cipherBytes.Length);
-                        cryptoStream.FlushFinalBlock();
-
-                        byte[] plainBytes = memoryStream.ToArray();
-
-                        return Encoding.Unicode.GetString(plainBytes, 0, plainBytes.Length);
-                    }
-                }
-            }
-        }
-        */
         private async void Initialize()
         {
             while (!isWindowLoaded) await Task.Delay(Settings.Default.Main_WaitPageLoadedDelay);
@@ -265,34 +195,41 @@ namespace Main
             Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetRows_new(readInfo, values, 1); });
             List<object[]> tableInfos = (List<object[]>)t.Result;
                         
-            if (tableInfos == null || tableInfos.Count == 0)
+            if (tableInfos == null)// || tableInfos.Count == 0)
             {
                 MyMessageBox.Show("C'est pas bien de ne pas se connecter à la base de données");
                 logger.Error("C'est pas bien de ne pas se connecter à la base de données");
                 return;
             }
-
-            object[] auditTrailRow = tableInfos[0];
-
-            for (int i = 0; i < auditTrailRow.Count(); i++)
+            else if (tableInfos.Count == 0)
             {
-                logger.Trace(auditTrailRow[i].ToString());
+                logger.Info("First ExecuteBackupAuto");
+                ExecuteBackupAuto();
             }
-
-            try
+            else
             {
-                DateTime dtLastBackup = Convert.ToDateTime(auditTrailRow[auditTrailInfo.DateTime]);
-                if (dtLastBackup.CompareTo(General.NextBackupTime.AddDays(-1)) < 0)
+                object[] auditTrailRow = tableInfos[0];
+
+                for (int i = 0; i < auditTrailRow.Count(); i++)
                 {
-                    logger.Debug("ExecuteBackupAuto at start");
-                    ExecuteBackupAuto();
+                    logger.Trace(auditTrailRow[i].ToString());
                 }
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex.Message);
-                MyMessageBox.Show(ex.Message);
-                return;
+
+                try
+                {
+                    DateTime dtLastBackup = Convert.ToDateTime(auditTrailRow[auditTrailInfo.DateTime]);
+                    if (dtLastBackup.CompareTo(General.NextBackupTime.AddDays(-1)) < 0)
+                    {
+                        logger.Info("ExecuteBackupAuto at start");
+                        ExecuteBackupAuto();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex.Message);
+                    MyMessageBox.Show(ex.Message);
+                    return;
+                }
             }
         }
         private bool ExecuteBackupAuto()
@@ -351,7 +288,6 @@ namespace Main
                 if (nAuditTailRows > Settings.Default.Archive_RowNumberTrigger)
                 {
                     logger.Debug(nAuditTailRows.ToString());
-                    MyMessageBox.Show(nAuditTailRows.ToString());
                     if (!Pages.Archiving.ExecuteFullArchive()) MyMessageBox.Show("Archivage échoué, merci de contacter un administrateur du système");
                 }
             }
@@ -691,7 +627,7 @@ namespace Main
             frameMain.Content = new Pages.Parameters();
         }
 
-        private void FxSampling(object sender, RoutedEventArgs e)
+        private void FxDailyTest(object sender, RoutedEventArgs e)
         {
             frameMain.Content = new Pages.SubCycle.CycleWeight(frameMain);
         }
@@ -720,7 +656,7 @@ namespace Main
             logger.Debug("Window_Deactivated");
 
             this.Activate();
-            await Task.Delay(100);
+            //await Task.Delay(100);
 
             /*
 Oui, il existe une autre méthode pour verrouiller un ordinateur et empêcher l'accès à d'autres programmes. Cette méthode consiste à créer un "shell personnalisé" pour Windows. En d'autres termes, vous pouvez remplacer l'interface graphique habituelle de Windows (explorer.exe) par votre propre application. Voici les étapes à suivre :

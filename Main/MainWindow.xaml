@@ -412,7 +412,7 @@
                     <MenuItem x:Name="menuItemDailyTest" Header="TEST JOURNALIER"
                               Height="{Binding ElementName=gridMenu, Path=ActualHeight}"
                               Style="{StaticResource Main_MenuItem}"
-                              Click = "FxSampling">
+                              Click = "FxDailyTest">
                         <MenuItem.Icon>
                             <Image Source="Resources/img_daily_test_en.png"
                                Stretch="Uniform" />

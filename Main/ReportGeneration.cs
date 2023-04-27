@@ -16,7 +16,6 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-//using System.Drawing.Printing;
 using System.Diagnostics;
 using static Alarm_Management.AlarmManagement;
 using System.Collections;
@@ -26,6 +25,7 @@ using System.Net;
 using System.Drawing;
 using System.Printing;
 using Message;
+using System.Runtime.InteropServices;
 
 namespace Main
 {
@@ -103,19 +103,6 @@ namespace Main
         private readonly string qtyNumberField = "QTY";
         private readonly string itemNumberField = "ITEM #";
 
-        //
-        // generateGeneralInfo
-        // 
-        private readonly double marginH_GeneralInfo = 25;
-        private readonly double marginH_GeneralInfoItems = 8;
-
-        private readonly string recipeNameVersionField = "ID recette et révision";
-        private readonly string equipmentNameField = "ID équipement";
-        private readonly string dtStartCycleField = "Début du cycle";
-        private readonly string dtEndCycleField = "Fin du cycle";
-        private readonly string cycleTimeField = "Temps de cycle";
-        private readonly string userField = "Utilisateur";
-        private readonly string lastSamplingField = "Date et heure du dernier étalonnage de la balance";
 
         // Info tables Séquences
         private readonly double marginL_Tables = 5;
@@ -181,6 +168,29 @@ namespace Main
             firstAlarmId = -1;
             lastAlarmId = -1;
             comment = "";
+        }
+        private double DrawTitle(PdfPage page, double y, string title)
+        {
+            logger.Debug("DrawTitle");
+            XRect rect = new XRect(x: margin, y: y, width: page.Width - 2 * margin, height: rectTitleHeight);
+            gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectTitleOutlineSize), rect);
+            gfxs[pagesNumber - 1].DrawString(title, new XFont(fontTitleName, fontTitleSize), XBrushes.Black, rect, XStringFormats.Center);
+
+            return y + rectTitleHeight;
+        }
+
+        private double DrawStringColumns(PdfPage page, double y, string[] values, int nColumns = 2)
+        {
+            logger.Debug("DrawStringColumns");
+            double textHeight = fontDoc_fontBodySize1_Height;
+            double generalInfoHeight = marginH_GeneralInfoItems + textHeight;
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                gfxs[pagesNumber - 1].DrawString(values[i], new XFont(fontDoc, fontBodySize1), XBrushes.Black, x: margin + (i % nColumns) * ((page.Width - 2 * margin) / nColumns), y: y + marginH_GeneralInfo + (int)(i / nColumns) * generalInfoHeight, XStringFormats.TopLeft);
+            }
+
+            return y + marginH_GeneralInfo + (int)((values.Length - 1) / nColumns) * generalInfoHeight + textHeight + smSeq_marginL_Cells;
         }
         private double GenerateHeader(PdfPage page)
         {
@@ -266,8 +276,21 @@ namespace Main
             return rect.Y + rect.Height;
         }
 
+        //
+        // generateGeneralInfo
+        // 
+        private readonly double marginH_GeneralInfo = 25;
+        private readonly double marginH_GeneralInfoItems = 8;
 
-        int statusId = 3;
+        private readonly string recipeNameVersionField = "ID recette et révision";
+        private readonly string equipmentNameField = "ID équipement";
+        private readonly string dtStartCycleField = "Début du cycle";
+        private readonly string dtEndCycleField = "Fin du cycle";
+        private readonly string cycleTimeField = "Temps de cycle";
+        private readonly string userField = "Utilisateur";
+        private readonly string lastDailyTestField = "Date et heure du dernier étalonnage de la balance";
+
+        private readonly int statusId = 3;
 
         private double GenerateGeneralInfo(PdfPage page, double y)
         {
@@ -308,57 +331,47 @@ namespace Main
             object[] dailyTestValues = new object[dailyTestInfo.Ids.Count()];
             dailyTestValues[dailyTestInfo.Status] = DatabaseSettings.General_TrueValue_Write;
 
-            string lastSampling;
-            bool isSamplingGood = false;
+            string lastDailyTest;
+            bool isDailyTestGood = false;
 
             try
             {
                 Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetLastDailyTestDate(dailyTestInfo, dailyTestValues, Convert.ToDateTime(dtStartCycle)); });
 
-                DateTime? lastSamplingDate = (DateTime?)t.Result;
+                DateTime? lastDailyTestDate = (DateTime?)t.Result;
 
-                if (lastSamplingDate == null)
+                if (lastDailyTestDate == null)
                 {
-                    lastSampling = "";
+                    lastDailyTest = "";
                 }
                 else
                 {
-                    lastSampling = ((DateTime)lastSamplingDate).ToString(Settings.Default.DateTime_Format_Read);
+                    lastDailyTest = ((DateTime)lastDailyTestDate).ToString(Settings.Default.DateTime_Format_Read);
                     if (dtStartCycle_t != null)
                     {
-                        isSamplingGood = ((DateTime)lastSamplingDate).CompareTo(((DateTime)dtStartCycle_t).AddDays(-1)) > 0;
+                        isDailyTestGood = ((DateTime)lastDailyTestDate).CompareTo(((DateTime)dtStartCycle_t).AddDays(-Settings.Default.LastDailyTest_Days).AddHours(-Settings.Default.LastDailyTest_Hours)) > 0;
                     }
                 }
             }
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                lastSampling = "";
+                lastDailyTest = "";
             }
 
-            double fieldWidth = gfxs[pagesNumber - 1].MeasureString(lastSamplingField + ": ", new XFont(fontDoc, fontBodySize1)).Width;
+            double fieldWidth = gfxs[pagesNumber - 1].MeasureString(lastDailyTestField + ": ", new XFont(fontDoc, fontBodySize1)).Width;
 
-            gfxs[pagesNumber - 1].DrawString(lastSamplingField + ": ", new XFont(fontDoc, fontBodySize1), 
+            gfxs[pagesNumber - 1].DrawString(lastDailyTestField + ": ", new XFont(fontDoc, fontBodySize1), 
                 XBrushes.Black, 
                 x: margin, 
                 y: currentY, XStringFormats.TopLeft);
 
-            gfxs[pagesNumber - 1].DrawString(lastSampling, new XFont(fontDoc, fontBodySize1),
-                (isSamplingGood ? XBrushes.Black : XBrushes.Red),
+            gfxs[pagesNumber - 1].DrawString(lastDailyTest, new XFont(fontDoc, fontBodySize1),
+                (isDailyTestGood ? XBrushes.Black : XBrushes.Red),
                 x: margin + fieldWidth,
                 y: currentY, XStringFormats.TopLeft);
 
             currentY += generalInfoHeight;
-
-
-
-            /*
-            for (int i = 0; i < values.Length; i++)
-            {
-                gfxs[pagesNumber - 1].DrawString(values[i], new XFont(fontDoc, fontBodySize1), XBrushes.Black, x: margin + (i % 2) * ((page.Width - 2 * margin) / 2), y: y + marginH_GeneralInfo + (int)(i / 2) * generalInfoHeight, XStringFormats.TopLeft);
-            }
-            currentY = y + marginH_GeneralInfo + (int)((values.Length - 1) / 2) * generalInfoHeight + textHeight + smSeq_marginL_Cells;
-            */
 
             // Generate general weigth information
 
@@ -371,12 +384,12 @@ namespace Main
             {
                 decimal eff = decimal.Parse(lastWeightEff, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowThousands);
                 decimal th = decimal.Parse(lastWeightTh, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowThousands);
-                status = (Math.Abs(eff - th) < th * Settings.Default.LastWeightRatio) ? statusPASS : statusFAIL;
+                status = Pages.SubCycle.CycleWeight.IsFinalWeightCorrect(eff, th) /*(Math.Abs(eff - th) < th * Settings.Default.LastWeightRatio)*/ ? statusPASS : statusFAIL;
             }
 
 
             string[,] tableValues = new string[,] {
-                { "Masse du bowl (g)", bowlWeight },
+                { "Masse du contenant (g)", bowlWeight },
                 { "Masse final théorique (g)", lastWeightTh == "" ? na : lastWeightTh },
                 { "Masse final effective (g)", decimal.Parse(lastWeightEff) == -1 ? na : lastWeightEff },
                 { "Statut", status } };
@@ -434,9 +447,9 @@ namespace Main
         private readonly string weightSeq_setpointField = "Valeur nominal";
         private readonly string weightSeq_minimumField = "Minimum";
         private readonly string weightSeq_maximumField = "Maximum";
-        private readonly string weightSeq_statusField = "Pass / Fail";
-        private readonly string statusPASS = "PASS";
-        private readonly string statusFAIL = "FAIL";
+        private readonly string weightSeq_statusField = "Réussi / Echoué";
+        private readonly string statusPASS = "REUSSI";
+        private readonly string statusFAIL = "ECHOUE";
         private readonly int weightSeq_statusColumnNumber = 4;
 
         private double GenerateWeightSeq(PdfPage page, int n, double y, object[] cycleSeqValues)
@@ -447,7 +460,7 @@ namespace Main
 
             if (cycleSeqValues == null) return -1;
 
-            string product = cycleSeqValues[cycleWeightInfo.Product].ToString();//3
+            string product = cycleSeqValues[cycleWeightInfo.Product].ToString() + (cycleSeqValues[cycleWeightInfo.IsSolvent].ToString() == DatabaseSettings.General_TrueValue_Read ? " (solvant)" : "");//3
             string wasWeightManual = cycleSeqValues[cycleWeightInfo.WasWeightManual].ToString();//4
             string dateTime = (cycleSeqValues[cycleWeightInfo.DateTime].ToString() == "" ||
                 cycleSeqValues[cycleWeightInfo.DateTime] == null) ? na :
@@ -633,8 +646,31 @@ namespace Main
             string pressureMax = cycleSeqValues[cycleSpeedMixerInfo.PressureMax].ToString();
             string pressureParam = pressureMin + pressureUnit + " - " + pressureMax + pressureUnit;
 
-            string speedMean = cycleSeqValues[cycleSpeedMixerInfo.SpeedAvg].ToString() == "" ? na : (double.Parse(cycleSeqValues[cycleSpeedMixerInfo.PressureAvg].ToString()).ToString("N0") + smSeq_speedUnit);
-            string pressureMean = cycleSeqValues[cycleSpeedMixerInfo.PressureAvg].ToString() == "" ? na : (double.Parse(cycleSeqValues[cycleSpeedMixerInfo.PressureAvg].ToString()).ToString("N2") + pressureUnit);
+            double speedMean;
+            try
+            {
+                speedMean = double.Parse(cycleSeqValues[cycleSpeedMixerInfo.SpeedAvg].ToString());
+            }
+            catch (Exception ex)
+            {
+                speedMean = -1;
+                logger.Error(ex.Message);
+            }
+            string speedMean_s = speedMean == -1 ? na : (speedMean).ToString("N0") + smSeq_speedUnit;
+
+            double pressureMean;
+            try
+            {
+                pressureMean = double.Parse(cycleSeqValues[cycleSpeedMixerInfo.PressureAvg].ToString());
+            }
+            catch (Exception ex)
+            {
+                pressureMean = -1;
+                logger.Error(ex.Message);
+            }
+
+            string pressureMean_s = pressureMean == -1 ? na : (pressureMean).ToString("N2") + pressureUnit;
+            //string pressureMean_s = cycleSeqValues[cycleSpeedMixerInfo.PressureAvg].ToString() == "" ? na : (double.Parse(cycleSeqValues[cycleSpeedMixerInfo.PressureAvg].ToString()).ToString("N2") + pressureUnit);
 
             string speedSTD = cycleSeqValues[cycleSpeedMixerInfo.SpeedStd].ToString() == "" ? na : (double.Parse(cycleSeqValues[cycleSpeedMixerInfo.SpeedStd].ToString()).ToString("N0") + smSeq_speedUnit);
             string pressureSTD = cycleSeqValues[cycleSpeedMixerInfo.PressureStd].ToString() == "" ? na : (double.Parse(cycleSeqValues[cycleSpeedMixerInfo.PressureStd].ToString()).ToString("N2") + pressureUnit);
@@ -662,22 +698,24 @@ namespace Main
             bool meanResultSpeed;
             try
             {
-                meanResultSpeed = double.Parse(speedMean) >= double.Parse(speedMin) && double.Parse(speedMean) <= double.Parse(speedMax);
+                meanResultSpeed = speedMean >= double.Parse(speedMin) && speedMean <= double.Parse(speedMax);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 meanResultSpeed = false;
+                logger.Error(ex.Message);
             }
 
             bool meanResultPressure;
 
             try
             {
-                meanResultPressure = double.Parse(pressureMean) >= double.Parse(pressureMin) && double.Parse(pressureMean) <= double.Parse(pressureMax);
+                meanResultPressure = pressureMean >= double.Parse(pressureMin) && pressureMean <= double.Parse(pressureMax);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 meanResultPressure = false;
+                logger.Error(ex.Message);
             }
 
             string[,] tableValues1 = new string[,] {
@@ -691,7 +729,7 @@ namespace Main
             string[,] tableValues2 = new string[,] {
                 { smSeq_descriptionField, smSeq_speedField, smSeq_pressureField },
                 { smSeq_recipeParamField, speedParam, pressureParam },
-                { smSeq_meanField, speedMean, pressureMean },
+                { smSeq_meanField, speedMean_s, pressureMean_s },
                 { smSeq_stdField, speedSTD, pressureSTD } };
             double xShift2 = (page.Width - 2 * margin) / (tableValues2.GetLength(0) + 1);
 
@@ -894,7 +932,7 @@ namespace Main
         private readonly double signatureRowHeight = 30;
         private readonly double minCommentHeight = 100;
         private readonly double cycleResultRowHeight = 30;
-        private readonly string cycleResultText = "Résultat de cycle (barrer mention inutile): PASS / FAIL";
+        private readonly string cycleResultText = "Résultat de cycle (barrer mention inutile): REUSSI / ECHOUE";
 
         private void GenerateCommentSignature(PdfPage page, double y)
         {
@@ -1183,7 +1221,7 @@ namespace Main
             }
         }
 
-        public void GenerateSamplingReport(int id)
+        public void GenerateDailyTestReport(int id)
         {
 
             logger.Debug("GenerateSamplingReport");
@@ -1307,7 +1345,7 @@ namespace Main
 
             for (int i = 0; i < document.Pages.Count; i++) UpdatePagination(document.Pages[i], gfxs[i], i + 1);
 
-            string fileName = samplingReportPath + generationDateTime.ToString("yyyy.MM.dd_HH.mm.ss");
+            string fileName = samplingReportPath + generationDateTime.ToString("yyyy.MM.dd_HH.mm.ss") + "_" + samplingStatus;
             string suffix = "";
             int index = 0;
 
@@ -1325,92 +1363,13 @@ namespace Main
                 PrintPaperOnce(fileName);
             }
         }
-        private double DrawTitle(PdfPage page, double y, string title)
-        {
-            logger.Debug("DrawTitle");
-            XRect rect = new XRect(x: margin, y: y, width: page.Width - 2 * margin, height: rectTitleHeight);
-            gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectTitleOutlineSize), rect);
-            gfxs[pagesNumber - 1].DrawString(title, new XFont(fontTitleName, fontTitleSize), XBrushes.Black, rect, XStringFormats.Center);
-
-            return y + rectTitleHeight;
-        }
-
-        private double DrawStringColumns(PdfPage page, double y, string[] values, int nColumns = 2)
-        {
-            logger.Debug("DrawStringColumns");
-            double textHeight = fontDoc_fontBodySize1_Height;
-            double generalInfoHeight = marginH_GeneralInfoItems + textHeight;
-
-            for (int i = 0; i < values.Length; i++)
-            {
-                gfxs[pagesNumber - 1].DrawString(values[i], new XFont(fontDoc, fontBodySize1), XBrushes.Black, x: margin + (i % nColumns) * ((page.Width - 2 * margin) / nColumns), y: y + marginH_GeneralInfo + (int)(i / nColumns) * generalInfoHeight, XStringFormats.TopLeft);
-            }
-
-            return y + marginH_GeneralInfo + (int)((values.Length - 1) / nColumns) * generalInfoHeight + textHeight + smSeq_marginL_Cells;
-        }
-
-        private void PrintPaperAndConfirm(string fileName)
-        {
-            bool result = true;
-            MessageBoxResult boxResult = MessageBoxResult.Yes;
-
-            do
-            {
-                result = PrintPaper(fileName);
-                if (result)
-                {
-                    boxResult = MyMessageBox.Show("L'impression a été lancé, pouvez-vous confirimer ?", MessageBoxButton.YesNo);
-                }
-
-            } while (result && boxResult == MessageBoxResult.No);
-
-            if (!result)
-            {
-                MyMessageBox.Show("Impression échouée");
-            }
-        }
-
-        private bool PrintPaper(string fileName)
-        {
-            bool result = false;
-            MessageBoxResult boxResult = MessageBoxResult.Yes;
-
-            do
-            {
-                //Task<bool> task = new Task<bool>(() => { return PrintPaperOnce(fileName); });
-                //task.Start();
-                result = PrintPaperOnce(fileName);
-
-                if (!result)
-                {
-                    boxResult = MyMessageBox.Show("L'impression a échoué, voulez-vous lancer une nouvelle impression ?", MessageBoxButton.YesNo);
-                }
-
-            } while (!result && boxResult == MessageBoxResult.Yes);
-            return result;
-        }
 
         private bool PrintPaperOnce(string fileName)
         {
             PrintQueue printQueue;
             int count = 0;
             bool result = false;
-            /*
-            // Ici on attends qu'il n'y a plus d'impression en cours
-            do
-            {
-                printQueue = LocalPrintServer.GetDefaultPrintQueue();
-                Task.Delay(Settings.Default.Report_Print_Delay2_Time_ms).Wait();
-                count++;
-                logger.Trace(count.ToString());
-            } while (printQueue.NumberOfJobs != 0 && count < Settings.Default.Report_Print_Delay2_MaxCount);
 
-            if (count == Settings.Default.Report_Print_Delay2_MaxCount)
-            {
-                logger.Error("Impression existante bloquée");
-                return false;
-            }
-            */
             logger.Debug("On va lancer l'impression");
 
             ProcessStartInfo info = new ProcessStartInfo();
@@ -1421,47 +1380,6 @@ namespace Main
             Process p = new Process();
             p.StartInfo = info;
             result = p.Start();
-            //p.WaitForInputIdle();
-            /*
-            // Ici on attend le début d'impression de notre document
-            count = 0;
-            do
-            {
-                printQueue = LocalPrintServer.GetDefaultPrintQueue();
-                Task.Delay(Settings.Default.Report_Print_Delay1_Time_ms).Wait();
-                count++;
-                logger.Trace(count.ToString());
-            } while (printQueue.NumberOfJobs == 0 && count < Settings.Default.Report_Print_Delay1_MaxCount);
-
-            if (count == Settings.Default.Report_Print_Delay1_MaxCount)
-            {
-                logger.Error("Le document ne s'ajoute pas à la liste d'impression " + count.ToString() + ", " + Settings.Default.Report_Print_Delay1_Time_ms.ToString());
-                goto End;
-            }
-
-            logger.Debug(printQueue.NumberOfJobs.ToString());
-
-            // Ici on attend la fin d'impression de notre document
-            count = 0;
-            do
-            {
-                printQueue = LocalPrintServer.GetDefaultPrintQueue();
-                Task.Delay(Settings.Default.Report_Print_Delay2_Time_ms).Wait();
-                count++;
-                logger.Trace(count.ToString());
-            } while (printQueue.NumberOfJobs != 0 && count < Settings.Default.Report_Print_Delay2_MaxCount);
-
-            if (count == Settings.Default.Report_Print_Delay2_MaxCount)
-            {
-                logger.Error("Impression bloquée");
-                goto End;
-            }
-            */
-            // logger.Debug(printQueue.NumberOfJobs.ToString());
-            //result = true;
-
-            //End:
-            //Task.Delay(10000).Wait();
 
             if (!result && MyMessageBox.Show("L'impression a échoué, voulez-vous la relancer ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
@@ -1491,5 +1409,45 @@ namespace Main
 
             return result;
         }
+
+        [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        private static extern bool LogonUser(string lpszUsername, string lpszDomain, string lpszPassword,
+            int dwLogonType, int dwLogonProvider, out IntPtr phToken);
     }
+
+
+    public class Impersonator : IDisposable
+    {
+        private readonly WindowsImpersonationContext _context;
+
+        public Impersonator(string username, string password)
+        {
+            // Se connecter avec le nom d'utilisateur et le mot de passe fournis
+            IntPtr token = IntPtr.Zero;
+            bool success = LogonUser(username, null, password, 2, 0, out token);
+
+            if (!success)
+            {
+                int error = Marshal.GetLastWin32Error();
+                throw new Exception($"Impossible de se connecter avec les informations d'identification fournies. Code d'erreur : {error}");
+            }
+
+            // Obtenir l'identité de l'utilisateur connecté
+            WindowsIdentity identity = new WindowsIdentity(token);
+
+            // Commencer l'impersonation
+            _context = identity.Impersonate();
+        }
+
+        public void Dispose()
+        {
+            // Terminer l'impersonation
+            _context?.Undo();
+        }
+
+        [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        private static extern bool LogonUser(string lpszUsername, string lpszDomain, string lpszPassword,
+            int dwLogonType, int dwLogonProvider, out IntPtr phToken);
+    }
+
 }

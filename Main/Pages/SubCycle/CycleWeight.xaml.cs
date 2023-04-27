@@ -19,6 +19,7 @@ using Database;
 using Main.Pages;
 using System.Timers;
 using Message;
+using System.Configuration;
 
 namespace Main.Pages.SubCycle
 {
@@ -66,7 +67,7 @@ namespace Main.Pages.SubCycle
         private decimal[] refWeights;
         private decimal[] measuredMasses;
         private int sampleNumber;
-        private bool isSamplingPass = true;
+        private bool isDailyTestPass = true;
 
         // Cycle variables
         private bool isCycle = false;
@@ -76,9 +77,9 @@ namespace Main.Pages.SubCycle
         private readonly RecipeWeightInfo recipeWeightInfo = new RecipeWeightInfo();
         private readonly object[] recipeWeightValues;
         private bool isScanningStep;
-        private bool isWeightCorrect;
+        //private bool isWeightCorrect;
         private readonly CycleWeightInfo cycleWeightInfo = new CycleWeightInfo();
-        private readonly object[] cycleWeightValues;
+        private readonly object[] cycleWeightValues = new object[0];
 
         // Constructor to measure the mass of the empty bowl at the start of a cycle
         public CycleWeight(CycleStartInfo info_arg)
@@ -104,8 +105,8 @@ namespace Main.Pages.SubCycle
             //Calculation the theoritical total weight
             CycleTableInfo cycleTableInfo = new CycleTableInfo();
             object[] cycleValues;
-            CycleWeightInfo cycleWeightInfo = new CycleWeightInfo();
-            object[] cycleWeightValues;
+            //CycleWeightInfo cycleWeightInfo = new CycleWeightInfo();
+            //object[] cycleWeightValues;
             Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow_new(new CycleTableInfo(), nextSeqInfo.idCycle); });
             cycleValues = (object[])t.Result;
 
@@ -188,7 +189,7 @@ namespace Main.Pages.SubCycle
             refWeights = refWeightsList.ToArray();
 
             currentSetpoint = refWeights[sampleNumber];
-            currentRatio = Settings.Default.SamplingRatio;
+            currentRatio = Settings.Default.DailyTestRatio;
                         
             measuredMasses = new decimal[refWeights.Length];
             message1 = message1Sampling;
@@ -206,7 +207,7 @@ namespace Main.Pages.SubCycle
             frameMain = subCycle.frameMain;
 
             //isSequenceOver = false;
-            isWeightCorrect = false;
+            //isWeightCorrect = false;
             //wasBalanceFreeOnce = false;
             General.CurrentCycleInfo.UpdateSequenceNumber();
 
@@ -300,9 +301,9 @@ namespace Main.Pages.SubCycle
                         labelWeight.Text = weight.value + "g";
                         //logger.Error(labelWeight.Text + weight.value);
 
-                        if (isFinalWeight || isDailyTest)
+                        if (isFinalWeight || isDailyTest || isCycle)
                         {
-                            labelWeight.Foreground = IsWeightCorrect(weight.value) ? Brushes.AliceBlue : Brushes.Red;
+                            labelWeight.Foreground = IsWeightCorrect(weight.value, currentSetpoint) ? (SolidColorBrush)Application.Current.FindResource("MyFont1_Foreground") : (SolidColorBrush)Application.Current.FindResource("FontColor_Incorrect");
                             //labelWeight.Foreground = (Math.Abs(weight.value - currentSetpoint) < currentSetpoint * currentRatio) ? Brushes.AliceBlue : Brushes.Red;
                         }
                         else if (isCycle)
@@ -457,6 +458,7 @@ namespace Main.Pages.SubCycle
                         logger.Error("Tare de la balance échouée, tare: " + Balance.TareBalance().ToString());
                     }
                 }
+                btNext.Visibility = Visibility.Visible;
             }
             else if (isPageActive)
             {
@@ -560,7 +562,7 @@ namespace Main.Pages.SubCycle
                     else
                     {
                         // Si on ne recommence pas, le statut est fail mais on continue
-                        isSamplingPass = false;
+                        isDailyTestPass = false;
                     }
                 }
 
@@ -600,12 +602,12 @@ namespace Main.Pages.SubCycle
                         dailyTestValues[dailyTestInfo.Setpoint1 + i] = refWeights[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
                         dailyTestValues[dailyTestInfo.Measure1 + i] = measuredMasses[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
                     }
-                    dailyTestValues[dailyTestInfo.Status] = isSamplingPass ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
+                    dailyTestValues[dailyTestInfo.Status] = isDailyTestPass ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
                     Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(dailyTestInfo, dailyTestValues); });
                     bool isSamplingRecorded = (bool)t.Result;
 
                     // Même chose dans l'audit trail
-                    string description = "Test journalier " + (isSamplingPass ? "réussi" : "échoué");
+                    string description = "Test journalier " + (isDailyTestPass ? "réussi" : "échoué");
                     for (int i = 0; i < refWeights.Length; i++)
                     {
                         description += "\n" + dailyTestInfo.Descriptions[dailyTestInfo.Setpoint1 + i] + ": " + refWeights[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal) + "g - ";
@@ -625,8 +627,8 @@ namespace Main.Pages.SubCycle
                         t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax_new(new DailyTestInfo(), dailyTestInfo.Ids[dailyTestInfo.Id]); });
                         ReportGeneration report = new ReportGeneration();
                         int id = ((int)t.Result);
-                        MyMessageBox.Show("Test journalier " + (isSamplingPass ? "réussi" : "échoué"));
-                        Task printReportTask = Task.Factory.StartNew(() => report.GenerateSamplingReport(id));
+                        MyMessageBox.Show("Test journalier " + (isDailyTestPass ? "réussi" : "échoué"));
+                        Task printReportTask = Task.Factory.StartNew(() => report.GenerateDailyTestReport(id));
                         //printReportTask.Wait();
                         //report.GenerateSamplingReport(id);
                         //MyMessageBox.Show("Rapport généré");
@@ -642,11 +644,12 @@ namespace Main.Pages.SubCycle
             {
                 Task<object> t;
 
-                isWeightCorrect =
-                    validWeight >= decimal.Parse(cycleWeightValues[cycleWeightInfo.Min].ToString()) &&
-                    validWeight <= decimal.Parse(cycleWeightValues[cycleWeightInfo.Max].ToString());
+                //isWeightCorrect =
+                    //validWeight >= decimal.Parse(cycleWeightValues[cycleWeightInfo.Min].ToString()) &&
+                    //validWeight <= decimal.Parse(cycleWeightValues[cycleWeightInfo.Max].ToString());
 
-                if (!isWeightCorrect)
+                //if (!isWeightCorrect)
+                if(!IsCycleWeightCorrect(validWeight))
                 {
                     MyMessageBox.Show(Settings.Default.CycleWeight_IncorrectWeight);
                     goto End;
@@ -736,9 +739,23 @@ namespace Main.Pages.SubCycle
             }
         }
 
-        private bool IsWeightCorrect(decimal weightValue)
+        private bool IsWeightCorrect(decimal weightValue, decimal setpoint)
         {
-            return Math.Abs(weightValue - currentSetpoint) <= currentSetpoint * currentRatio;
+            if (isDailyTest)
+            {
+                return IsSampWeightCorrect(weightValue, setpoint);
+            }
+            else if (isCycle)
+            {
+                return IsCycleWeightCorrect(weightValue);
+            }
+            else if (isFinalWeight)
+            {
+                return IsFinalWeightCorrect(weightValue, setpoint);
+            }
+
+            //return Math.Abs(weightValue - setpoint) <= setpoint * currentRatio;
+            return false;
         }
 
         public static bool IsFinalWeightCorrect(decimal weightValue, decimal setpoint)
@@ -748,7 +765,13 @@ namespace Main.Pages.SubCycle
 
         public static bool IsSampWeightCorrect(decimal weightValue, decimal setpoint)
         {
-            return Math.Abs(weightValue - setpoint) <= setpoint * Settings.Default.SamplingRatio;
+            return Math.Abs(weightValue - setpoint) <= setpoint * Settings.Default.DailyTestRatio;
+        }
+
+        private bool IsCycleWeightCorrect(decimal weightValue)
+        {
+            return weightValue >= decimal.Parse(cycleWeightValues[cycleWeightInfo.Min].ToString()) &&
+                   weightValue <= decimal.Parse(cycleWeightValues[cycleWeightInfo.Max].ToString());
         }
 
         public void EnablePage(bool enable)
