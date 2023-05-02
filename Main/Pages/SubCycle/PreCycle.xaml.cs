@@ -1,7 +1,5 @@
 ﻿using Alarm_Management;
 using Database;
-using Driver_RS232_Pump;
-using DRIVER_RS232_Weight;
 using Main.Pages.SubCycle;
 using Main.Properties;
 using Message;
