@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Driver_RS232_Pump;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -94,7 +95,7 @@ namespace Main
 
             InitializeComponent();
 
-            MyMessageBox.SetParentWindow(this);
+            //MyMessageBox.SetParentWindow(this);
             MyMessageBox.SetParentWindow(this, this.Window_Deactivated);
 
             MyDatabase.Initialize(new Database.IniInfo()
@@ -169,8 +170,9 @@ namespace Main
             Task connectBalanceTask = new Task(() => { Balance.Connect(); });
             connectBalanceTask.Start();
 
-            Driver_ColdTrap.ColdTrap.Initialize(new Driver_ColdTrap.IniInfo() { Window = this });
+            //Driver_ColdTrap.ColdTrap.Initialize(new Driver_ColdTrap.IniInfo() { Window = this });
             UserManagement.Initialize(new User_Management.IniInfo() { Window = this });
+            RS232Pump.Initialize();
             //SpeedMixerModbus.Initialize();
 
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
@@ -186,7 +188,7 @@ namespace Main
             Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetRows_new(readInfo, values, 1); });
             List<object[]> tableInfos = (List<object[]>)t.Result;
                         
-            if (tableInfos == null)// || tableInfos.Count == 0)
+            if (tableInfos == null)
             {
                 MyMessageBox.Show("C'est pas bien de ne pas se connecter à la base de données");
                 logger.Error("C'est pas bien de ne pas se connecter à la base de données");

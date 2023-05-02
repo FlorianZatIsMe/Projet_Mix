@@ -557,10 +557,6 @@
       <Project>{2AC9C27E-6FAB-4EAA-AC2F-55691AFC24F6}</Project>
       <Name>Driver_RS232_Pump</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DRIVER.Weight\DRIVER_RS232_Weight.csproj">
-      <Project>{24D3295E-C288-495D-AA65-345A32FAFB60}</Project>
-      <Name>DRIVER_RS232_Weight</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Driver_Ethernet\Driver_Ethernet.csproj">
       <Project>{141D44F7-77DD-49B2-AA86-56CFF916F13F}</Project>
       <Name>Driver_Ethernet</Name>

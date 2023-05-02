@@ -85,28 +85,25 @@ namespace Alarm_Management
     }
     public class AlarmManagement
     {
+        //
+        // PUBLIC VARIABLES
+        //
         public static List<Tuple<int, int>> ActiveAlarms { get; }
-        public static List<int> RAZalarms;
         public static Alarm[,] Alarms { get; }
+        public static List<int> RAZalarms;
+        public static event Action ActiveAlarmEvent = null;
+        public static event Action InactiveAlarmEvent = null;
+        public static IniInfo info;
 
+        //
+        // PRIVATE VARIABLES
+        //
         private static bool isInitialized = false;
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        // Future interface
-        //private static string AuditTrail_SystemUsername;
-
-        public static event Action ActiveAlarmEvent = null;
-        public static event Action InactiveAlarmEvent = null;
-
-        public static IniInfo info;
-
-        //private static Window mainWindow;
-
-        static void test()
-        {
-            logger.Fatal("test alarm");
-        }
-
+        //
+        // CONSTRUCTOR
+        //
         static AlarmManagement()
         {
             logger.Debug("Start");
@@ -130,6 +127,11 @@ namespace Alarm_Management
             alarms[4, 0] = new Alarm("Backup automatique complet de la base de données échoué aprés 3 tentatives", AlarmType.Warning);
             */
         }
+
+        //
+        // PUBLIC METHODS
+        //
+
         /// <summary>
         /// Initialize
         /// </summary>
@@ -330,22 +332,6 @@ namespace Alarm_Management
             ActiveAlarms.RemoveAt(n);
             if (ActiveAlarms.Count == 0) InactiveAlarmEvent();
         }
-        private static void UpdateAlarm(int id1, int id2, AlarmStatus statusBefore, AlarmStatus statusAfter)
-        {
-            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-            object[] auditTrailValues = new object[auditTrailInfo.Ids.Length];
-            auditTrailValues[auditTrailInfo.Username] = info.AuditTrail_SystemUsername;
-            auditTrailValues[auditTrailInfo.EventType] = GetAlarmType(Alarms[id1, id2].Type);
-            auditTrailValues[auditTrailInfo.Description] = GetAlarmDescription(id1, id2);
-            auditTrailValues[auditTrailInfo.ValueBefore] = statusBefore.ToString();
-            auditTrailValues[auditTrailInfo.ValueAfter] = statusAfter.ToString();
-
-            MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTrailInfo, auditTrailValues); });
-
-            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax_new(auditTrailInfo, auditTrailInfo.Ids[auditTrailInfo.Id]); });
-            Alarms[id1, id2].id = (int)t.Result;
-            Alarms[id1, id2].Status = statusAfter;
-        }
         public static void UpdateAlarms()
         {
             List<Tuple<int, int>> listId = new List<Tuple<int, int>>();
@@ -380,6 +366,27 @@ namespace Alarm_Management
             logger.Debug("GetAlarmDescription");
 
             return GetAlarmType(Alarms[id1, id2].Type).ToUpper() + " " + id1.ToString("00") + "." + id2.ToString("00") + " " + Alarms[id1, id2].Description;
+        }
+
+        //
+        // PRIVATE METHODS
+        //
+
+        private static void UpdateAlarm(int id1, int id2, AlarmStatus statusBefore, AlarmStatus statusAfter)
+        {
+            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+            object[] auditTrailValues = new object[auditTrailInfo.Ids.Length];
+            auditTrailValues[auditTrailInfo.Username] = info.AuditTrail_SystemUsername;
+            auditTrailValues[auditTrailInfo.EventType] = GetAlarmType(Alarms[id1, id2].Type);
+            auditTrailValues[auditTrailInfo.Description] = GetAlarmDescription(id1, id2);
+            auditTrailValues[auditTrailInfo.ValueBefore] = statusBefore.ToString();
+            auditTrailValues[auditTrailInfo.ValueAfter] = statusAfter.ToString();
+
+            MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTrailInfo, auditTrailValues); });
+
+            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax_new(auditTrailInfo, auditTrailInfo.Ids[auditTrailInfo.Id]); });
+            Alarms[id1, id2].id = (int)t.Result;
+            Alarms[id1, id2].Status = statusAfter;
         }
     }
 }

@@ -5,16 +5,12 @@ using MySqlConnector;
 using System.Windows;
 using System.Configuration;
 using System.Threading.Tasks;
-//using System.Threading;
 using Database.Properties;
 using Message;
 using System.Threading;
-//using System.Windows.Threading;
 using System.Security.Cryptography;
 using System.Text;
 using System.IO;
-
-// CONFIURE "yyyy-MM-dd HH:mm:ss" SOME DAY, PLEASE
 
 namespace Database
 {
@@ -198,6 +194,14 @@ namespace Database
     /// </summary>
     public static class MyDatabase
     {
+        /// <value>
+        /// Variable initialized by other projects
+        /// </value>
+        public static IniInfo info;
+
+        //
+        // PRIVATE VARIABLES
+        //
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();   // Variable allowing to logger events (debug, errors...)
         private static MySqlConnection connection;  // Variable of the connection with the database
         private static MySqlDataReader reader;      // Reader: used to send command and get their result
@@ -216,12 +220,6 @@ namespace Database
 
         private static readonly string key = "J'aime le chocolat";
 
-        //private static Window mainWindow;   // Main window of the application (used to attach the MessageBoxes to it)
-
-        /// <value>
-        /// Variable initialized by other projects
-        /// </value>
-        public static IniInfo info;
 
         // Constructor of the class called automatically
         static MyDatabase()
@@ -255,90 +253,9 @@ namespace Database
             IsQueueAvailableTimer.Start();                                          // Start of the timer
         }
 
-        public static void MessageBoxShow(string messageBoxText, MessageBoxButton button = MessageBoxButton.OK)
-        {
-            MessageBox.Show(messageBoxText, "", button);
-        }
-
-
-
-        // Method executed when the empty queue timer elapses
-        private static void QueueEmptyTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
-        {
-            // If the database is not disconnected then we log a debug message
-            if(QueueEmptyCount > 0 && QueueEmptyCount < Settings.Default.QueueEmptyCount_Max+1) logger.Debug("QueueEmptyCount: " + QueueEmptyCount.ToString());
-
-            // If the queue is empty then...
-            if (taskQueue.Count == 0 && (lastTask == null || lastTask.IsCompleted))
-            {
-                QueueEmptyCount++;  // Increment of the empty queue counter
-                // If the counter reaches a setting value, the database is diconnected
-                if (QueueEmptyCount > Settings.Default.QueueEmptyCount_Max && IsConnected()) Disconnect();
-            }
-        }
-
-        // Method executed when the timer (which checks if the task queue isn't empty anymore) elapses
-        private static void IsQueueAvailableTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
-        {
-            // If the queue is empty then the timer is reseted
-            if (taskQueue.Count == 0) IsQueueAvailableTimer.Enabled = true;
-            // Else then...
-            else
-            {
-                //logger.Debug("Start TaskDeQueue");      // Log a debug message
-                IsQueueAvailableTimer.Enabled = false;  // The timer is stopped
-                if (!IsConnected()) Connect();          // If the database is disconnected, it is connected
-                //if(lastTask != null) lastTask.Wait();
-                TaskDeQueue();                          // Execution of the next task on the queue
-            }
-        }
-
-        // Method which executes the next task from the queue
-        private async static void TaskDeQueue()
-        {
-            // If the task queue isn't empty then the next task is executed
-            if (taskQueue.Count > 0)
-            {
-                //logger.Debug("Dequeue on going");   // Log a debug message
-                QueueEmptyCount = 0;                // Initialize the empty queue counter
-                lastTask = taskQueue.Dequeue();     // Get the next task and remove it from the queue
-                lastTask.Start();                   // Execute the task
-                lastTask.Wait();                    // Wait for the task to end
-
-                if (taskQueue.Count == 0) await Task.Delay(Settings.Default.TaskDeQueue_Wait); // If the executed task was the last of the queue then the program waits few ms
-                TaskDeQueue();  // Execute the next task
-            }
-            // Else (the queue is empty) then...
-            else
-            {
-                //logger.Debug("Wait for new task");  // Log a debug message
-                IsQueueAvailableTimer.Start();      // Start the timer which 
-            }
-        }
-
-        // Method executed when the scan connect timer elapses
-        private static void ScanConnectTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
-        {//logger.Debug("ScanConnect");
-            // If the database isn't connected then we connect it
-            if (!IsConnected())
-            {
-                Connect();  // Connection to the database
-                logger.Info(Settings.Default.Info01 + IsConnected().ToString());    // Log an Info of the connected status
-            }
-            scanConnectTimer.Enabled = true;    // The timer is reseted
-        }
-
-        /// <summary>
-        /// Only allowed method to interact with the database. This method adds a task to be executed to the task queue 
-        /// </summary>
-        /// <param name="function">Method to be added to the queue</param>
-        /// <returns>The added task, it allows to interact with the task (e.g. wait it ends, get its return value)</returns>
-        public static Task<object> TaskEnQueue(Func<object> function)
-        {
-            Task<object> task = new Task<object>(function); // Creation of a task based on the method in parameter
-            taskQueue.Enqueue(task);                        // Task added to the queue (note: the queue isn't empty anymore if it were)
-            return task;                                    // The added task is returned
-        }
+        //
+        // PUBLIC METHODS
+        //
 
         /// <summary>
         /// Method called by other project which initializes the variable <see cref="info"/>
@@ -361,446 +278,15 @@ namespace Database
         }
 
         /// <summary>
-        /// Connection to the database
+        /// Only allowed method to interact with the database. This method adds a task to be executed to the task queue 
         /// </summary>
-        public static void Connect()
+        /// <param name="function">Method to be added to the queue</param>
+        /// <returns>The added task, it allows to interact with the task (e.g. wait it ends, get its return value)</returns>
+        public static Task<object> TaskEnQueue(Func<object> function)
         {
-            // If the database is already connected then the method is stopped
-            if (IsConnected())
-            {
-                logger.Debug("No Connect"); // Log a debug message
-                return;                     // End of the method
-            }
-
-            logger.Debug("Connect");    // Log a debug message
-            isConnecting = true;        // Activate the connecting flag to inform that connection is on going
-
-            // Creation of the connection builer
-            MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder
-            {
-                Server = Settings.Default.ConnectionInfo.Server,        // Setting of the server to connect to
-                UserID = Settings.Default.ConnectionInfo.UserID,        // Setting of the user ID
-                Password = Decrypt(Settings.Default.ConnectionInfo.Password, key),    // Setting of the password of the used user ID
-                Database = Settings.Default.ConnectionInfo.Db,          // Setting of the database to use
-                AllowZeroDateTime = true,                               // Allow zero date and time (00.00.0000 00:00:00)
-                Pooling = true,                                         // I forgot ;-P
-                MinimumPoolSize = 2                                     // The minimum number of available connection to the database is set to 2 (it's important to have a pool size for performance issue)
-            };
-
-            connection = new MySqlConnection(builder.ConnectionString); // Setting of the connection information from the builder to the variable connection
-
-            try { if (!StopScan) connection.Open(); }           // If a deconnection isn't ongoing then try to connect to the database
-            catch (Exception ex) { logger.Error(ex.Message); }  // If the connection generated an exception the log the error message of the exception
-
-            if (!StopScan) scanConnectTimer.Start();            // If a deconnection isn't ongoing then start the timer to check the connection
-            isConnecting = false;                               // Desactivate the connecting flag to inform that no connection is on going
-        }
-
-        /// <summary>
-        /// Disconnection of the database
-        /// </summary>
-        public async static void Disconnect()
-        {
-            // If the connection to the database is already removed the end of the method
-            if (!IsConnected())
-            {
-                logger.Debug("Already disconnected");   // Log a debug message
-                return;                                 // End of the method
-            }
-
-            logger.Debug("Disconnect");     // Log a debug message
-            scanConnectTimer.Stop();        // Stop of the timer to check the connection
-            StopScan = true;                // Activate the flag to inform that the disconnection is on going
-
-            // If a connection is on going then wait of the end of the connection
-            while (isConnecting)
-            {
-                logger.Debug("Disconnect on going");                    // Log a debug message
-                await Task.Delay(Settings.Default.Disconnect_WaitTime); // Wait a setted amount of time in ms
-            }
-            StopScan = false;   // Desactivate the flag to inform that the no disconnection is on going
-
-            try { connection.Close(); }                         // Try to close the connection
-            catch (Exception ex) { logger.Error(ex.Message); }  // In case of error, log the error message
-        }
-
-        /// <summary>
-        /// Get the status of the connection
-        /// </summary>
-        /// <returns>True if the database is connected, false otherwise</returns>
-        public static bool IsConnected()
-        {
-            if (connection == null) return false;                           // If the connection variable is null then the method is stopped and return false
-            return connection.State == System.Data.ConnectionState.Open;    // Returns True if the connection status is open, false otherwise
-        }
-
-        /// <summary>
-        ///  Base method to interact with the database. This method allows to execute any SQL command to the open connection.
-        /// </summary>
-        /// <param name="commandText">SQL command to send</param>
-        /// <param name="values">List of columns, the non-empty values can be used in the command. Default value: null</param>
-        /// <returns>True if the command was correctly executed, false otherwise</returns>
-        public static bool SendCommand_new(string commandText, object[] values = null)
-        {
-            //logger.Debug("SendCommand " + commandText); // Log a debug message
-            bool result = false;                        // Initialize to false the return value
-
-            // If the database is not connected then an error message is displayed, the method is stoped and returns false
-            if (!IsConnected())
-            {
-                logger.Error(Settings.Default.Error_connectToDbFailed); // Log an error message
-                return false;                                           // Returns false
-            }
-
-            Close_reader(); // The reader is closed
-
-            MySqlCommand command = connection.CreateCommand();  // Creation of a command variable
-            command.CommandText = commandText;                  // Set the text of the command variable based on the parameter
-
-            bool isCommandOk = true;    // Creation of a boolean variable to follow 
-            if (values != null)
-            {
-                isCommandOk = SetCommand_new(command, values);
-            }
-
-            if (!isCommandOk)
-            {
-                logger.Error(Settings.Default.Error02 + isCommandOk.ToString());
-                MessageBoxShow(Settings.Default.Error02);
-                return false;
-            }
-
-            try
-            {
-                reader = command.ExecuteReader();
-                result = true;
-            }
-            catch (Exception ex)
-            {
-                reader = null;
-                logger.Error(ex.Message);
-                MessageBoxShow(ex.Message);
-            }
-            return result;
-        }
-
-        public static void SendCommand_Read_new(IComTabInfo tableInfo, object[] values, string orderBy = null, bool isOrderAsc = true)
-        {
-            logger.Debug("SendCommand_Read");
-
-            if (!IsConnected())
-            {
-                logger.Error(Settings.Default.Error_connectToDbFailed);
-                MessageBoxShow(Settings.Default.Error_connectToDbFailed);
-                return;
-            }
-
-            string whereArg = " WHERE " + GetArg_new(tableInfo.Ids, values, " AND ");
-
-            string orderArg = "";
-            if (orderBy != null)
-            {
-                orderArg = " ORDER BY " + orderBy + (isOrderAsc ? " ASC" : " DESC");
-            }
-
-            SendCommand_new(@"SELECT * FROM " + tableInfo.TabName + whereArg + orderArg, values);
-        }
-        public static void SendCommand_Read_new(ReadInfo readInfo, object[] values = null)
-        {
-            logger.Debug("SendCommand_Read");
-
-            if (!IsConnected())
-            {
-                logger.Error(Settings.Default.Error_connectToDbFailed);
-                MessageBoxShow(Settings.Default.Error_connectToDbFailed);
-                return;
-            }
-
-            string tableArg = values == null ? "" : GetArg_new(readInfo.TableInfo.Ids, values, " AND ");
-            string whereArg = "";
-            if (tableArg != "" || readInfo.CustomWhere != "")
-            {
-                whereArg = " WHERE " + tableArg + readInfo.CustomWhere;
-            }
-
-            string orderArg = "";
-            if (readInfo.OrderBy != null)
-            {
-                orderArg = " ORDER BY " + readInfo.OrderBy + (readInfo.IsOrderAsc ? " ASC" : " DESC");
-            }
-
-            SendCommand_new(commandText: @"SELECT * FROM " + readInfo.TableInfo.TabName + whereArg + orderArg,
-                values: values);
-        }
-        public static bool SendCommand_ReadAuditTrail_new(ReadInfo readInfo)
-        {
-            if (readInfo.DtBefore == null || readInfo.DtAfter == null)
-            {
-                logger.Error(Settings.Default.Error_ReadAudit_ArgIncorrect);
-                MessageBoxShow(Settings.Default.Error_ReadAudit_ArgIncorrect);
-                return false;
-            }
-
-            logger.Debug("SendCommand_ReadAuditTrail_new");
-
-            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-
-            if (!IsConnected())
-            {
-                logger.Error(Settings.Default.Error_connectToDbFailed);
-                MessageBoxShow(Settings.Default.Error_connectToDbFailed);
-                return false;
-            }
-
-            string whereDateTime = auditTrailInfo.Ids[auditTrailInfo.DateTime] + " >= @0 AND " + auditTrailInfo.Ids[auditTrailInfo.DateTime] + " <= @1";
-            string eventType = " AND (";
-            string orderArg = "";
-
-            if (readInfo.EventTypes != null && readInfo.EventTypes.Length != 0)
-            {
-                for (int i = 0; i < readInfo.EventTypes.Length - 1; i++)
-                {
-                    eventType += auditTrailInfo.Ids[auditTrailInfo.EventType] + " = @" + (i + 2).ToString() + " OR ";
-                }
-                eventType += auditTrailInfo.Ids[auditTrailInfo.EventType] + " = @" + (readInfo.EventTypes.Length + 1).ToString() + ")";
-            }
-            else
-            {
-                eventType = "";
-            }
-
-            if (readInfo.OrderBy != null)
-            {
-                orderArg = " ORDER BY " + readInfo.OrderBy + (readInfo.IsOrderAsc ? " ASC" : " DESC");
-            }
-
-            List<object> values = new List<object>();
-
-            values.Add(((DateTime)readInfo.DtBefore).ToString("yyyy-MM-dd HH:mm:ss"));
-            values.Add(((DateTime)readInfo.DtAfter).ToString("yyyy-MM-dd HH:mm:ss"));
-
-            if (readInfo.EventTypes != null)
-            {
-                for (int i = 0; i < readInfo.EventTypes.Length; i++)
-                {
-                    values.Add(readInfo.EventTypes[i]);
-                }
-            }
-
-            return SendCommand_new(@"SELECT * FROM " + auditTrailInfo.TabName + " WHERE " + whereDateTime + eventType + orderArg, values.ToArray());
-        }
-        public static bool SendCommand_ReadAlarms_new(int firstId, int lastId, bool readAlert = false)
-        {
-            logger.Debug("SendCommand_ReadAlarms");
-
-            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-
-            if (info.AlarmType_Alarm == null || info.AlarmType_Warning == null)
-            {
-                logger.Error(Settings.Default.Error12);
-                MessageBoxShow(Settings.Default.Error12);
-                return false;
-            }
-
-            if (!IsConnected())
-            {
-                logger.Error(Settings.Default.Error_connectToDbFailed);
-                MessageBoxShow(Settings.Default.Error_connectToDbFailed);
-                return false;
-            }
-
-            if (firstId > lastId)
-            {
-                MessageBoxShow("C'est pas bien ça");
-                return false;
-            }
-
-            string whereId =
-                auditTrailInfo.Ids[auditTrailInfo.Id] + " >= @0 AND " +
-                auditTrailInfo.Ids[auditTrailInfo.Id] + " <= @1 AND ";
-            string eventType = readAlert ?
-                "(" + auditTrailInfo.Ids[auditTrailInfo.EventType] + " = '" + info.AlarmType_Alarm + "' OR " +
-                auditTrailInfo.Ids[auditTrailInfo.EventType] + " = '" + info.AlarmType_Warning + "')"
-                : auditTrailInfo.Ids[auditTrailInfo.EventType] + " = '" + info.AlarmType_Alarm + "'";
-
-            object[] values = new object[2];
-            values[0] = firstId;
-            values[1] = lastId;
-
-            return SendCommand_new(@"SELECT * FROM " + auditTrailInfo.TabName + " WHERE " + whereId + eventType, values);
-        }
-        public static void SendCommand_GetLastRecipes(RecipeStatus status = RecipeStatus.PRODnDRAFT)
-        {
-            // only prod pour la prod
-            // only draft pour les tests de recette
-            // only obsolete pour faire revivre une vieille recette
-            // prod and draft pour modifier une recette
-
-            //
-
-            logger.Debug("SendCommand_GetLastRecipes");
-
-            RecipeInfo recipeInfo = new RecipeInfo();
-
-            if (!IsConnected())
-            {
-                logger.Error(Settings.Default.Error_connectToDbFailed);
-                MessageBoxShow(Settings.Default.Error_connectToDbFailed);
-                return;
-            }
-
-            string statusFilter =
-                status == RecipeStatus.DRAFT ? recipeInfo.Ids[recipeInfo.Status] + " = " + GetRecipeStatus(RecipeStatus.DRAFT) :
-                status == RecipeStatus.OBSOLETE ? recipeInfo.Ids[recipeInfo.Status] + " = " + GetRecipeStatus(RecipeStatus.OBSOLETE) :
-                status == RecipeStatus.PROD ? recipeInfo.Ids[recipeInfo.Status] + " = " + GetRecipeStatus(RecipeStatus.PROD) :
-                status == RecipeStatus.PRODnDRAFT ? "(" + recipeInfo.Ids[recipeInfo.Status] + " = " + GetRecipeStatus(RecipeStatus.PROD) + " OR " +
-                recipeInfo.Ids[recipeInfo.Status] + " = " + GetRecipeStatus(RecipeStatus.DRAFT) + ")" : "";
-
-            if (statusFilter == "")
-            {
-                logger.Error(Settings.Default.Error03);
-                MessageBoxShow(Settings.Default.Error03);
-                return;
-            }
-
-            SendCommand_new("SELECT * FROM " + recipeInfo.TabName +
-                " WHERE ((" + recipeInfo.Ids[recipeInfo.Name] + ", " +
-                recipeInfo.Ids[recipeInfo.Version] + ") IN " +
-                "(SELECT " + recipeInfo.Ids[recipeInfo.Name] +
-                ", MAX(" + recipeInfo.Ids[recipeInfo.Version] + ") " +
-                "FROM " + recipeInfo.TabName +
-                (status == RecipeStatus.OBSOLETE ? "" : " WHERE " + statusFilter) +
-                " GROUP BY " + recipeInfo.Ids[recipeInfo.Name] + "))" +
-                (status == RecipeStatus.OBSOLETE ? " AND " + statusFilter : "") +
-                " ORDER BY " + recipeInfo.Ids[recipeInfo.Name] + ";");
-        }
-        public static object[] ReadNext_new()
-        {
-            //logger.Debug("ReadNext new");
-
-            object[] values = null;
-
-            if (!IsConnected())
-            {
-                logger.Error(Settings.Default.Error_connectToDbFailed);
-                MessageBoxShow(Settings.Default.Error_connectToDbFailed);
-                return null;
-            }
-
-            if (IsReaderNotAvailable())
-            {
-                logger.Error(Settings.Default.Error04);
-                MessageBoxShow(Settings.Default.Error04);
-                return null;
-            }
-
-            try
-            {
-                if (reader.Read())
-                {
-                    values = new object[reader.FieldCount];
-
-                    for (int i = 0; i < reader.FieldCount; i++)
-                    {
-                        values[i] = reader.GetValue(i);
-                        //logger.Trace(i.ToString() + ": " + reader[i].ToString());
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex.Message);
-                MessageBoxShow(ex.Message);
-                return null;
-            }
-
-            return values;
-        }
-        public static string[] ReadNext()
-        {
-            logger.Debug("ReadNext");
-
-            string[] array = null;
-
-            if (!IsConnected())
-            {
-                logger.Error(Settings.Default.Error_connectToDbFailed);
-                MessageBoxShow(Settings.Default.Error_connectToDbFailed);
-                return null;
-            }
-
-            if (IsReaderNotAvailable())
-            {
-                logger.Error(Settings.Default.Error04);
-                MessageBoxShow(Settings.Default.Error04);
-                return null;
-            }
-
-            try
-            {
-                if (reader.Read())
-                {
-                    array = new string[reader.FieldCount];
-
-                    for (int i = 0; i < reader.FieldCount; i++)
-                    {
-                        array[i] = reader[i].ToString();
-                        //logger.Trace(i.ToString() + ": " + reader[i].ToString());
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex.Message);
-                MessageBoxShow(ex.Message);
-            }
-            return array;
-        }
-        public static bool[] ReadNextBool()
-        {
-            bool[] array = null;
-
-            logger.Debug("ReadNextBool");
-
-            if (!IsConnected())
-            {
-                logger.Error(Settings.Default.Error_connectToDbFailed);
-                MessageBoxShow(Settings.Default.Error_connectToDbFailed);
-                return null;
-            }
-
-            if (IsReaderNotAvailable())
-            {
-                logger.Error(Settings.Default.Error04);
-                MessageBoxShow(Settings.Default.Error04);
-                return null;
-            }
-
-            try
-            {
-                if (reader.Read())
-                {
-                    array = new bool[reader.FieldCount];
-
-                    for (int i = 0; i < reader.FieldCount; i++)
-                    {
-                        try
-                        {
-                            array[i] = reader.GetBoolean(i);
-                        }
-                        catch (Exception)
-                        {
-                            array[i] = false;
-                        }
-
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex.Message);
-            }
-            return array;
+            Task<object> task = new Task<object>(function); // Creation of a task based on the method in parameter
+            taskQueue.Enqueue(task);                        // Task added to the queue (note: the queue isn't empty anymore if it were)
+            return task;                                    // The added task is returned
         }
 
         public static bool InsertRow_new(IBasTabInfo tableInfo, object[] values)
@@ -923,7 +409,6 @@ namespace Database
 
             return result;
         }
-
         public static bool DeleteRows_new(IDtTabInfo tableInfo, DateTime firstRecordDate)
         {
             logger.Debug("DeleteRows " + tableInfo.TabName);
@@ -940,25 +425,6 @@ namespace Database
             Close_reader();
             return true;
         }
-        /*
-        public static bool DeleteRows(IDtTabInfo tableInfo, DateTime lastRecordDate)
-        {
-            bool result = false;
-
-            logger.Debug("DeleteRows " + tableInfo.TabName);
-
-            if (!IsConnected())
-            {
-                logger.Error(Settings.Default.Error_connectToDbFailed);
-                MessageBoxShow(Settings.Default.Error_connectToDbFailed);
-                return result;
-            }
-
-            SendCommand(@"DELETE FROM " + tableInfo.TabName + " WHERE " + tableInfo.Ids[tableInfo.DateTime] + " < \"" + lastRecordDate.ToString("yyyy-MM-dd HH:mm:ss") + "\"");
-
-            Close_reader();
-            return result;
-        }*/
 
         public static object[] GetOneRow_new(IComTabInfo table, int? id = null, object[] values = null)
         {
@@ -990,7 +456,7 @@ namespace Database
                 return null;
             }
 
-            if (ReadNext() != null)
+            if (ReadNext_new() != null)
             {
                 logger.Error(Settings.Default.Error15);
                 MessageBoxShow(Settings.Default.Error15);
@@ -998,7 +464,6 @@ namespace Database
             }
             return result;
         }
-
         public static object[] GetOneRow(string tableName, int nRow, string orderBy = null, bool isOrderAsc = true)
         {
             logger.Debug("GetOneRow");
@@ -1033,72 +498,6 @@ namespace Database
                 return null;
             }
             return row;
-        }
-        public static object[] GetOneArrayRow_new(IComTabInfo tableInfo, string id)
-        {
-            object[] tableValues = new object[tableInfo.Ids.Count()]; ;
-
-            logger.Debug("GetOneRow");
-
-            if (!IsConnected())
-            {
-                logger.Error(Settings.Default.Error_connectToDbFailed);
-                MessageBoxShow(Settings.Default.Error_connectToDbFailed);
-                return null;
-            }
-
-            tableValues[tableInfo.Id] = id;
-            SendCommand_Read_new(tableInfo, tableValues);
-            tableValues = ReadNext_new();
-
-            if (ReadNext_new() != null)
-            {
-                logger.Error(Settings.Default.Error15);
-                MessageBoxShow(Settings.Default.Error15);
-                return null;
-            }
-
-            return tableValues;
-        }
-        public static List<object[]> GetRows_new(IComTabInfo tableInfo, object[] values, int nRows = 0, string orderBy = null, bool isOrderAsc = true)
-        {
-            logger.Debug("GetRows_new");
-
-            if (nRows > Settings.Default.MaxNumbRows || nRows < 0)
-            {
-                logger.Error(Settings.Default.Error_NumbRowsIncorrect);
-                MessageBoxShow(Settings.Default.Error_NumbRowsIncorrect);
-                return null;
-            }
-
-            if (tableInfo.Ids.Count() != values.Count())
-            {
-                logger.Error("On a un problème");
-                MessageBoxShow("On a un problème");
-                return null;
-            }
-
-            SendCommand_Read_new(tableInfo: tableInfo, values: values, orderBy: orderBy, isOrderAsc: isOrderAsc);
-
-            List<object[]> rows = new List<object[]>();
-            object[] row;
-            int i = 1;
-            int n = nRows == 0 ? Settings.Default.MaxNumbRows : nRows;
-
-            do
-            {
-                row = ReadNext_new();
-                if (row != null) rows.Add(row);
-                i++;
-                logger.Debug(i.ToString() + ", " + n.ToString());
-            } while (row != null && i < n);
-
-            if (nRows == 0 && i == n)
-            {
-                logger.Error(Settings.Default.Error_IDidntReadItAll);
-                MessageBoxShow(Settings.Default.Error_IDidntReadItAll);
-            }
-            return rows;
         }
         public static List<object[]> GetRows_new(ReadInfo readInfo, object[] values = null, int nRows = 0)
         {
@@ -1226,7 +625,6 @@ namespace Database
 
             return rows;
         }
-
         public static DateTime? GetLastDailyTestDate(DailyTestInfo sampleInfo, object[] sampleValues, DateTime? lastSample = null)
         {
             logger.Debug("SendCommand_GetLastSampling");
@@ -1274,7 +672,6 @@ namespace Database
             }
             return null;
         }
-
         public static int GetMax_new(IComTabInfo tableInfo, string column, object[] values = null)
         {
             int result = -1;
@@ -1324,7 +721,6 @@ namespace Database
 
             return result;
         }
-
         public static int GetRowCount(string tableName)
         {
             if (!IsConnected())
@@ -1352,7 +748,6 @@ namespace Database
                 return -1;
             }
         }
-
         public static bool CreateTempTable()
         {
             TempInfo tempInfo = new TempInfo();
@@ -1392,11 +787,444 @@ namespace Database
             SendCommand_new(@"SELECT " + select + " FROM " + tempInfo.TabName + ";");
             return ReadNext_new();
         }
+        public static int GetRecipeStatus(RecipeStatus status)
+        {
+            switch (status)
+            {
+                case RecipeStatus.DRAFT:
+                    return 0;
+                case RecipeStatus.PROD:
+                    return 1;
+                case RecipeStatus.OBSOLETE:
+                    return 2;
+                default:
+                    return -1;
+            }
+        }
 
-        public static void Close_reader() { if (!IsReaderNotAvailable()) reader.Close(); }
-        public static bool IsReaderNotAvailable() { return reader == null || reader.IsClosed; }
+        //
+        // PRIVATE METHODS
+        //
 
-        // Méthode outils
+        /// <summary>
+        /// Connection to the database
+        /// </summary>
+        private static void Connect()
+        {
+            // If the database is already connected then the method is stopped
+            if (IsConnected())
+            {
+                logger.Debug("No Connect"); // Log a debug message
+                return;                     // End of the method
+            }
+
+            logger.Debug("Connect");    // Log a debug message
+            isConnecting = true;        // Activate the connecting flag to inform that connection is on going
+
+            // Creation of the connection builer
+            MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder
+            {
+                Server = Settings.Default.ConnectionInfo.Server,        // Setting of the server to connect to
+                UserID = Settings.Default.ConnectionInfo.UserID,        // Setting of the user ID
+                Password = Decrypt(Settings.Default.ConnectionInfo.Password, key),    // Setting of the password of the used user ID
+                Database = Settings.Default.ConnectionInfo.Db,          // Setting of the database to use
+                AllowZeroDateTime = true,                               // Allow zero date and time (00.00.0000 00:00:00)
+                Pooling = true,                                         // I forgot ;-P
+                MinimumPoolSize = 2                                     // The minimum number of available connection to the database is set to 2 (it's important to have a pool size for performance issue)
+            };
+
+            connection = new MySqlConnection(builder.ConnectionString); // Setting of the connection information from the builder to the variable connection
+
+            try { if (!StopScan) connection.Open(); }           // If a deconnection isn't ongoing then try to connect to the database
+            catch (Exception ex) { logger.Error(ex.Message); }  // If the connection generated an exception the log the error message of the exception
+
+            if (!StopScan) scanConnectTimer.Start();            // If a deconnection isn't ongoing then start the timer to check the connection
+            isConnecting = false;                               // Desactivate the connecting flag to inform that no connection is on going
+        }
+
+        /// <summary>
+        /// Disconnection of the database
+        /// </summary>
+        private async static void Disconnect()
+        {
+            // If the connection to the database is already removed the end of the method
+            if (!IsConnected())
+            {
+                logger.Debug("Already disconnected");   // Log a debug message
+                return;                                 // End of the method
+            }
+
+            logger.Debug("Disconnect");     // Log a debug message
+            scanConnectTimer.Stop();        // Stop of the timer to check the connection
+            StopScan = true;                // Activate the flag to inform that the disconnection is on going
+
+            // If a connection is on going then wait of the end of the connection
+            while (isConnecting)
+            {
+                logger.Debug("Disconnect on going");                    // Log a debug message
+                await Task.Delay(Settings.Default.Disconnect_WaitTime); // Wait a setted amount of time in ms
+            }
+            StopScan = false;   // Desactivate the flag to inform that the no disconnection is on going
+
+            try { connection.Close(); }                         // Try to close the connection
+            catch (Exception ex) { logger.Error(ex.Message); }  // In case of error, log the error message
+        }
+
+        /// <summary>
+        /// Get the status of the connection
+        /// </summary>
+        /// <returns>True if the database is connected, false otherwise</returns>
+        private static bool IsConnected()
+        {
+            if (connection == null) return false;                           // If the connection variable is null then the method is stopped and return false
+            return connection.State == System.Data.ConnectionState.Open;    // Returns True if the connection status is open, false otherwise
+        }
+
+        // Method which executes the next task from the queue
+        private async static void TaskDeQueue()
+        {
+            // If the task queue isn't empty then the next task is executed
+            if (taskQueue.Count > 0)
+            {
+                //logger.Debug("Dequeue on going");   // Log a debug message
+                QueueEmptyCount = 0;                // Initialize the empty queue counter
+                lastTask = taskQueue.Dequeue();     // Get the next task and remove it from the queue
+                lastTask.Start();                   // Execute the task
+                lastTask.Wait();                    // Wait for the task to end
+
+                if (taskQueue.Count == 0) await Task.Delay(Settings.Default.TaskDeQueue_Wait); // If the executed task was the last of the queue then the program waits few ms
+                TaskDeQueue();  // Execute the next task
+            }
+            // Else (the queue is empty) then...
+            else
+            {
+                //logger.Debug("Wait for new task");  // Log a debug message
+                IsQueueAvailableTimer.Start();      // Start the timer which 
+            }
+        }
+
+        // Method executed when the timer (which checks if the task queue isn't empty anymore) elapses
+        private static void IsQueueAvailableTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            // If the queue is empty then the timer is reseted
+            if (taskQueue.Count == 0) IsQueueAvailableTimer.Enabled = true;
+            // Else then...
+            else
+            {
+                //logger.Debug("Start TaskDeQueue");      // Log a debug message
+                IsQueueAvailableTimer.Enabled = false;  // The timer is stopped
+                if (!IsConnected()) Connect();          // If the database is disconnected, it is connected
+                //if(lastTask != null) lastTask.Wait();
+                TaskDeQueue();                          // Execution of the next task on the queue
+            }
+        }
+
+        // Method executed when the empty queue timer elapses
+        private static void QueueEmptyTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            // If the database is not disconnected then we log a debug message
+            if (QueueEmptyCount > 0 && QueueEmptyCount < Settings.Default.QueueEmptyCount_Max + 1) logger.Debug("QueueEmptyCount: " + QueueEmptyCount.ToString());
+
+            // If the queue is empty then...
+            if (taskQueue.Count == 0 && (lastTask == null || lastTask.IsCompleted))
+            {
+                QueueEmptyCount++;  // Increment of the empty queue counter
+                // If the counter reaches a setting value, the database is diconnected
+                if (QueueEmptyCount > Settings.Default.QueueEmptyCount_Max && IsConnected()) Disconnect();
+            }
+        }
+
+        //----------------------------------
+
+        // Method executed when the scan connect timer elapses
+        private static void ScanConnectTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        {//logger.Debug("ScanConnect");
+            // If the database isn't connected then we connect it
+            if (!IsConnected())
+            {
+                Connect();  // Connection to the database
+                logger.Info(Settings.Default.Info01 + IsConnected().ToString());    // Log an Info of the connected status
+            }
+            scanConnectTimer.Enabled = true;    // The timer is reseted
+        }
+
+        private static bool SendCommand_new(string commandText, object[] values = null)
+        {
+            //logger.Debug("SendCommand " + commandText); // Log a debug message
+            bool result = false;                        // Initialize to false the return value
+
+            // If the database is not connected then an error message is displayed, the method is stoped and returns false
+            if (!IsConnected())
+            {
+                logger.Error(Settings.Default.Error_connectToDbFailed); // Log an error message
+                return false;                                           // Returns false
+            }
+
+            Close_reader(); // The reader is closed
+
+            MySqlCommand command = connection.CreateCommand();  // Creation of a command variable
+            command.CommandText = commandText;                  // Set the text of the command variable based on the parameter
+
+            bool isCommandOk = true;    // Creation of a boolean variable to follow 
+            if (values != null)
+            {
+                isCommandOk = SetCommand_new(command, values);
+            }
+
+            if (!isCommandOk)
+            {
+                logger.Error(Settings.Default.Error02 + isCommandOk.ToString());
+                MessageBoxShow(Settings.Default.Error02);
+                return false;
+            }
+
+            try
+            {
+                reader = command.ExecuteReader();
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                reader = null;
+                logger.Error(ex.Message);
+                MessageBoxShow(ex.Message);
+            }
+            return result;
+        }
+        private static void SendCommand_Read_new(IComTabInfo tableInfo, object[] values, string orderBy = null, bool isOrderAsc = true)
+        {
+            logger.Debug("SendCommand_Read");
+
+            if (!IsConnected())
+            {
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBoxShow(Settings.Default.Error_connectToDbFailed);
+                return;
+            }
+
+            string whereArg = " WHERE " + GetArg_new(tableInfo.Ids, values, " AND ");
+
+            string orderArg = "";
+            if (orderBy != null)
+            {
+                orderArg = " ORDER BY " + orderBy + (isOrderAsc ? " ASC" : " DESC");
+            }
+
+            SendCommand_new(@"SELECT * FROM " + tableInfo.TabName + whereArg + orderArg, values);
+        }
+        private static void SendCommand_Read_new(ReadInfo readInfo, object[] values = null)
+        {
+            logger.Debug("SendCommand_Read");
+
+            if (!IsConnected())
+            {
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBoxShow(Settings.Default.Error_connectToDbFailed);
+                return;
+            }
+
+            string tableArg = values == null ? "" : GetArg_new(readInfo.TableInfo.Ids, values, " AND ");
+            string whereArg = "";
+            if (tableArg != "" || readInfo.CustomWhere != "")
+            {
+                whereArg = " WHERE " + tableArg + readInfo.CustomWhere;
+            }
+
+            string orderArg = "";
+            if (readInfo.OrderBy != null)
+            {
+                orderArg = " ORDER BY " + readInfo.OrderBy + (readInfo.IsOrderAsc ? " ASC" : " DESC");
+            }
+
+            SendCommand_new(commandText: @"SELECT * FROM " + readInfo.TableInfo.TabName + whereArg + orderArg,
+                values: values);
+        }
+        private static bool SendCommand_ReadAuditTrail_new(ReadInfo readInfo)
+        {
+            if (readInfo.DtBefore == null || readInfo.DtAfter == null)
+            {
+                logger.Error(Settings.Default.Error_ReadAudit_ArgIncorrect);
+                MessageBoxShow(Settings.Default.Error_ReadAudit_ArgIncorrect);
+                return false;
+            }
+
+            logger.Debug("SendCommand_ReadAuditTrail_new");
+
+            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+
+            if (!IsConnected())
+            {
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBoxShow(Settings.Default.Error_connectToDbFailed);
+                return false;
+            }
+
+            string whereDateTime = auditTrailInfo.Ids[auditTrailInfo.DateTime] + " >= @0 AND " + auditTrailInfo.Ids[auditTrailInfo.DateTime] + " <= @1";
+            string eventType = " AND (";
+            string orderArg = "";
+
+            if (readInfo.EventTypes != null && readInfo.EventTypes.Length != 0)
+            {
+                for (int i = 0; i < readInfo.EventTypes.Length - 1; i++)
+                {
+                    eventType += auditTrailInfo.Ids[auditTrailInfo.EventType] + " = @" + (i + 2).ToString() + " OR ";
+                }
+                eventType += auditTrailInfo.Ids[auditTrailInfo.EventType] + " = @" + (readInfo.EventTypes.Length + 1).ToString() + ")";
+            }
+            else
+            {
+                eventType = "";
+            }
+
+            if (readInfo.OrderBy != null)
+            {
+                orderArg = " ORDER BY " + readInfo.OrderBy + (readInfo.IsOrderAsc ? " ASC" : " DESC");
+            }
+
+            List<object> values = new List<object>();
+
+            values.Add(((DateTime)readInfo.DtBefore).ToString("yyyy-MM-dd HH:mm:ss"));
+            values.Add(((DateTime)readInfo.DtAfter).ToString("yyyy-MM-dd HH:mm:ss"));
+
+            if (readInfo.EventTypes != null)
+            {
+                for (int i = 0; i < readInfo.EventTypes.Length; i++)
+                {
+                    values.Add(readInfo.EventTypes[i]);
+                }
+            }
+
+            return SendCommand_new(@"SELECT * FROM " + auditTrailInfo.TabName + " WHERE " + whereDateTime + eventType + orderArg, values.ToArray());
+        }
+        private static bool SendCommand_ReadAlarms_new(int firstId, int lastId, bool readAlert = false)
+        {
+            logger.Debug("SendCommand_ReadAlarms");
+
+            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+
+            if (info.AlarmType_Alarm == null || info.AlarmType_Warning == null)
+            {
+                logger.Error(Settings.Default.Error12);
+                MessageBoxShow(Settings.Default.Error12);
+                return false;
+            }
+
+            if (!IsConnected())
+            {
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBoxShow(Settings.Default.Error_connectToDbFailed);
+                return false;
+            }
+
+            if (firstId > lastId)
+            {
+                MessageBoxShow("C'est pas bien ça");
+                return false;
+            }
+
+            string whereId =
+                auditTrailInfo.Ids[auditTrailInfo.Id] + " >= @0 AND " +
+                auditTrailInfo.Ids[auditTrailInfo.Id] + " <= @1 AND ";
+            string eventType = readAlert ?
+                "(" + auditTrailInfo.Ids[auditTrailInfo.EventType] + " = '" + info.AlarmType_Alarm + "' OR " +
+                auditTrailInfo.Ids[auditTrailInfo.EventType] + " = '" + info.AlarmType_Warning + "')"
+                : auditTrailInfo.Ids[auditTrailInfo.EventType] + " = '" + info.AlarmType_Alarm + "'";
+
+            object[] values = new object[2];
+            values[0] = firstId;
+            values[1] = lastId;
+
+            return SendCommand_new(@"SELECT * FROM " + auditTrailInfo.TabName + " WHERE " + whereId + eventType, values);
+        }
+        private static void SendCommand_GetLastRecipes(RecipeStatus status = RecipeStatus.PRODnDRAFT)
+        {
+            // only prod pour la prod
+            // only draft pour les tests de recette
+            // only obsolete pour faire revivre une vieille recette
+            // prod and draft pour modifier une recette
+
+            //
+
+            logger.Debug("SendCommand_GetLastRecipes");
+
+            RecipeInfo recipeInfo = new RecipeInfo();
+
+            if (!IsConnected())
+            {
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBoxShow(Settings.Default.Error_connectToDbFailed);
+                return;
+            }
+
+            string statusFilter =
+                status == RecipeStatus.DRAFT ? recipeInfo.Ids[recipeInfo.Status] + " = " + GetRecipeStatus(RecipeStatus.DRAFT) :
+                status == RecipeStatus.OBSOLETE ? recipeInfo.Ids[recipeInfo.Status] + " = " + GetRecipeStatus(RecipeStatus.OBSOLETE) :
+                status == RecipeStatus.PROD ? recipeInfo.Ids[recipeInfo.Status] + " = " + GetRecipeStatus(RecipeStatus.PROD) :
+                status == RecipeStatus.PRODnDRAFT ? "(" + recipeInfo.Ids[recipeInfo.Status] + " = " + GetRecipeStatus(RecipeStatus.PROD) + " OR " +
+                recipeInfo.Ids[recipeInfo.Status] + " = " + GetRecipeStatus(RecipeStatus.DRAFT) + ")" : "";
+
+            if (statusFilter == "")
+            {
+                logger.Error(Settings.Default.Error03);
+                MessageBoxShow(Settings.Default.Error03);
+                return;
+            }
+
+            SendCommand_new("SELECT * FROM " + recipeInfo.TabName +
+                " WHERE ((" + recipeInfo.Ids[recipeInfo.Name] + ", " +
+                recipeInfo.Ids[recipeInfo.Version] + ") IN " +
+                "(SELECT " + recipeInfo.Ids[recipeInfo.Name] +
+                ", MAX(" + recipeInfo.Ids[recipeInfo.Version] + ") " +
+                "FROM " + recipeInfo.TabName +
+                (status == RecipeStatus.OBSOLETE ? "" : " WHERE " + statusFilter) +
+                " GROUP BY " + recipeInfo.Ids[recipeInfo.Name] + "))" +
+                (status == RecipeStatus.OBSOLETE ? " AND " + statusFilter : "") +
+                " ORDER BY " + recipeInfo.Ids[recipeInfo.Name] + ";");
+        }
+        private static object[] ReadNext_new()
+        {
+            //logger.Debug("ReadNext new");
+
+            object[] values = null;
+
+            if (!IsConnected())
+            {
+                logger.Error(Settings.Default.Error_connectToDbFailed);
+                MessageBoxShow(Settings.Default.Error_connectToDbFailed);
+                return null;
+            }
+
+            if (IsReaderNotAvailable())
+            {
+                logger.Error(Settings.Default.Error04);
+                MessageBoxShow(Settings.Default.Error04);
+                return null;
+            }
+
+            try
+            {
+                if (reader.Read())
+                {
+                    values = new object[reader.FieldCount];
+
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        values[i] = reader.GetValue(i);
+                        //logger.Trace(i.ToString() + ": " + reader[i].ToString());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+                MessageBoxShow(ex.Message);
+                return null;
+            }
+
+            return values;
+        }
+        private static bool IsReaderNotAvailable() { return reader == null || reader.IsClosed; }
+        private static void Close_reader() { if (!IsReaderNotAvailable()) reader.Close(); }
         private static string GetArg_new(string[] ids, object[] values, string separator, string prefix = "")
         {
             string arg = "";
@@ -1429,7 +1257,6 @@ namespace Database
 
             return arg;
         }
-
         private static bool SetCommand_new(MySqlCommand command, object[] values)
         {
             logger.Debug("SetCommand");
@@ -1461,23 +1288,6 @@ namespace Database
             }
             return true;
         }
-
-        // Interface à implémenter
-        public static int GetRecipeStatus(RecipeStatus status)
-        {
-            switch (status)
-            {
-                case RecipeStatus.DRAFT:
-                    return 0;
-                case RecipeStatus.PROD:
-                    return 1;
-                case RecipeStatus.OBSOLETE:
-                    return 2;
-                default:
-                    return -1;
-            }
-        }
-
         private static string Decrypt(string cipherText, string keyString)
         {
             byte[] cipherBytes = Convert.FromBase64String(cipherText);
@@ -1508,6 +1318,10 @@ namespace Database
                     }
                 }
             }
+        }
+        private static void MessageBoxShow(string messageBoxText, MessageBoxButton button = MessageBoxButton.OK)
+        {
+            MessageBox.Show(messageBoxText, "", button);
         }
     }
 }

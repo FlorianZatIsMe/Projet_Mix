@@ -11,12 +11,6 @@ using Alarm_Management;
 
 namespace Driver_Ethernet
 {
-    public class Config
-    {
-
-    }
-
-
     public class Ethernet
     {
         private Socket client;
@@ -25,8 +19,9 @@ namespace Driver_Ethernet
         public readonly string endLine;
         private readonly int alarmConnectId1;
         private readonly int alarmConnectId2;
+
         private bool isActive = false;
-        private readonly System.Timers.Timer scanAlarmTimer;
+        private readonly Timer scanAlarmTimer;
         private bool[] areAlarmActive;
         private readonly int nAlarms = 1;
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
@@ -40,12 +35,6 @@ namespace Driver_Ethernet
             alarmConnectId1 = alarmConnectId1_arg;
             alarmConnectId2 = alarmConnectId2_arg;
             areAlarmActive = new bool[nAlarms];
-            /*
-            // Créez un objet socket pour la connexion
-            client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
-            {
-                SendTimeout = 500
-            };*/
 
             // Initialisation des timers
             scanAlarmTimer = new System.Timers.Timer
@@ -131,8 +120,6 @@ namespace Driver_Ethernet
 
         public string ReadData(int msWaitTime = 1000)
         {
-            //logger.Debug("ReadData(int msWaitTime = 1000)");
-            //if (!IsConnected()) Connect();
             if (!IsConnected()) return null;
 
             // Envoyez et recevez les données via le socket
@@ -141,23 +128,6 @@ namespace Driver_Ethernet
             int receivedDataLength = client.Receive(data);
             Console.WriteLine("Received data: " + Encoding.ASCII.GetString(data, 0, receivedDataLength));
             return Encoding.ASCII.GetString(data, 0, receivedDataLength);
-            //*/
-            /*
-            ArraySegment<byte> buffer = new ArraySegment<byte>(data);
-            Task<int> task = client.ReceiveAsync(buffer, SocketFlags.None);
-            task.Wait(msWaitTime);
-            
-            //MyMessageBox.Show("Alors");
-
-            int receivedDataLength;
-            if (task.IsCompleted)
-            {
-                receivedDataLength = task.Result;
-                Console.WriteLine("Received data: " + Encoding.ASCII.GetString(data, 0, receivedDataLength));
-                return Encoding.ASCII.GetString(data, 0, receivedDataLength);
-            }
-            return null;
-            //*/
         }
 
         public string ReadData(string dataToSend, int msWaitTime = -1)

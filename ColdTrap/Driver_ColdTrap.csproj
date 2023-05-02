@@ -219,6 +219,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Alarm_Management\Alarm_Management.csproj">
+      <Project>{d55d238d-616b-4ac6-acec-1c6d34f94a07}</Project>
+      <Name>Alarm_Management</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Message\Message.csproj">
       <Project>{77b11b88-ceda-40c3-8b83-e2ef31bce0b3}</Project>
       <Name>Message</Name>

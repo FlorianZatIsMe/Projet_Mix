@@ -69,7 +69,7 @@ namespace Main
     internal static class General
     {
         public static CycleInfo CurrentCycleInfo;
-        public const string application_version = "1.0"; // see if we can manage that through VisualStudio
+        public readonly static string application_version; // see if we can manage that through VisualStudio
         public const string application_name = "MixingApplication";
         public readonly static string equipement_name = Settings.Default.General_equipement_name;
         public static string loggedUsername = WindowsIdentity.GetCurrent().Name;
@@ -130,6 +130,8 @@ namespace Main
             {
                 General.NextBackupTime = General.NextBackupTime.AddDays(1);
             }
+
+            application_version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
         }
         public static bool Verify_Format(TextBox textBox, bool isNotNull, bool isNumber, int parameter, decimal min = -1, decimal max = -1)
         {
