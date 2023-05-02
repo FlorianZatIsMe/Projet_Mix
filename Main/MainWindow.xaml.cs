@@ -6,8 +6,6 @@ using System.Configuration;
 using System.Collections.Specialized;
 using Database;
 using System.Globalization;
-using DRIVER_RS232_Weight;
-using Driver_RS232_Pump;
 using System.Security.Principal;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
@@ -171,16 +169,9 @@ namespace Main
             Task connectBalanceTask = new Task(() => { Balance.Connect(); });
             connectBalanceTask.Start();
 
-            RS232Pump.Initialize(/*new Driver_RS232.IniInfo() { Window = this }*/);
             Driver_ColdTrap.ColdTrap.Initialize(new Driver_ColdTrap.IniInfo() { Window = this });
             UserManagement.Initialize(new User_Management.IniInfo() { Window = this });
             //SpeedMixerModbus.Initialize();
-            if (RS232Pump.IsOpen())
-            {
-                RS232Pump.BlockUse();
-                RS232Pump.StopPump();
-                RS232Pump.FreeUse();
-            }
 
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
             object[] values = new object[auditTrailInfo.Ids.Count()];
