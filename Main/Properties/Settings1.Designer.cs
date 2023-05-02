@@ -25,82 +25,37 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\\\\chlocgxp001\\gxp_validated\\ENDEXO\\MixingApplication\\Reports\\Cycle_Reports\\")]
-        public string Report_Path {
+        [global::System.Configuration.DefaultSettingValueAttribute("La variable info n\'est pas correcte")]
+        public string CycleInfo_Error01 {
             get {
-                return ((string)(this["Report_Path"]));
+                return ((string)(this["CycleInfo_Error01"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\\\\chlocgxp001\\gxp_validated\\ENDEXO\\MixingApplication\\Reports\\DailyTest_Reports\\")]
-        public string Sampling_Path {
+        [global::System.Configuration.DefaultSettingValueAttribute("La commande envoyé n\'a rien renvoyé")]
+        public string CycleInfo_Error02 {
             get {
-                return ((string)(this["Sampling_Path"]));
+                return ((string)(this["CycleInfo_Error02"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\\\\chlocgxp001\\gxp_validated\\ENDEXO\\MixingApplication\\Database\\Backups\\")]
-        public string Backup_backupPath {
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int CycleInfo_checkAlarmsTimer_Interval {
             get {
-                return ((string)(this["Backup_backupPath"]));
+                return ((int)(this["CycleInfo_checkAlarmsTimer_Interval"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\\\\chlocgxp001\\gxp_validated\\ENDEXO\\MixingApplication\\Database\\Archive\\SQL\\")]
-        public string Archiving_sqlPath {
+        [global::System.Configuration.DefaultSettingValueAttribute("Classe utilisée incorrecte")]
+        public string CycleInfo_Error03 {
             get {
-                return ((string)(this["Archiving_sqlPath"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\\\\chlocgxp001\\gxp_validated\\ENDEXO\\MixingApplication\\Database\\Archive\\CSV\\")]
-        public string Archiving_csvPath {
-            get {
-                return ((string)(this["Archiving_csvPath"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Code produit")]
-        public string General_ProductCode {
-            get {
-                return ((string)(this["General_ProductCode"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Masse produit final")]
-        public string General_FinalWeight {
-            get {
-                return ((string)(this["General_FinalWeight"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Numéro OF: ")]
-        public string CycleInfo_OF_Field {
-            get {
-                return ((string)(this["CycleInfo_OF_Field"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Révision recette: ")]
-        public string CycleInfo_RevRecipe_Field {
-            get {
-                return ((string)(this["CycleInfo_RevRecipe_Field"]));
+                return ((string)(this["CycleInfo_Error03"]));
             }
         }
         
@@ -142,109 +97,100 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
-        public int CycleInfo_checkAlarmsTimer_Interval_ms {
-            get {
-                return ((int)(this["CycleInfo_checkAlarmsTimer_Interval_ms"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Classe utilisée incorrecte")]
-        public string CycleInfo_Error_NewInfo_01 {
-            get {
-                return ((string)(this["CycleInfo_Error_NewInfo_01"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("500")]
-        public int CycleMix_timeSeqController_ms {
+        public int CycleMix_timeSeqController {
             get {
-                return ((int)(this["CycleMix_timeSeqController_ms"]));
+                return ((int)(this["CycleMix_timeSeqController"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1000")]
-        public int CycleMix_timeCheckAlarms_Interval_ms {
+        public int CycleMix_timeCheckAlarms_Interval {
             get {
-                return ((int)(this["CycleMix_timeCheckAlarms_Interval_ms"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
-        public int CycleMix_sequenceTimer_Interval_ms {
-            get {
-                return ((int)(this["CycleMix_sequenceTimer_Interval_ms"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
-        public int CycleMix_pumpNotFreeTimer_Interval_ms {
-            get {
-                return ((int)(this["CycleMix_pumpNotFreeTimer_Interval_ms"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
-        public int CycleMix_tempControlTimer_Interval_ms {
-            get {
-                return ((int)(this["CycleMix_tempControlTimer_Interval_ms"]));
+                return ((int)(this["CycleMix_timeCheckAlarms_Interval"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("30")]
-        public int CycleMix_timeoutPumpNotFree_s {
+        public int CycleMix_timeoutPumpNotFree {
             get {
-                return ((int)(this["CycleMix_timeoutPumpNotFree_s"]));
+                return ((int)(this["CycleMix_timeoutPumpNotFree"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("20")]
-        public int CycleMix_timeoutTempTooHotDuringCycle_s {
+        public int CycleMix_timeoutTempTooHotDuringCycle {
             get {
-                return ((int)(this["CycleMix_timeoutTempTooHotDuringCycle_s"]));
+                return ((int)(this["CycleMix_timeoutTempTooHotDuringCycle"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("30")]
-        public int CycleMix_timeoutTempTooHotBeforeCycle_s {
+        public int CycleMix_timeoutTempTooHotBeforeCycle {
             get {
-                return ((int)(this["CycleMix_timeoutTempTooHotBeforeCycle_s"]));
+                return ((int)(this["CycleMix_timeoutTempTooHotBeforeCycle"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("60")]
-        public int CycleMix_timeoutSequenceTooLong_s {
+        public int CycleMix_timeoutSequenceTooLong {
             get {
-                return ((int)(this["CycleMix_timeoutSequenceTooLong_s"]));
+                return ((int)(this["CycleMix_timeoutSequenceTooLong"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("90")]
-        public int CycleMix_timeoutSequenceBlocked_s {
+        public int CycleMix_timeoutSequenceBlocked {
             get {
-                return ((int)(this["CycleMix_timeoutSequenceBlocked_s"]));
+                return ((int)(this["CycleMix_timeoutSequenceBlocked"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int CycleMix_sequenceTimer_Interval {
+            get {
+                return ((int)(this["CycleMix_sequenceTimer_Interval"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int CycleMix_pumpNotFreeTimer_Interval {
+            get {
+                return ((int)(this["CycleMix_pumpNotFreeTimer_Interval"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int CycleMix_tempControlTimer_Interval {
+            get {
+                return ((int)(this["CycleMix_tempControlTimer_Interval"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("recipeSpeedMixerInfo est null")]
+        public string CycleMix_Erro01 {
+            get {
+                return ((string)(this["CycleMix_Erro01"]));
             }
         }
         
@@ -259,28 +205,10 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Mettez le produit dans le speedmixer et fermer le capot")]
-        public string CycleMix_Request_PutProduct {
-            get {
-                return ((string)(this["CycleMix_Request_PutProduct"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Cliquez sur OK pour démarrer le speedmixer")]
         public string CycleMix_Request_StartMix {
             get {
                 return ((string)(this["CycleMix_Request_StartMix"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("recipeSpeedMixerInfo est null")]
-        public string CycleMix_Error_Constructor_01 {
-            get {
-                return ((string)(this["CycleMix_Error_Constructor_01"]));
             }
         }
         
@@ -331,24 +259,6 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("500")]
-        public int CycleWeight_getWeightTimer_Interval {
-            get {
-                return ((int)(this["CycleWeight_getWeightTimer_Interval"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool CycleWeight_isManualAllowed {
-            get {
-                return ((bool)(this["CycleWeight_isManualAllowed"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Masse")]
         public string CycleWeight_WeightField {
             get {
@@ -376,24 +286,6 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("La masse du produit n\'est pas correcte")]
-        public string CycleWeight_IncorrectWeight {
-            get {
-                return ((string)(this["CycleWeight_IncorrectWeight"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Code barre incorrect, code barre attendu:")]
-        public string CycleWeigh_IncorrectBarcode {
-            get {
-                return ((string)(this["CycleWeigh_IncorrectBarcode"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Valeur incorrecte de ")]
         public string CycleWeight_Error_IncorrectValue {
             get {
@@ -412,6 +304,60 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("500")]
+        public int CycleWeight_getWeightTimer_Interval {
+            get {
+                return ((int)(this["CycleWeight_getWeightTimer_Interval"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CycleWeight_isManualAllowed {
+            get {
+                return ((bool)(this["CycleWeight_isManualAllowed"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Mettez le produit dans le speedmixer et fermer le capot")]
+        public string CycleMix_Request_PutProduct {
+            get {
+                return ((string)(this["CycleMix_Request_PutProduct"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("La masse du produit n\'est pas correcte")]
+        public string CycleWeight_IncorrectWeight {
+            get {
+                return ((string)(this["CycleWeight_IncorrectWeight"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Code barre incorrect, code barre attendu:")]
+        public string CycleWeigh_IncorrectBarcode {
+            get {
+                return ((string)(this["CycleWeigh_IncorrectBarcode"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Cycle interrompu")]
+        public string Report_Comment_CycleAborted {
+            get {
+                return ((string)(this["Report_Comment_CycleAborted"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Voulez-vous démarrer le cycle ?")]
         public string PreCycle_Request_StartCycle {
             get {
@@ -421,37 +367,10 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Numéro de lot")]
-        public string PreCycle_BatchNumber_Field {
+        [global::System.Configuration.DefaultSettingValueAttribute("Confirmation")]
+        public string PreCycle_Request_StartCycle_Title {
             get {
-                return ((string)(this["PreCycle_BatchNumber_Field"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Masse cible (g) [")]
-        public string PreCycle_FinalWeigh_Field {
-            get {
-                return ((string)(this["PreCycle_FinalWeigh_Field"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Liste")]
-        public string PreCycle_TbList_List {
-            get {
-                return ((string)(this["PreCycle_TbList_List"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Scan")]
-        public string PreCycle_TbList_TextBox {
-            get {
-                return ((string)(this["PreCycle_TbList_TextBox"]));
+                return ((string)(this["PreCycle_Request_StartCycle_Title"]));
             }
         }
         
@@ -673,6 +592,15 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\chlocgxp001\\gxp_validated\\ENDEXO\\MixingApplication\\Database\\Archive\\SQL\\")]
+        public string Archiving_sqlPath {
+            get {
+                return ((string)(this["Archiving_sqlPath"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute(".sql")]
         public string ArchBack_ExtFile {
             get {
@@ -682,7 +610,7 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("92")]
+        [global::System.Configuration.DefaultSettingValueAttribute("22")]
         public int Archiving_maxArchiveCount {
             get {
                 return ((int)(this["Archiving_maxArchiveCount"]));
@@ -830,6 +758,15 @@ namespace Main.Properties {
         public int ArchBack_progressBar_LeftMargin {
             get {
                 return ((int)(this["ArchBack_progressBar_LeftMargin"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\chlocgxp001\\gxp_validated\\ENDEXO\\MixingApplication\\Database\\Backups\\")]
+        public string Backup_backupPath {
+            get {
+                return ((string)(this["Backup_backupPath"]));
             }
         }
         
@@ -1445,6 +1382,15 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\chlocgxp001\\gxp_validated\\ENDEXO\\MixingApplication\\Reports\\Cycle_Reports\\")]
+        public string Report_Path {
+            get {
+                return ((string)(this["Report_Path"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Informations du cycle manquantes")]
         public string Report_Info_CycleInfoNotFound {
             get {
@@ -1638,6 +1584,15 @@ namespace Main.Properties {
         public decimal DailyTestRatio {
             get {
                 return ((decimal)(this["DailyTestRatio"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\chlocgxp001\\gxp_validated\\ENDEXO\\MixingApplication\\Reports\\DailyTest_Reports\\")]
+        public string Sampling_Path {
+            get {
+                return ((string)(this["Sampling_Path"]));
             }
         }
         
@@ -1866,570 +1821,870 @@ namespace Main.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Resources/img_stop_dis.png")]
         public string Main_StopIconDis {
             get {
                 return ((string)(this["Main_StopIconDis"]));
             }
+            set {
+                this["Main_StopIconDis"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("5500")]
         public int Archive_RowNumberStartArchive {
             get {
                 return ((int)(this["Archive_RowNumberStartArchive"]));
             }
+            set {
+                this["Archive_RowNumberStartArchive"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("6020")]
         public int Archive_RowNumberTrigger {
             get {
                 return ((int)(this["Archive_RowNumberTrigger"]));
             }
+            set {
+                this["Archive_RowNumberTrigger"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute(".csv")]
         public string CsvExtFile {
             get {
                 return ((string)(this["CsvExtFile"]));
             }
+            set {
+                this["CsvExtFile"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\chlocgxp001\\gxp_validated\\ENDEXO\\MixingApplication\\Database\\Archive\\CSV\\")]
+        public string Archiving_csvPath {
+            get {
+                return ((string)(this["Archiving_csvPath"]));
+            }
+            set {
+                this["Archiving_csvPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool OFNumber_IsNumber {
             get {
                 return ((bool)(this["OFNumber_IsNumber"]));
             }
+            set {
+                this["OFNumber_IsNumber"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("7")]
         public int OFNumber_NbChar {
             get {
                 return ((int)(this["OFNumber_NbChar"]));
             }
+            set {
+                this["OFNumber_NbChar"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("200")]
         public int Report_Print_Delay1_Time_ms {
             get {
                 return ((int)(this["Report_Print_Delay1_Time_ms"]));
             }
+            set {
+                this["Report_Print_Delay1_Time_ms"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("150")]
         public int Report_Print_Delay1_MaxCount {
             get {
                 return ((int)(this["Report_Print_Delay1_MaxCount"]));
             }
+            set {
+                this["Report_Print_Delay1_MaxCount"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1000")]
         public int Report_Print_Delay2_Time_ms {
             get {
                 return ((int)(this["Report_Print_Delay2_Time_ms"]));
             }
+            set {
+                this["Report_Print_Delay2_Time_ms"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("30")]
         public int Report_Print_Delay2_MaxCount {
             get {
                 return ((int)(this["Report_Print_Delay2_MaxCount"]));
             }
+            set {
+                this["Report_Print_Delay2_MaxCount"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("15")]
         public int AutoLogOff_min {
             get {
                 return ((int)(this["AutoLogOff_min"]));
             }
+            set {
+                this["AutoLogOff_min"] = value;
+            }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Numéro de lot")]
+        public string PreCycle_BatchNumber_Field {
+            get {
+                return ((string)(this["PreCycle_BatchNumber_Field"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Code produit")]
+        public string PreCycle_ProductCode_Field {
+            get {
+                return ((string)(this["PreCycle_ProductCode_Field"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Masse cible (g) [")]
+        public string PreCycle_FinalWeigh_Field {
+            get {
+                return ((string)(this["PreCycle_FinalWeigh_Field"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Liste")]
+        public string PreCycle_TbList_List {
+            get {
+                return ((string)(this["PreCycle_TbList_List"]));
+            }
+            set {
+                this["PreCycle_TbList_List"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Scan")]
+        public string PreCycle_TbList_TextBox {
+            get {
+                return ((string)(this["PreCycle_TbList_TextBox"]));
+            }
+            set {
+                this["PreCycle_TbList_TextBox"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Numéro OF: ")]
+        public string CycleInfo_OF_Field {
+            get {
+                return ((string)(this["CycleInfo_OF_Field"]));
+            }
+            set {
+                this["CycleInfo_OF_Field"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Masse produit final: ")]
+        public string CycleInfo_FinalWeight_Field {
+            get {
+                return ((string)(this["CycleInfo_FinalWeight_Field"]));
+            }
+            set {
+                this["CycleInfo_FinalWeight_Field"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Code Produit: ")]
+        public string CycleInfo_Product_Field {
+            get {
+                return ((string)(this["CycleInfo_Product_Field"]));
+            }
+            set {
+                this["CycleInfo_Product_Field"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Révision recette: ")]
+        public string CycleInfo_RevRecipe_Field {
+            get {
+                return ((string)(this["CycleInfo_RevRecipe_Field"]));
+            }
+            set {
+                this["CycleInfo_RevRecipe_Field"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Phase n°")]
         public string CycleSpeedMixer_PhaseNumber_Field {
             get {
                 return ((string)(this["CycleSpeedMixer_PhaseNumber_Field"]));
             }
+            set {
+                this["CycleSpeedMixer_PhaseNumber_Field"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Phase Time: ")]
         public string CycleSpeedMixer_PhaseTime_Field {
             get {
                 return ((string)(this["CycleSpeedMixer_PhaseTime_Field"]));
             }
+            set {
+                this["CycleSpeedMixer_PhaseTime_Field"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Température: ")]
         public string CycleSpeedMixer_Temperature_Field {
             get {
                 return ((string)(this["CycleSpeedMixer_Temperature_Field"]));
             }
+            set {
+                this["CycleSpeedMixer_Temperature_Field"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Pression (")]
         public string CycleSpeedMixer_Pressure_Field1 {
             get {
                 return ((string)(this["CycleSpeedMixer_Pressure_Field1"]));
             }
+            set {
+                this["CycleSpeedMixer_Pressure_Field1"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("): ")]
         public string CycleSpeedMixer_Pressure_Field2 {
             get {
                 return ((string)(this["CycleSpeedMixer_Pressure_Field2"]));
             }
+            set {
+                this["CycleSpeedMixer_Pressure_Field2"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Vitesse (RPM): ")]
         public string CycleSpeedMixer_Speed_Field {
             get {
                 return ((string)(this["CycleSpeedMixer_Speed_Field"]));
             }
+            set {
+                this["CycleSpeedMixer_Speed_Field"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Ok")]
         public string OkButton_Content {
             get {
                 return ((string)(this["OkButton_Content"]));
             }
+            set {
+                this["OkButton_Content"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Supprimer")]
         public string SpeedMixer_DelSequenceButton_Content {
             get {
                 return ((string)(this["SpeedMixer_DelSequenceButton_Content"]));
             }
+            set {
+                this["SpeedMixer_DelSequenceButton_Content"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Pesée")]
         public string Recipe_SeqName_Weight {
             get {
                 return ((string)(this["Recipe_SeqName_Weight"]));
             }
+            set {
+                this["Recipe_SeqName_Weight"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("SpeedMixer")]
         public string Recipe_SeqName_SpeedMixer {
             get {
                 return ((string)(this["Recipe_SeqName_SpeedMixer"]));
             }
+            set {
+                this["Recipe_SeqName_SpeedMixer"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Vitesse (RPM)")]
         public string RecipeMix_Speed_Label {
             get {
                 return ((string)(this["RecipeMix_Speed_Label"]));
             }
+            set {
+                this["RecipeMix_Speed_Label"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Pression (")]
         public string RecipeMix_Pressure_Label {
             get {
                 return ((string)(this["RecipeMix_Pressure_Label"]));
             }
+            set {
+                this["RecipeMix_Pressure_Label"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Contrôle du vide")]
         public string SpeedMixer_VacuumButton_Field {
             get {
                 return ((string)(this["SpeedMixer_VacuumButton_Field"]));
             }
+            set {
+                this["SpeedMixer_VacuumButton_Field"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Unité de la pression")]
         public string SpeedMixer_VacuumLabel_Field {
             get {
                 return ((string)(this["SpeedMixer_VacuumLabel_Field"]));
             }
+            set {
+                this["SpeedMixer_VacuumLabel_Field"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Utilisation du piège froid")]
         public string SpeedMixer_ColdTrapButton {
             get {
                 return ((string)(this["SpeedMixer_ColdTrapButton"]));
             }
+            set {
+                this["SpeedMixer_ColdTrapButton"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Tout aquitter")]
         public string ActiveAlarm_AckButton {
             get {
                 return ((string)(this["ActiveAlarm_AckButton"]));
             }
+            set {
+                this["ActiveAlarm_AckButton"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Archiver")]
         public string Archiving_ArchiveButton {
             get {
                 return ((string)(this["Archiving_ArchiveButton"]));
             }
+            set {
+                this["Archiving_ArchiveButton"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Date du dernier enregistrement à archiver: ")]
         public string Archiving_DateLabel {
             get {
                 return ((string)(this["Archiving_DateLabel"]));
             }
+            set {
+                this["Archiving_DateLabel"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Faire un restore")]
         public string Archiving_RestoreButton {
             get {
                 return ((string)(this["Archiving_RestoreButton"]));
             }
+            set {
+                this["Archiving_RestoreButton"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Date et heure de début:")]
         public string AuditTrail_StartDateTime {
             get {
                 return ((string)(this["AuditTrail_StartDateTime"]));
             }
+            set {
+                this["AuditTrail_StartDateTime"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("00:00:00")]
         public string AuditTrail_DefaultTime {
             get {
                 return ((string)(this["AuditTrail_DefaultTime"]));
             }
+            set {
+                this["AuditTrail_DefaultTime"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Date et heure de fin:")]
         public string AuditTrail_EndDateTime {
             get {
                 return ((string)(this["AuditTrail_EndDateTime"]));
             }
+            set {
+                this["AuditTrail_EndDateTime"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Type d\'évenements")]
         public string AuditTrail_EventType_Field {
             get {
                 return ((string)(this["AuditTrail_EventType_Field"]));
             }
+            set {
+                this["AuditTrail_EventType_Field"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Evènements")]
         public string AuditTrail_EventType_Event {
             get {
                 return ((string)(this["AuditTrail_EventType_Event"]));
             }
+            set {
+                this["AuditTrail_EventType_Event"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Alarmes")]
         public string AuditTrail_EventType_Alarm {
             get {
                 return ((string)(this["AuditTrail_EventType_Alarm"]));
             }
+            set {
+                this["AuditTrail_EventType_Alarm"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Alertes")]
         public string AuditTrail_EventType_Warning {
             get {
                 return ((string)(this["AuditTrail_EventType_Warning"]));
             }
+            set {
+                this["AuditTrail_EventType_Warning"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Filtrer")]
         public string AuditTrail_FilterButton {
             get {
                 return ((string)(this["AuditTrail_FilterButton"]));
             }
+            set {
+                this["AuditTrail_FilterButton"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Statut:")]
         public string ArchBackup_Status_Field {
             get {
                 return ((string)(this["ArchBackup_Status_Field"]));
             }
+            set {
+                this["ArchBackup_Status_Field"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Faire un backup")]
         public string Backup_Backup_Button {
             get {
                 return ((string)(this["Backup_Backup_Button"]));
             }
+            set {
+                this["Backup_Backup_Button"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Faire un restore")]
         public string Backup_Restore_Button {
             get {
                 return ((string)(this["Backup_Restore_Button"]));
             }
+            set {
+                this["Backup_Restore_Button"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Paramètres")]
         public string Parameters_Title {
             get {
                 return ((string)(this["Parameters_Title"]));
             }
+            set {
+                this["Parameters_Title"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Prochaine calibration: ")]
         public string Parameters_NextCalibration_Field {
             get {
                 return ((string)(this["Parameters_NextCalibration_Field"]));
             }
+            set {
+                this["Parameters_NextCalibration_Field"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Nom de la recette")]
         public string Recipe_New_Name {
             get {
                 return ((string)(this["Recipe_New_Name"]));
             }
+            set {
+                this["Recipe_New_Name"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Nouvelle séquence")]
         public string Recipe_NewSequence_Button {
             get {
                 return ((string)(this["Recipe_NewSequence_Button"]));
             }
+            set {
+                this["Recipe_NewSequence_Button"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Masse cible min (g)")]
         public string Recipe_FinalWeight_Min {
             get {
                 return ((string)(this["Recipe_FinalWeight_Min"]));
             }
+            set {
+                this["Recipe_FinalWeight_Min"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Masse cible max (g)")]
         public string Recipe_FinalWeight_Max {
             get {
                 return ((string)(this["Recipe_FinalWeight_Max"]));
             }
+            set {
+                this["Recipe_FinalWeight_Max"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Créer recette")]
         public string Recipe_New_Create_Button {
             get {
                 return ((string)(this["Recipe_New_Create_Button"]));
             }
+            set {
+                this["Recipe_New_Create_Button"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Version: ")]
         public string Recipe_Version_Field {
             get {
                 return ((string)(this["Recipe_Version_Field"]));
             }
+            set {
+                this["Recipe_Version_Field"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Statut: ")]
         public string Recipe_Status_Field {
             get {
                 return ((string)(this["Recipe_Status_Field"]));
             }
+            set {
+                this["Recipe_Status_Field"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Tester recette")]
         public string Recipe_Test_Field {
             get {
                 return ((string)(this["Recipe_Test_Field"]));
             }
+            set {
+                this["Recipe_Test_Field"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Masse produit final (g)")]
         public string Recipe_Test_FinalProduct {
             get {
                 return ((string)(this["Recipe_Test_FinalProduct"]));
             }
+            set {
+                this["Recipe_Test_FinalProduct"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Tester")]
         public string Recipe_Test_Button {
             get {
                 return ((string)(this["Recipe_Test_Button"]));
             }
+            set {
+                this["Recipe_Test_Button"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Nom de la recette à copier")]
         public string Recipe_Copy_Name {
             get {
                 return ((string)(this["Recipe_Copy_Name"]));
             }
+            set {
+                this["Recipe_Copy_Name"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Copier recette")]
         public string Recipe_Copy_Button {
             get {
                 return ((string)(this["Recipe_Copy_Button"]));
             }
+            set {
+                this["Recipe_Copy_Button"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Activer recette")]
         public string Recipe_Activate_Field {
             get {
                 return ((string)(this["Recipe_Activate_Field"]));
             }
+            set {
+                this["Recipe_Activate_Field"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Désactiver/Supprimer recette")]
         public string Recipe_Deactivate_Field {
             get {
                 return ((string)(this["Recipe_Deactivate_Field"]));
             }
+            set {
+                this["Recipe_Deactivate_Field"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Nom d\'utilisateur")]
         public string LogIn_UserName {
             get {
                 return ((string)(this["LogIn_UserName"]));
             }
+            set {
+                this["LogIn_UserName"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Mot de passe")]
         public string LogIn_Password {
             get {
                 return ((string)(this["LogIn_Password"]));
             }
+            set {
+                this["LogIn_Password"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Connexion")]
         public string LogIn_Connexion {
             get {
                 return ((string)(this["LogIn_Connexion"]));
             }
+            set {
+                this["LogIn_Connexion"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Déconnexion")]
         public string LogIn_Deconnexion {
             get {
                 return ((string)(this["LogIn_Deconnexion"]));
             }
+            set {
+                this["LogIn_Deconnexion"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Annuler")]
         public string Cancel_Button {
             get {
                 return ((string)(this["Cancel_Button"]));
             }
+            set {
+                this["Cancel_Button"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Veuillez créer une séquence")]
         public string Recipe_Info_NoSubRecipe {
             get {
                 return ((string)(this["Recipe_Info_NoSubRecipe"]));
+            }
+            set {
+                this["Recipe_Info_NoSubRecipe"] = value;
             }
         }
         
@@ -2469,106 +2724,99 @@ namespace Main.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("12.764")]
         public decimal DailyTest_Weight2 {
             get {
                 return ((decimal)(this["DailyTest_Weight2"]));
             }
+            set {
+                this["DailyTest_Weight2"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public decimal DailyTest_Weight3 {
             get {
                 return ((decimal)(this["DailyTest_Weight3"]));
             }
+            set {
+                this["DailyTest_Weight3"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public decimal DailyTest_Weight4 {
             get {
                 return ((decimal)(this["DailyTest_Weight4"]));
             }
+            set {
+                this["DailyTest_Weight4"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public decimal Paramètre {
             get {
                 return ((decimal)(this["Paramètre"]));
             }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Cycle interrompu")]
-        public string Report_Comment_CycleAborted {
-            get {
-                return ((string)(this["Report_Comment_CycleAborted"]));
+            set {
+                this["Paramètre"] = value;
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Code produit")]
-        public string PreCycle_ProductCode_Field {
-            get {
-                return ((string)(this["PreCycle_ProductCode_Field"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"
-          <IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-            <list>
-              <int>3</int>
-              <int>4</int>
-              <int>5</int>
-              <int>10</int>
-              <int>12</int>
-              <int>13</int>
-              <int>14</int>
-              <int>15</int>
-              <int>16</int>
-              <int>17</int>
-              <int>18</int>
-              <int>19</int>
-              <int>20</int>
-              <int>21</int>
-              <int>22</int>
-              <int>23</int>
-              <int>24</int>
-              <int>25</int>
-              <int>26</int>
-              <int>27</int>
-              <int>28</int>
-              <int>29</int>
-              <int>30</int>
-              <int>31</int>
-              <int>32</int>
-              <int>33</int>
-              <int>34</int>
-              <int>35</int>
-              <int>36</int>
-              <int>37</int>
-              <int>38</int>
-              <int>39</int>
-              <int>40</int>
-              <int>41</int>
-              <int>42</int>
-              <int>43</int>
-              <int>44</int>
-              <int>45</int>
-            </list>
-          </IdDBControls>
-        ")]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <list>
+    <int>3</int>
+    <int>4</int>
+    <int>5</int>
+    <int>10</int>
+    <int>12</int>
+    <int>13</int>
+    <int>14</int>
+    <int>15</int>
+    <int>16</int>
+    <int>17</int>
+    <int>18</int>
+    <int>19</int>
+    <int>20</int>
+    <int>21</int>
+    <int>22</int>
+    <int>23</int>
+    <int>24</int>
+    <int>25</int>
+    <int>26</int>
+    <int>27</int>
+    <int>28</int>
+    <int>29</int>
+    <int>30</int>
+    <int>31</int>
+    <int>32</int>
+    <int>33</int>
+    <int>34</int>
+    <int>35</int>
+    <int>36</int>
+    <int>37</int>
+    <int>38</int>
+    <int>39</int>
+    <int>40</int>
+    <int>41</int>
+    <int>42</int>
+    <int>43</int>
+    <int>44</int>
+    <int>45</int>
+  </list>
+</IdDBControls>")]
         public global::Main.Pages.IdDBControls RecipeMix_IdDBControls {
             get {
                 return ((global::Main.Pages.IdDBControls)(this["RecipeMix_IdDBControls"]));
@@ -2577,28 +2825,18 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"
-          <IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-            <list>
-              <int>3</int>
-              <int>5</int>
-              <int>8</int>
-              <int>9</int>
-            </list>
-          </IdDBControls>
-        ")]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <list>
+    <int>3</int>
+    <int>5</int>
+    <int>8</int>
+    <int>9</int>
+  </list>
+</IdDBControls>")]
         public global::Main.Pages.IdDBControls RecipeWeight_IdDBControls {
             get {
                 return ((global::Main.Pages.IdDBControls)(this["RecipeWeight_IdDBControls"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Fermeture de l\'application")]
-        public string General_auditTrail_StopApp {
-            get {
-                return ((string)(this["General_auditTrail_StopApp"]));
             }
         }
     }

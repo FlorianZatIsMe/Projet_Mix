@@ -23,7 +23,7 @@ namespace Main.Pages
     /// <summary>
     /// Logique d'interaction pour Status.xaml
     /// </summary>
-    public partial class Status : Page, IDisposable
+    public partial class Status : Page
     {
         private readonly System.Timers.Timer timer;
 
@@ -40,11 +40,6 @@ namespace Main.Pages
             };
             timer.Elapsed += Timer_OnTimedEvent;
             timer.Start();
-        }
-
-        public void Dispose()
-        {
-            timer.Dispose();
         }
 
         private void Timer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)

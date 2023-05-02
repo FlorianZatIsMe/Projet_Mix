@@ -8,8 +8,8 @@
     <Application.Resources>
 
         <!-- Colors -->
-        <SolidColorBrush x:Key="Color_MouseOver" Color="#2D2D53" />
-        <SolidColorBrush x:Key="Color_SubS_rbOn" Color="#2162B5" /> <!-- ToggleButtonStyle1, ButtonStyle1 -->
+        <SolidColorBrush x:Key="Color_MouseOver" Color="#2D532D" />
+        <SolidColorBrush x:Key="Color_SubS_rbOn" Color="#01A552" /> <!-- ToggleButtonStyle1, ButtonStyle1 -->
         <SolidColorBrush x:Key="Color_SubS_rbOff" Color="#CECECE" /> <!-- ToggleButtonStyle1, ButtonStyle1 -->
         <SolidColorBrush x:Key="FontColor_ButtonDisabled" Color="#7E7E7E" />
 

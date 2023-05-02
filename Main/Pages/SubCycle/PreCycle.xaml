@@ -29,7 +29,7 @@
         <TextBlock Grid.Row = "0" Grid.Column = "0" Text = "{Binding Source={x:Static p:Settings.Default}, Path=PreCycle_BatchNumber_Field}" Margin = "10" HorizontalAlignment = "Left" VerticalAlignment = "Center" Style="{DynamicResource Label1}"/>
         <TextBox x:Name="tbOFnumber" Grid.Row = "0" Grid.Column = "1" Margin = "10" LostFocus="tbOFnumber_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{DynamicResource TextBoxStyle1}"/>
 
-        <TextBlock Grid.Row = "1" Grid.Column = "0" Text = "{Binding Source={x:Static p:Settings.Default}, Path=General_ProductCode}" Style="{DynamicResource Label1}" Margin = "10" HorizontalAlignment = "Left" VerticalAlignment = "Center"/>
+        <TextBlock Grid.Row = "1" Grid.Column = "0" Text = "{Binding Source={x:Static p:Settings.Default}, Path=PreCycle_ProductCode_Field}" Style="{DynamicResource Label1}" Margin = "10" HorizontalAlignment = "Left" VerticalAlignment = "Center"/>
         <TextBox x:Name="tbRecipeName" Grid.Row = "1" Grid.Column = "1" Margin = "10" LostFocus="tbRecipeName_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{DynamicResource TextBoxStyle1}"/>
         <ComboBox x:Name="cbxRecipeName" Style="{DynamicResource ComboBoxStyle1}" Grid.Row = "1" Grid.Column = "1" Margin="10" Width="Auto" IsSynchronizedWithCurrentItem="True" SelectionChanged="cbxProgramName_SelectionChanged" Visibility="Collapsed"/>
         <ToggleButton x:Name="tgBarcodeOption" Content="{Binding Source={x:Static p:Settings.Default}, Path=PreCycle_TbList_List}" Grid.Row = "1" Grid.Column = "2" Margin="15" Click="tgBarcodeOption_Click" Style="{DynamicResource ToggleButtonStyle1}"/>

@@ -54,7 +54,7 @@
     &lt;ConfigAlarm&gt;
       &lt;id1&gt;1&lt;/id1&gt;
       &lt;id2&gt;1&lt;/id2&gt;
-      &lt;description&gt;Erreur du SpeedMixer pendant le cycle&lt;/description&gt;
+      &lt;description&gt;Erreur du speedmixer pendant un cycle&lt;/description&gt;
       &lt;type&gt;Alarm&lt;/type&gt;
     &lt;/ConfigAlarm&gt;
     &lt;ConfigAlarm&gt;

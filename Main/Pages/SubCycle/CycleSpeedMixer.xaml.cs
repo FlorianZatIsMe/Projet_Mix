@@ -63,9 +63,9 @@ namespace Main.Pages.SubCycle
         private int countBeforeStart = 0;
 
         private Task taskSeqController;
-        private readonly int timeSeqController = Settings.Default.CycleMix_timeSeqController_ms;
+        private readonly int timeSeqController = Settings.Default.CycleMix_timeSeqController;
         private Task taskCheckAlarms;
-        private readonly int timeCheckAlarms = Settings.Default.CycleMix_timeCheckAlarms_Interval_ms;
+        private readonly int timeCheckAlarms = Settings.Default.CycleMix_timeCheckAlarms_Interval;
 
         private readonly System.Timers.Timer sequenceTimer;
         private int currentPhaseTime;
@@ -81,11 +81,11 @@ namespace Main.Pages.SubCycle
         private bool isTempOK;
         private int tempTooHotSince;
         
-        private readonly int timeoutPumpNotFree = Settings.Default.CycleMix_timeoutPumpNotFree_s; // 30s, si la pompe n'est pas disponible pendant ce temps, on arrête la séquence
-        private readonly int timeoutTempTooHotDuringCycle = Settings.Default.CycleMix_timeoutTempTooHotDuringCycle_s;
-        private readonly int timeoutTempTooHotBeforeCycle = Settings.Default.CycleMix_timeoutTempTooHotBeforeCycle_s;
-        private readonly int timeoutSequenceTooLong = Settings.Default.CycleMix_timeoutSequenceTooLong_s;
-        private readonly int timeoutSequenceBlocked = Settings.Default.CycleMix_timeoutSequenceBlocked_s;
+        private readonly int timeoutPumpNotFree = Settings.Default.CycleMix_timeoutPumpNotFree; // 30s, si la pompe n'est pas disponible pendant ce temps, on arrête la séquence
+        private readonly int timeoutTempTooHotDuringCycle = Settings.Default.CycleMix_timeoutTempTooHotDuringCycle;
+        private readonly int timeoutTempTooHotBeforeCycle = Settings.Default.CycleMix_timeoutTempTooHotBeforeCycle;
+        private readonly int timeoutSequenceTooLong = Settings.Default.CycleMix_timeoutSequenceTooLong;
+        private readonly int timeoutSequenceBlocked = Settings.Default.CycleMix_timeoutSequenceBlocked;
         private readonly static int nAlarms = 2;
         private readonly static bool[] areAlarmActive = new bool[nAlarms]; // 0: 3,1 Alarme température trop haute ; 1: 1,1 Erreur du speedmixer pendant un cycle
         private int currentSpeed;
@@ -124,7 +124,7 @@ namespace Main.Pages.SubCycle
             // Initialisation des timers
             sequenceTimer = new System.Timers.Timer
             {
-                Interval = Settings.Default.CycleMix_sequenceTimer_Interval_ms,
+                Interval = Settings.Default.CycleMix_sequenceTimer_Interval,
                 AutoReset = true
             };
             sequenceTimer.Elapsed += SeqTimer_OnTimedEvent;
@@ -133,7 +133,7 @@ namespace Main.Pages.SubCycle
 
             pumpNotFreeTimer = new System.Timers.Timer
             {
-                Interval = Settings.Default.CycleMix_pumpNotFreeTimer_Interval_ms,
+                Interval = Settings.Default.CycleMix_pumpNotFreeTimer_Interval,
                 AutoReset = true
             };
             pumpNotFreeTimer.Elapsed += PumpNotFreeTimer_OnTimedEvent;
@@ -143,7 +143,7 @@ namespace Main.Pages.SubCycle
 
             tempControlTimer = new System.Timers.Timer
             {
-                Interval = Settings.Default.CycleMix_tempControlTimer_Interval_ms,
+                Interval = Settings.Default.CycleMix_tempControlTimer_Interval,
                 AutoReset = true
             };
             tempControlTimer.Elapsed += TempTooHotTimer_OnTimedEvent;
@@ -174,8 +174,8 @@ namespace Main.Pages.SubCycle
 
             if (currentRecipeValues == null) // S'il n'y a pas eu d'erreur...
             {
-                logger.Error(Settings.Default.CycleMix_Error_Constructor_01);
-                MyMessageBox.Show(Settings.Default.CycleMix_Error_Constructor_01);
+                logger.Error(Settings.Default.CycleMix_Erro01);
+                MyMessageBox.Show(Settings.Default.CycleMix_Erro01);
                 return;
             }
 

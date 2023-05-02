@@ -25,7 +25,6 @@
                 Click="ButtonAckAll_Click" />
 
         <DataGrid Grid.Row="1" Name="dataGridAlarms"
-                  FontSize="{DynamicResource FontSize_DataGrid1}"
                   Loaded="dataGridAlarms_Loaded"/>
     </Grid>
 </Page>

@@ -7,7 +7,7 @@
       xmlns:p="clr-namespace:Main.Properties"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="1200"
-      Title="Archiving" Loaded="Page_Loaded">
+      Title="Archiving">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -22,7 +22,7 @@
 
         <StackPanel Grid.Column="0" Grid.Row="0" 
                     Margin="20,20,0,0"
-                    Visibility="Visible">
+                    Visibility="Hidden">
             <Button Style="{DynamicResource ButtonStyle1}" 
                     Content="{Binding Source={x:Static p:Settings.Default}, Path=Archiving_ArchiveButton, Mode=OneWay}" 
                     VerticalAlignment="Top" 
