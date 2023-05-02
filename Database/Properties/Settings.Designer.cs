@@ -2049,14 +2049,13 @@ namespace Database.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"
-          <ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-            <Server>localhost</Server>
-            <UserID>root</UserID>
-            <Password>fDdViXrfIK0s3nNIFU4UAyKljiDYdMzCkJ2cyXi8kGM=</Password>
-            <Db>db1</Db>
-          </ConnectionInfo>
-        ")]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ConnectionInfo xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <Server>localhost</Server>
+  <UserID>root</UserID>
+  <Password>fDdViXrfIK0s3nNIFU4UAyKljiDYdMzCkJ2cyXi8kGM=</Password>
+  <Db>db1</Db>
+</ConnectionInfo>")]
         public global::Database.ConnectionInfo ConnectionInfo {
             get {
                 return ((global::Database.ConnectionInfo)(this["ConnectionInfo"]));

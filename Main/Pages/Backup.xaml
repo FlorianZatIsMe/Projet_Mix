@@ -38,6 +38,7 @@
                      HorizontalAlignment="Left" 
                      Width="Auto" Height="Auto" 
                      MaxHeight="600" 
+                     FontSize="{DynamicResource FontSize_ListBox1}"
                      ScrollViewer.VerticalScrollBarVisibility="Auto"/>
         </StackPanel>
 

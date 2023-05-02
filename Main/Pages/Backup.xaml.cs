@@ -29,7 +29,6 @@ namespace Main.Pages
         private static readonly int nDaysBefDelBackup = Settings.Default.Backup_nDaysBefDelBackup;// 10;
         private static string lastBackupFileName;
         private static int nLines;
-        private readonly string key = "J'aime le chocolat";
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public Backup()
@@ -104,7 +103,7 @@ namespace Main.Pages
             string batchFile = Settings.Default.Backup_Backup_batchFile;// @".\Resources\DB_backup";
             string arg1 = "\"" + DatabaseSettings.DBAppFolder + "\"";// @"C:\Program Files\MariaDB 10.9\bin" + "\"";
             string arg2 = DatabaseSettings.ConnectionInfo.UserID;// "root";
-            string arg3 = General.Decrypt(DatabaseSettings.ConnectionInfo.Password, General.key);// "Integra2022/";
+            string arg3 = General.Decrypt(DatabaseSettings.ConnectionInfo.Password, General.key);
             string arg4 = DatabaseSettings.ConnectionInfo.Db;// dbName;
             string arg5 = backupPath + lastBackupFileName;
             string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5;
@@ -140,7 +139,7 @@ namespace Main.Pages
 
                 AuditTrailInfo auditTInfo = new AuditTrailInfo();
                 object[] values = new object[auditTInfo.Ids.Count()];
-                values[auditTInfo.Username] = Settings.Default.General_SystemUsername;
+                values[auditTInfo.Username] = username;//Settings.Default.General_SystemUsername;
                 values[auditTInfo.EventType] = Settings.Default.General_AuditTrailEvent_Event;
                 values[auditTInfo.Description] = General.auditTrail_BackupDesc;
 

@@ -142,7 +142,7 @@ namespace Alarm_Management.Properties {
     <ConfigAlarm>
       <id1>1</id1>
       <id2>1</id2>
-      <description>Erreur du speedmixer pendant un cycle</description>
+      <description>Erreur du SpeedMixer pendant le cycle</description>
       <type>Alarm</type>
     </ConfigAlarm>
     <ConfigAlarm>

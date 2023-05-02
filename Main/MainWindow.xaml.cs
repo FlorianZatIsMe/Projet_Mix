@@ -277,6 +277,7 @@ namespace Main
                 wasAutoBackupStarted = true;
                 logger.Debug("ExecuteBackupAuto on time");
                 if (ExecuteBackupAuto()) General.NextBackupTime = General.NextBackupTime.AddDays(1);
+                wasAutoBackupStarted = false;
             }
 
             // We see if we perform an archiving
@@ -615,7 +616,7 @@ namespace Main
         }
         private void FxArchiving(object sender, RoutedEventArgs e)
         {
-            frameMain.Content = new Pages.Archiving();
+            frameMain.Content = new Pages.Archiving(frameMain);
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -685,6 +686,18 @@ Il est important de noter que cette méthode est assez radicale et peut rendre l
             {
                 MyMessageBox.Show("C'est pas bien ça");
                 e.Cancel = true;
+                return;
+            }
+            else
+            {
+                AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+                object[] auditTrailValues = new object[auditTrailInfo.Ids.Count()];
+                auditTrailValues[auditTrailInfo.Username] = General.loggedUsername;
+                auditTrailValues[auditTrailInfo.EventType] = Settings.Default.AuditTrail_EventType_Event;
+                auditTrailValues[auditTrailInfo.Description] = Settings.Default.General_auditTrail_StopApp;
+
+                MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTrailInfo, auditTrailValues); }).Wait();
+
             }
         }
     }

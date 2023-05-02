@@ -62,7 +62,7 @@ namespace Main.Pages.SubCycle
             // Initialisation des timers
             checkAlarmsTimer = new System.Timers.Timer
             {
-                Interval = Settings.Default.CycleInfo_checkAlarmsTimer_Interval,
+                Interval = Settings.Default.CycleInfo_checkAlarmsTimer_Interval_ms,
                 AutoReset = false
             };
             checkAlarmsTimer.Elapsed += ScanConnectTimer_OnTimedEvent;
@@ -70,13 +70,6 @@ namespace Main.Pages.SubCycle
             frameCycleInfo = frame;
 
             InitializeComponent();
-            /*
-            if (info.Length != 4)
-            {
-                logger.Error(Settings.Default.CycleInfo_Error01);
-                MyMessageBox.Show(Settings.Default.CycleInfo_Error01);
-                return;
-            }*/
 
             labelOFNumber.Text = cycleTableValues[cycleTableInfo.BatchNumber].ToString();
             labelRecipeName.Text = cycleTableValues[cycleTableInfo.RecipeName].ToString();
@@ -158,8 +151,8 @@ namespace Main.Pages.SubCycle
             }
             else
             {
-                logger.Error(Settings.Default.CycleInfo_Error03);
-                MyMessageBox.Show(Settings.Default.CycleInfo_Error03);
+                logger.Error(Settings.Default.CycleInfo_Error_NewInfo_01);
+                MyMessageBox.Show(Settings.Default.CycleInfo_Error_NewInfo_01);
             }
         }
         public void NewWeightInfo(object[] recipeWeight, decimal finalWeight)
