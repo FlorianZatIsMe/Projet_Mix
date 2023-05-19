@@ -1,11 +1,12 @@
-﻿<UserControl x:Class="Main.Pages.Status"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Main.Pages"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+﻿<Page x:Class="Main.Pages.StatusOld"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Main.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Status" Background="Transparent">
 
     <Grid x:Name="grid">
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -36,7 +37,7 @@
                            FontSize="{DynamicResource FontSize_Label2}"
                            Style="{DynamicResource Label1}"/>
             </WrapPanel>
-            <!--            <WrapPanel Margin="0,7,0,0">
+<!--            <WrapPanel Margin="0,7,0,0">
                 <TextBlock Text="Statut piège froid: " 
                            FontSize="{DynamicResource FontSize_Label2}"
                            Style="{DynamicResource Label1}"/>
@@ -47,4 +48,4 @@
             </WrapPanel> -->
         </StackPanel>
     </Grid>
-</UserControl>
+</Page>

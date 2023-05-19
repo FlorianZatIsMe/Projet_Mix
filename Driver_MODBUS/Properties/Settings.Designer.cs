@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Driver_MODBUS.Properties {
+namespace Driver_MODBUS_SpeedMixer.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -380,9 +380,9 @@ namespace Driver_MODBUS.Properties {
             "i=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n            <ipAddress>10.10.1.2" +
             "</ipAddress>\r\n            <port>503</port>\r\n          </ConnectionInfo>\r\n       " +
             " ")]
-        public global::Driver_MODBUS.ConnectionInfo ConnectionInfo {
+        public global::Driver_MODBUS_SpeedMixer.ConnectionInfo ConnectionInfo {
             get {
-                return ((global::Driver_MODBUS.ConnectionInfo)(this["ConnectionInfo"]));
+                return ((global::Driver_MODBUS_SpeedMixer.ConnectionInfo)(this["ConnectionInfo"]));
             }
         }
     }

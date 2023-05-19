@@ -34,7 +34,7 @@ namespace User_Management.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("INTEGRA\\F-CHLOC-PRJ-LIC-WRX")]
+        [global::System.Configuration.DefaultSettingValueAttribute("INTEGRA\\F-CHLOC-PRJ-LIC-RW")]
         public string Group_supervisor {
             get {
                 return ((string)(this["Group_supervisor"]));
@@ -43,7 +43,7 @@ namespace User_Management.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("INTEGRA\\F-CHLOC-PRJ-LIC-RW")]
+        [global::System.Configuration.DefaultSettingValueAttribute("INTEGRA\\F-CHLOC-PRJ-LIC-WRX")]
         public string Group_administrator {
             get {
                 return ((string)(this["Group_administrator"]));

@@ -10,7 +10,7 @@
       Title="Recipe"
       Background="Transparent">
 
-    <Grid>
+    <Grid x:Name="grid">
         <Grid.RowDefinitions>
             <RowDefinition Height="110"/>
             <RowDefinition Height="40"/>

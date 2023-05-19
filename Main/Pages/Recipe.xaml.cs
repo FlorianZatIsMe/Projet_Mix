@@ -101,12 +101,12 @@ namespace Main.Pages
         public List<int> list { get; set; }
     }
 
-    public partial class Recipe : Page
+    public partial class Recipe : Page, IDisposable
     {
-        private readonly RecipeWeightInfo recipeWeightInfo = new RecipeWeightInfo();
-        private readonly RecipeInfo recipeInfo = new RecipeInfo();
+        private static readonly RecipeWeightInfo recipeWeightInfo = new RecipeWeightInfo();
+        private static readonly RecipeInfo recipeInfo = new RecipeInfo();
         private int nRow;
-        private readonly StringCollection status = Settings.Default.Recipe_Status_DescList;
+        private static readonly StringCollection status = Settings.Default.Recipe_Status_DescList;
         private bool isFrameLoaded;
         private readonly List<string> ProgramNames = new List<string>();
         private readonly List<int> ProgramIDs = new List<int>();
@@ -117,8 +117,8 @@ namespace Main.Pages
         private readonly bool isCbxToDeleteAvailable = false;
         private int currentRecipeVersion;
         private string currentRecipeStatus;
-        private readonly Frame frameMain;
-        private readonly Frame frameInfoCycle;
+        private Frame frameMain;
+        private Frame frameInfoCycle;
         private bool curMethodDoneOnGoing;
         private string finalWeightMin = "";
         private string finalWeightMax = "";
@@ -1096,6 +1096,13 @@ namespace Main.Pages
             {
                 General.HideKeyBoard();
             }
+        }
+
+        public void Dispose()
+        {
+            logger.Debug("Dispose");
+            General.RemoveChildren(grid.Children);
+            grid = null;
         }
     }
 }

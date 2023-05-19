@@ -5,7 +5,7 @@ VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Main", "Main\Main.csproj", "{7E902CC0-FC1E-450B-AF26-4331A690555B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Driver_MODBUS", "Driver_MODBUS\Driver_MODBUS.csproj", "{FFFC191F-46A5-44D6-9208-831505A35C23}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Driver_MODBUS_SpeedMixer", "Driver_MODBUS\Driver_MODBUS_SpeedMixer.csproj", "{FFFC191F-46A5-44D6-9208-831505A35C23}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "Database\Database.csproj", "{9DA604D9-06C8-4EFF-9688-E9934CE25F40}"
 EndProject

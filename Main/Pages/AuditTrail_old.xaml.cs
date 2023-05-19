@@ -1,29 +1,21 @@
-﻿using System;
+﻿using Alarm_Management;
+using Database;
+using Main.Properties;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
-using Alarm_Management;
-using Database;
-using Main.Properties;
 
 namespace Main.Pages
 {
     /// <summary>
     /// Logique d'interaction pour AuditTrail.xaml
     /// </summary>
-    public partial class AuditTrail : UserControl
+    public partial class AuditTrailOld : Page//, IDisposable
     {
         private static readonly AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
         private bool tbBefSelToUpdate = false;
@@ -37,7 +29,7 @@ namespace Main.Pages
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public AuditTrail()
+        public AuditTrailOld()
         {
             logger.Debug("Start");
 
@@ -54,7 +46,7 @@ namespace Main.Pages
 
             tbTimeBefore.Text = DateTime.Now.ToString("HH:mm:ss");
             tbTimeAfter.Text = tbTimeBefore.Text;
-        }
+        }   
         private void LoadAuditTrail(object sender, RoutedEventArgs e)
         {
             logger.Debug("LoadAuditTrail");

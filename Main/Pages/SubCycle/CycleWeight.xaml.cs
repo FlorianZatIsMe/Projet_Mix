@@ -467,7 +467,7 @@ namespace Main.Pages.SubCycle
                 if (!Balance.IsFree()) Balance.FreeUse();
                 if (!isCycleEnded && (isFinalWeight || isCycle))
                 {
-                    if (frameMain.Content.GetType() == typeof(Pages.Status) || frameMain.Content.GetType() == typeof(Pages.Recipe))
+                    if (frameMain.Content.GetType() == typeof(Pages.StatusOld) || frameMain.Content.GetType() == typeof(Pages.Recipe))
                     {
                         EndCycle();
                     }
@@ -637,7 +637,7 @@ namespace Main.Pages.SubCycle
                     {
                         MyMessageBox.Show("L'étalonnage n'a pas être enregistrer");
                     }
-                    frameMain.Content = new Pages.Status();
+                    frameMain.Content = new Pages.StatusOld();
                 }
             }
             else if(isCycle)
@@ -698,7 +698,7 @@ namespace Main.Pages.SubCycle
 
             if (isDailyTest)
             {
-                frameMain.Content = new Status();
+                frameMain.Content = new StatusOld();
             }
             else
             {
@@ -735,7 +735,7 @@ namespace Main.Pages.SubCycle
             }
             else
             {
-                frameMain.Content = new Pages.Status();
+                frameMain.Content = new Pages.StatusOld();
             }
         }
 

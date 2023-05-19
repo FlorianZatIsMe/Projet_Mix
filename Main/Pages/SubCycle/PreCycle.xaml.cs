@@ -158,7 +158,7 @@ namespace Main.Pages.SubCycle
 
             //MyDatabase.Disconnect();
             mainWindow.UpdateMenuStartCycle(true);
-            frameMain.Content = new Status();
+            frameMain.Content = new StatusOld();
         }
         private void cbxProgramName_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

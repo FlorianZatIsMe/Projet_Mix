@@ -126,16 +126,16 @@ namespace Main
                 }
             }
 
-            if (mainWindow.frameMain.Content.GetType().GetInterface(typeof(Pages.ISubCycle).Name) != null)
+            if (mainWindow.frameMain_Old.Content.GetType().GetInterface(typeof(Pages.ISubCycle).Name) != null)
             {
-                Pages.ISubCycle subCycle = mainWindow.frameMain.Content as Pages.ISubCycle;
+                Pages.ISubCycle subCycle = mainWindow.frameMain_Old.Content as Pages.ISubCycle;
                 bool[] accessTable = UserManagement.GetCurrentAccessTable();
                 subCycle.EnablePage(accessTable[subCycle.IsItATest() ? AccessTableInfo.RecipeUpdate : AccessTableInfo.CycleStart]);
             }
             else
             {
                 mainWindow.UpdateMenuStartCycle(true);
-                mainWindow.frameMain.Content = new Pages.Status();
+                mainWindow.frameMain_Old.Content = new Pages.StatusOld();
             }
 
             this.Close();

@@ -1,14 +1,15 @@
-﻿<UserControl x:Class="Main.Pages.AuditTrail"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Main.Pages"
-             xmlns:p="clr-namespace:Main.Properties"
-             xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="1600"
-             Background="Transparent">
+﻿<Page x:Class="Main.Pages.AuditTrailOld"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"       
+      xmlns:local="clr-namespace:Main.Pages"
+      xmlns:p="clr-namespace:Main.Properties"
+      xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="1600"
+      Title="AuditTrail"
+      Background="Transparent">
 
     <Grid x:Name="grid">
         <Grid.RowDefinitions>
@@ -96,5 +97,6 @@
         <DataGrid Grid.Row="1" Name="dataGridAuditTrail"
                   FontSize="{DynamicResource FontSize_DataGrid1}"
                   Loaded="LoadAuditTrail"/>
+
     </Grid>
-</UserControl>
+</Page>

@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using Alarm_Management;
 using Database;
-using Driver_MODBUS.Properties;
+using Driver_MODBUS_SpeedMixer.Properties;
 using EasyModbus;
 using Message;
 
-namespace Driver_MODBUS
+namespace Driver_MODBUS_SpeedMixer
 {
     /// <summary>
     /// 

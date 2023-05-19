@@ -18,7 +18,7 @@ using System.Collections;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Driver_MODBUS;
+using Driver_MODBUS_SpeedMixer;
 using System.Diagnostics;
 using Alarm_Management;
 using System.Linq;
@@ -32,6 +32,7 @@ using Driver_Ethernet_Balance;
 using System.Speech.Synthesis;
 using System.Windows.Media;
 using Message;
+using System.Timers;
 
 namespace Main
 {
@@ -55,6 +56,9 @@ namespace Main
         private int archiveCount = 0;
         private readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+
+        private System.Timers.Timer scanAlarmTimer;
+
         public MainWindow()
         {
 #if DEBUG
@@ -77,12 +81,13 @@ namespace Main
             }
 
             AlarmManagement.Initialize(new Alarm_Management.IniInfo() { AuditTrail_SystemUsername = Settings.Default.General_SystemUsername, Window = this });
+            
             InitializeComponent();
+            
             AlarmManagement.ActiveAlarmEvent += ActiveAlarmEvent;
             AlarmManagement.InactiveAlarmEvent += InactiveAlarmEvent;
 
             /*
-
             SpeechSynthesizer synth = new SpeechSynthesizer();
             //synth.SelectVoiceByHints(VoiceGender.Male, VoiceAge.Senior);
             //synth.Speak("Oh... You're sweet, thank you. I don't love you, but it's nice to know that someone loves me. Who wouldn't anyway ?");
@@ -93,9 +98,8 @@ namespace Main
             Environment.Exit(1);
             //*/
 
-            InitializeComponent();
-
             //MyMessageBox.SetParentWindow(this);
+            
             MyMessageBox.SetParentWindow(this, this.Window_Deactivated);
 
             MyDatabase.Initialize(new Database.IniInfo()
@@ -136,8 +140,10 @@ namespace Main
             // A corriger if insert didn't work
             MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTrailInfo, values); });
 
-            frameMain.Content = new Pages.Status();
+            frameMain_Old.Content = new Pages.StatusOld();
             frameInfoCycle.Content = null;
+
+            contentControlMain.Content = new Pages.Status();
 
             // Initialisation des timers
             currentTimeTimer = new System.Timers.Timer
@@ -159,6 +165,44 @@ namespace Main
             }
 
             Initialize();
+
+
+
+            scanAlarmTimer = new System.Timers.Timer
+            {
+                Interval = 500,
+                AutoReset = false
+            };
+            scanAlarmTimer.Elapsed += ScanAlarmTimer_OnTimedEvent;
+            scanAlarmTimer.Start();
+            
+        }
+        private void ScanAlarmTimer_OnTimedEvent(object sender, ElapsedEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() => {/*
+                if (frameMain_Old.Content.GetType() == typeof(Pages.AuditTrail))
+                {
+                    frameMain_Old.Content = new Pages.StatusOld();
+                }
+                else
+                {
+                    frameMain_Old.Content = new Pages.AuditTrailOld();
+                }
+                //*/
+
+                //*
+                if (contentControlMain.Content.GetType() == typeof(Pages.AuditTrail))
+                {
+                    contentControlMain.Content = new Pages.Status();
+                }
+                else
+                {
+                    contentControlMain.Content = new Pages.AuditTrail();
+                }
+                //*/
+            });
+
+            scanAlarmTimer.Enabled = true;
         }
         private async void Initialize()
         {
@@ -167,8 +211,8 @@ namespace Main
             AlarmManagement.Initialize(new Alarm_Management.IniInfo() { AuditTrail_SystemUsername = Settings.Default.General_SystemUsername, Window = this });
 
             // We connect to the balance through a task to avoid a freeze of the application and allow the user to access the OS
-            Task connectBalanceTask = new Task(() => { Balance.Connect(); });
-            connectBalanceTask.Start();
+            //Task connectBalanceTask = new Task(() => { Balance.Connect(); });
+            //connectBalanceTask.Start();
 
             //Driver_ColdTrap.ColdTrap.Initialize(new Driver_ColdTrap.IniInfo() { Window = this });
             UserManagement.Initialize(new User_Management.IniInfo() { Window = this });
@@ -350,16 +394,16 @@ namespace Main
             bool isATest;
 
             // Si le cycle à démarrer et que la frame principale est un sous cycle alors on rend le bouton STOP enable si le test en cours est un test
-            if (isCycleStarted && frameMain.Content.GetType().GetInterface(typeof(Pages.ISubCycle).Name) != null)
+            if (isCycleStarted && frameMain_Old.Content.GetType().GetInterface(typeof(Pages.ISubCycle).Name) != null)
             {
-                Pages.ISubCycle subCycle = frameMain.Content as Pages.ISubCycle;
+                Pages.ISubCycle subCycle = frameMain_Old.Content as Pages.ISubCycle;
                 subCycle.EnablePage(false);
                 isATest = subCycle.IsItATest();
             }
             else
             {
                 isATest = false;
-                frameMain.Content = new Pages.Status();
+                frameMain_Old.Content = new Pages.StatusOld();
             }
 
             menuItemStart.Visibility = 
@@ -533,7 +577,7 @@ namespace Main
                     {
                         if (MyMessageBox.Show("Le dernier test journalier de la balance a été fait le " + lastDailyTest.ToString(Settings.Default.Date_Format_Read) + " à " + lastDailyTest.ToString(Settings.Default.Time_Format) + ", voulez-vous faire le test journalier ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                         {
-                            frameMain.Content = new Pages.SubCycle.CycleWeight(frameMain);
+                            frameMain_Old.Content = new Pages.SubCycle.CycleWeight(frameMain_Old);
                             return;
                         }
                     }
@@ -545,52 +589,68 @@ namespace Main
 
                 }
 
-                frameMain.Content = new Pages.SubCycle.PreCycle(frameMain, frameInfoCycle, this);
+                frameMain_Old.Content = new Pages.SubCycle.PreCycle(frameMain_Old, frameInfoCycle, this);
                 UpdateMenuStartCycle(false);
             }
             else
             {
-                if (frameMain.Content.GetType().GetInterface(typeof(Pages.ISubCycle).Name) != null)
+                if (frameMain_Old.Content.GetType().GetInterface(typeof(Pages.ISubCycle).Name) != null)
                 {
-                    Pages.ISubCycle subCycle = frameMain.Content as Pages.ISubCycle;
+                    Pages.ISubCycle subCycle = frameMain_Old.Content as Pages.ISubCycle;
                     subCycle.StopCycle();
                 }
                 else
                 {
-                    frameMain.Content = new Pages.Status();
+                    frameMain_Old.Content = new Pages.StatusOld();
                 }
 
                 UpdateMenuStartCycle(true);
             }
         }
 
-        private void FxSystemStatus(object sender, RoutedEventArgs e)
-        {
-            frameMain.Content = new Pages.Status();
+        private async void FxSystemStatus(object sender, RoutedEventArgs e)
+        {/*
+            using (Pages.Status page = new Pages.Status())
+            {
+                frameMain.Content = page;
+                while (!frameMain.Content.Equals(page)) await Task.Delay(100);
+                while (frameMain.Content.Equals(page)) await Task.Delay(100);
+            }*/
+            contentControlMain.Content = new Pages.Status();
+
+            //frameMain_Old.Content = new Pages.StatusOld();
         }
         private void FxProgramNew(object sender, RoutedEventArgs e)
         {
-            frameMain.Content = new Pages.Recipe(RcpAction.New);
+            frameMain_Old.Content = new Pages.Recipe(RcpAction.New);
         }
         private void FxProgramModify(object sender, RoutedEventArgs e)
         {
-            frameMain.Content = new Pages.Recipe(RcpAction.Modify, frameMain, frameInfoCycle, window: this);
+            frameMain_Old.Content = new Pages.Recipe(RcpAction.Modify, frameMain_Old, frameInfoCycle, window: this);
         }
         private void FxProgramCopy(object sender, RoutedEventArgs e)
         {
-            frameMain.Content = new Pages.Recipe(RcpAction.Copy);
+            frameMain_Old.Content = new Pages.Recipe(RcpAction.Copy);
         }
         private void FxProgramDelete(object sender, RoutedEventArgs e)
         {
-            frameMain.Content = new Pages.Recipe(RcpAction.Delete);
+            frameMain_Old.Content = new Pages.Recipe(RcpAction.Delete);
         }
-        private void FxAuditTrail(object sender, RoutedEventArgs e)
-        {
-            frameMain.Content = new Pages.AuditTrail();
+        private async void FxAuditTrail(object sender, RoutedEventArgs e)
+        {/*
+            using (Pages.AuditTrail page = new Pages.AuditTrail())
+            {
+                frameMain.Content = page;
+                while (!frameMain.Content.Equals(page)) await Task.Delay(100);
+                while (frameMain.Content.Equals(page)) await Task.Delay(100);
+            }//*/
+
+            contentControlMain.Content = new Pages.AuditTrail();
+            //frameMain_Old.Navigate(new Pages.AuditTrailOld());
         }
         private void FxAlarms(object sender, RoutedEventArgs e)
         {
-            frameMain.Content = new Pages.ActiveAlarms(frameMain);
+            frameMain_Old.Content = new Pages.ActiveAlarms(frameMain_Old);
         }
         private void FxUserLogInOut(object sender, RoutedEventArgs e)
         {
@@ -604,11 +664,11 @@ namespace Main
         }
         private void FxBackup(object sender, RoutedEventArgs e)
         {
-            frameMain.Content = new Pages.Backup();
+            frameMain_Old.Content = new Pages.Backup();
         }
         private void FxArchiving(object sender, RoutedEventArgs e)
         {
-            frameMain.Content = new Pages.Archiving();
+            frameMain_Old.Content = new Pages.Archiving();
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -617,19 +677,16 @@ namespace Main
 
         private void FxParameters(object sender, RoutedEventArgs e)
         {
-            frameMain.Content = new Pages.Parameters();
+            frameMain_Old.Content = new Pages.Parameters();
         }
 
         private void FxDailyTest(object sender, RoutedEventArgs e)
         {
-            frameMain.Content = new Pages.SubCycle.CycleWeight(frameMain);
+            frameMain_Old.Content = new Pages.SubCycle.CycleWeight(frameMain_Old);
         }
 
         private void frameMain_ContentRendered(object sender, EventArgs e)
         {
-            if (frameMain.Content.GetType() == typeof(Pages.Status))
-            {
-            }
         }
 
         private async void Window_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
@@ -648,7 +705,7 @@ namespace Main
             await Task.Delay(100);
             logger.Debug("Window_Deactivated");
 
-            this.Activate();
+            //this.Activate();
             //await Task.Delay(100);
 
             /*
@@ -678,7 +735,40 @@ Il est important de noter que cette méthode est assez radicale et peut rendre l
             {
                 MyMessageBox.Show("C'est pas bien ça");
                 e.Cancel = true;
+                return;
             }
+
+            if (frameMain_Old.Content.GetType().GetInterface(typeof(IDisposable).Name) == typeof(IDisposable))
+            {
+                IDisposable disposablePage = frameMain_Old.Content as IDisposable;
+                disposablePage.Dispose();
+            }
+        }
+
+        private IDisposable previousDisposablePage = null;
+        private bool pageToDisposed = false;
+        private Page previousPage = null;
+        private object frameContent;
+
+        private void frameMain_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
+        {
+            Frame frame = sender as Frame;
+            /*
+            logger.Debug("frameMain_Navigated " + frame.Content.GetType().ToString());
+
+            if (pageToDisposed)
+            {
+                logger.Debug("previousDisposablePage.Dispose");
+                pageToDisposed = false;
+                previousDisposablePage.Dispose();
+                //previousDisposablePage = null;
+            }
+
+            if (frame.Content.GetType().GetInterface(typeof(IDisposable).Name) == typeof(IDisposable))
+            {
+                previousDisposablePage = frame.Content as IDisposable;
+                pageToDisposed = true;
+            }//*/
         }
     }
 }

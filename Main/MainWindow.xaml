@@ -248,7 +248,6 @@
 
     </Window.Resources>
 
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="{DynamicResource HeightMenu}" />
@@ -460,7 +459,9 @@
 
                 <DockPanel LastChildFill = "True">
                     <Frame DockPanel.Dock = "Left" x:Name="frameInfoCycle" NavigationUIVisibility="Hidden" Margin="5" Visibility="Collapsed" Width="{DynamicResource WidthFrameInfoCycle}"/>
-                    <Frame x:Name="frameMain" NavigationUIVisibility="Hidden" Margin="5" ContentRendered="frameMain_ContentRendered"/>
+                    <Frame DockPanel.Dock="Bottom" x:Name="frameMain_Old" NavigationUIVisibility="Hidden" Margin="5" ContentRendered="frameMain_ContentRendered" Navigated="frameMain_Navigated" />
+
+                    <ContentControl x:Name="contentControlMain"/>
                 </DockPanel>
             </Border>
         </Grid>

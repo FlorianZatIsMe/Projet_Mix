@@ -20,12 +20,15 @@ namespace Driver_Ethernet
         private readonly int alarmConnectId1;
         private readonly int alarmConnectId2;
 
-        private bool isActive = false;
-        private readonly Timer scanAlarmTimer;
+        //private bool isActive = false;
+        private Timer scanAlarmTimer;
         private bool[] areAlarmActive;
         private readonly int nAlarms = 1;
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+        //
+        // CONSTRUCTOR
+        //
         public Ethernet(string ipAddress_arg, int port_arg, string endLine_arg = "", int alarmConnectId1_arg = -1, int alarmConnectId2_arg = -1)
         {
             ipAddress = ipAddress_arg;
@@ -37,39 +40,15 @@ namespace Driver_Ethernet
             areAlarmActive = new bool[nAlarms];
 
             // Initialisation des timers
-            scanAlarmTimer = new System.Timers.Timer
-            {
-                Interval = 1000,
-                AutoReset = false
-            };
-            scanAlarmTimer.Elapsed += ScanAlarmTimer_OnTimedEvent;
-            scanAlarmTimer.Start();
+            //InitializeScanAlarmTimer();
+
+            Connect();
+            //scanAlarmTimer.Start();
         }
 
-        private void ScanAlarmTimer_OnTimedEvent(object sender, ElapsedEventArgs e)
-        {
-            if (isActive)
-            {
-                //logger.Debug("ScanAlarmTimer_OnTimedEvent");
-                if (!IsConnected() && !areAlarmActive[0])
-                {
-                    AlarmManagement.NewAlarm(alarmConnectId1, alarmConnectId2);
-                    areAlarmActive[0] = true;
-                }
-                else if (IsConnected() && areAlarmActive[0])
-                {
-                    AlarmManagement.InactivateAlarm(alarmConnectId1, alarmConnectId2);
-                    areAlarmActive[0] = false;
-                }
-
-
-                if (!IsConnected()) Connect();
-                //client.Connect(new IPEndPoint(IPAddress.Parse(ipAddress), port));
-                //client.BeginConnect(new IPEndPoint(IPAddress.Parse(ipAddress), port), null, client);
-            }
-            scanAlarmTimer.Enabled = true;
-        }
-
+        //
+        // PUBLIC METHODS
+        //
         public void Connect()
         {
             logger.Debug("Connect");
@@ -88,25 +67,29 @@ namespace Driver_Ethernet
             {
                 logger.Error(ex.Message);
             }
-            isActive = true;
-        }
+            //isActive = true;
 
-        public bool IsConnected()
-        {
-            return client != null && client.Connected;
+            if (scanAlarmTimer == null || !scanAlarmTimer.Enabled)
+            {
+                InitializeScanAlarmTimer();
+                scanAlarmTimer.Start();
+            }
         }
-
         public void Disconnect()
         {
             if (client != null)
             {
+                scanAlarmTimer.Dispose();
                 // Fermez la connexion
                 client.Shutdown(SocketShutdown.Both);
                 client.Close();
-                isActive = false;
+                //isActive = false;
             }
         }
-
+        public bool IsConnected()
+        {
+            return client != null && client.Connected;
+        }
         public bool WriteData(string dataToSend)
         {
             //logger.Debug("WriteData");
@@ -117,7 +100,6 @@ namespace Driver_Ethernet
             client.Send(buffer);
             return true;
         }
-
         public string ReadData(int msWaitTime = 1000)
         {
             if (!IsConnected()) return null;
@@ -129,7 +111,6 @@ namespace Driver_Ethernet
             Console.WriteLine("Received data: " + Encoding.ASCII.GetString(data, 0, receivedDataLength));
             return Encoding.ASCII.GetString(data, 0, receivedDataLength);
         }
-
         public string ReadData(string dataToSend, int msWaitTime = -1)
         {
             if (WriteData(dataToSend))
@@ -137,6 +118,39 @@ namespace Driver_Ethernet
                 return ReadData(msWaitTime);
             }
             return "";
+        }
+
+        //
+        // PRIVATE METHODS
+        //
+        private void InitializeScanAlarmTimer()
+        {
+            scanAlarmTimer = new System.Timers.Timer
+            {
+                Interval = 1000,
+                AutoReset = false
+            };
+            scanAlarmTimer.Elapsed += ScanAlarmTimer_OnTimedEvent;
+        }
+        private void ScanAlarmTimer_OnTimedEvent(object sender, ElapsedEventArgs e)
+        {
+            //if (isActive)
+            {
+                //logger.Debug("ScanAlarmTimer_OnTimedEvent");
+                if (!IsConnected() && !areAlarmActive[0])
+                {
+                    AlarmManagement.NewAlarm(alarmConnectId1, alarmConnectId2);
+                    areAlarmActive[0] = true;
+                }
+                else if (IsConnected() && areAlarmActive[0])
+                {
+                    AlarmManagement.InactivateAlarm(alarmConnectId1, alarmConnectId2);
+                    areAlarmActive[0] = false;
+                }
+
+                if (!IsConnected()) Connect();
+            }
+            scanAlarmTimer.Enabled = true;
         }
     }
 }

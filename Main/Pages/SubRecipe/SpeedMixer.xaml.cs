@@ -407,7 +407,7 @@ namespace Main.Pages.SubRecipe
             {
                 FormatControl[i] = false;
             }
-            MyMessageBox.Show(FormatControl[i].ToString() + ", i:" + i.ToString());
+            //MyMessageBox.Show(FormatControl[i].ToString() + ", i:" + i.ToString());
         }
         private void TbAcceleration_LostFocus(object sender, RoutedEventArgs e)
         {

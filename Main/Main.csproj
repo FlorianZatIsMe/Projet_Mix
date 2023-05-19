@@ -266,11 +266,17 @@
     <Compile Include="Pages\Archiving.xaml.cs">
       <DependentUpon>Archiving.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\AuditTrail.xaml.cs">
+      <DependentUpon>AuditTrail.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Backup.xaml.cs">
       <DependentUpon>Backup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Parameters.xaml.cs">
       <DependentUpon>Parameters.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Status.xaml.cs">
+      <DependentUpon>Status.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\SubCycle\CycleWeight.xaml.cs">
       <DependentUpon>CycleWeight.xaml</DependentUpon>
@@ -309,6 +315,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\AuditTrail_old.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\Backup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -318,6 +328,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\Recipe.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Status.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -345,14 +359,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\Status.xaml">
+    <Page Include="Pages\Status_old.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Pages\AuditTrail.xaml.cs">
-      <DependentUpon>AuditTrail.xaml</DependentUpon>
+    <Compile Include="Pages\AuditTrail_old.xaml.cs">
+      <DependentUpon>AuditTrail_old.xaml</DependentUpon>
     </Compile>
     <Compile Include="General.cs" />
     <Compile Include="Pages\Recipe.xaml.cs">
@@ -373,7 +387,7 @@
     <Compile Include="Pages\SubRecipe\Weight.xaml.cs">
       <DependentUpon>Weight.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Status.xaml.cs" />
+    <Compile Include="Pages\Status_old.xaml.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -565,9 +579,9 @@
       <Project>{44088962-c48a-4623-9cf1-5c3864eaa2ef}</Project>
       <Name>Driver_Ethernet_Balance</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Driver_MODBUS\Driver_MODBUS.csproj">
+    <ProjectReference Include="..\Driver_MODBUS\Driver_MODBUS_SpeedMixer.csproj">
       <Project>{fffc191f-46a5-44d6-9208-831505a35c23}</Project>
-      <Name>Driver_MODBUS</Name>
+      <Name>Driver_MODBUS_SpeedMixer</Name>
     </ProjectReference>
     <ProjectReference Include="..\Driver_RS232\Driver_RS232.csproj">
       <Project>{995498BD-68E4-4DAD-98C3-42563DBD79D8}</Project>

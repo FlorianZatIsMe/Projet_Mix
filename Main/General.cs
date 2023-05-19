@@ -108,6 +108,19 @@ namespace Main
         }*/
 
 
+        public static void RemoveChildren(UIElementCollection children)
+        {
+            while (children.Count != 0)
+            {
+                //MessageBox.Show(children[0].ToString() + " - " + children.Count.ToString());
+                Panel panel = children[0] as Panel;
+                if (panel != null && panel.Children.Count != 0)
+                {
+                    RemoveChildren(panel.Children);
+                }
+                children.RemoveAt(0);
+            }
+        }
 
         public static void ResetLastActTime()
         {
@@ -542,7 +555,7 @@ namespace Main
             }
             else
             {
-                nextSeqInfo.frameMain.Content = new Status();
+                nextSeqInfo.frameMain.Content = new StatusOld();
                 //MyDatabase.Disconnect();
             }
             info.Window.UpdateMenuStartCycle(true);

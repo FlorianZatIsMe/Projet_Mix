@@ -37,12 +37,13 @@ namespace Message
 
         public static void SetParentWindow(Window parent, EventHandler windowDeactivatedEvent_arg = null)
         {
-            parentWindow = parent;
+            //parentWindow = parent;
             windowDeactivatedEvent = windowDeactivatedEvent_arg;
         }
 
         public static MessageBoxResult Show(string messageBoxText, MessageBoxButton button = MessageBoxButton.OK)
         {
+            //return MessageBox.Show("salut");
             MessageBoxResult result = MessageBoxResult.None;
 
             Application.Current.Dispatcher.Invoke(() =>
@@ -51,39 +52,11 @@ namespace Message
             });
 
             return result;
-            /*
-            //return MessageBox.Show(messageBoxText, "", button);
-            MessageBoxResult result = MessageBoxResult.None;
-            return Display(messageBoxText, button);
-
-            if (parentWindow == null)
-            {
-                result = Display(messageBoxText + " C'est bizarre tout ça, vraiment bizarre", button);
-            }
-            
-            else
-            {
-                return Display(messageBoxText, button);
-                //Thread backgroundThread = new Thread(new ThreadStart(MyDatabase.testTask));
-                //backgroundThread.Name = "backgroundThread";
-                //backgroundThread.Priority = ThreadPriority.Highest;
-                //backgroundThread.Start();
-
-                //parentWindow.Dispatcher.Invoke(() =>
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    return MessageBox.Show(messageBoxText, "", button);
-                    //result = Display(messageBoxText, button);
-                });
-
-            }
-            return MessageBoxResult.None;
-            return result;
-            */
         }
         private static MessageBoxResult Display(string messageBoxText, MessageBoxButton button = MessageBoxButton.OK)
         {
             //return MessageBox.Show(messageBoxText + " Display", "", button);
+            //*
             MyMessageBox messageBox = new MyMessageBox();
             messageBox.labelMessage.Text = messageBoxText;
             messageBox.btOk.Visibility = button == MessageBoxButton.OK ? Visibility.Visible : Visibility.Collapsed;
@@ -92,16 +65,16 @@ namespace Message
             messageBox.myMessageBoxId = myMessageBoxes.Count;
             myMessageBoxes.Add(messageBox);
 
-            logger.Trace("Display: " + messageBoxText + ", myMessageBoxId = " + messageBox.myMessageBoxId.ToString());
+            //logger.Trace("Display: " + messageBoxText + ", myMessageBoxId = " + messageBox.myMessageBoxId.ToString());
             if (parentWindow != null && messageBox.myMessageBoxId == 0)
             {
-                logger.Trace("On retire le parent: " + parentWindow.ToString());
+                //logger.Trace("On retire le parent: " + parentWindow.ToString());
                 parentWindow.Deactivated -= windowDeactivatedEvent;
             }
 
             messageBox.ShowDialog();
             return messageBox.resultButton;
-
+            //*/
         }
 
         private void ButtonOk_Click(object sender, RoutedEventArgs e)
@@ -133,27 +106,27 @@ namespace Message
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            logger.Trace("Closing");
+        {/*
+            //logger.Trace("Closing");
             this.Deactivated -= Window_Deactivated;
             myMessageBoxes.RemoveAt(this.myMessageBoxId);
 
             for (int i = 0; i < myMessageBoxes.Count; i++)
             {
-                logger.Trace(i.ToString() + ": " + myMessageBoxes[i].myMessageBoxId.ToString());
+                //logger.Trace(i.ToString() + ": " + myMessageBoxes[i].myMessageBoxId.ToString());
             }
 
             if (parentWindow != null && myMessageBoxes.Count == 0)
             {
-                logger.Trace("On active papa");
+                //logger.Trace("On active papa");
                 parentWindow.Activate();
                 parentWindow.Deactivated += windowDeactivatedEvent;
             }
             else if (myMessageBoxes.Count > 0)
             {
-                logger.Trace("On active la boîte " + (myMessageBoxes.Count - 1).ToString());
+                //logger.Trace("On active la boîte " + (myMessageBoxes.Count - 1).ToString());
                 myMessageBoxes[myMessageBoxes.Count - 1].Activate();
-            }
+            }*/
         }
     }
 }
