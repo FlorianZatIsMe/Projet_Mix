@@ -1,44 +1,44 @@
-﻿using System;
+﻿using Database;
+using Main.Properties;
+using Message;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Database;
-using Main.Properties;
-using Message;
-using System.Globalization;
 
 namespace Main.Pages.SubCycle
 {
-    /// <summary>
-    /// Logique d'interaction pour PreCycle.xaml
-    /// </summary>
-    public partial class PreCycle : UserControl
+    public partial class PreCycleOld : Page
     {
-        private readonly ContentControl frameMain = new ContentControl();
-        private readonly ContentControl frameInfoCycle = new ContentControl();
+        private readonly Frame frameMain = new Frame();
+        private readonly Frame frameInfoCycle = new Frame();
         private readonly List<string> ProgramNames = new List<string>();
         private readonly List<int> ProgramIDs = new List<int>();
         private bool isCbxRecipeAvailable = false;
         private int finalWeightMin = 0;
         private int finalWeightMax = 0;
         private MainWindow mainWindow;
+        private bool test;
 
         private readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public PreCycle(ContentControl frameMain_arg, ContentControl inputInfoCycleFrame, MainWindow mainWindow_arg)
+        public PreCycleOld(Frame frameMain_arg, Frame inputInfoCycleFrame, MainWindow mainWindow_arg)
         {
             logger.Debug("Start");
 
             frameMain = frameMain_arg;
             frameInfoCycle = inputInfoCycleFrame;
             mainWindow = mainWindow_arg;
+            //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
             InitializeComponent();
-
+            
             General.Update_RecipeNames(cbxRecipeName, ProgramNames, ProgramIDs, RecipeStatus.PROD);
             SetFinalWeightRange(-1);
             isCbxRecipeAvailable = true;
+            //MyDatabase.Disconnect();
         }
         private void FxOK(object sender, RoutedEventArgs e)
         {
@@ -101,16 +101,16 @@ namespace Main.Pages.SubCycle
             info.recipeID = ProgramIDs[recipeIndex];
             info.OFnumber = tbOFnumber.Text;
             info.finalWeight = tbFinalWeight.Text;
-            info.frameMain = null;
-            info.frameInfoCycle = null;
-            info.contentControlMain = frameMain;
-            info.contentControlInfoCycle = frameInfoCycle;
+            info.frameMain = frameMain;
+            info.frameInfoCycle = frameInfoCycle;
+            info.contentControlMain = null;
+            info.contentControlInfoCycle = null;
             info.isTest = false;
             info.bowlWeight = "";
 
             if (MyMessageBox.Show(Settings.Default.PreCycle_Request_StartCycle, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                info.contentControlMain.Content = new CycleWeight(info);
+                info.frameMain.Content = new CycleWeightOld(info);
             }
         End:
             tbOk.IsEnabled = true;
@@ -181,7 +181,7 @@ namespace Main.Pages.SubCycle
             }
 
             SetFinalWeightRange(-1);
-            if (informUser) MyMessageBox.Show("Code produit incorrect");
+            if(informUser) MyMessageBox.Show("Code produit incorrect");
             return false;
         }
 

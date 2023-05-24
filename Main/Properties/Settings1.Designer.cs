@@ -2777,10 +2777,8 @@ namespace Main.Properties {
         [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
 <IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
   <list>
-    <int>3</int>
     <int>4</int>
     <int>5</int>
-    <int>10</int>
     <int>12</int>
     <int>13</int>
     <int>14</int>

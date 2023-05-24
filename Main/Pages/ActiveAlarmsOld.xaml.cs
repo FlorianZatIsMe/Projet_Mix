@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Alarm_Management;
+using Database;
+using Main.Properties;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Alarm_Management;
-using Database;
-using Main.Properties;
-using System.Data;
 using User_Management;
 
 namespace Main.Pages
@@ -14,21 +14,20 @@ namespace Main.Pages
     /// <summary>
     /// Logique d'interaction pour ActiveAlarms.xaml
     /// </summary>
-    public partial class ActiveAlarms : UserControl
+    public partial class ActiveAlarmsOld : Page
     {
         private readonly AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
 
-        private readonly ContentControl contentControlMain;
+        private readonly Frame frameMain;
         private readonly System.Timers.Timer updateAlarmTimer;
         private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public ActiveAlarms(ContentControl contentControlMain_arg)
+        public ActiveAlarmsOld(Frame frameMain_arg)
         {
             logger.Debug("Start");
 
-            contentControlMain = contentControlMain_arg;
-            contentControlMain.LayoutUpdated += ContentControlMain_LayoutUpdated;
-            //contentControlMain.ContentRendered += new EventHandler(FrameMain_ContentRendered);
+            frameMain = frameMain_arg;
+            frameMain.ContentRendered += new EventHandler(FrameMain_ContentRendered);
 
             // Initialisation des timers
             updateAlarmTimer = new System.Timers.Timer
@@ -44,18 +43,6 @@ namespace Main.Pages
             bool[] currentAccess = UserManagement.GetCurrentAccessTable();
             btAck.Visibility = currentAccess[AccessTableInfo.AckAlarm] ? Visibility.Visible : Visibility.Hidden;
         }
-
-        private void ContentControlMain_LayoutUpdated(object sender, EventArgs e)
-        {
-            if (contentControlMain.Content != this)
-            {
-                logger.Debug("ContentControlMain_LayoutUpdated");
-                contentControlMain.LayoutUpdated -= ContentControlMain_LayoutUpdated;
-                updateAlarmTimer.Stop();
-                updateAlarmTimer.Dispose();
-            }
-        }
-
         private void LoadAlarms()
         {
             logger.Debug("LoadAlarms");
@@ -128,6 +115,18 @@ namespace Main.Pages
             logger.Debug("dataGridAlarms_Loaded");
 
             updateAlarmTimer.Start();
+        }
+        private void FrameMain_ContentRendered(object sender, EventArgs e)
+        {
+            logger.Debug("FrameMain_ContentRendered");
+
+            if (frameMain.Content != this)
+            {
+                frameMain.ContentRendered -= FrameMain_ContentRendered;
+                updateAlarmTimer.Stop();
+                updateAlarmTimer.Dispose();
+            }
+
         }
         private void UpdateAlarmTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {

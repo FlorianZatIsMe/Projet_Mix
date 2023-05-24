@@ -1,25 +1,24 @@
-﻿using System;
+﻿using Database;
+using Main.Properties;
+using Message;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Database;
-using Main.Properties;
-using Message;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
 
 namespace Main.Pages
 {
     /// <summary>
     /// Logique d'interaction pour Archiving.xaml
     /// </summary>
-    public partial class Archiving : UserControl
+    public partial class ArchivingOld : Page
     {
-        private ContentControl contentControlMain;
         private readonly AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
         //private readonly string dbName = DatabaseSettings.ConnectionInfo.db;
         private readonly static string archivingPath = Settings.Default.Archiving_sqlPath;// @"C:\Temp\Archives\";
@@ -32,30 +31,16 @@ namespace Main.Pages
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public Archiving(ContentControl contentControlMain_arg)
+        public ArchivingOld()
         {
             logger.Debug("Start");
-            contentControlMain = contentControlMain_arg;
-            InitializeComponent();
-        }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
             if (!Directory.Exists(archivingPath))
             {
-                try
-                {
-                    Directory.CreateDirectory(archivingPath);
-                }
-                catch (Exception ex)
-                {
-                    logger.Error(ex.Message);
-                    MyMessageBox.Show(ex.Message);
-                    contentControlMain.Content = new Pages.Status();
-                    return;
-                }
+                Directory.CreateDirectory(archivingPath);
             }
 
+            InitializeComponent();
             dpLastRecord.DisplayDateEnd = DateTime.Now;
             dpLastRecord.SelectedDateFormat = DatePickerFormat.Long;
 
@@ -117,7 +102,7 @@ namespace Main.Pages
             CycleSpeedMixerInfo cycleSpeedMixerInfo = new CycleSpeedMixerInfo();
 
             bool isArchiveOk = true;
-            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(tableName: auditTrailInfo.TabName, nRow: Settings.Default.Archive_RowNumberStartArchive, orderBy: auditTrailInfo.Ids[auditTrailInfo.DateTime], isOrderAsc: false); });
+            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(tableName: auditTrailInfo.TabName, nRow: Settings.Default.Archive_RowNumberStartArchive,orderBy: auditTrailInfo.Ids[auditTrailInfo.DateTime],isOrderAsc: false); });
             object[] row = (object[])t.Result;
 
             if (row == null)

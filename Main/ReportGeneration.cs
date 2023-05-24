@@ -384,7 +384,7 @@ namespace Main
             {
                 decimal eff = decimal.Parse(lastWeightEff, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowThousands);
                 decimal th = decimal.Parse(lastWeightTh, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowThousands);
-                status = Pages.SubCycle.CycleWeight.IsFinalWeightCorrect(eff, th) /*(Math.Abs(eff - th) < th * Settings.Default.LastWeightRatio)*/ ? statusPASS : statusFAIL;
+                status = Pages.SubCycle.CycleWeightOld.IsFinalWeightCorrect(eff, th) /*(Math.Abs(eff - th) < th * Settings.Default.LastWeightRatio)*/ ? statusPASS : statusFAIL;
             }
 
 
@@ -1216,8 +1216,15 @@ namespace Main
 
             if (!File.Exists(fileName))
             {
-                document.Save(fileName);
-                PrintPaperOnce(fileName);
+                try
+                {
+                    document.Save(fileName);
+                    PrintPaperOnce(fileName);
+                }
+                catch (Exception ex)
+                {
+                    MyMessageBox.Show(ex.Message);
+                }
             }
         }
 
@@ -1312,7 +1319,7 @@ namespace Main
                 tableValues[0, 1 + i] = samplingRefs[i];
                 tableValues[1, 1 + i] = samplingMeas[i];
                 tableValues[2, 1 + i] = (decimal.Parse(samplingRefs[i]) - decimal.Parse(samplingMeas[i])).ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
-                tableValues[3, 1 + i] = Pages.SubCycle.CycleWeight.IsSampWeightCorrect(decimal.Parse(samplingMeas[i]), decimal.Parse(samplingRefs[i])) ? "PASS" : "FAIL";
+                tableValues[3, 1 + i] = Pages.SubCycle.CycleWeightOld.IsSampWeightCorrect(decimal.Parse(samplingMeas[i]), decimal.Parse(samplingRefs[i])) ? "PASS" : "FAIL";
             }
             
             double xShift = (page.Width - 2 * margin) / tableValues.GetLength(0);
@@ -1366,9 +1373,9 @@ namespace Main
 
         private bool PrintPaperOnce(string fileName)
         {
-            PrintQueue printQueue;
-            int count = 0;
-            bool result = false;
+            //PrintQueue printQueue;
+            //int count = 0;
+            bool result;// = false;
 
             logger.Debug("On va lancer l'impression");
 

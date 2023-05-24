@@ -1,33 +1,44 @@
-﻿using System;
+﻿using Database;
+using Driver_ColdTrap;
+using Driver_MODBUS_SpeedMixer;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Database;
-using Driver_MODBUS_SpeedMixer;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Timers;
 using System.Reflection;
 using Alarm_Management;
 using Main.Properties;
+using Main.Pages.SubCycle;
 using Message;
 using Driver_RS232_Pump;
 
 namespace Main.Pages.SubCycle
 {
-    public class CycleSpeedMixerViewModel : DependencyObject
-    {
-        public static readonly DependencyProperty pressureUnitProperty =
-            DependencyProperty.Register("pressureUnit", typeof(string), typeof(CycleSpeedMixerViewModel), new PropertyMetadata(string.Empty));
 
-        public string pressureUnit
-        {
-            get { return (string)GetValue(pressureUnitProperty); }
-            set { SetValue(pressureUnitProperty, value); }
-        }
-    }
-    /// <summary>
-    /// Logique d'interaction pour CycleSpeedMixer.xaml
-    /// </summary>
-    public partial class CycleSpeedMixer : UserControl, ISubCycle
+
+    /* class CycleSpeedMixer
+     * 
+     * Description: Classe contrôlant une séquence de SpeedMixer
+     * Appelé par: CycleSpeedMixer, Cycle Weight, PreCycle
+     * 
+     * Classes de références: TBD
+     * 
+     * Version: 1.0
+     */
+
+    public partial class CycleSpeedMixerOld : Page, IDisposable, ISubCycle
     {
         private readonly SubCycleArg subCycle;
         private readonly int previousSeqId;
@@ -58,7 +69,7 @@ namespace Main.Pages.SubCycle
         private readonly System.Timers.Timer tempControlTimer;
         private bool isTempOK;
         private int tempTooHotSince;
-
+        
         private readonly int timeoutPumpNotFree = Settings.Default.CycleMix_timeoutPumpNotFree; // 30s, si la pompe n'est pas disponible pendant ce temps, on arrête la séquence
         private readonly int timeoutTempTooHotDuringCycle = Settings.Default.CycleMix_timeoutTempTooHotDuringCycle;
         private readonly int timeoutTempTooHotBeforeCycle = Settings.Default.CycleMix_timeoutTempTooHotBeforeCycle;
@@ -87,30 +98,13 @@ namespace Main.Pages.SubCycle
          * Version: 1.0
          */
         //public CycleSpeedMixer(Frame frameMain_arg, Frame frameInfoCycle_arg, string id, int idCycle_arg, int idPrevious_arg, string tablePrevious_arg, ISeqInfo prevSeqInfo_arg, bool isTest_arg = true)
-
-        private void ThisFrame_ContentRendered(object sender, EventArgs e)
-        {
-            logger.Debug("ThisFrame_ContentRendered");
-
-            if (subCycle.frameMain.Content != this)
-            {
-                subCycle.frameMain.ContentRendered -= ThisFrame_ContentRendered;
-                if (!isSequenceOver) StopCycle();
-            }
-        }
-
-        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
-        {
-            if (!isSequenceOver) StopCycle();
-        }
-
-        public CycleSpeedMixer(SubCycleArg subCycleArg)
+        public CycleSpeedMixerOld(SubCycleArg subCycleArg)
         {
             logger.Debug("Start");
             Task<object> t;
 
             subCycle = subCycleArg;
-            //subCycle.frameMain.ContentRendered += new EventHandler(ThisFrame_ContentRendered);
+            subCycle.frameMain.ContentRendered += new EventHandler(ThisFrame_ContentRendered);
             //thisCycleInfo = cycleInfo;
             isSequenceOver = false;     // la séquence n'est pas terminée
             hasSequenceStarted = false; // la séquence n'a pas démarré
@@ -207,7 +201,7 @@ namespace Main.Pages.SubCycle
 
             pumpNotFreeTimer.Start();
             if (currentRecipeValues[recipeSpeedMixerInfo.Coldtrap].ToString() == DatabaseSettings.General_TrueValue_Read) tempControlTimer.Start(); // On lance le timer de contrôle de la température
-
+              
             SpeedMixerModbus.SetProgram_new(currentRecipeValues);
 
             //SpeedMixerModbus.SetProgram(this.currentPhaseParameters); // On met à jour tout les paramètres dans le speedmixer
@@ -247,7 +241,7 @@ namespace Main.Pages.SubCycle
                     if (pumpNotFreeTimer != null)
                     {
                         pumpNotFreeTimer.Stop();
-                        pumpNotFreeTimer.Dispose();
+                        pumpNotFreeTimer.Dispose(); 
                     }
                     if (tempControlTimer != null)
                     {
@@ -269,12 +263,12 @@ namespace Main.Pages.SubCycle
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
-        ~CycleSpeedMixer()
+        ~CycleSpeedMixerOld()
         {
             logger.Debug("~CycleSpeedMixer");
 
             Dispose(disposing: false);
-            //MyMessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Disconnection done");
+            MyMessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Disconnection done");
         }
         private async void SequenceController()
         {
@@ -290,7 +284,7 @@ namespace Main.Pages.SubCycle
 
                 currentPressure = SpeedMixerModbus.GetPressure();
                 currentSpeed = SpeedMixerModbus.GetSpeed();
-
+                
                 this.Dispatcher.Invoke(() =>
                 {
                     tbReadyToRun.Text = status[SpeedMixerSettings.MixerStatusId_ReadyToRun] ? "Ready to run " + hasSequenceStarted.ToString() : "Not ready to run";
@@ -320,7 +314,7 @@ namespace Main.Pages.SubCycle
                 // Si on n'a pas encore démarré et que le capot est fermé alors on démarre le cycle
                 else if (!hasSequenceStarted && status[SpeedMixerSettings.MixerStatusId_SafetyOK] && !status[SpeedMixerSettings.MixerStatusId_MixerRunning])
                 {
-                    if ((currentRecipeValues[recipeSpeedMixerInfo.Coldtrap].ToString() == DatabaseSettings.General_FalseValue_Read || isTempOK) &&
+                    if ((currentRecipeValues[recipeSpeedMixerInfo.Coldtrap].ToString() == DatabaseSettings.General_FalseValue_Read || isTempOK) && 
                         (wasPumpActivated || currentRecipeValues[recipeSpeedMixerInfo.Vaccum_control].ToString() == DatabaseSettings.General_FalseValue_Read)) // Si on ne conttrôle pas la température ou qu'elle est bonne et si la pompe a été commandée ou qu'on en a pas besoin, on démarre le cycle
                     //if ((currentPhaseParameters[11] == "False" || isTempOK) && (wasPumpActivated || currentPhaseParameters[6] == "False")) // Si on ne conttrôle pas la température ou qu'elle est bonne et si la pompe a été commandée ou qu'on en a pas besoin, on démarre le cycle
                     {
@@ -331,7 +325,7 @@ namespace Main.Pages.SubCycle
 
                             this.Dispatcher.Invoke(() =>
                             {
-                                tbPhaseNumber.Text = currentPhaseNumber.ToString() + " - " + currentRecipeValues[recipeSpeedMixerInfo.Time00 + 3 * (currentPhaseNumber - 1)] + "s";
+                                tbPhaseNumber.Text = currentPhaseNumber.ToString() + " - " + currentRecipeValues[recipeSpeedMixerInfo.Time00 + 3 * (currentPhaseNumber-1)] + "s";
                                 currentPhaseTime = (int)currentRecipeValues[recipeSpeedMixerInfo.Time00 + 3 * (currentPhaseNumber - 1)];
                                 //tbPhaseNumber.Text = currentPhaseNumber.ToString() + " - " + currentPhaseParameters[10 + 3 * currentPhaseNumber] + "s";
                                 //currentPhaseTime = int.Parse(currentPhaseParameters[10 + 3 * currentPhaseNumber]);
@@ -523,7 +517,7 @@ namespace Main.Pages.SubCycle
             //MyDatabase.InsertRow("temp", "speed, pressure", new string[] { currentSpeed.ToString(), currentPressure.ToString() });
 
             currentPhaseTime--;
-
+            
             if (currentPhaseTime >= 0)
             {
                 this.Dispatcher.Invoke(() =>
@@ -576,7 +570,7 @@ namespace Main.Pages.SubCycle
 
                 if (!areAlarmActive[1] && status[SpeedMixerSettings.MixerStatusId_MixerError])
                 {
-                    AlarmManagement.NewAlarm(1, 1);
+                    AlarmManagement.NewAlarm(1,1);
                     areAlarmActive[1] = true;
                 }
                 else if (areAlarmActive[1] && !status[SpeedMixerSettings.MixerStatusId_MixerError])
@@ -677,8 +671,8 @@ namespace Main.Pages.SubCycle
             NextSeqInfo nextSeqInfo = new NextSeqInfo(
                 recipeInfo_arg: recipeSpeedMixerInfo,
                 recipeValues_arg: currentRecipeValues,
-                frameMain_arg: null,
-                frameInfoCycle_arg: null,
+                frameMain_arg: subCycle.frameMain,
+                frameInfoCycle_arg: subCycle.frameInfoCycle,
                 contentControlMain_arg: subCycle.contentControlMain,
                 contentControlInfoCycle_arg: subCycle.contentControlInfoCycle,
                 idCycle_arg: subCycle.idCycle,
@@ -716,6 +710,17 @@ namespace Main.Pages.SubCycle
 
             StopCycle();
         }
+        private void ThisFrame_ContentRendered(object sender, EventArgs e)
+        {
+            logger.Debug("ThisFrame_ContentRendered");
+
+            if (subCycle.frameMain.Content != this)
+            {
+                subCycle.frameMain.ContentRendered -= ThisFrame_ContentRendered;
+                if(!isSequenceOver) StopCycle();
+            }
+
+        } 
         public void StopCycle()
         {
             logger.Debug("StopCycle");
@@ -739,6 +744,5 @@ namespace Main.Pages.SubCycle
         {
             return subCycle.isTest;
         }
-
     }
 }

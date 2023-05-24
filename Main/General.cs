@@ -6,21 +6,17 @@ using Main.Properties;
 using Message;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Security.Cryptography;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Security;
 
 namespace Main
 {
@@ -36,6 +32,8 @@ namespace Main
         public string finalWeight;
         public Frame frameMain;
         public Frame frameInfoCycle;
+        public ContentControl contentControlMain;
+        public ContentControl contentControlInfoCycle;
         public bool isTest;
         public string bowlWeight;
     }
@@ -46,18 +44,22 @@ namespace Main
         public object[] recipeValues { get; }
         public Frame frameMain { get; }
         public Frame frameInfoCycle { get; }
+        public ContentControl contentControlMain { get; }
+        public ContentControl contentControlInfoCycle { get; }        
         public int idCycle { get; }
         public int previousSeqType { get; }
         public int previousSeqId { get; }
         public bool isTest { get; }
         public string comment { get; }
 
-        public NextSeqInfo(ISeqTabInfo recipeInfo_arg, object[] recipeValues_arg, Frame frameMain_arg, Frame frameInfoCycle_arg, int idCycle_arg, int previousSeqType_arg, int previousSeqId_arg, bool isTest_arg, string comment_arg = "")
+        public NextSeqInfo(ISeqTabInfo recipeInfo_arg, object[] recipeValues_arg, Frame frameMain_arg, Frame frameInfoCycle_arg, ContentControl contentControlMain_arg, ContentControl contentControlInfoCycle_arg, int idCycle_arg, int previousSeqType_arg, int previousSeqId_arg, bool isTest_arg, string comment_arg = "")
         {
             recipeInfo = recipeInfo_arg;
             recipeValues = recipeValues_arg;
             frameMain = frameMain_arg;
             frameInfoCycle = frameInfoCycle_arg;
+            contentControlMain = contentControlMain_arg;
+            contentControlInfoCycle = contentControlInfoCycle_arg;
             idCycle = idCycle_arg;
             previousSeqType = previousSeqType_arg;
             previousSeqId = previousSeqId_arg;
@@ -326,7 +328,7 @@ namespace Main
             Task<object> t1 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(cycleTableInfo, cycleTableValues); });
             //MyDatabase.InsertRow(cycleTableInfo);
 
-            CurrentCycleInfo = new CycleInfo(cycleTableInfo, cycleTableValues, info.frameInfoCycle);
+            CurrentCycleInfo = new CycleInfo(cycleTableInfo, cycleTableValues, info.contentControlInfoCycle);
             // A CORRIGER : IF RESULT IS FALSE
             Task<object> t2 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax_new(cycleTableInfo, cycleTableInfo.Ids[cycleTableInfo.Id]); });
             int idCycle = (int)t2.Result;
@@ -396,35 +398,33 @@ namespace Main
             //MyDatabase.Update_Row(cycleTableInfo, idCycle.ToString());
 
             SubCycleArg subCycleArg = new SubCycleArg(
-                frameMain_arg: info.frameMain, 
-                frameInfoCycle_arg: info.frameInfoCycle, 
+                contentControlMain_arg: info.contentControlMain, 
+                contentControlInfoCycle_arg: info.contentControlInfoCycle, 
                 id_arg: (int)firstSeqID, 
                 idCycle_arg: idCycle, 
                 idPrevious_arg: idCycle, 
                 tablePrevious_arg: cycleTableInfo.TabName, 
                 prevSeqInfo_arg: new CycleTableInfo(), 
                 isTest_arg: info.isTest);
-            info.frameMain.Content = Activator.CreateInstance(Pages.Sequence.list[(int)(firstSeqType)].subCycPgType, new object[] { subCycleArg });
+            info.contentControlMain.Content = Activator.CreateInstance(Pages.Sequence.list[(int)(firstSeqType)].subCycPgType, new object[] { subCycleArg });
 
             //MyDatabase.Close_reader(); // On ferme le reader de la db pour pouvoir lancer une autre requête
         }
         //public static void NextSequence(ISeqTabInfo recipeParam, Frame frameMain, Frame frameInfoCycle, int idCycle, int idSubCycle, int previousSeqType, ISeqTabInfo prevSeqInfo_arg, bool isTest, string comment = "")
         public static void NextSequence(NextSeqInfo nextSeqInfo, ISeqTabInfo prevSeqInfo_arg, object[] prevSeqValues_arg = null)
         {
-            //NextSeqInfo(ISeqTabInfo recipeParam_arg, Frame frameMain_arg, Frame frameInfoCycle_arg, int idCycle_arg, int previousSeqType_arg, string previousSeqId_arg, bool isTest_arg, string comment_arg = "")
-
             logger.Debug("NextSequence");
 
             if (nextSeqInfo.recipeValues[nextSeqInfo.recipeInfo.NextSeqType] == null || nextSeqInfo.recipeValues[nextSeqInfo.recipeInfo.NextSeqType].ToString() == "") // S'il n'y a pas de prochaine séquence 
             {
-                nextSeqInfo.frameMain.Content = new CycleWeight(nextSeqInfo);
+                nextSeqInfo.contentControlMain.Content = new CycleWeight(nextSeqInfo);
                 //LastThingToChange(recipeParam: nextSeqInfo.recipeParam, frameMain: nextSeqInfo.frameMain, frameInfoCycle: nextSeqInfo.frameInfoCycle, idCycle: nextSeqInfo.idCycle, previousSeqType: nextSeqInfo.previousSeqType, previousSeqId: nextSeqInfo.previousSeqId.ToString(), isTest: nextSeqInfo.isTest, comment: nextSeqInfo.comment);
             }
             else
             {
                 SubCycleArg subCycleArg = new SubCycleArg(
-                    frameMain_arg: nextSeqInfo.frameMain, 
-                    frameInfoCycle_arg: nextSeqInfo.frameInfoCycle, 
+                    contentControlMain_arg: nextSeqInfo.contentControlMain, 
+                    contentControlInfoCycle_arg: nextSeqInfo.contentControlInfoCycle, 
                     id_arg: int.Parse(nextSeqInfo.recipeValues[nextSeqInfo.recipeInfo.NextSeqId].ToString()),
                     idCycle_arg: nextSeqInfo.idCycle,
                     idPrevious_arg: nextSeqInfo.previousSeqId,
@@ -432,7 +432,7 @@ namespace Main
                     prevSeqInfo_arg: prevSeqInfo_arg,
                     isTest_arg: nextSeqInfo.isTest,
                     prevSeqValues_arg: new object[0]);
-                nextSeqInfo.frameMain.Content = Activator.CreateInstance(Pages.Sequence.list[int.Parse(nextSeqInfo.recipeValues[nextSeqInfo.recipeInfo.NextSeqType].ToString())].subCycPgType, new object[] { subCycleArg });
+                nextSeqInfo.contentControlMain.Content = Activator.CreateInstance(Pages.Sequence.list[int.Parse(nextSeqInfo.recipeValues[nextSeqInfo.recipeInfo.NextSeqType].ToString())].subCycPgType, new object[] { subCycleArg });
             }
         }
         public static void EndCycle(NextSeqInfo nextSeqInfo, decimal bowlWeight = -1, decimal finalWeight = -1)
@@ -551,11 +551,12 @@ namespace Main
                 // A CORRIGER : IF RESULT IS FALSE
                 Task<object> t8 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow_new(new CycleTableInfo(), nextSeqInfo.idCycle); });
                 cycleTableValues = (object[])t8.Result;
-                nextSeqInfo.frameMain.Content = new Recipe(RcpAction.Modify, nextSeqInfo.frameMain, nextSeqInfo.frameInfoCycle, cycleTableValues == null ? "" : cycleTableValues[cycleTableInfo.RecipeName].ToString(), info.Window);
+                nextSeqInfo.contentControlMain.Content = new Recipe(RcpAction.Modify, nextSeqInfo.contentControlMain, nextSeqInfo.contentControlInfoCycle, cycleTableValues == null ? "" : cycleTableValues[cycleTableInfo.RecipeName].ToString(), info.Window);
+                //nextSeqInfo.frameMain.Content = new RecipeOld(RcpAction.Modify, nextSeqInfo.frameMain, nextSeqInfo.frameInfoCycle, nextSeqInfo.contentControlMain, nextSeqInfo.contentControlInfoCycle, cycleTableValues == null ? "" : cycleTableValues[cycleTableInfo.RecipeName].ToString(), info.Window);
             }
             else
             {
-                nextSeqInfo.frameMain.Content = new StatusOld();
+                nextSeqInfo.contentControlMain.Content = new Status();
                 //MyDatabase.Disconnect();
             }
             info.Window.UpdateMenuStartCycle(true);
@@ -653,32 +654,18 @@ namespace Main
             }
         }
 
-        public static void Impersonate()
-        {/*
-            IntPtr token = IntPtr.Zero;
-            bool success = LogonUser(_username, null, "password", 2, 0, out token);
-
-            if (!success)
-            {
-                int error = Marshal.GetLastWin32Error();
-                throw new Exception($"Impossible de se connecter avec les informations d'identification fournies. Code d'erreur : {error}");
-            }
-
-            // Obtenir l'identité de l'utilisateur connecté
-            WindowsIdentity identity = new WindowsIdentity(token);
-
-            // Commencer l'impersonation
-            _context = identity.Impersonate();            
-            */
-        }
-
-        public static void Depersonate()
+        public static bool IsFolderAccessible(string path)
         {
-            //_context?.Undo();
+            try
+            {
+                Directory.GetDirectories(path);
+                return true;
+            }
+            catch (Exception)
+            {
+                //MyMessageBox.Show("Une erreur s'est produite lors de l'accès au dossier : " + ex.Message);
+            }
+            return false;
         }
-
-        [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        private static extern bool LogonUser(string lpszUsername, string lpszDomain, string lpszPassword,
-            int dwLogonType, int dwLogonProvider, out IntPtr phToken);
     }
 }

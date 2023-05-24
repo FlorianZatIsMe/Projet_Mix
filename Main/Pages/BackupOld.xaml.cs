@@ -1,26 +1,25 @@
-﻿using System;
+﻿using Alarm_Management;
+using Database;
+using Main.Properties;
+using Message;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Alarm_Management;
-using Database;
-using Main.Properties;
-using Message;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
 
 namespace Main.Pages
 {
     /// <summary>
     /// Logique d'interaction pour Backup.xaml
     /// </summary>
-    public partial class Backup : UserControl
+    public partial class BackupOld : Page
     {
-        //private readonly AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
-        private ContentControl contentControlMain;
+        private readonly AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
         private static readonly string dbName = DatabaseSettings.ConnectionInfo.Db;
         public static readonly string backupPath = Settings.Default.Backup_backupPath;// @"C:\Temp\Backups\";
         private static readonly string backupExtFile = Settings.Default.ArchBack_ExtFile;
@@ -28,33 +27,19 @@ namespace Main.Pages
         private static readonly int nDaysBefDelBackup = Settings.Default.Backup_nDaysBefDelBackup;// 10;
         private static string lastBackupFileName;
         private static int nLines;
-        //private readonly string key = "J'aime le chocolat";
+        private readonly string key = "J'aime le chocolat";
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public Backup(ContentControl contentControlMain_arg)
+        public BackupOld()
         {
             logger.Debug("Start");
-            contentControlMain = contentControlMain_arg;
 
-            InitializeComponent();
-        }
-
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
             if (!Directory.Exists(backupPath))
             {
-                try
-                {
-                    Directory.CreateDirectory(backupPath);
-                }
-                catch (Exception ex)
-                {
-                    logger.Error(ex.Message);
-                    MyMessageBox.Show(ex.Message);
-                    contentControlMain.Content = new Pages.Status();
-                    return;
-                }
+                Directory.CreateDirectory(backupPath);
             }
+
+            InitializeComponent();
 
             labelStatus.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             labelStatus.Arrange(new Rect(0, 0, labelStatus.DesiredSize.Width, labelStatus.DesiredSize.Height));
@@ -109,9 +94,9 @@ namespace Main.Pages
 
             bool isBackupSucceeded = false;
 
-            lastBackupFileName = DateTime.Now.ToString("yyyy.MM.dd_HH.mm.ss") + Settings.Default.Backup_fileName_backup +
-                DatabaseSettings.ConnectionInfo.Db +
-                (username == Settings.Default.General_SystemUsername ? Settings.Default.ArchBack_fileName_auto : Settings.Default.ArchBack_fileName_man) +
+            lastBackupFileName = DateTime.Now.ToString("yyyy.MM.dd_HH.mm.ss") + Settings.Default.Backup_fileName_backup + 
+                DatabaseSettings.ConnectionInfo.Db + 
+                (username == Settings.Default.General_SystemUsername ? Settings.Default.ArchBack_fileName_auto : Settings.Default.ArchBack_fileName_man) + 
                 backupExtFile;
 
             string batchFile = Settings.Default.Backup_Backup_batchFile;// @".\Resources\DB_backup";
@@ -122,7 +107,7 @@ namespace Main.Pages
             string arg5 = backupPath + lastBackupFileName;
             string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5;
             //MyMessageBox.Show(command);
-
+            
             var processInfo = new ProcessStartInfo("cmd.exe", "/c " + command)
             {
                 CreateNoWindow = true,
@@ -131,7 +116,7 @@ namespace Main.Pages
                 RedirectStandardOutput = true
             };
             var process = Process.Start(processInfo);
-
+            
             process.OutputDataReceived += (object sender, DataReceivedEventArgs e) => {
                 General.count++;
                 General.text = e.Data;
@@ -143,7 +128,7 @@ namespace Main.Pages
                 General.text = e.Data;
             };
             process.BeginErrorReadLine();
-
+            
             process.WaitForExit();
 
             if (process.ExitCode == 0)
@@ -211,7 +196,7 @@ namespace Main.Pages
                     MyMessageBox.Show("Fichier " + backupPath + restoreFileName + " n'existe pas");
                     UpdateBackupList();
                     return;
-                }
+                }                
 
                 nLines = File.ReadAllLines(backupPath + restoreFileName).Length + Settings.Default.Backup_nLines_offset;
 

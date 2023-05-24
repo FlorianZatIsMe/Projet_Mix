@@ -1,12 +1,14 @@
-﻿<UserControl x:Class="Main.Pages.SubCycle.CycleInfo"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Main.Pages.SubCycle"
-             xmlns:p="clr-namespace:Main.Properties"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+﻿<Page x:Class="Main.Pages.SubCycle.CycleInfoOld"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Main.Pages.SubCycle"
+      xmlns:p="clr-namespace:Main.Properties"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="750"
+      Title="CycleInfo"
+      Background="Transparent">
 
     <Grid>
         <Border CornerRadius="10, 0, 0, 10" Background="{DynamicResource Backgroup_CycleInfo}">
@@ -27,4 +29,4 @@
         </Border>
 
     </Grid>
-</UserControl>
+</Page>

@@ -1,21 +1,21 @@
-﻿using System;
+﻿using Message;
+using System;
+using System.Configuration;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Message;
-using System.Configuration;
 
 namespace Main.Pages
 {
     /// <summary>
     /// Logique d'interaction pour Parameters.xaml
     /// </summary>
-    public partial class Parameters : UserControl
+    public partial class ParametersOld : Page
     {
         bool dpNextCalDateToUpdt = false;
         private Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
         private readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public Parameters()
+        public ParametersOld()
         {
             InitializeComponent();
 

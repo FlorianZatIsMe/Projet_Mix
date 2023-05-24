@@ -140,10 +140,11 @@ namespace Main
             // A corriger if insert didn't work
             MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTrailInfo, values); });
 
-            frameMain_Old.Content = new Pages.StatusOld();
-            frameInfoCycle.Content = null;
+            //frameMain_Old.Content = new Pages.StatusOld();
+            //frameInfoCycle.Content = null;
 
             contentControlMain.Content = new Pages.Status();
+            contentControlInfoCycle.Content = null;
 
             // Initialisation des timers
             currentTimeTimer = new System.Timers.Timer
@@ -170,12 +171,11 @@ namespace Main
 
             scanAlarmTimer = new System.Timers.Timer
             {
-                Interval = 500,
+                Interval = 2000,
                 AutoReset = false
             };
             scanAlarmTimer.Elapsed += ScanAlarmTimer_OnTimedEvent;
-            scanAlarmTimer.Start();
-            
+            //scanAlarmTimer.Start();            
         }
         private void ScanAlarmTimer_OnTimedEvent(object sender, ElapsedEventArgs e)
         {
@@ -191,13 +191,13 @@ namespace Main
                 //*/
 
                 //*
-                if (contentControlMain.Content.GetType() == typeof(Pages.AuditTrail))
+                if (contentControlMain.Content.GetType() == typeof(Pages.ActiveAlarms))
                 {
-                    contentControlMain.Content = new Pages.Status();
+                    contentControlMain.Content = new Pages.Archiving(contentControlMain);
                 }
                 else
                 {
-                    contentControlMain.Content = new Pages.AuditTrail();
+                    contentControlMain.Content = new Pages.ActiveAlarms(contentControlMain);
                 }
                 //*/
             });
@@ -211,8 +211,8 @@ namespace Main
             AlarmManagement.Initialize(new Alarm_Management.IniInfo() { AuditTrail_SystemUsername = Settings.Default.General_SystemUsername, Window = this });
 
             // We connect to the balance through a task to avoid a freeze of the application and allow the user to access the OS
-            //Task connectBalanceTask = new Task(() => { Balance.Connect(); });
-            //connectBalanceTask.Start();
+            Task connectBalanceTask = new Task(() => { Balance.Connect(); });
+            connectBalanceTask.Start();
 
             //Driver_ColdTrap.ColdTrap.Initialize(new Driver_ColdTrap.IniInfo() { Window = this });
             UserManagement.Initialize(new User_Management.IniInfo() { Window = this });
@@ -276,7 +276,7 @@ namespace Main
 
             while (!wasBackupSucceeded && nBackupAttempt < 3)
             {
-                wasBackupSucceeded = Pages.Backup.ExecuteBackup(Settings.Default.General_SystemUsername);
+                wasBackupSucceeded = Pages.BackupOld.ExecuteBackup(Settings.Default.General_SystemUsername);
 
                 nBackupAttempt++;
                 if (!wasBackupSucceeded)
@@ -325,7 +325,7 @@ namespace Main
                 if (nAuditTailRows > Settings.Default.Archive_RowNumberTrigger)
                 {
                     logger.Debug(nAuditTailRows.ToString());
-                    if (!Pages.Archiving.ExecuteFullArchive()) MyMessageBox.Show("Archivage échoué, merci de contacter un administrateur du système");
+                    if (!Pages.ArchivingOld.ExecuteFullArchive()) MyMessageBox.Show("Archivage échoué, merci de contacter un administrateur du système");
                 }
             }
             archiveCount = (archiveCount + 1) % 3600;
@@ -403,7 +403,8 @@ namespace Main
             else
             {
                 isATest = false;
-                frameMain_Old.Content = new Pages.StatusOld();
+                contentControlMain.Content = new Pages.Status();
+                //frameMain_Old.Content = new Pages.StatusOld();
             }
 
             menuItemStart.Visibility = 
@@ -577,7 +578,14 @@ namespace Main
                     {
                         if (MyMessageBox.Show("Le dernier test journalier de la balance a été fait le " + lastDailyTest.ToString(Settings.Default.Date_Format_Read) + " à " + lastDailyTest.ToString(Settings.Default.Time_Format) + ", voulez-vous faire le test journalier ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                         {
-                            frameMain_Old.Content = new Pages.SubCycle.CycleWeight(frameMain_Old);
+                            if (!General.IsFolderAccessible(Settings.Default.Sampling_Path))
+                            {
+                                if (MyMessageBox.Show("Le rapport ne pourra être généré, voulez-vous continuer ?",
+                                    MessageBoxButton.YesNo) == MessageBoxResult.No) return;
+                            }
+
+                            contentControlMain.Content = new Pages.SubCycle.CycleWeight(contentControlMain);
+                            contentControlMain.Content = new Pages.Status();
                             return;
                         }
                     }
@@ -589,7 +597,14 @@ namespace Main
 
                 }
 
-                frameMain_Old.Content = new Pages.SubCycle.PreCycle(frameMain_Old, frameInfoCycle, this);
+                if (!General.IsFolderAccessible(Settings.Default.Report_Path))
+                {
+                    if (MyMessageBox.Show("Le rapport ne pourra être généré, voulez-vous continuer ?", 
+                        MessageBoxButton.YesNo) == MessageBoxResult.No) return;
+                }
+
+                //frameMain_Old.Content = new Pages.SubCycle.PreCycleOld(frameMain_Old, frameInfoCycle, this);
+                contentControlMain.Content = new Pages.SubCycle.PreCycle(contentControlMain, contentControlInfoCycle, this);
                 UpdateMenuStartCycle(false);
             }
             else
@@ -601,7 +616,8 @@ namespace Main
                 }
                 else
                 {
-                    frameMain_Old.Content = new Pages.StatusOld();
+                    contentControlMain.Content = new Pages.Status();
+                    //frameMain_Old.Content = new Pages.StatusOld();
                 }
 
                 UpdateMenuStartCycle(true);
@@ -622,19 +638,23 @@ namespace Main
         }
         private void FxProgramNew(object sender, RoutedEventArgs e)
         {
-            frameMain_Old.Content = new Pages.Recipe(RcpAction.New);
+            //frameMain_Old.Content = new Pages.RecipeOld(RcpAction.New);
+            contentControlMain.Content = new Pages.Recipe(RcpAction.New);
         }
         private void FxProgramModify(object sender, RoutedEventArgs e)
         {
-            frameMain_Old.Content = new Pages.Recipe(RcpAction.Modify, frameMain_Old, frameInfoCycle, window: this);
+            //frameMain_Old.Content = new Pages.RecipeOld(RcpAction.Modify, frameMain_Old, frameInfoCycle, window: this);
+            contentControlMain.Content = new Pages.Recipe(RcpAction.Modify, contentControlMain, contentControlInfoCycle, window: this);
         }
         private void FxProgramCopy(object sender, RoutedEventArgs e)
         {
-            frameMain_Old.Content = new Pages.Recipe(RcpAction.Copy);
+            //frameMain_Old.Content = new Pages.RecipeOld(RcpAction.Copy);
+            contentControlMain.Content = new Pages.Recipe(RcpAction.Copy);
         }
         private void FxProgramDelete(object sender, RoutedEventArgs e)
         {
-            frameMain_Old.Content = new Pages.Recipe(RcpAction.Delete);
+            //frameMain_Old.Content = new Pages.RecipeOld(RcpAction.Delete);
+            contentControlMain.Content = new Pages.Recipe(RcpAction.Delete);
         }
         private async void FxAuditTrail(object sender, RoutedEventArgs e)
         {/*
@@ -650,7 +670,8 @@ namespace Main
         }
         private void FxAlarms(object sender, RoutedEventArgs e)
         {
-            frameMain_Old.Content = new Pages.ActiveAlarms(frameMain_Old);
+            //frameMain_Old.Content = new Pages.ActiveAlarmsOld(frameMain_Old);
+            contentControlMain.Content = new Pages.ActiveAlarms(contentControlMain);
         }
         private void FxUserLogInOut(object sender, RoutedEventArgs e)
         {
@@ -664,11 +685,13 @@ namespace Main
         }
         private void FxBackup(object sender, RoutedEventArgs e)
         {
-            frameMain_Old.Content = new Pages.Backup();
+            //frameMain_Old.Content = new Pages.BackupOld();
+            contentControlMain.Content = new Pages.Backup(contentControlMain);
         }
         private void FxArchiving(object sender, RoutedEventArgs e)
         {
-            frameMain_Old.Content = new Pages.Archiving();
+            //frameMain_Old.Content = new Pages.ArchivingOld();
+            contentControlMain.Content = new Pages.Archiving(contentControlMain);
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -677,12 +700,20 @@ namespace Main
 
         private void FxParameters(object sender, RoutedEventArgs e)
         {
-            frameMain_Old.Content = new Pages.Parameters();
+            //frameMain_Old.Content = new Pages.ParametersOld();
+            contentControlMain.Content = new Pages.Parameters();
         }
 
         private void FxDailyTest(object sender, RoutedEventArgs e)
         {
-            frameMain_Old.Content = new Pages.SubCycle.CycleWeight(frameMain_Old);
+            if (!General.IsFolderAccessible(Settings.Default.Sampling_Path))
+            {
+                if (MyMessageBox.Show("Le rapport ne pourra être généré, voulez-vous continuer ?",
+                    MessageBoxButton.YesNo) == MessageBoxResult.No) return;
+            }
+
+            //frameMain_Old.Content = new Pages.SubCycle.CycleWeightOld(frameMain_Old);
+            contentControlMain.Content = new Pages.SubCycle.CycleWeight(contentControlMain);
         }
 
         private void frameMain_ContentRendered(object sender, EventArgs e)
@@ -738,11 +769,12 @@ Il est important de noter que cette méthode est assez radicale et peut rendre l
                 return;
             }
 
+            /*
             if (frameMain_Old.Content.GetType().GetInterface(typeof(IDisposable).Name) == typeof(IDisposable))
             {
                 IDisposable disposablePage = frameMain_Old.Content as IDisposable;
                 disposablePage.Dispose();
-            }
+            }*/
         }
 
         private IDisposable previousDisposablePage = null;
@@ -769,6 +801,11 @@ Il est important de noter que cette méthode est assez radicale et peut rendre l
                 previousDisposablePage = frame.Content as IDisposable;
                 pageToDisposed = true;
             }//*/
+        }
+
+        private void contentControlMain_TargetUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
+        {
+            MyMessageBox.Show("Target updated ?");
         }
     }
 }

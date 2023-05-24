@@ -1,21 +1,12 @@
-﻿using Database;
-using Main.Properties;
-using Message;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using static Main.Pages.Recipe;
+using Database;
+using Main.Properties;
+using Message;
 
 namespace Main.Pages.SubRecipe
 {
@@ -24,27 +15,29 @@ namespace Main.Pages.SubRecipe
         public string TextBlockSetpoint { get; } = Settings.Default.RecipeWeight_Setpoint_Label + " " + "[" + Settings.Default.RecipeWeight_Setpoint_Min + " ; " + Settings.Default.RecipeWeight_Setpoint_Max + "]";
         public string TextBlockRange { get; } = Settings.Default.RecipeWeight_Range_Label + " " + "[" + Settings.Default.RecipeWeight_Range_Min + " ; " + Settings.Default.RecipeWeight_Range_Max + "]";
     }
-
     /// <summary>
-    /// Logique d'interaction pour Weight.xaml
+    /// Logique d'interaction pour RecipeWeight.xaml
     /// </summary>
-    public partial class Weight : Page, ISubRecipe
+    public partial class RecipeWeight : UserControl, ISubRecipe
     {
+        public event Action<object> SubRecipeDeletedEvent;
+        public event Action<object> NextSubRecipeEvent;
+
         RecipeWeightInfo recipeWeightInfo = new RecipeWeightInfo();
 
         private readonly int[] ControlsIDs;
 
-        private readonly Frame parentFrame;
+        private readonly ContentControl parentContentControl;
         private readonly bool[] FormatControl = new bool[Settings.Default.RecipeWeight_IdDBControls.list.Count];
         private bool CurrentFormatControl_tbBarcode;
 
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        
 
-        public Weight(Frame frame, string seqNumber)
+
+        public RecipeWeight(ContentControl contentControl, string seqNumber)
         {
             logger.Debug("Start");
-            
+
             ControlsIDs = new int[recipeWeightInfo.Ids.Count()];
             List<int> list = Settings.Default.RecipeWeight_IdDBControls.list;
             int n = 0;
@@ -63,7 +56,7 @@ namespace Main.Pages.SubRecipe
                 //logger.Trace(i.ToString() + ": " + ControlsIDs[i].ToString());
             }
 
-            parentFrame = frame;
+            parentContentControl = contentControl;
             CurrentFormatControl_tbBarcode = false;
             InitializeComponent();
             tbSeqNumber.Text = seqNumber;
@@ -84,13 +77,16 @@ namespace Main.Pages.SubRecipe
         {
             logger.Debug("RadioButton_Click_1");
 
-            parentFrame.Content = new SpeedMixer(parentFrame, tbSeqNumber.Text);
+            RecipeSpeedMixer recipeSpeedMixer = new RecipeSpeedMixer(parentContentControl, tbSeqNumber.Text);
+            NextSubRecipeEvent(recipeSpeedMixer);
+            parentContentControl.Content = recipeSpeedMixer;
         }
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ButtonDeleteSequence_Click(object sender, RoutedEventArgs e)
         {
             logger.Debug("Button_Click");
 
-            parentFrame.Content = null;
+            //parentContentControl.Content = null;
+            SubRecipeDeletedEvent(parentContentControl);
         }
         public void SetSeqNumber(int n)
         {
@@ -187,7 +183,7 @@ namespace Main.Pages.SubRecipe
             cbIsBarcode.Content = "Code barre";
             tbBarcode.Visibility = Visibility.Visible;
             //labelBarcode.Visibility = Visibility.Visible;
-            if(tbBarcode.Text != "") TbBarcode_LostFocus(tbBarcode, new RoutedEventArgs());
+            if (tbBarcode.Text != "") TbBarcode_LostFocus(tbBarcode, new RoutedEventArgs());
             FormatControl[ControlsIDs[recipeWeightInfo.Barcode]] = CurrentFormatControl_tbBarcode;
         }
         private void CbIsBarcode_Unchecked(object sender, RoutedEventArgs e)
@@ -227,7 +223,7 @@ namespace Main.Pages.SubRecipe
 
             General.HideKeyBoard();
 
-            if (General.Verify_Format(textBox, isNotNull:true, isNumber: false, Settings.Default.RecipeWeight_Barcode_nCharMax))
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: false, Settings.Default.RecipeWeight_Barcode_nCharMax))
             {
                 FormatControl[i] = true;
             }
@@ -261,8 +257,8 @@ namespace Main.Pages.SubRecipe
 
             General.HideKeyBoard();
 
-            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: n, 
-                min: Settings.Default.RecipeWeight_Setpoint_Min, 
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: n,
+                min: Settings.Default.RecipeWeight_Setpoint_Min,
                 max: Settings.Default.RecipeWeight_Setpoint_Max))
             {
                 FormatControl[i] = true;
@@ -295,7 +291,7 @@ namespace Main.Pages.SubRecipe
             General.HideKeyBoard();
 
 
-            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: n, 
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: n,
                 min: Settings.Default.RecipeWeight_Range_Min, max: Settings.Default.RecipeWeight_Range_Max))
             {
                 FormatControl[i] = true;
@@ -352,7 +348,7 @@ namespace Main.Pages.SubRecipe
 
             x = (bool)cbIsBarcode.IsChecked ? 0 : 1;
             //MyMessageBox.Show(((n + x) == FormatControl.Length).ToString() + " - " + (n + x).ToString() + " = " + n.ToString() + " + " + x.ToString() + " / " + FormatControl.Length.ToString()); //((n + x) == FormatControl.Length).ToString() + n.ToString + x.ToString() + FormatControl.Length.ToString()
-            return (n+x) == FormatControl.Length;
+            return (n + x) == FormatControl.Length;
         }
         private void ShowKeyBoard(object sender, RoutedEventArgs e)
         {

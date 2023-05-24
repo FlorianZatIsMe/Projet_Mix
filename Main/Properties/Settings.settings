@@ -851,10 +851,8 @@
       <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;IdDBControls xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
   &lt;list&gt;
-    &lt;int&gt;3&lt;/int&gt;
     &lt;int&gt;4&lt;/int&gt;
     &lt;int&gt;5&lt;/int&gt;
-    &lt;int&gt;10&lt;/int&gt;
     &lt;int&gt;12&lt;/int&gt;
     &lt;int&gt;13&lt;/int&gt;
     &lt;int&gt;14&lt;/int&gt;

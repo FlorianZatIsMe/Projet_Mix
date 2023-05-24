@@ -1,113 +1,22 @@
-﻿using System;
+﻿using Database;
+using Main.Properties;
+using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Database;
-using Main.Properties;
-using System.Collections.Specialized;
 using System.Globalization;
 using Main.Pages.SubCycle;
 using Message;
-using System.Configuration;
 
 namespace Main.Pages
 {
-    public interface ISubRecipe
-    {
-        event Action<object> SubRecipeDeletedEvent;
-        event Action<object> NextSubRecipeEvent;
-        void SetPage(object[] seqValues);
-        ISeqTabInfo GetPage();
-        ISeqTabInfo GetRecipeInfo();
-        object[] GetRecipeValues();
 
-        bool IsFormatOk();
-        void SetSeqNumber(int n);
-    }
-    public interface ISubCycle
-    {
-        void StopCycle();
-        void EnablePage(bool enable);
-        bool IsItATest();
-    }
-    public class SubCycleArg
-    {
-        public Frame frameMain { get; }
-        public Frame frameInfoCycle { get; }
-        public ContentControl contentControlMain { get; }
-        public ContentControl contentControlInfoCycle { get; }
-        public int id { get; }
-        public int idCycle { get; }
-        public int idPrevious { get; }
-        public string tablePrevious { get; }
-        public ISeqTabInfo prevSeqInfo { get; }
-        public object[] prevSeqValues { get; }
-        public bool isTest { get; }
-
-        public SubCycleArg(ContentControl contentControlMain_arg, ContentControl contentControlInfoCycle_arg, int id_arg, int idCycle_arg, int idPrevious_arg, string tablePrevious_arg, ISeqTabInfo prevSeqInfo_arg, bool isTest_arg = true, object[] prevSeqValues_arg = null)
-        {
-            contentControlMain = contentControlMain_arg;
-            contentControlInfoCycle = contentControlInfoCycle_arg;
-            id = id_arg;
-            idCycle = idCycle_arg;
-            idPrevious = idPrevious_arg;
-            tablePrevious = tablePrevious_arg;
-            prevSeqInfo = prevSeqInfo_arg;
-            isTest = isTest_arg;
-            if (prevSeqValues_arg == null)
-            {
-                prevSeqValues = new object[prevSeqInfo.Ids.Count()];
-            }
-            else
-            {
-                prevSeqValues = prevSeqValues_arg;
-            }
-        }
-    }
-    public class Seq
-    {
-        public Type subRcpPgType { get; set; }
-        public ISeqTabInfo subRecipeInfo { get; set; }
-        public Type subCycPgType { get; set; }
-        public ICycleSeqInfo subCycleInfo { get; set; }
-    }
-    public class Sequence
-    {
-        public static readonly List<Seq> list = new List<Seq>()
-        {
-            new Seq()
-            {
-                subRcpPgType = typeof(Pages.SubRecipe.RecipeWeight),
-                subRecipeInfo = new RecipeWeightInfo(),
-                subCycPgType = typeof(Pages.SubCycle.CycleWeight),
-                subCycleInfo = new CycleWeightInfo()
-            },
-
-            new Seq()
-            {
-                subRcpPgType = typeof(Pages.SubRecipe.RecipeSpeedMixer),
-                subRecipeInfo = new RecipeSpeedMixerInfo(),
-                subCycPgType =  typeof(Pages.SubCycle.CycleSpeedMixer),
-                subCycleInfo = new CycleSpeedMixerInfo()
-            }
-        };
-    }
-
-    //
-    // Classe utilisée pour lister les contrôles des sous-recette (ex: Weight, Speedmixer)
-    //
-    [SettingsSerializeAs(SettingsSerializeAs.Xml)]
-    public class IdDBControls
-    {
-        public List<int> list { get; set; }
-    }
-    /// <summary>
-    /// Logique d'interaction pour Recipe.xaml
-    /// </summary>
-    public partial class Recipe : UserControl, IDisposable
+    public partial class RecipeOld : Page, IDisposable
     {
         private static readonly RecipeWeightInfo recipeWeightInfo = new RecipeWeightInfo();
         private static readonly RecipeInfo recipeInfo = new RecipeInfo();
@@ -123,21 +32,22 @@ namespace Main.Pages
         private readonly bool isCbxToDeleteAvailable = false;
         private int currentRecipeVersion;
         private string currentRecipeStatus;
-        //private Frame frameMain;
-        //private Frame frameInfoCycle;
+        private Frame frameMain;
+        private Frame frameInfoCycle; 
         private ContentControl contentControlMain;
-        private ContentControl contentControlInfoCycle;
+        private ContentControl contentControlInfoCycle; 
         private bool curMethodDoneOnGoing;
         private string finalWeightMin = "";
         private string finalWeightMax = "";
         private MainWindow mainWindow;
         private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public Recipe(RcpAction action, ContentControl contentControlMain_arg = null, ContentControl contentControlInfoCycle_arg = null, string recipeName = "", MainWindow window = null)
+        public RecipeOld(RcpAction action, Frame frameMain_arg = null, Frame frameInfoCycle_arg = null, ContentControl contentControlMain_arg = null, ContentControl contentControlInfoCycle_arg = null, string recipeName = "", MainWindow window = null)
         {
             logger.Debug("Start");
 
             nRow = 1;
+            frameMain = frameMain_arg;
             contentControlMain = contentControlMain_arg;
             isFrameLoaded = false;
             mainWindow = window;
@@ -151,7 +61,7 @@ namespace Main.Pages
                     Create_NewSequence(recipeWeightInfo.SeqType);// MySettings["SubRecipeWeight_SeqType"]);
                     break;
                 case RcpAction.Modify: // pour ça je pense qu'une comboBox est suffisant, on puet imaginer une fenêtre intermédiaire avec une liste et une champ pour filtrer mais ça me semble pas applicable à notre besoin
-                    contentControlMain = contentControlMain_arg;
+                    frameInfoCycle = frameInfoCycle_arg;
                     contentControlInfoCycle = contentControlInfoCycle_arg;
                     if (mainWindow == null)
                     {
@@ -161,7 +71,7 @@ namespace Main.Pages
                     }
                     gridModify_Recipe.Visibility = Visibility.Visible;
                     General.Update_RecipeNames(cbxPgmToModify, ProgramNames, ProgramIDs, Database.RecipeStatus.PRODnDRAFT);
-
+                 
                     isCbxToModifAvailable = true;
 
                     if (recipeName != "")
@@ -209,15 +119,14 @@ namespace Main.Pages
             List<string[]> allValues = new List<string[]>();
             bool isFormatOk = true;
 
-            //List<ISeqTabInfo> seqInfoList = new List<ISeqTabInfo>();
+            List<ISeqTabInfo> seqInfoList = new List<ISeqTabInfo>();
 
             List<Tuple<ISeqTabInfo, object[]>> tSeqInfoList = new List<Tuple<ISeqTabInfo, object[]>>();
 
             ISubRecipe recipeSeq;
             Task<object> t;
 
-            if (recipeName == "")
-            {
+            if (recipeName == "") {
                 MyMessageBox.Show(Settings.Default.Recipe_Request_FillRecipeName);
                 return false;
             }
@@ -242,10 +151,9 @@ namespace Main.Pages
             recipeValues[recipeInfo.Name] = recipeName;
 
 
-            if (new_version == 1 &&
+            if (new_version == 1 && 
                 isRecipeCreated &&
-                (int)(MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax_new(recipeInfo, recipeInfo.Ids[recipeInfo.Version], recipeValues); }).Result) != 0)
-            {
+                (int)(MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax_new(recipeInfo, recipeInfo.Ids[recipeInfo.Version], recipeValues); }).Result) != 0) {
                 MyMessageBox.Show(Settings.Default.Recipe_Info_ExistingRecipe);
                 return false;
             }
@@ -259,42 +167,41 @@ namespace Main.Pages
             recipeValues[recipeInfo.Status] = MyDatabase.GetRecipeStatus(status);
 
             tSeqInfoList.Add(new Tuple<ISeqTabInfo, object[]>(recipeInfo, recipeValues));
-            //seqInfoList.Add(recipeInfo);
+            seqInfoList.Add(recipeInfo);
 
             foreach (UIElement element in gridMain.Children) // Pour chaque element de la grille principale (gridMain)...
             {
-                if (element.GetType().Equals(typeof(ContentControl))) // Si c'est une frame...
+                if (element.GetType().Equals(typeof(Frame))) // Si c'est une frame...
                 {
-                    ContentControl contentControl = element as ContentControl;
+                    Frame frame = element as Frame;
 
-                    if (contentControl.Content.GetType().GetInterface(typeof(ISubRecipe).Name) == null)
+                    if (frame.Content.GetType().GetInterface(typeof(ISubRecipe).Name) == null)
                     {
-                        logger.Error(contentControl.Content.GetType().ToString());
+                        logger.Error(frame.Content.GetType().ToString());
                         continue; // je crois que c'est juste à tester
                     }
 
-                    recipeSeq = contentControl.Content as ISubRecipe;
+                    recipeSeq = frame.Content as ISubRecipe;
 
                     isFormatOk = recipeSeq.IsFormatOk();
                     if (isFormatOk)
-                    {
-                        //seqInfoList.Add(recipeSeq.GetPage());
+                    { 
+                        seqInfoList.Add(recipeSeq.GetPage());
                         tSeqInfoList.Add(new Tuple<ISeqTabInfo, object[]>(recipeSeq.GetRecipeInfo(), recipeSeq.GetRecipeValues()));
                     }
                     else break;
                 }
             }
 
-            // Si toutes les séquences ne sont pas correctement renseignées, on sort de là
-            if (!isFormatOk)
+            if (seqInfoList.Count == 1)
             {
-                MyMessageBox.Show(Settings.Default.Recipe_Info_IncorrectFormat);
+                MyMessageBox.Show(Settings.Default.Recipe_Info_NoSubRecipe);
                 return false;
             }
 
-            if (tSeqInfoList.Count == 1)
-            {
-                MyMessageBox.Show(Settings.Default.Recipe_Info_NoSubRecipe);
+            // Si toutes les séquences ne sont pas correctement renseignées, on sort de là
+            if (!isFormatOk) {
+                MyMessageBox.Show(Settings.Default.Recipe_Info_IncorrectFormat);
                 return false;
             }
 
@@ -310,7 +217,7 @@ namespace Main.Pages
                 if (isRecordOk)
                 {
                     row = "InsertRow " + i.ToString() + " - ";
-                    for (int j = 0; j < tSeqInfoList[i].Item1.Ids.Count(); j++)
+                    for (int j = 0; j < seqInfoList[i].Ids.Count(); j++)
                     {
                         row = row + tSeqInfoList[i].Item1.Ids[j] + ": " + (tSeqInfoList[i].Item2[j] == null ? "N/A" : tSeqInfoList[i].Item2[j].ToString()) + " ";
                         //MyMessageBox.Show((tSeqInfoList[i].Item2[j] == null).ToString());
@@ -324,8 +231,8 @@ namespace Main.Pages
 
                     // A CORRIGER : IF RESULT IS FALSE
                     t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax_new(tSeqInfoList[i].Item1, tSeqInfoList[i].Item1.Ids[tSeqInfoList[i].Item1.Id]); });
-                    tSeqInfoList[i - 1].Item2[tSeqInfoList[i - 1].Item1.NextSeqId] = ((int)t.Result).ToString();
-                    tSeqInfoList[i - 1].Item2[tSeqInfoList[i - 1].Item1.NextSeqType] = tSeqInfoList[i].Item1.SeqType.ToString();
+                    tSeqInfoList[i-1].Item2[tSeqInfoList[i-1].Item1.NextSeqId] = ((int)t.Result).ToString();
+                    tSeqInfoList[i-1].Item2[tSeqInfoList[i-1].Item1.NextSeqType] = tSeqInfoList[i].Item1.SeqType.ToString();
                 }
                 else break;
             }
@@ -336,8 +243,7 @@ namespace Main.Pages
                 isRecordOk = (bool)t.Result;
             }
 
-            if (isRecordOk)
-            {
+            if (isRecordOk) {
                 if (new_version == 1) MyMessageBox.Show(Settings.Default.Recipe_Info_RecipeCreated);
                 else MyMessageBox.Show(Settings.Default.Recipe_Info_RecipeModified);
                 return true;
@@ -374,8 +280,8 @@ namespace Main.Pages
 
             int? nextSeqType;
             int? nextSeqID;
-            ContentControl currentContentControl;
-            List<ContentControl> contentControlsToDelete = new List<ContentControl>();
+            Frame currentFrame;
+            List<Frame> framesToDelete = new List<Frame>();
             RecipeInfo recipeInfo = new RecipeInfo();
             object[] recipeValues = new object[recipeInfo.Ids.Count()];
             ISubRecipe currentPage;
@@ -412,51 +318,38 @@ namespace Main.Pages
 
             foreach (UIElement element in gridMain.Children) // Pour chaque element de la grille principale (gridMain)...
             {
-                if (element.GetType().Equals(typeof(ContentControl))) // Si c'est une frame...
+                if (element.GetType().Equals(typeof(Frame))) // Si c'est une frame...
                 {
-                    contentControlsToDelete.Add(element as ContentControl); // On l'ajoute dans la liste des frame à supprimer
+                    framesToDelete.Add(element as Frame); // On l'ajoute dans la liste des frame à supprimer
                 }
             }
 
             // On supprime toutes les frame existantes
-            foreach (ContentControl contentControl in contentControlsToDelete)
+            foreach (Frame frame in framesToDelete)
             {
-                Grid grid = contentControl.Parent as Grid;
-                //contentControl.Content = null;
-                grid.Children.Remove(contentControl);
-                //Update_SequenceNumbers();
-                /*
-                ISubRecipe subRecipe = contentControl.Content as ISubRecipe;
-                if (subRecipe != null)
-                {
-                    df
-                }*/
-                //isFrameLoaded = false;
-                //contentControl.Content = null;
-                //while (!isFrameLoaded) await Task.Delay(Settings.Default.Recipe_WaitFrameLoaded_Delay); // On attend que la frame ai bien été supprimée
+                isFrameLoaded = false;
+                frame.Content = null;
+                while (!isFrameLoaded) await Task.Delay(Settings.Default.Recipe_WaitFrameLoaded_Delay); // On attend que la frame ai bien été supprimée
             }
-
-
-            nRow = 1;
 
             while (nextSeqID != null) // On remplie les frames ici
             {
-                //isFrameLoaded = false;
+                isFrameLoaded = false;
                 Create_NewSequence(nextSeqType);
 
-                //while (!isFrameLoaded) await Task.Delay(Settings.Default.Recipe_WaitFrameLoaded_Delay); // On attend que la frame créée (New_Sequence(nextSeqType == "1");) a été chargé
-                //isFrameLoaded = false;
+                while (!isFrameLoaded) await Task.Delay(Settings.Default.Recipe_WaitFrameLoaded_Delay); // On attend que la frame créée (New_Sequence(nextSeqType == "1");) a été chargé
+                isFrameLoaded = false;
 
-                if (gridMain.Children[gridMain.Children.Count - 1].GetType().Equals(typeof(ContentControl))) // Si le dernier élément de la grille gridMain est une frame on continue
+                if (gridMain.Children[gridMain.Children.Count - 1].GetType().Equals(typeof(Frame))) // Si le dernier élément de la grille gridMain est une frame on continue
                 {
 
                     // A CORRIGER : IF RESULT IS FALSE
                     currentRecipeSeq = Sequence.list[(int)(nextSeqType)].subRecipeInfo;
                     t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow_new(currentRecipeSeq, nextSeqID); });
                     currentRecipeValues = (object[])t.Result;
-                    currentContentControl = gridMain.Children[gridMain.Children.Count - 1] as ContentControl;
+                    currentFrame = gridMain.Children[gridMain.Children.Count - 1] as Frame;
 
-                    currentPage = currentContentControl.Content as ISubRecipe;
+                    currentPage = currentFrame.Content as ISubRecipe;
 
                     if (currentRecipeValues != null)
                     {
@@ -500,50 +393,15 @@ namespace Main.Pages
 
             gridMain.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) });
 
-            ContentControl contentControl = new ContentControl();
+            Frame frame = new Frame();
+            frame.ContentRendered += SubRecipeFrame_ContentRendered;
 
-            ISubRecipe subRecipe = (ISubRecipe)Activator.CreateInstance(Pages.Sequence.list[(int)(seqType)].subRcpPgType, new object[] { contentControl, nRow.ToString() });
-            subRecipe.SubRecipeDeletedEvent += SubRecipe_SubRecipeDeletedEvent;
-            subRecipe.NextSubRecipeEvent += SubRecipe_NextSubRecipeEvent;
-            contentControl.Content = subRecipe;
+            frame.Content = Activator.CreateInstance(Pages.Sequence.list[(int)(seqType)].subRcpPgType, new object[] { frame, nRow.ToString() });
 
-            Grid.SetRow(contentControl, gridMain.RowDefinitions.Count() - 1);
-            gridMain.Children.Add(contentControl);
+            Grid.SetRow(frame, gridMain.RowDefinitions.Count() - 1);
+            gridMain.Children.Add(frame);
             nRow++;
         }
-
-        private void SubRecipe_NextSubRecipeEvent(object obj)
-        {
-            ISubRecipe subRecipe = obj as ISubRecipe;
-
-            if (subRecipe == null)
-            {
-                logger.Error("Objet null");
-                return;
-            }
-
-            subRecipe.SubRecipeDeletedEvent += SubRecipe_SubRecipeDeletedEvent;
-            subRecipe.NextSubRecipeEvent += SubRecipe_NextSubRecipeEvent;
-        }
-
-        private void SubRecipe_SubRecipeDeletedEvent(object sender)
-        {
-            logger.Debug("ContentControl_LayoutUpdated");
-            ContentControl contentControl = sender as ContentControl;
-
-            Grid grid = contentControl.Parent as Grid;
-            //contentControl.Content = null;
-            grid.Children.Remove(contentControl);
-            Update_SequenceNumbers();
-            nRow--;
-        }
-        /*
-        private void ContentControl_LayoutUpdated(object sender, EventArgs e)
-        {
-            ContentControl contentControl = sender as ContentControl;
-            MyMessageBox.Show(contentControl.GetType().ToString());
-        }*/
-
         private void Update_SequenceNumbers()
         {
             logger.Debug("Update_SequenceNumbers");
@@ -553,13 +411,13 @@ namespace Main.Pages
 
             foreach (UIElement element in gridMain.Children)
             {
-                if (element.GetType().Equals(typeof(ContentControl)))
+                if (element.GetType().Equals(typeof(Frame)))
                 {
-                    ContentControl contentControl = element as ContentControl;
+                    Frame frame = element as Frame;
 
-                    if (contentControl.Content.GetType().GetInterface(typeof(ISubRecipe).Name) != null)
+                    if (frame.Content.GetType().Equals(typeof(ISubRecipe)))
                     {
-                        subRecipe = contentControl.Content as ISubRecipe;
+                        subRecipe = frame.Content as ISubRecipe;
                         subRecipe.SetSeqNumber(i);
                         i++;
                     }
@@ -642,6 +500,21 @@ namespace Main.Pages
 
         // EVENTS
 
+        private void SubRecipeFrame_ContentRendered(object sender, EventArgs e)
+        {
+            logger.Debug("SubRecipeFrame_ContentRendered");
+
+            Frame frame = sender as Frame;
+
+            if (frame.Content == null)
+            {
+                Grid grid = frame.Parent as Grid;
+                grid.Children.Remove(frame);
+                Update_SequenceNumbers();
+                nRow--;
+            }
+            isFrameLoaded = true;
+        }
         private void New_Sequence_Click(object sender, RoutedEventArgs e)
         {
             logger.Debug("New_Sequence_Click");
@@ -671,7 +544,7 @@ namespace Main.Pages
                 labelVersion.Text = currentRecipeVersion.ToString();
                 labelStatus.Text = currentRecipeStatus;
 
-                while (curMethodDoneOnGoing) await Task.Delay(Settings.Default.Recipe_WaitRecipeDisplayedDelay);
+                while (curMethodDoneOnGoing) await Task.Delay(Settings.Default.Recipe_WaitRecipeDisplayedDelay); 
 
                 panelInfoRecipe.Visibility = Visibility.Visible;
                 panelTestRecipe.Visibility = Visibility.Visible;
@@ -768,7 +641,7 @@ namespace Main.Pages
                     isStillDraft = true;
                 }
 
-                if (isStillDraft)
+                if(isStillDraft)
                 {
                     // Modification de la recette draft en cours
                     if (Create_NewRecipe(ProgramNames[cbxPgmToModify.SelectedIndex], int.Parse(labelVersion.Text), RecipeStatus.DRAFT, false))
@@ -817,8 +690,8 @@ namespace Main.Pages
                 {
                     if (MyMessageBox.Show(Settings.Default.Recipe_Request_DelProdRecipe1 +
                         recipeInfo.Descriptions[recipeInfo.Name] + " " + recipeValues[recipeInfo.Name].ToString() + " " +
-                        recipeInfo.Descriptions[recipeInfo.Version] + " " + recipeValues[recipeInfo.Version].ToString() +
-                        Settings.Default.Recipe_Request_DelProdRecipe2,
+                        recipeInfo.Descriptions[recipeInfo.Version] + " " + recipeValues[recipeInfo.Version].ToString() + 
+                        Settings.Default.Recipe_Request_DelProdRecipe2, 
                         MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
                         //recipeToUpdate = new object[recipeInfo.Ids.Count()];
@@ -838,8 +711,8 @@ namespace Main.Pages
                 {
                     if (MyMessageBox.Show(Settings.Default.Recipe_Request_DelDraftRecipe1 +
                         recipeInfo.Descriptions[recipeInfo.Name] + " " + recipeValues[recipeInfo.Name].ToString() + " " +
-                        recipeInfo.Descriptions[recipeInfo.Version] + " " + recipeValues[recipeInfo.Version].ToString() +
-                        Settings.Default.Recipe_Request_DelDraftRecipe2,
+                        recipeInfo.Descriptions[recipeInfo.Version] + " " + recipeValues[recipeInfo.Version].ToString() + 
+                        Settings.Default.Recipe_Request_DelDraftRecipe2, 
                         MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
                         Delete_Recipe(recipeId);
@@ -876,10 +749,10 @@ namespace Main.Pages
             }
             else if ((bool)rbActivate.IsChecked)
             {
-                if (MyMessageBox.Show(Settings.Default.Recipe_Request_ActRecipe1 +
-                    recipeValues[recipeInfo.Name].ToString() +
-                    " version " + recipeValues[recipeInfo.Version].ToString() +
-                    Settings.Default.Recipe_Request_ActRecipe2,
+                if (MyMessageBox.Show(Settings.Default.Recipe_Request_ActRecipe1 + 
+                    recipeValues[recipeInfo.Name].ToString() + 
+                    " version " + recipeValues[recipeInfo.Version].ToString() + 
+                    Settings.Default.Recipe_Request_ActRecipe2, 
                     MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     // using partout
@@ -946,7 +819,7 @@ namespace Main.Pages
                 }
             }
         }
-        private void ButtonTestSequence_Click(object sender, RoutedEventArgs e)
+        private void Test_Sequence_Click(object sender, RoutedEventArgs e)
         {
             logger.Debug("Test_Sequence_Click");
 
@@ -978,24 +851,18 @@ namespace Main.Pages
 
             if (MyMessageBox.Show(Settings.Default.Recipe_Request_TestRecipe, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                if (!General.IsFolderAccessible(Settings.Default.Report_Path))
-                {
-                    if (MyMessageBox.Show("Le rapport ne pourra être généré, voulez-vous continuer ?",
-                        MessageBoxButton.YesNo) == MessageBoxResult.No) return;
-                }
-
                 int id = ProgramIDs[cbxPgmToModify.SelectedIndex];
                 CycleStartInfo info;
                 info.recipeID = id;
                 info.OFnumber = Settings.Default.General_na;
                 info.finalWeight = finalWeight.ToString();
-                info.frameMain = null;
-                info.frameInfoCycle = null;
-                info.contentControlMain = contentControlMain;
-                info.contentControlInfoCycle = contentControlInfoCycle;
+                info.frameMain = frameMain;
+                info.frameInfoCycle = frameInfoCycle;
+                info.contentControlMain = null;
+                info.contentControlInfoCycle = null;
                 info.isTest = true;
                 info.bowlWeight = "";
-                info.contentControlMain.Content = new CycleWeight(info);
+                info.frameMain.Content = new CycleWeightOld(info);
                 mainWindow.UpdateMenuStartCycle(false);
             }
         }
@@ -1104,8 +971,8 @@ namespace Main.Pages
         private void tbWeightMaxNew_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textBox = sender as TextBox;
-            General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0,
-                min: tbWeightMinNew.Text == "" ? 0 : int.Parse(tbWeightMinNew.Text, NumberStyles.AllowThousands),
+            General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
+                min: tbWeightMinNew.Text == "" ? 0 : int.Parse(tbWeightMinNew.Text, NumberStyles.AllowThousands), 
                 max: -1);
             finalWeightMax = tbWeightMaxNew.Text;
 

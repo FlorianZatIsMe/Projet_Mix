@@ -1,23 +1,32 @@
-﻿using System;
+﻿using Main;
+using Main.Properties;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using Main.Properties;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 using Driver_Ethernet_Balance;
 using Database;
+using Main.Pages;
 using System.Timers;
 using Message;
+using System.Configuration;
 
 namespace Main.Pages.SubCycle
 {
     /// <summary>
-    /// Logique d'interaction pour CycleWeight.xaml
+    /// Logique d'interaction pour WeightBowl.xaml
     /// </summary>
-    public partial class CycleWeight : UserControl, ISubCycle
+    public partial class CycleWeightOld : Page, ISubCycle
     {
         private bool isBalanceFree = false;
         private bool isManual = false;
@@ -31,7 +40,7 @@ namespace Main.Pages.SubCycle
         private decimal currentRatio;
         private string message1;
 
-        private ContentControl contentControlMain;
+        private Frame frameMain;
 
         private bool isFinalWeight = false;
         private bool isBowlWeight = false;
@@ -73,11 +82,11 @@ namespace Main.Pages.SubCycle
         private readonly object[] cycleWeightValues = new object[0];
 
         // Constructor to measure the mass of the empty bowl at the start of a cycle
-        public CycleWeight(CycleStartInfo info_arg)
+        public CycleWeightOld(CycleStartInfo info_arg)
         {
             isBowlWeight = true;
             info = info_arg;
-            contentControlMain = info.contentControlMain;
+            frameMain = info.frameMain;
             message1 = message1EmptyBowl;
 
             InitializeComponent();
@@ -85,11 +94,11 @@ namespace Main.Pages.SubCycle
         }
 
         // Constructor to measure the mass of the bowl at the end of a cycle
-        public CycleWeight(NextSeqInfo nextSeqInfo_arg)
+        public CycleWeightOld(NextSeqInfo nextSeqInfo_arg)
         {
             isFinalWeight = true;
             nextSeqInfo = nextSeqInfo_arg;
-            contentControlMain = nextSeqInfo.contentControlMain;
+            frameMain = nextSeqInfo.frameMain;
             currentRatio = Settings.Default.LastWeightRatio;
             message1 = message1FullBowl;
 
@@ -133,7 +142,7 @@ namespace Main.Pages.SubCycle
                     if (seqTabValues[seqTabInfo.NextSeqId] == null || seqTabValues[seqTabInfo.NextSeqId].ToString() == "") nextId = null;
                     else nextId = int.Parse(seqTabValues[seqTabInfo.NextSeqId].ToString());
 
-                    if (seqTabValues[seqTabInfo.NextSeqType] == null || seqTabValues[seqTabInfo.NextSeqType].ToString() == "") nextType = null;
+                    if (seqTabValues[seqTabInfo.NextSeqType] == null || seqTabValues[seqTabInfo.NextSeqType].ToString() =="") nextType = null;
                     else nextType = int.Parse(seqTabValues[seqTabInfo.NextSeqType].ToString());
 
                     if (seqTabInfo.SeqType == cycleWeightInfo.SeqType)
@@ -167,9 +176,9 @@ namespace Main.Pages.SubCycle
         }
 
         // Constructor to perform the daily sampling
-        public CycleWeight(ContentControl contentControlMain_arg)
+        public CycleWeightOld(Frame frame)
         {
-            contentControlMain = contentControlMain_arg;
+            frameMain = frame;
             isDailyTest = true;
             sampleNumber = 0;
             List<decimal> refWeightsList = new List<decimal>();
@@ -181,21 +190,21 @@ namespace Main.Pages.SubCycle
 
             currentSetpoint = refWeights[sampleNumber];
             currentRatio = Settings.Default.DailyTestRatio;
-
+                        
             measuredMasses = new decimal[refWeights.Length];
             message1 = message1Sampling;
             InitializeComponent();
             Initialize();
         }
 
-        public CycleWeight(SubCycleArg subCycleArg)
+        public CycleWeightOld(SubCycleArg subCycleArg)
         {
             logger.Debug("Start");
             isCycle = true;
             Task<object> t;
 
             subCycle = subCycleArg;
-            contentControlMain = subCycle.contentControlMain;
+            frameMain = subCycle.frameMain;
 
             //isSequenceOver = false;
             //isWeightCorrect = false;
@@ -242,19 +251,21 @@ namespace Main.Pages.SubCycle
             nextSeqInfo = new NextSeqInfo(
                 recipeInfo_arg: recipeWeightInfo, // done
                 recipeValues_arg: recipeWeightValues,
-                frameMain_arg: null,
-                frameInfoCycle_arg: null,
+                frameMain_arg: subCycle.frameMain,
+                frameInfoCycle_arg: subCycle.frameInfoCycle,
                 contentControlMain_arg: subCycle.contentControlMain,
                 contentControlInfoCycle_arg: subCycle.contentControlInfoCycle,
                 idCycle_arg: subCycle.idCycle,
                 previousSeqType_arg: recipeWeightInfo.SeqType, // done
                 previousSeqId_arg: previousSeqId,
-                isTest_arg: subCycle.isTest);
+                isTest_arg: subCycle.isTest) ;
             Initialize();
         }
 
         private void Initialize()
         {
+            frameMain.ContentRendered += new EventHandler(FrameMain_ContentRendered);
+
             //*
             getWeightTimer = new Timer
             {
@@ -265,143 +276,8 @@ namespace Main.Pages.SubCycle
             //*/
 
             labelMessage.Text = tareOnGoing;
-            InitializeCycle();
         }
-        private async void InitializeCycle()
-        {
-            bool exeTare = true;
 
-            // If the balance is free, we block it
-            if (Balance.IsFree())
-            {
-                Balance.BlockUse();
-                isBalanceFree = true;
-            }
-
-            // While the balance is not free
-            while (!isBalanceFree)
-            {
-                // We ask the user if he wants to try to block the balance again
-                if (MyMessageBox.Show("La balance n'est pas disponible, voulez-vous attendre ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    // If he wants to wait, we wait
-                    if (Balance.IsFree())
-                    {
-                        Balance.BlockUse();
-                        isBalanceFree = true;
-                    }
-                }
-                else
-                {
-                    // Else we're out
-                    Stop();
-                    return;
-                }
-            }
-
-            // Connect the balance
-            //Balance.Connect();
-
-            // While the balance is not connected or user give up
-            while (!Balance.IsConnected() && !isManual)
-            {
-                // We ask the user if he wants to try to connect to the balance again
-                if (MyMessageBox.Show("La balance n'est pas connecté, voulez-vous attendre ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    int count = 0;
-                    while (!Balance.IsConnected() && count < 10)
-                    {
-                        await Task.Delay(1000);
-                        count++;
-                    }
-
-                    // If he wants to wait, we connect to the balance
-                    //Balance.Connect();
-                }
-                else
-                {
-                    // If he gives up then
-                    // If manual weighting is allowed we set the manual weighting
-                    if (Settings.Default.CycleWeight_isManualAllowed)
-                    {
-                        isManual = true;
-                    }
-                    else
-                    {
-                        // Else stop of cycle
-                        Stop();
-                        return;
-                    }
-                }
-            }
-
-            // On vérifie le scan du produit, si on est en train de peser un produit et que la recette demande de contrôler le code barre
-            if (isCycle && recipeWeightValues[recipeWeightInfo.IsBarcodeUsed].ToString() == DatabaseSettings.General_TrueValue_Read)
-            {
-                labelMessage.Text = Settings.Default.CycleWeight_Request_ScanProduct + " " + recipeWeightValues[recipeWeightInfo.Name].ToString();
-                tbScan.Visibility = Visibility.Visible;
-                isScanningStep = true;
-
-                while (isScanningStep)
-                {
-                    await Task.Delay(500);
-                }
-
-                labelMessage.Text = tareOnGoing;
-            }
-            //isManual = true;
-            // if we are in manual mode, perform a manual tare
-            if (isManual)
-            {
-                MyMessageBox.Show("Veuillez retirer tout object sur la balance puis faites une tare de la balance manuellement. Cliquer sur le ok une fois terminé");
-            }
-            else
-            {
-                MyMessageBox.Show("Veuillez retirer tout object sur la balance. Cliquer sur le bouton une fois fait");
-            }
-
-            labelWeight.Visibility = isManual ? Visibility.Collapsed : Visibility.Visible;
-            tbWeight.Visibility = isManual ? Visibility.Visible : Visibility.Collapsed;
-
-            while (exeTare)
-            {
-                int tare = isManual ? 0 : Balance.TareBalance();
-                if (tare == 0)
-                {
-                    labelMessage.Text = message1;
-                    btNext.Visibility = Visibility.Visible;
-
-                    if (isFinalWeight || isDailyTest || isCycle)
-                    {
-                        labelSetpoint.Visibility = Visibility.Visible;
-                        string setpoint = "#";
-                        if (currentSetpoint != -1)
-                        {
-                            setpoint = currentSetpoint.ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
-                        }
-                        labelSetpoint.Text = setpointText1 + setpoint + setpointText2;
-                    }
-
-                    // démarrage du timer qui lit en continue la valeur du poids et l'affiche
-                    StartTimer();
-
-                    isgetWeightTaskActive = true;
-                    //getWeightTask = Task.Factory.StartNew(() => GetWeight()); ;
-                    exeTare = false;
-                }
-                else
-                {
-                    if (MyMessageBox.Show("Tare de la balance échouée, voulez-vous réessayer ?", MessageBoxButton.YesNo) == MessageBoxResult.No)
-                    {
-                        exeTare = false;
-                        Stop();
-                        return;
-                    }
-                    logger.Error("Tare de la balance échouée, tare: " + Balance.TareBalance().ToString());
-                }
-            }
-            btNext.Visibility = Visibility.Visible;
-        }
         private void GetWeightTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             isManual = !Balance.IsConnected();
@@ -436,12 +312,171 @@ namespace Main.Pages.SubCycle
                         {
                             labelWeight.Foreground = Math.Abs(weight.value - decimal.Parse(recipeWeightValues[recipeWeightInfo.Setpoint].ToString())) <= decimal.Parse(recipeWeightValues[recipeWeightInfo.Criteria].ToString()) ? Brushes.AliceBlue : Brushes.Red;
                             logger.Error((Math.Abs(weight.value - decimal.Parse(recipeWeightValues[recipeWeightInfo.Setpoint].ToString())) <= decimal.Parse(recipeWeightValues[recipeWeightInfo.Criteria].ToString())).ToString() + weight.value.ToString() + recipeWeightValues[recipeWeightInfo.Setpoint].ToString() + Math.Abs(weight.value - decimal.Parse(recipeWeightValues[recipeWeightInfo.Setpoint].ToString())).ToString() + recipeWeightValues[recipeWeightInfo.Criteria].ToString());
-                        }
+            }
                     }
                 });
             }
+
             getWeightTimer.Enabled = isgetWeightTaskActive;
         }
+
+        private async void FrameMain_ContentRendered(object sender, EventArgs e)
+        {
+            Frame frame = sender as Frame;
+
+            if (frame.Content == this)
+            {
+                isPageActive = true;
+                bool exeTare = true;
+
+                // If the balance is free, we block it
+                if (Balance.IsFree())
+                {
+                    Balance.BlockUse();
+                    isBalanceFree = true;
+                }
+
+                // While the balance is not free
+                while (!isBalanceFree)
+                {
+                    // We ask the user if he wants to try to block the balance again
+                    if (MyMessageBox.Show("La balance n'est pas disponible, voulez-vous attendre ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    {
+                        // If he wants to wait, we wait
+                        if (Balance.IsFree())
+                        {
+                            Balance.BlockUse();
+                            isBalanceFree = true;
+                        }
+                    }
+                    else
+                    {
+                        // Else we're out
+                        Stop();
+                        return;
+                    }
+                }
+
+                // Connect the balance
+                //Balance.Connect();
+
+                // While the balance is not connected or user give up
+                while (!Balance.IsConnected() && !isManual)
+                {
+                    // We ask the user if he wants to try to connect to the balance again
+                    if (MyMessageBox.Show("La balance n'est pas connecté, voulez-vous attendre ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    {
+                        int count = 0;
+                        while (!Balance.IsConnected() && count < 10)
+                        {
+                            await Task.Delay(1000);
+                            count++;
+                        }
+
+                        // If he wants to wait, we connect to the balance
+                        //Balance.Connect();
+                    }
+                    else
+                    {
+                        // If he gives up then
+                        // If manual weighting is allowed we set the manual weighting
+                        if (Settings.Default.CycleWeight_isManualAllowed)
+                        {
+                            isManual = true;
+                        }
+                        else
+                        {
+                            // Else stop of cycle
+                            Stop();
+                            return;
+                        }
+                    }
+                }
+
+                // On vérifie le scan du produit, si on est en train de peser un produit et que la recette demande de contrôler le code barre
+                if (isCycle && recipeWeightValues[recipeWeightInfo.IsBarcodeUsed].ToString() == DatabaseSettings.General_TrueValue_Read)
+                {
+                    labelMessage.Text = Settings.Default.CycleWeight_Request_ScanProduct + " " + recipeWeightValues[recipeWeightInfo.Name].ToString();
+                    tbScan.Visibility = Visibility.Visible;
+                    isScanningStep = true;
+
+                    while (isScanningStep)
+                    {
+                        await Task.Delay(500);
+                    }
+
+                    labelMessage.Text = tareOnGoing;
+                }
+
+
+                //isManual = true;
+                // if we are in manual mode, perform a manual tare
+                if (isManual)
+                {
+                    MyMessageBox.Show("Veuillez retirer tout object sur la balance puis faites une tare de la balance manuellement. Cliquer sur le ok une fois terminé");
+                }
+                else
+                {
+                    MyMessageBox.Show("Veuillez retirer tout object sur la balance. Cliquer sur le bouton une fois fait");
+                }
+
+                labelWeight.Visibility = isManual ? Visibility.Collapsed : Visibility.Visible;
+                tbWeight.Visibility = isManual ? Visibility.Visible : Visibility.Collapsed;
+
+                while (exeTare)
+                {
+                    int tare = isManual ? 0 : Balance.TareBalance();
+                    if (tare == 0)
+                    {
+                        labelMessage.Text = message1;
+                        btNext.Visibility = Visibility.Visible;
+
+                        if (isFinalWeight || isDailyTest || isCycle)
+                        {
+                            labelSetpoint.Visibility = Visibility.Visible;
+                            string setpoint = "#";
+                            if (currentSetpoint != -1)
+                            {
+                                setpoint = currentSetpoint.ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
+                            }
+                            labelSetpoint.Text = setpointText1 + setpoint + setpointText2;
+                        }
+
+                        // démarrage du timer qui lit en continue la valeur du poids et l'affiche
+                        StartTimer();
+
+                        isgetWeightTaskActive = true;
+                        //getWeightTask = Task.Factory.StartNew(() => GetWeight()); ;
+                        exeTare = false;
+                    }
+                    else
+                    {
+                        if (MyMessageBox.Show("Tare de la balance échouée, voulez-vous réessayer ?", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                        {
+                            exeTare = false;
+                            Stop();
+                            return;
+                        }
+                        logger.Error("Tare de la balance échouée, tare: " + Balance.TareBalance().ToString());
+                    }
+                }
+                btNext.Visibility = Visibility.Visible;
+            }
+            else if (isPageActive)
+            {
+                frame.ContentRendered -= FrameMain_ContentRendered;
+                StopTimer();
+                if (!Balance.IsFree()) Balance.FreeUse();
+                if (!isCycleEnded && (isFinalWeight || isCycle))
+                {
+                    if (frameMain.Content.GetType() == typeof(Pages.StatusOld) || frameMain.Content.GetType() == typeof(Pages.RecipeOld))
+                    {
+                        EndCycle();
+                    }
+                }
+            }
+        }
+
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
@@ -510,9 +545,7 @@ namespace Main.Pages.SubCycle
                     }
                 }
 
-                isgetWeightTaskActive = false;
-                getWeightTimer.Stop();
-                getWeightTimer.Dispose();
+                StopTimer();
                 if (!Balance.IsFree()) Balance.FreeUse();
                 EndCycle(validWeight);
             }
@@ -521,7 +554,7 @@ namespace Main.Pages.SubCycle
                 // On contrôle la mesure
                 // Si c'est bon, on continue
                 // Sinon, message d'erreur qui propose de recommencer ou pas
-                if (!IsSampWeightCorrect(validWeight, currentSetpoint)) //if (!IsWeightCorrect(validWeight))
+                if(!IsSampWeightCorrect(validWeight, currentSetpoint)) //if (!IsWeightCorrect(validWeight))
                 {
                     if (MyMessageBox.Show("La masse du poids étalon est incorrecte, voulez-vous continuer ?", MessageBoxButton.YesNo) == MessageBoxResult.No)
                     {
@@ -558,9 +591,7 @@ namespace Main.Pages.SubCycle
                 else
                 {
                     // Fin de l'étalonnage
-                    isgetWeightTaskActive = false;
-                    getWeightTimer.Stop();
-                    getWeightTimer.Dispose();
+                    StopTimer();
                     if (!Balance.IsFree()) Balance.FreeUse();
 
                     // On met dans la base de données toutes les mesures (cible et valeur) avec le status
@@ -608,19 +639,19 @@ namespace Main.Pages.SubCycle
                     {
                         MyMessageBox.Show("L'étalonnage n'a pas être enregistrer");
                     }
-                    contentControlMain.Content = new Pages.Status();
+                    frameMain.Content = new Pages.StatusOld();
                 }
             }
-            else if (isCycle)
+            else if(isCycle)
             {
                 Task<object> t;
 
                 //isWeightCorrect =
-                //validWeight >= decimal.Parse(cycleWeightValues[cycleWeightInfo.Min].ToString()) &&
-                //validWeight <= decimal.Parse(cycleWeightValues[cycleWeightInfo.Max].ToString());
+                    //validWeight >= decimal.Parse(cycleWeightValues[cycleWeightInfo.Min].ToString()) &&
+                    //validWeight <= decimal.Parse(cycleWeightValues[cycleWeightInfo.Max].ToString());
 
                 //if (!isWeightCorrect)
-                if (!IsCycleWeightCorrect(validWeight))
+                if(!IsCycleWeightCorrect(validWeight))
                 {
                     MyMessageBox.Show(Settings.Default.CycleWeight_IncorrectWeight);
                     goto End;
@@ -656,7 +687,6 @@ namespace Main.Pages.SubCycle
             }
             else
             {
-                if (!Balance.IsFree()) Balance.FreeUse();
                 info.bowlWeight = validWeight.ToString("N" + Settings.Default.RecipeWeight_NbDecimal.ToString());
                 General.StartCycle(info);
             }
@@ -666,15 +696,13 @@ namespace Main.Pages.SubCycle
 
         private void Stop()
         {
-            isgetWeightTaskActive = false;
-            getWeightTimer.Stop();
-            getWeightTimer.Dispose();
+            StopTimer();
 
             if (!Balance.IsFree()) Balance.FreeUse();
 
             if (isDailyTest)
             {
-                contentControlMain.Content = new Status();
+                frameMain.Content = new StatusOld();
             }
             else
             {
@@ -707,11 +735,11 @@ namespace Main.Pages.SubCycle
                 Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow_new(new RecipeInfo(), info.recipeID); });
                 object[] recipeValues = (object[])t.Result;
 
-                info.contentControlMain.Content = new Recipe(RcpAction.Modify, info.contentControlMain, info.contentControlInfoCycle, recipeValues == null ? "" : recipeValues[recipeInfo.Name].ToString(), General.info.Window);
+                info.frameMain.Content = new RecipeOld(RcpAction.Modify, info.frameMain, info.frameInfoCycle, info.contentControlMain, info.contentControlInfoCycle, recipeValues == null ? "" : recipeValues[recipeInfo.Name].ToString(), General.info.Window);
             }
             else
             {
-                contentControlMain.Content = new Pages.Status();
+                frameMain.Content = new Pages.StatusOld();
             }
         }
 
@@ -771,9 +799,7 @@ namespace Main.Pages.SubCycle
 
         public void StopCycle()
         {
-            isgetWeightTaskActive = false;
-            getWeightTimer.Stop();
-            getWeightTimer.Dispose();
+            StopTimer();
             if (!Balance.IsFree()) Balance.FreeUse();
             EndCycle();
         }
@@ -819,9 +845,9 @@ namespace Main.Pages.SubCycle
                     }
                     MyMessageBox.Show(Settings.Default.CycleWeigh_IncorrectBarcode + " " + recipeWeightValues[recipeWeightInfo.Barcode].ToString());
 
-                    while (!contentControlMain.IsFocused)
+                    while (!frameMain.IsFocused)
                     {
-                        contentControlMain.Focus();
+                        frameMain.Focus();
                         await Task.Delay(100);
                     }
 
@@ -854,21 +880,6 @@ namespace Main.Pages.SubCycle
             if (e.Key == Key.Enter || e.Key == Key.Escape)
             {
                 General.HideKeyBoard();
-            }
-        }
-
-        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
-        {
-            isgetWeightTaskActive = false;
-            getWeightTimer.Stop();
-            getWeightTimer.Dispose();
-            if (!Balance.IsFree()) Balance.FreeUse();
-            if (!isCycleEnded && (isFinalWeight || isCycle))
-            {
-                if (this.contentControlMain.Content.GetType() == typeof(Pages.Status) || this.contentControlMain.Content.GetType() == typeof(Pages.Recipe))
-                {
-                    EndCycle();
-                }
             }
         }
     }

@@ -461,7 +461,8 @@
                     <Frame DockPanel.Dock = "Left" x:Name="frameInfoCycle" NavigationUIVisibility="Hidden" Margin="5" Visibility="Collapsed" Width="{DynamicResource WidthFrameInfoCycle}"/>
                     <Frame DockPanel.Dock="Bottom" x:Name="frameMain_Old" NavigationUIVisibility="Hidden" Margin="5" ContentRendered="frameMain_ContentRendered" Navigated="frameMain_Navigated" />
 
-                    <ContentControl x:Name="contentControlMain"/>
+                    <ContentControl x:Name="contentControlInfoCycle" DockPanel.Dock = "Left"/>
+                    <ContentControl x:Name="contentControlMain" TargetUpdated="contentControlMain_TargetUpdated"/>
                 </DockPanel>
             </Border>
         </Grid>

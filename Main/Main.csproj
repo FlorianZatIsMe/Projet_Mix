@@ -263,8 +263,14 @@
     <Compile Include="Pages\ActiveAlarms.xaml.cs">
       <DependentUpon>ActiveAlarms.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ActiveAlarmsOld.xaml.cs">
+      <DependentUpon>ActiveAlarmsOld.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Archiving.xaml.cs">
       <DependentUpon>Archiving.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ArchivingOld.xaml.cs">
+      <DependentUpon>ArchivingOld.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\AuditTrail.xaml.cs">
       <DependentUpon>AuditTrail.xaml</DependentUpon>
@@ -272,14 +278,41 @@
     <Compile Include="Pages\Backup.xaml.cs">
       <DependentUpon>Backup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\BackupOld.xaml.cs">
+      <DependentUpon>BackupOld.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Parameters.xaml.cs">
       <DependentUpon>Parameters.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ParametersOld.xaml.cs">
+      <DependentUpon>ParametersOld.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Recipe.xaml.cs">
+      <DependentUpon>Recipe.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Status.xaml.cs">
       <DependentUpon>Status.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\SubCycle\CycleInfo.xaml.cs">
+      <DependentUpon>CycleInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SubCycle\CycleSpeedMixer.xaml.cs">
+      <DependentUpon>CycleSpeedMixer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\SubCycle\CycleWeight.xaml.cs">
       <DependentUpon>CycleWeight.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SubCycle\CycleWeightOld.xaml.cs">
+      <DependentUpon>CycleWeightOld.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SubCycle\PreCycle.xaml.cs">
+      <DependentUpon>PreCycle.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SubRecipe\RecipeSpeedMixer.xaml.cs">
+      <DependentUpon>RecipeSpeedMixer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SubRecipe\RecipeWeight.xaml.cs">
+      <DependentUpon>RecipeWeight.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings1.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -307,7 +340,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\ActiveAlarmsOld.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\Archiving.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ArchivingOld.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -323,11 +364,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\BackupOld.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\Parameters.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\ParametersOld.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\Recipe.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\RecipeOld.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -339,11 +392,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\SubCycle\CycleInfoOld.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\SubCycle\CycleSpeedMixer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\SubCycle\PreCycle.xaml">
+    <Page Include="Pages\SubCycle\CycleSpeedMixerOld.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -351,11 +408,31 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\SubRecipe\SpeedMixer.xaml">
+    <Page Include="Pages\SubCycle\PreCycle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\SubRecipe\Weight.xaml">
+    <Page Include="Pages\SubCycle\PreCycleOld.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SubCycle\CycleWeightOld.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SubRecipe\RecipeSpeedMixer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SubRecipe\RecipeWeight.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SubRecipe\SpeedMixerOld.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SubRecipe\WeightOld.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -369,23 +446,23 @@
       <DependentUpon>AuditTrail_old.xaml</DependentUpon>
     </Compile>
     <Compile Include="General.cs" />
-    <Compile Include="Pages\Recipe.xaml.cs">
-      <DependentUpon>Recipe.xaml</DependentUpon>
+    <Compile Include="Pages\RecipeOld.xaml.cs">
+      <DependentUpon>RecipeOld.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\SubCycle\CycleInfo.xaml.cs">
-      <DependentUpon>CycleInfo.xaml</DependentUpon>
+    <Compile Include="Pages\SubCycle\CycleInfoOld.xaml.cs">
+      <DependentUpon>CycleInfoOld.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\SubCycle\CycleSpeedMixer.xaml.cs">
-      <DependentUpon>CycleSpeedMixer.xaml</DependentUpon>
+    <Compile Include="Pages\SubCycle\CycleSpeedMixerOld.xaml.cs">
+      <DependentUpon>CycleSpeedMixerOld.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\SubCycle\PreCycle.xaml.cs">
-      <DependentUpon>PreCycle.xaml</DependentUpon>
+    <Compile Include="Pages\SubCycle\PreCycleOld.xaml.cs">
+      <DependentUpon>PreCycleOld.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\SubRecipe\SpeedMixer.xaml.cs">
-      <DependentUpon>SpeedMixer.xaml</DependentUpon>
+    <Compile Include="Pages\SubRecipe\SpeedMixerOld.xaml.cs">
+      <DependentUpon>SpeedMixerOld.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\SubRecipe\Weight.xaml.cs">
-      <DependentUpon>Weight.xaml</DependentUpon>
+    <Compile Include="Pages\SubRecipe\WeightOld.xaml.cs">
+      <DependentUpon>WeightOld.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Status_old.xaml.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

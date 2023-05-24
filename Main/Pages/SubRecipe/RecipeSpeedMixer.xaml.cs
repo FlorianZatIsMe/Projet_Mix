@@ -1,22 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Globalization;
-using static Main.Pages.Recipe;
 using Database;
 using Main.Properties;
-using System.Configuration;
 using System.Windows.Controls.Primitives;
 using Message;
 
@@ -31,22 +22,28 @@ namespace Main.Pages.SubRecipe
         public string TextBlockPressure { get; } = "[" + Settings.Default.RecipeMix_Pressure_Min + " ; " + Settings.Default.RecipeMix_Pressure_Max + "]";
         public string TextBlockTime { get; } = "[0 ; " + Settings.Default.RecipeMix_Time_Max + "]";
     }
-    public partial class SpeedMixer : Page, ISubRecipe
+    /// <summary>
+    /// Logique d'interaction pour RecipeSpeedMixer.xaml
+    /// </summary>
+    public partial class RecipeSpeedMixer : UserControl, ISubRecipe
     {
         RecipeSpeedMixerInfo recipeSpeedMixerInfo = new RecipeSpeedMixerInfo();
 
         private readonly int PhasesNumber = Settings.Default.RecipeMix_MaxPhaseNumber; // Nombre maximum de phase pendant une séquence speedmixer
         private readonly int[] ControlsIDs;
-        private readonly Frame parentFrame;
+        private readonly ContentControl parentContentControl;
         private readonly ToggleButton[] toggleButtons = new ToggleButton[Settings.Default.RecipeMix_MaxPhaseNumber];
         private readonly TextBox[] speeds = new TextBox[Settings.Default.RecipeMix_MaxPhaseNumber];
         private readonly TextBox[] times = new TextBox[Settings.Default.RecipeMix_MaxPhaseNumber];
         private readonly TextBox[] pressures = new TextBox[Settings.Default.RecipeMix_MaxPhaseNumber];
-        private readonly bool[] FormatControl = new bool[Settings.Default.RecipeMix_IdDBControls.list.Count];
+        private readonly bool[,] FormatControl = new bool[Settings.Default.RecipeMix_IdDBControls.list.Count, 2];
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public SpeedMixer(Frame frame, string seqNumber)
+        public event Action<object> SubRecipeDeletedEvent;
+        public event Action<object> NextSubRecipeEvent;
+
+        public RecipeSpeedMixer(ContentControl contentControl, string seqNumber)
         {
             logger.Debug("Start");
 
@@ -68,10 +65,11 @@ namespace Main.Pages.SubRecipe
                 logger.Trace(i.ToString() + ": " + ControlsIDs[i].ToString() + " - " + recipeSpeedMixerInfo.Ids[i]);
             }
 
-            parentFrame = frame;
+            parentContentControl = contentControl;
             InitializeComponent();
             tbSeqNumber.Text = seqNumber;
 
+            toggleButtons[0] = tgPhase00;
             toggleButtons[1] = tgPhase01;
             toggleButtons[2] = tgPhase02;
             toggleButtons[3] = tgPhase03;
@@ -114,15 +112,14 @@ namespace Main.Pages.SubRecipe
             pressures[7] = tbPressure07;
             pressures[8] = tbPressure08;
             pressures[9] = tbPressure09;
-
-            FormatControl[ControlsIDs[recipeSpeedMixerInfo.Scurve]] = true;
-            FormatControl[ControlsIDs[recipeSpeedMixerInfo.Name]] = true;
         }
         private void RadioButton_Click_1(object sender, RoutedEventArgs e)
         {
             logger.Debug("RadioButton_Click_1");
 
-            parentFrame.Content = new Weight(parentFrame, tbSeqNumber.Text);
+            RecipeWeight recipeWeight = new RecipeWeight(parentContentControl, tbSeqNumber.Text);
+            NextSubRecipeEvent(recipeWeight);
+            parentContentControl.Content = recipeWeight;
         }
         public void SetSeqNumber(int n)
         {
@@ -130,11 +127,12 @@ namespace Main.Pages.SubRecipe
 
             tbSeqNumber.Text = n.ToString();
         }
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ButtonDeleteSequence_Click(object sender, RoutedEventArgs e)
         {
             logger.Debug("Button_Click");
 
-            parentFrame.Content = null;
+            //parentContentControl.Content = null;
+            SubRecipeDeletedEvent(parentContentControl);
         }
         private void tgPhase_Unchecked(object sender, RoutedEventArgs e)
         {
@@ -157,13 +155,9 @@ namespace Main.Pages.SubRecipe
                 times[id].IsEnabled = false;
                 pressures[id].IsEnabled = false;
 
-                speeds[id].Text = "";
-                times[id].Text = "";
-                pressures[id].Text = "";
-
-                FormatControl[ControlsIDs[recipeSpeedMixerInfo.Speed00 + 3 * id]] = false;
-                FormatControl[ControlsIDs[recipeSpeedMixerInfo.Time00 + 3 * id]] = false;
-                FormatControl[ControlsIDs[recipeSpeedMixerInfo.Pressure00 + 3 * id]] = false;
+                //FormatControl[ControlsIDs[recipeSpeedMixerInfo.Speed00 + 3 * id], 1] = false;
+                //FormatControl[ControlsIDs[recipeSpeedMixerInfo.Time00 + 3 * id], 1] = false;
+                //FormatControl[ControlsIDs[recipeSpeedMixerInfo.Pressure00 + 3 * id], 1] = false;
 
                 if (id < 9)
                 {
@@ -325,14 +319,14 @@ namespace Main.Pages.SubRecipe
                 {
                     recipeValues[recipeInfo.Speed00 + 3 * i] = int.Parse(speeds[i].Text, NumberStyles.AllowThousands).ToString();
                     recipeValues[recipeInfo.Time00 + 3 * i] = int.Parse(times[i].Text, NumberStyles.AllowThousands).ToString();
-                    recipeValues[recipeInfo.Pressure00 + 3 * i] = int.Parse(pressures[i].Text, NumberStyles.AllowThousands).ToString();
+                    if((bool)cbVacuum.IsChecked) recipeValues[recipeInfo.Pressure00 + 3 * i] = int.Parse(pressures[i].Text, NumberStyles.AllowThousands).ToString();
                     i++;
                 } while (i != 10 && (bool)toggleButtons[i].IsChecked);
 
                 recipeValues[recipeInfo.SpeedMin] = int.Parse(tbSpeedMin.Text, NumberStyles.AllowThousands).ToString();
                 recipeValues[recipeInfo.SpeedMax] = int.Parse(tbSpeedMax.Text, NumberStyles.AllowThousands).ToString();
-                recipeValues[recipeInfo.PressureMin] = int.Parse(tbPressureMin.Text, NumberStyles.AllowThousands).ToString();
-                recipeValues[recipeInfo.PressureMax] = int.Parse(tbPressureMax.Text, NumberStyles.AllowThousands).ToString();
+                if ((bool)cbVacuum.IsChecked) recipeValues[recipeInfo.PressureMin] = int.Parse(tbPressureMin.Text, NumberStyles.AllowThousands).ToString();
+                if ((bool)cbVacuum.IsChecked) recipeValues[recipeInfo.PressureMax] = int.Parse(tbPressureMax.Text, NumberStyles.AllowThousands).ToString();
             }
             catch (Exception ex)
             {
@@ -374,14 +368,14 @@ namespace Main.Pages.SubRecipe
                 {
                     recipeValues[recipeInfo.Speed00 + 3 * i] = int.Parse(speeds[i].Text, NumberStyles.AllowThousands);
                     recipeValues[recipeInfo.Time00 + 3 * i] = int.Parse(times[i].Text, NumberStyles.AllowThousands);
-                    recipeValues[recipeInfo.Pressure00 + 3 * i] = int.Parse(pressures[i].Text, NumberStyles.AllowThousands);
+                    if ((bool)cbVacuum.IsChecked) recipeValues[recipeInfo.Pressure00 + 3 * i] = int.Parse(pressures[i].Text, NumberStyles.AllowThousands);
                     i++;
                 } while (i != 10 && (bool)toggleButtons[i].IsChecked);
 
                 recipeValues[recipeInfo.SpeedMin] = int.Parse(tbSpeedMin.Text, NumberStyles.AllowThousands);
                 recipeValues[recipeInfo.SpeedMax] = int.Parse(tbSpeedMax.Text, NumberStyles.AllowThousands);
-                recipeValues[recipeInfo.PressureMin] = int.Parse(tbPressureMin.Text, NumberStyles.AllowThousands);
-                recipeValues[recipeInfo.PressureMax] = int.Parse(tbPressureMax.Text, NumberStyles.AllowThousands);
+                if ((bool)cbVacuum.IsChecked) recipeValues[recipeInfo.PressureMin] = int.Parse(tbPressureMin.Text, NumberStyles.AllowThousands);
+                if ((bool)cbVacuum.IsChecked) recipeValues[recipeInfo.PressureMax] = int.Parse(tbPressureMax.Text, NumberStyles.AllowThousands);
             }
             catch (Exception ex)
             {
@@ -393,7 +387,7 @@ namespace Main.Pages.SubRecipe
             return recipeValues;
         }
         private void TbProgramName_LostFocus(object sender, RoutedEventArgs e)
-        {
+        {/*
             logger.Debug("TbProgramName_LostFocus");
 
             TextBox textBox = sender as TextBox;
@@ -401,12 +395,12 @@ namespace Main.Pages.SubRecipe
 
             if (General.Verify_Format(textBox, isNotNull: true, isNumber: false, Settings.Default.RecipeMix_ProgramName_nCharMax))
             {
-                FormatControl[i] = true;
+                FormatControl[i, 0] = true;
             }
             else
             {
-                FormatControl[i] = false;
-            }
+                FormatControl[i, 0] = false;
+            }*/
             //MyMessageBox.Show(FormatControl[i].ToString() + ", i:" + i.ToString());
         }
         private void TbAcceleration_LostFocus(object sender, RoutedEventArgs e)
@@ -416,14 +410,14 @@ namespace Main.Pages.SubRecipe
             TextBox textBox = sender as TextBox;
             int i = ControlsIDs[recipeSpeedMixerInfo.Acceleration];
 
-            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0,
                 min: Settings.Default.RecipeMix_Acceleration_Min, max: Settings.Default.RecipeMix_Acceleration_Max))
             {
-                FormatControl[i] = true;
+                FormatControl[i, 0] = true;
             }
             else
             {
-                FormatControl[i] = false;
+                FormatControl[i, 0] = false;
             }
             //MyMessageBox.Show(FormatControl[i].ToString());
         }
@@ -434,14 +428,14 @@ namespace Main.Pages.SubRecipe
             TextBox textBox = sender as TextBox;
             int i = ControlsIDs[recipeSpeedMixerInfo.Deceleration];
 
-            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0,
                 min: Settings.Default.RecipeMix_Deceleration_Min, max: Settings.Default.RecipeMix_Deceleration_Max))
             {
-                FormatControl[i] = true;
+                FormatControl[i, 0] = true;
             }
             else
             {
-                FormatControl[i] = false;
+                FormatControl[i, 0] = false;
             }
             //MyMessageBox.Show(FormatControl[i].ToString());
         }
@@ -461,9 +455,6 @@ namespace Main.Pages.SubRecipe
                 FormatControl[i] = false;
             }*/
             //MyMessageBox.Show(FormatControl[i].ToString());
-
-            int i = ControlsIDs[recipeSpeedMixerInfo.Scurve];
-            FormatControl[i] = true;
         }
         private void TbSpeed_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -478,14 +469,14 @@ namespace Main.Pages.SubRecipe
                 {
                     if (j == 0 || (bool)toggleButtons[j].IsChecked)
                     {
-                        if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
+                        if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0,
                             min: Settings.Default.RecipeMix_Speed_Min, max: Settings.Default.RecipeMix_Speed_Max))
                         {
-                            FormatControl[i + 3 * j] = true;
+                            FormatControl[i + 3 * j, 0] = true;
                         }
                         else
                         {
-                            FormatControl[i + 3 * j] = false;
+                            FormatControl[i + 3 * j, 0] = false;
                         }
                     }
                 }
@@ -504,14 +495,14 @@ namespace Main.Pages.SubRecipe
                 {
                     if (j == 0 || (bool)toggleButtons[j].IsChecked)
                     {
-                        if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
+                        if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0,
                             min: Settings.Default.RecipeMix_Time_Min, max: Settings.Default.RecipeMix_Time_Max))
                         {
-                            FormatControl[i + 3 * j] = true;
+                            FormatControl[i + 3 * j, 0] = true;
                         }
                         else
                         {
-                            FormatControl[i + 3 * j] = false;
+                            FormatControl[i + 3 * j, 0] = false;
                         }
                         //MyMessageBox.Show((i+j).ToString() + " - " + FormatControl[i + j].ToString());
                     }
@@ -532,14 +523,14 @@ namespace Main.Pages.SubRecipe
                 {
                     if (j == 0 || (bool)toggleButtons[j].IsChecked)
                     {
-                        if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
+                        if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0,
                             min: Settings.Default.RecipeMix_Pressure_Min, max: Settings.Default.RecipeMix_Pressure_Max))
                         {
-                            FormatControl[i + 3 * j] = true;
+                            FormatControl[i + 3 * j, 0] = true;
                         }
                         else
                         {
-                            FormatControl[i + 3 * j] = false;
+                            FormatControl[i + 3 * j, 0] = false;
                         }
                     }
                 }
@@ -552,14 +543,14 @@ namespace Main.Pages.SubRecipe
             TextBox textBox = sender as TextBox;
             int i = ControlsIDs[recipeSpeedMixerInfo.SpeedMin];
 
-            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0,
                 min: Settings.Default.RecipeMix_Speed_Min, max: tbSpeedMax.Text == "" ? Settings.Default.RecipeMix_Speed_Max : decimal.Parse(tbSpeedMax.Text)))
             {
-                FormatControl[i] = true;
+                FormatControl[i, 0] = true;
             }
             else
             {
-                FormatControl[i] = false;
+                FormatControl[i, 0] = false;
             }
             //MyMessageBox.Show(FormatControl[i].ToString());
         }
@@ -570,14 +561,14 @@ namespace Main.Pages.SubRecipe
             TextBox textBox = sender as TextBox;
             int i = ControlsIDs[recipeSpeedMixerInfo.SpeedMax];
 
-            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0,
                 min: tbSpeedMin.Text == "" ? Settings.Default.RecipeMix_Speed_Min : decimal.Parse(tbSpeedMin.Text), max: Settings.Default.RecipeMix_Speed_Max))
             {
-                FormatControl[i] = true;
+                FormatControl[i, 0] = true;
             }
             else
             {
-                FormatControl[i] = false;
+                FormatControl[i, 0] = false;
             }
             //MyMessageBox.Show(FormatControl[i].ToString());
         }
@@ -588,14 +579,14 @@ namespace Main.Pages.SubRecipe
             TextBox textBox = sender as TextBox;
             int i = ControlsIDs[recipeSpeedMixerInfo.PressureMin];
 
-            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0,
                 min: Settings.Default.RecipeMix_Pressure_Min, max: tbPressureMax.Text == "" ? Settings.Default.RecipeMix_Pressure_Max : decimal.Parse(tbPressureMax.Text)))
             {
-                FormatControl[i] = true;
+                FormatControl[i, 0] = true;
             }
             else
             {
-                FormatControl[i] = false;
+                FormatControl[i, 0] = false;
             }
             //MyMessageBox.Show(FormatControl[i].ToString());
         }
@@ -606,14 +597,14 @@ namespace Main.Pages.SubRecipe
             TextBox textBox = sender as TextBox;
             int i = ControlsIDs[recipeSpeedMixerInfo.PressureMax];
 
-            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0, 
+            if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0,
                 min: tbPressureMin.Text == "" ? Settings.Default.RecipeMix_Pressure_Min : decimal.Parse(tbPressureMin.Text), max: Settings.Default.RecipeMix_Pressure_Max))
             {
-                FormatControl[i] = true;
+                FormatControl[i, 0] = true;
             }
             else
             {
-                FormatControl[i] = false;
+                FormatControl[i, 0] = false;
             }
             //MyMessageBox.Show(FormatControl[i].ToString());
         }
@@ -622,23 +613,35 @@ namespace Main.Pages.SubRecipe
             logger.Debug("IsFormatOk");
 
             int nbGoodFormat = 0;
-            int nbNotRequiredFormat = 0;
 
-            for (int i = 0; i < FormatControl.Length; i++)
+            FormatControl[ControlsIDs[recipeSpeedMixerInfo.Acceleration], 1] = tbAcceleration.Visibility == Visibility.Visible && tbAcceleration.IsEnabled;
+            FormatControl[ControlsIDs[recipeSpeedMixerInfo.Deceleration], 1] = tbDeceleration.Visibility == Visibility.Visible && tbDeceleration.IsEnabled;
+            FormatControl[ControlsIDs[recipeSpeedMixerInfo.SpeedMin], 1] = tbSpeedMin.Visibility == Visibility.Visible && tbSpeedMin.IsEnabled;
+            FormatControl[ControlsIDs[recipeSpeedMixerInfo.SpeedMax], 1] = tbSpeedMax.Visibility == Visibility.Visible && tbSpeedMax.IsEnabled;
+            FormatControl[ControlsIDs[recipeSpeedMixerInfo.PressureMin], 1] = tbPressureMin.Visibility == Visibility.Visible && tbPressureMin.IsEnabled;
+            FormatControl[ControlsIDs[recipeSpeedMixerInfo.PressureMax], 1] = tbPressureMax.Visibility == Visibility.Visible && tbPressureMax.IsEnabled;
+
+            for (int i = 0; i < toggleButtons.Count(); i++)
             {
-                nbGoodFormat += FormatControl[i] ? 1 : 0;
-                //logger.Trace(i.ToString() + " - " + FormatControl[i].ToString());
+                FormatControl[ControlsIDs[recipeSpeedMixerInfo.Speed00 + 3 * i], 1] = speeds[i].Visibility == Visibility.Visible && speeds[i].IsEnabled;
+                FormatControl[ControlsIDs[recipeSpeedMixerInfo.Time00 + 3 * i], 1] = times[i].Visibility == Visibility.Visible && times[i].IsEnabled;
+                FormatControl[ControlsIDs[recipeSpeedMixerInfo.Pressure00 + 3 * i], 1] = pressures[i].Visibility == Visibility.Visible && pressures[i].IsEnabled;
             }
 
-            int n = (bool)cbVacuum.IsChecked ? 0 : 1;
-            nbNotRequiredFormat = n;
-
-            for (int i = 1; i < PhasesNumber; i++)
+            for (int i = 0; i < FormatControl.GetLength(0); i++)
             {
-                nbNotRequiredFormat += (bool)toggleButtons[i].IsChecked ? n : 3; // Pour chaque checkbox décoché, on ajoutera 3 au score final
+                if (FormatControl[i, 1])
+                {
+                    nbGoodFormat += FormatControl[i, 0] ? 1 : 0;
+                }
+                else
+                {
+                    nbGoodFormat += 1;
+                }
+                logger.Trace(i.ToString() + " - " + FormatControl[i, 0].ToString() + " - " + FormatControl[i, 1].ToString());
             }
-            MyMessageBox.Show(nbGoodFormat.ToString() + " + " + nbNotRequiredFormat.ToString() + " = " + (nbGoodFormat+nbNotRequiredFormat).ToString() + " / " + FormatControl.Length.ToString());
-            return (nbGoodFormat + nbNotRequiredFormat) == FormatControl.Length;
+            MyMessageBox.Show(nbGoodFormat.ToString() + " = " + FormatControl.GetLength(0).ToString());
+            return nbGoodFormat == FormatControl.GetLength(0);
         }
         private void ShowKeyBoard(object sender, RoutedEventArgs e)
         {
@@ -667,11 +670,11 @@ namespace Main.Pages.SubRecipe
             labelPressureUnit.Visibility = visibility;
             cbxPressureUnit.Visibility = visibility;
 
-            gridPressure.Visibility = visibility;
-            //labelPressureMin.Visibility = visibility;
-            //tbPressureMin.Visibility = visibility;
-            //labelPressureMax.Visibility = visibility;
-            //tbPressureMax.Visibility = visibility;
+            labelPressureMinMax.Visibility = visibility;
+            labelPressureMin.Visibility = visibility;
+            tbPressureMin.Visibility = visibility;
+            labelPressureMax.Visibility = visibility;
+            tbPressureMax.Visibility = visibility;
 
             labelPressure.Visibility = visibility;
             pressures[0].Visibility = visibility;
