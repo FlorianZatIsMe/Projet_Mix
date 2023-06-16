@@ -1,0 +1,152 @@
+﻿<UserControl x:Class="Main.Pages.Parameters"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Main.Pages"
+      xmlns:p="clr-namespace:Main.Properties"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=Parameters_Title, Mode=OneWay}" 
+                   FontSize="{DynamicResource FontSize_Title1}" 
+                   Style="{DynamicResource Label1}" 
+                   VerticalAlignment="Center" 
+                   HorizontalAlignment="Center"/>
+
+        <StackPanel Grid.Row="1" Margin="10,0,0,0">
+            <WrapPanel>
+                <CheckBox Content="{Binding Source={x:Static p:Settings.Default}, Path=Parameters_NextCalibration_Field, Mode=OneWay}"
+                      x:Name="cbMonitorCalib"                      
+                      Foreground="{DynamicResource MyFont1_Foreground}" 
+                      VerticalAlignment="Center"
+                      FontFamily="{DynamicResource MyFont1}" 
+                      FontSize="{DynamicResource FontSize_CheckBox1}" Unchecked="cbMonitorCalib_Unchecked" Checked="cbMonitorCalib_Checked"/>
+                <DatePicker x:Name="dpNextCalibDate" 
+                       VerticalAlignment="Center"
+                        Margin="10,0,0,0"
+                        FontSize="{DynamicResource FontSize_DatePicker1}"/>
+            </WrapPanel>
+
+            <WrapPanel Margin="0,10,0,0">
+                <CheckBox Content="{Binding Source={x:Static p:Settings.Default}, Path=Parameters_SampleWeight1_Field, Mode=OneWay}"
+                      x:Name="cbSampleWeight0" 
+                          IsChecked="True"
+                          IsEnabled="False"
+                      Foreground="{DynamicResource MyFont1_Foreground}" 
+                      VerticalAlignment="Center"
+                      FontFamily="{DynamicResource MyFont1}" 
+                      FontSize="{DynamicResource FontSize_CheckBox1}"/>
+                <WrapPanel x:Name="wpSampleWeight0"
+                           Visibility="Visible">
+                    <TextBox Margin="10,0,0,0"
+                         x:Name="tbSampleWeight0"
+                         Width="100"
+                         Style="{DynamicResource TextBoxStyle1}"/>
+
+                    <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=Parameters_SampleWeightID_Field}"
+                           Margin="20,0,0,0"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource Label1}"/>
+                    <TextBox Margin="10,0,0,0"
+                         x:Name="tbSampleWeightID0"
+                         Width="100"
+                         Style="{DynamicResource TextBoxStyle1}"/>
+                </WrapPanel>
+            </WrapPanel>
+
+            <WrapPanel Margin="0,10,0,0">
+                <CheckBox Content="{Binding Source={x:Static p:Settings.Default}, Path=Parameters_SampleWeight2_Field, Mode=OneWay}"
+                      x:Name="cbSampleWeight1"                      
+                      Foreground="{DynamicResource MyFont1_Foreground}" 
+                      VerticalAlignment="Center"
+                      FontFamily="{DynamicResource MyFont1}" 
+                      FontSize="{DynamicResource FontSize_CheckBox1}" 
+                          Checked="cbSampleWeight_Checked" 
+                          Unchecked="cbSampleWeight_Unchecked"/>
+                <WrapPanel x:Name="wpSampleWeight1"
+                           Visibility="Hidden">
+                    <TextBox Margin="10,0,0,0"
+                         x:Name="tbSampleWeight1"
+                         Width="100"
+                         Style="{DynamicResource TextBoxStyle1}"/>
+
+                    <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=Parameters_SampleWeightID_Field}"
+                           Margin="20,0,0,0"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource Label1}"/>
+                    <TextBox Margin="10,0,0,0"
+                         x:Name="tbSampleWeightID1"
+                         Width="100"
+                         Style="{DynamicResource TextBoxStyle1}"/>
+                </WrapPanel>
+            </WrapPanel>
+
+            <WrapPanel Margin="0,10,0,0">
+                <CheckBox Content="{Binding Source={x:Static p:Settings.Default}, Path=Parameters_SampleWeight3_Field, Mode=OneWay}"
+                      x:Name="cbSampleWeight2"                      
+                      Foreground="{DynamicResource MyFont1_Foreground}" 
+                      VerticalAlignment="Center"
+                      FontFamily="{DynamicResource MyFont1}" 
+                      FontSize="{DynamicResource FontSize_CheckBox1}"
+                          Checked="cbSampleWeight_Checked" 
+                          Unchecked="cbSampleWeight_Unchecked"/>
+                <WrapPanel x:Name="wpSampleWeight2"
+                           Visibility="Hidden">
+                    <TextBox Margin="10,0,0,0"
+                         x:Name="tbSampleWeight2"
+                         Width="100"
+                         Style="{DynamicResource TextBoxStyle1}"/>
+
+                    <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=Parameters_SampleWeightID_Field}"
+                           Margin="20,0,0,0"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource Label1}"/>
+                    <TextBox Margin="10,0,0,0"
+                         x:Name="tbSampleWeightID2"
+                         Width="100"
+                         Style="{DynamicResource TextBoxStyle1}"/>
+                </WrapPanel>
+            </WrapPanel>
+
+            <WrapPanel Margin="0,10,0,0">
+                <CheckBox Content="{Binding Source={x:Static p:Settings.Default}, Path=Parameters_SampleWeight4_Field, Mode=OneWay}"
+                      x:Name="cbSampleWeight3"                      
+                      Foreground="{DynamicResource MyFont1_Foreground}" 
+                      VerticalAlignment="Center"
+                      FontFamily="{DynamicResource MyFont1}" 
+                      FontSize="{DynamicResource FontSize_CheckBox1}"
+                          Checked="cbSampleWeight_Checked" 
+                          Unchecked="cbSampleWeight_Unchecked"/>
+                <WrapPanel x:Name="wpSampleWeight3"
+                           Visibility="Hidden">
+                    <TextBox Margin="10,0,0,0"
+                         x:Name="tbSampleWeight3"
+                         Width="100"
+                         Style="{DynamicResource TextBoxStyle1}"/>
+
+                    <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=Parameters_SampleWeightID_Field}"
+                           Margin="20,0,0,0"
+                           VerticalAlignment="Center"
+                           Style="{DynamicResource Label1}"/>
+                    <TextBox Margin="10,0,0,0"
+                         x:Name="tbSampleWeightID3"
+                         Width="100"
+                         Style="{DynamicResource TextBoxStyle1}"/>
+                </WrapPanel>
+            </WrapPanel>
+        </StackPanel>
+        <Button Content="Modifier"
+                Grid.Row="1"
+                VerticalAlignment="Bottom"
+                HorizontalAlignment="Right"
+                Style="{DynamicResource ButtonStyle1}"
+                Margin="20" Click="Button_Click"/>
+    </Grid>
+</UserControl>

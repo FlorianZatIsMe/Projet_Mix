@@ -1,0 +1,803 @@
+id: Driver_RS232_Pump
+language: CSharp
+name:
+  Default: Driver_RS232_Pump
+qualifiedName:
+  Default: Driver_RS232_Pump
+type: Assembly
+modifiers: {}
+items:
+- id: Driver_RS232_Pump
+  commentId: N:Driver_RS232_Pump
+  language: CSharp
+  name:
+    CSharp: Driver_RS232_Pump
+    VB: Driver_RS232_Pump
+  nameWithType:
+    CSharp: Driver_RS232_Pump
+    VB: Driver_RS232_Pump
+  qualifiedName:
+    CSharp: Driver_RS232_Pump
+    VB: Driver_RS232_Pump
+  type: Namespace
+  assemblies:
+  - Driver_RS232_Pump
+  modifiers: {}
+  items:
+  - id: Driver_RS232_Pump.RS232Pump
+    commentId: T:Driver_RS232_Pump.RS232Pump
+    language: CSharp
+    name:
+      CSharp: RS232Pump
+      VB: RS232Pump
+    nameWithType:
+      CSharp: RS232Pump
+      VB: RS232Pump
+    qualifiedName:
+      CSharp: Driver_RS232_Pump.RS232Pump
+      VB: Driver_RS232_Pump.RS232Pump
+    type: Class
+    assemblies:
+    - Driver_RS232_Pump
+    namespace: Driver_RS232_Pump
+    source:
+      id: RS232Pump
+      path: C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\RS232Pump.cs
+      startLine: 16
+    syntax:
+      content:
+        CSharp: public static class RS232Pump
+        VB: Public Module RS232Pump
+    inheritance:
+    - System.Object
+    inheritedMembers:
+    - System.Object.ToString
+    - System.Object.Equals(System.Object)
+    - System.Object.Equals(System.Object,System.Object)
+    - System.Object.ReferenceEquals(System.Object,System.Object)
+    - System.Object.GetHashCode
+    - System.Object.GetType
+    - System.Object.MemberwiseClone
+    modifiers:
+      CSharp:
+      - public
+      - static
+      - class
+      VB:
+      - Public
+      - Module
+    items:
+    - id: Driver_RS232_Pump.RS232Pump.Initialize
+      commentId: M:Driver_RS232_Pump.RS232Pump.Initialize
+      language: CSharp
+      name:
+        CSharp: Initialize()
+        VB: Initialize()
+      nameWithType:
+        CSharp: RS232Pump.Initialize()
+        VB: RS232Pump.Initialize()
+      qualifiedName:
+        CSharp: Driver_RS232_Pump.RS232Pump.Initialize()
+        VB: Driver_RS232_Pump.RS232Pump.Initialize()
+      type: Method
+      assemblies:
+      - Driver_RS232_Pump
+      namespace: Driver_RS232_Pump
+      source:
+        id: Initialize
+        path: C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\RS232Pump.cs
+        startLine: 41
+      syntax:
+        content:
+          CSharp: public static void Initialize()
+          VB: Public Shared Sub Initialize
+      overload: Driver_RS232_Pump.RS232Pump.Initialize*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: Driver_RS232_Pump.RS232Pump.BlockUse
+      commentId: M:Driver_RS232_Pump.RS232Pump.BlockUse
+      language: CSharp
+      name:
+        CSharp: BlockUse()
+        VB: BlockUse()
+      nameWithType:
+        CSharp: RS232Pump.BlockUse()
+        VB: RS232Pump.BlockUse()
+      qualifiedName:
+        CSharp: Driver_RS232_Pump.RS232Pump.BlockUse()
+        VB: Driver_RS232_Pump.RS232Pump.BlockUse()
+      type: Method
+      assemblies:
+      - Driver_RS232_Pump
+      namespace: Driver_RS232_Pump
+      source:
+        id: BlockUse
+        path: C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\RS232Pump.cs
+        startLine: 45
+      syntax:
+        content:
+          CSharp: public static void BlockUse()
+          VB: Public Shared Sub BlockUse
+      overload: Driver_RS232_Pump.RS232Pump.BlockUse*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: Driver_RS232_Pump.RS232Pump.FreeUse
+      commentId: M:Driver_RS232_Pump.RS232Pump.FreeUse
+      language: CSharp
+      name:
+        CSharp: FreeUse()
+        VB: FreeUse()
+      nameWithType:
+        CSharp: RS232Pump.FreeUse()
+        VB: RS232Pump.FreeUse()
+      qualifiedName:
+        CSharp: Driver_RS232_Pump.RS232Pump.FreeUse()
+        VB: Driver_RS232_Pump.RS232Pump.FreeUse()
+      type: Method
+      assemblies:
+      - Driver_RS232_Pump
+      namespace: Driver_RS232_Pump
+      source:
+        id: FreeUse
+        path: C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\RS232Pump.cs
+        startLine: 46
+      syntax:
+        content:
+          CSharp: public static void FreeUse()
+          VB: Public Shared Sub FreeUse
+      overload: Driver_RS232_Pump.RS232Pump.FreeUse*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: Driver_RS232_Pump.RS232Pump.IsFree
+      commentId: M:Driver_RS232_Pump.RS232Pump.IsFree
+      language: CSharp
+      name:
+        CSharp: IsFree()
+        VB: IsFree()
+      nameWithType:
+        CSharp: RS232Pump.IsFree()
+        VB: RS232Pump.IsFree()
+      qualifiedName:
+        CSharp: Driver_RS232_Pump.RS232Pump.IsFree()
+        VB: Driver_RS232_Pump.RS232Pump.IsFree()
+      type: Method
+      assemblies:
+      - Driver_RS232_Pump
+      namespace: Driver_RS232_Pump
+      source:
+        id: IsFree
+        path: C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\RS232Pump.cs
+        startLine: 47
+      syntax:
+        content:
+          CSharp: public static bool IsFree()
+          VB: Public Shared Function IsFree As Boolean
+        return:
+          type: System.Boolean
+      overload: Driver_RS232_Pump.RS232Pump.IsFree*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: Driver_RS232_Pump.RS232Pump.IsOpen
+      commentId: M:Driver_RS232_Pump.RS232Pump.IsOpen
+      language: CSharp
+      name:
+        CSharp: IsOpen()
+        VB: IsOpen()
+      nameWithType:
+        CSharp: RS232Pump.IsOpen()
+        VB: RS232Pump.IsOpen()
+      qualifiedName:
+        CSharp: Driver_RS232_Pump.RS232Pump.IsOpen()
+        VB: Driver_RS232_Pump.RS232Pump.IsOpen()
+      type: Method
+      assemblies:
+      - Driver_RS232_Pump
+      namespace: Driver_RS232_Pump
+      source:
+        id: IsOpen
+        path: C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\RS232Pump.cs
+        startLine: 48
+      syntax:
+        content:
+          CSharp: public static bool IsOpen()
+          VB: Public Shared Function IsOpen As Boolean
+        return:
+          type: System.Boolean
+      overload: Driver_RS232_Pump.RS232Pump.IsOpen*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: Driver_RS232_Pump.RS232Pump.StartPump
+      commentId: M:Driver_RS232_Pump.RS232Pump.StartPump
+      language: CSharp
+      name:
+        CSharp: StartPump()
+        VB: StartPump()
+      nameWithType:
+        CSharp: RS232Pump.StartPump()
+        VB: RS232Pump.StartPump()
+      qualifiedName:
+        CSharp: Driver_RS232_Pump.RS232Pump.StartPump()
+        VB: Driver_RS232_Pump.RS232Pump.StartPump()
+      type: Method
+      assemblies:
+      - Driver_RS232_Pump
+      namespace: Driver_RS232_Pump
+      source:
+        id: StartPump
+        path: C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\RS232Pump.cs
+        startLine: 52
+      syntax:
+        content:
+          CSharp: public static bool StartPump()
+          VB: Public Shared Function StartPump As Boolean
+        return:
+          type: System.Boolean
+      overload: Driver_RS232_Pump.RS232Pump.StartPump*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: Driver_RS232_Pump.RS232Pump.StopPump
+      commentId: M:Driver_RS232_Pump.RS232Pump.StopPump
+      language: CSharp
+      name:
+        CSharp: StopPump()
+        VB: StopPump()
+      nameWithType:
+        CSharp: RS232Pump.StopPump()
+        VB: RS232Pump.StopPump()
+      qualifiedName:
+        CSharp: Driver_RS232_Pump.RS232Pump.StopPump()
+        VB: Driver_RS232_Pump.RS232Pump.StopPump()
+      type: Method
+      assemblies:
+      - Driver_RS232_Pump
+      namespace: Driver_RS232_Pump
+      source:
+        id: StopPump
+        path: C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\RS232Pump.cs
+        startLine: 62
+      syntax:
+        content:
+          CSharp: public static bool StopPump()
+          VB: Public Shared Function StopPump As Boolean
+        return:
+          type: System.Boolean
+      overload: Driver_RS232_Pump.RS232Pump.StopPump*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: Driver_RS232_Pump.RS232Pump.GetData
+      commentId: M:Driver_RS232_Pump.RS232Pump.GetData
+      language: CSharp
+      name:
+        CSharp: GetData()
+        VB: GetData()
+      nameWithType:
+        CSharp: RS232Pump.GetData()
+        VB: RS232Pump.GetData()
+      qualifiedName:
+        CSharp: Driver_RS232_Pump.RS232Pump.GetData()
+        VB: Driver_RS232_Pump.RS232Pump.GetData()
+      type: Method
+      assemblies:
+      - Driver_RS232_Pump
+      namespace: Driver_RS232_Pump
+      source:
+        id: GetData
+        path: C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\RS232Pump.cs
+        startLine: 72
+      syntax:
+        content:
+          CSharp: public static string GetData()
+          VB: Public Shared Function GetData As String
+        return:
+          type: System.String
+      overload: Driver_RS232_Pump.RS232Pump.GetData*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+references:
+  System:
+    name:
+      CSharp:
+      - name: System
+        nameWithType: System
+        qualifiedName: System
+        isExternal: true
+      VB:
+      - name: System
+        nameWithType: System
+        qualifiedName: System
+    isDefinition: true
+    commentId: N:System
+  System.Object:
+    name:
+      CSharp:
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      VB:
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+    isDefinition: true
+    parent: System
+    commentId: T:System.Object
+  System.Object.ToString:
+    name:
+      CSharp:
+      - id: System.Object.ToString
+        name: ToString
+        nameWithType: Object.ToString
+        qualifiedName: System.Object.ToString
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.ToString
+        name: ToString
+        nameWithType: Object.ToString
+        qualifiedName: System.Object.ToString
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.ToString
+  System.Object.Equals(System.Object):
+    name:
+      CSharp:
+      - id: System.Object.Equals(System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.Equals(System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.Equals(System.Object)
+  System.Object.Equals(System.Object,System.Object):
+    name:
+      CSharp:
+      - id: System.Object.Equals(System.Object,System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.Equals(System.Object,System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.Equals(System.Object,System.Object)
+  System.Object.ReferenceEquals(System.Object,System.Object):
+    name:
+      CSharp:
+      - id: System.Object.ReferenceEquals(System.Object,System.Object)
+        name: ReferenceEquals
+        nameWithType: Object.ReferenceEquals
+        qualifiedName: System.Object.ReferenceEquals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.ReferenceEquals(System.Object,System.Object)
+        name: ReferenceEquals
+        nameWithType: Object.ReferenceEquals
+        qualifiedName: System.Object.ReferenceEquals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  System.Object.GetHashCode:
+    name:
+      CSharp:
+      - id: System.Object.GetHashCode
+        name: GetHashCode
+        nameWithType: Object.GetHashCode
+        qualifiedName: System.Object.GetHashCode
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.GetHashCode
+        name: GetHashCode
+        nameWithType: Object.GetHashCode
+        qualifiedName: System.Object.GetHashCode
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.GetHashCode
+  System.Object.GetType:
+    name:
+      CSharp:
+      - id: System.Object.GetType
+        name: GetType
+        nameWithType: Object.GetType
+        qualifiedName: System.Object.GetType
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.GetType
+        name: GetType
+        nameWithType: Object.GetType
+        qualifiedName: System.Object.GetType
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.GetType
+  System.Object.MemberwiseClone:
+    name:
+      CSharp:
+      - id: System.Object.MemberwiseClone
+        name: MemberwiseClone
+        nameWithType: Object.MemberwiseClone
+        qualifiedName: System.Object.MemberwiseClone
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.MemberwiseClone
+        name: MemberwiseClone
+        nameWithType: Object.MemberwiseClone
+        qualifiedName: System.Object.MemberwiseClone
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.MemberwiseClone
+  Driver_RS232_Pump.RS232Pump.Initialize*:
+    name:
+      CSharp:
+      - id: Driver_RS232_Pump.RS232Pump.Initialize*
+        name: Initialize
+        nameWithType: RS232Pump.Initialize
+        qualifiedName: Driver_RS232_Pump.RS232Pump.Initialize
+      VB:
+      - id: Driver_RS232_Pump.RS232Pump.Initialize*
+        name: Initialize
+        nameWithType: RS232Pump.Initialize
+        qualifiedName: Driver_RS232_Pump.RS232Pump.Initialize
+    isDefinition: true
+    commentId: Overload:Driver_RS232_Pump.RS232Pump.Initialize
+  Driver_RS232_Pump.RS232Pump.BlockUse*:
+    name:
+      CSharp:
+      - id: Driver_RS232_Pump.RS232Pump.BlockUse*
+        name: BlockUse
+        nameWithType: RS232Pump.BlockUse
+        qualifiedName: Driver_RS232_Pump.RS232Pump.BlockUse
+      VB:
+      - id: Driver_RS232_Pump.RS232Pump.BlockUse*
+        name: BlockUse
+        nameWithType: RS232Pump.BlockUse
+        qualifiedName: Driver_RS232_Pump.RS232Pump.BlockUse
+    isDefinition: true
+    commentId: Overload:Driver_RS232_Pump.RS232Pump.BlockUse
+  Driver_RS232_Pump.RS232Pump.FreeUse*:
+    name:
+      CSharp:
+      - id: Driver_RS232_Pump.RS232Pump.FreeUse*
+        name: FreeUse
+        nameWithType: RS232Pump.FreeUse
+        qualifiedName: Driver_RS232_Pump.RS232Pump.FreeUse
+      VB:
+      - id: Driver_RS232_Pump.RS232Pump.FreeUse*
+        name: FreeUse
+        nameWithType: RS232Pump.FreeUse
+        qualifiedName: Driver_RS232_Pump.RS232Pump.FreeUse
+    isDefinition: true
+    commentId: Overload:Driver_RS232_Pump.RS232Pump.FreeUse
+  System.Boolean:
+    name:
+      CSharp:
+      - id: System.Boolean
+        name: Boolean
+        nameWithType: Boolean
+        qualifiedName: System.Boolean
+        isExternal: true
+      VB:
+      - id: System.Boolean
+        name: Boolean
+        nameWithType: Boolean
+        qualifiedName: System.Boolean
+        isExternal: true
+    isDefinition: true
+    parent: System
+    commentId: T:System.Boolean
+  Driver_RS232_Pump.RS232Pump.IsFree*:
+    name:
+      CSharp:
+      - id: Driver_RS232_Pump.RS232Pump.IsFree*
+        name: IsFree
+        nameWithType: RS232Pump.IsFree
+        qualifiedName: Driver_RS232_Pump.RS232Pump.IsFree
+      VB:
+      - id: Driver_RS232_Pump.RS232Pump.IsFree*
+        name: IsFree
+        nameWithType: RS232Pump.IsFree
+        qualifiedName: Driver_RS232_Pump.RS232Pump.IsFree
+    isDefinition: true
+    commentId: Overload:Driver_RS232_Pump.RS232Pump.IsFree
+  Driver_RS232_Pump.RS232Pump.IsOpen*:
+    name:
+      CSharp:
+      - id: Driver_RS232_Pump.RS232Pump.IsOpen*
+        name: IsOpen
+        nameWithType: RS232Pump.IsOpen
+        qualifiedName: Driver_RS232_Pump.RS232Pump.IsOpen
+      VB:
+      - id: Driver_RS232_Pump.RS232Pump.IsOpen*
+        name: IsOpen
+        nameWithType: RS232Pump.IsOpen
+        qualifiedName: Driver_RS232_Pump.RS232Pump.IsOpen
+    isDefinition: true
+    commentId: Overload:Driver_RS232_Pump.RS232Pump.IsOpen
+  Driver_RS232_Pump.RS232Pump.StartPump*:
+    name:
+      CSharp:
+      - id: Driver_RS232_Pump.RS232Pump.StartPump*
+        name: StartPump
+        nameWithType: RS232Pump.StartPump
+        qualifiedName: Driver_RS232_Pump.RS232Pump.StartPump
+      VB:
+      - id: Driver_RS232_Pump.RS232Pump.StartPump*
+        name: StartPump
+        nameWithType: RS232Pump.StartPump
+        qualifiedName: Driver_RS232_Pump.RS232Pump.StartPump
+    isDefinition: true
+    commentId: Overload:Driver_RS232_Pump.RS232Pump.StartPump
+  Driver_RS232_Pump.RS232Pump.StopPump*:
+    name:
+      CSharp:
+      - id: Driver_RS232_Pump.RS232Pump.StopPump*
+        name: StopPump
+        nameWithType: RS232Pump.StopPump
+        qualifiedName: Driver_RS232_Pump.RS232Pump.StopPump
+      VB:
+      - id: Driver_RS232_Pump.RS232Pump.StopPump*
+        name: StopPump
+        nameWithType: RS232Pump.StopPump
+        qualifiedName: Driver_RS232_Pump.RS232Pump.StopPump
+    isDefinition: true
+    commentId: Overload:Driver_RS232_Pump.RS232Pump.StopPump
+  System.String:
+    name:
+      CSharp:
+      - id: System.String
+        name: String
+        nameWithType: String
+        qualifiedName: System.String
+        isExternal: true
+      VB:
+      - id: System.String
+        name: String
+        nameWithType: String
+        qualifiedName: System.String
+        isExternal: true
+    isDefinition: true
+    parent: System
+    commentId: T:System.String
+  Driver_RS232_Pump.RS232Pump.GetData*:
+    name:
+      CSharp:
+      - id: Driver_RS232_Pump.RS232Pump.GetData*
+        name: GetData
+        nameWithType: RS232Pump.GetData
+        qualifiedName: Driver_RS232_Pump.RS232Pump.GetData
+      VB:
+      - id: Driver_RS232_Pump.RS232Pump.GetData*
+        name: GetData
+        nameWithType: RS232Pump.GetData
+        qualifiedName: Driver_RS232_Pump.RS232Pump.GetData
+    isDefinition: true
+    commentId: Overload:Driver_RS232_Pump.RS232Pump.GetData
+  Driver_RS232_Pump.RS232Pump:
+    name:
+      CSharp:
+      - id: Driver_RS232_Pump.RS232Pump
+        name: RS232Pump
+        nameWithType: RS232Pump
+        qualifiedName: Driver_RS232_Pump.RS232Pump
+      VB:
+      - id: Driver_RS232_Pump.RS232Pump
+        name: RS232Pump
+        nameWithType: RS232Pump
+        qualifiedName: Driver_RS232_Pump.RS232Pump
+    isDefinition: true
+    commentId: T:Driver_RS232_Pump.RS232Pump
+  Driver_RS232_Pump:
+    name:
+      CSharp:
+      - name: Driver_RS232_Pump
+        nameWithType: Driver_RS232_Pump
+        qualifiedName: Driver_RS232_Pump
+      VB:
+      - name: Driver_RS232_Pump
+        nameWithType: Driver_RS232_Pump
+        qualifiedName: Driver_RS232_Pump
+    isDefinition: true
+    commentId: N:Driver_RS232_Pump

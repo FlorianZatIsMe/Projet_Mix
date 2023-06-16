@@ -1,0 +1,85 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Alarm_Management.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="AlarmType_Alarm" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Alarme</Value>
+    </Setting>
+    <Setting Name="AlarmType_Warning" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Alerte</Value>
+    </Setting>
+    <Setting Name="AlarmType_None" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Aucun</Value>
+    </Setting>
+    <Setting Name="Error01" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">La classe n'est pas initialisée</Value>
+    </Setting>
+    <Setting Name="Error02" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">L'alarme est déjà active</Value>
+    </Setting>
+    <Setting Name="Error03" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">L'alarme est inactive mais ne fait pas parti des alarmes actives</Value>
+    </Setting>
+    <Setting Name="Error04" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">L'alarme ne fait pas parti des alarmes actives</Value>
+    </Setting>
+    <Setting Name="Error05" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">L'alarme est déjà inactive</Value>
+    </Setting>
+    <Setting Name="Error06" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Statut de l'alarme avant inactivation ou aquittement incorrect</Value>
+    </Setting>
+    <Setting Name="Error07" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Type d'alarme incorrect</Value>
+    </Setting>
+    <Setting Name="Alarms" Type="Alarm_Management.ConfigAlarms" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ConfigAlarms xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;configAlarms&gt;
+    &lt;ConfigAlarm&gt;
+      &lt;id1&gt;0&lt;/id1&gt;
+      &lt;id2&gt;0&lt;/id2&gt;
+      &lt;description&gt;Connexion à la balance échouée&lt;/description&gt;
+      &lt;type&gt;Alarm&lt;/type&gt;
+    &lt;/ConfigAlarm&gt;
+    &lt;ConfigAlarm&gt;
+      &lt;id1&gt;1&lt;/id1&gt;
+      &lt;id2&gt;0&lt;/id2&gt;
+      &lt;description&gt;Connexion au SpeedMixer échouée&lt;/description&gt;
+      &lt;type&gt;Alarm&lt;/type&gt;
+    &lt;/ConfigAlarm&gt;
+    &lt;ConfigAlarm&gt;
+      &lt;id1&gt;1&lt;/id1&gt;
+      &lt;id2&gt;1&lt;/id2&gt;
+      &lt;description&gt;Erreur du speedmixer pendant un cycle&lt;/description&gt;
+      &lt;type&gt;Alarm&lt;/type&gt;
+    &lt;/ConfigAlarm&gt;
+    &lt;ConfigAlarm&gt;
+      &lt;id1&gt;2&lt;/id1&gt;
+      &lt;id2&gt;0&lt;/id2&gt;
+      &lt;description&gt;Connexion à la pompe à vide échouée&lt;/description&gt;
+      &lt;type&gt;Alarm&lt;/type&gt;
+    &lt;/ConfigAlarm&gt;
+    &lt;ConfigAlarm&gt;
+      &lt;id1&gt;3&lt;/id1&gt;
+      &lt;id2&gt;0&lt;/id2&gt;
+      &lt;description&gt;Connexion au piège froid échouée&lt;/description&gt;
+      &lt;type&gt;Alarm&lt;/type&gt;
+    &lt;/ConfigAlarm&gt;
+    &lt;ConfigAlarm&gt;
+      &lt;id1&gt;3&lt;/id1&gt;
+      &lt;id2&gt;1&lt;/id2&gt;
+      &lt;description&gt;Température trop haute pendant le cycle&lt;/description&gt;
+      &lt;type&gt;Alarm&lt;/type&gt;
+    &lt;/ConfigAlarm&gt;
+    &lt;ConfigAlarm&gt;
+      &lt;id1&gt;4&lt;/id1&gt;
+      &lt;id2&gt;0&lt;/id2&gt;
+      &lt;description&gt;Backup automatique complet de la base de données échoué aprés 3 tentatives&lt;/description&gt;
+      &lt;type&gt;Warning&lt;/type&gt;
+    &lt;/ConfigAlarm&gt;
+  &lt;/configAlarms&gt;
+&lt;/ConfigAlarms&gt;</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

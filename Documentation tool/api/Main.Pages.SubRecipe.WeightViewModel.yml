@@ -1,0 +1,419 @@
+### YamlMime:ManagedReference
+items:
+- uid: Main.Pages.SubRecipe.WeightViewModel
+  commentId: T:Main.Pages.SubRecipe.WeightViewModel
+  id: WeightViewModel
+  parent: Main.Pages.SubRecipe
+  children:
+  - Main.Pages.SubRecipe.WeightViewModel.TextBlockRange
+  - Main.Pages.SubRecipe.WeightViewModel.TextBlockSetpoint
+  langs:
+  - csharp
+  - vb
+  name: WeightViewModel
+  nameWithType: WeightViewModel
+  fullName: Main.Pages.SubRecipe.WeightViewModel
+  type: Class
+  source:
+    id: WeightViewModel
+    path: C:\Temp\MixingApplication\Main\Pages\SubRecipe\Weight.xaml.cs
+    startLine: 20
+  assemblies:
+  - MixingApplication
+  namespace: Main.Pages.SubRecipe
+  syntax:
+    content: public class WeightViewModel
+    content.vb: Public Class WeightViewModel
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Main.Pages.SubRecipe.WeightViewModel.TextBlockSetpoint
+  commentId: P:Main.Pages.SubRecipe.WeightViewModel.TextBlockSetpoint
+  id: TextBlockSetpoint
+  parent: Main.Pages.SubRecipe.WeightViewModel
+  langs:
+  - csharp
+  - vb
+  name: TextBlockSetpoint
+  nameWithType: WeightViewModel.TextBlockSetpoint
+  fullName: Main.Pages.SubRecipe.WeightViewModel.TextBlockSetpoint
+  type: Property
+  source:
+    id: TextBlockSetpoint
+    path: C:\Temp\MixingApplication\Main\Pages\SubRecipe\Weight.xaml.cs
+    startLine: 22
+  assemblies:
+  - MixingApplication
+  namespace: Main.Pages.SubRecipe
+  syntax:
+    content: public string TextBlockSetpoint { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property TextBlockSetpoint As String
+  overload: Main.Pages.SubRecipe.WeightViewModel.TextBlockSetpoint*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Main.Pages.SubRecipe.WeightViewModel.TextBlockRange
+  commentId: P:Main.Pages.SubRecipe.WeightViewModel.TextBlockRange
+  id: TextBlockRange
+  parent: Main.Pages.SubRecipe.WeightViewModel
+  langs:
+  - csharp
+  - vb
+  name: TextBlockRange
+  nameWithType: WeightViewModel.TextBlockRange
+  fullName: Main.Pages.SubRecipe.WeightViewModel.TextBlockRange
+  type: Property
+  source:
+    id: TextBlockRange
+    path: C:\Temp\MixingApplication\Main\Pages\SubRecipe\Weight.xaml.cs
+    startLine: 23
+  assemblies:
+  - MixingApplication
+  namespace: Main.Pages.SubRecipe
+  syntax:
+    content: public string TextBlockRange { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property TextBlockRange As String
+  overload: Main.Pages.SubRecipe.WeightViewModel.TextBlockRange*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+references:
+- uid: Main.Pages.SubRecipe
+  commentId: N:Main.Pages.SubRecipe
+  name: Main.Pages.SubRecipe
+  nameWithType: Main.Pages.SubRecipe
+  fullName: Main.Pages.SubRecipe
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Main.Pages.SubRecipe.WeightViewModel.TextBlockSetpoint*
+  commentId: Overload:Main.Pages.SubRecipe.WeightViewModel.TextBlockSetpoint
+  name: TextBlockSetpoint
+  nameWithType: WeightViewModel.TextBlockSetpoint
+  fullName: Main.Pages.SubRecipe.WeightViewModel.TextBlockSetpoint
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Main.Pages.SubRecipe.WeightViewModel.TextBlockRange*
+  commentId: Overload:Main.Pages.SubRecipe.WeightViewModel.TextBlockRange
+  name: TextBlockRange
+  nameWithType: WeightViewModel.TextBlockRange
+  fullName: Main.Pages.SubRecipe.WeightViewModel.TextBlockRange

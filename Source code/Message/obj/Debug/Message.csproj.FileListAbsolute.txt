@@ -1,0 +1,40 @@
+C:\Temp\MixingApplication\Message\bin\Debug\Message.exe.config
+C:\Temp\MixingApplication\Message\bin\Debug\Message.exe
+C:\Temp\MixingApplication\Message\bin\Debug\Message.pdb
+C:\Temp\MixingApplication\Message\obj\Debug\Message.csproj.AssemblyReference.cache
+C:\Temp\MixingApplication\Message\obj\Debug\Message.csproj.SuggestedBindingRedirects.cache
+C:\Temp\MixingApplication\Message\obj\Debug\MyMessageBox.g.cs
+C:\Temp\MixingApplication\Message\obj\Debug\App.g.cs
+C:\Temp\MixingApplication\Message\obj\Debug\Message_MarkupCompile.cache
+C:\Temp\MixingApplication\Message\obj\Debug\Message_MarkupCompile.lref
+C:\Temp\MixingApplication\Message\obj\Debug\MyMessageBox.baml
+C:\Temp\MixingApplication\Message\obj\Debug\Message.g.resources
+C:\Temp\MixingApplication\Message\obj\Debug\Message.Properties.Resources.resources
+C:\Temp\MixingApplication\Message\obj\Debug\Message.csproj.GenerateResource.cache
+C:\Temp\MixingApplication\Message\obj\Debug\Message.csproj.CoreCompileInputs.cache
+C:\Temp\MixingApplication\Message\obj\Debug\Message.exe
+C:\Temp\MixingApplication\Message\obj\Debug\Message.pdb
+C:\Temp\MixingApplication\Message\bin\Debug\NLog.dll
+C:\Temp\MixingApplication\Message\bin\Debug\NLog.xml
+C:\Temp\MixingApplication\Message\obj\Debug\Message.csproj.CopyComplete
+C:\Temp\MixingApplication\Message\obj\Debug\App.baml
+C:\Temp\MixingApplication\Source code\Message\bin\Debug\Message.exe.config
+C:\Temp\MixingApplication\Source code\Message\bin\Debug\Message.exe
+C:\Temp\MixingApplication\Source code\Message\bin\Debug\Message.pdb
+C:\Temp\MixingApplication\Source code\Message\bin\Debug\NLog.dll
+C:\Temp\MixingApplication\Source code\Message\bin\Debug\NLog.xml
+C:\Temp\MixingApplication\Source code\Message\obj\Debug\Message.csproj.AssemblyReference.cache
+C:\Temp\MixingApplication\Source code\Message\obj\Debug\Message.csproj.SuggestedBindingRedirects.cache
+C:\Temp\MixingApplication\Source code\Message\obj\Debug\MyMessageBox.g.cs
+C:\Temp\MixingApplication\Source code\Message\obj\Debug\App.g.cs
+C:\Temp\MixingApplication\Source code\Message\obj\Debug\Message_MarkupCompile.cache
+C:\Temp\MixingApplication\Source code\Message\obj\Debug\Message_MarkupCompile.lref
+C:\Temp\MixingApplication\Source code\Message\obj\Debug\App.baml
+C:\Temp\MixingApplication\Source code\Message\obj\Debug\MyMessageBox.baml
+C:\Temp\MixingApplication\Source code\Message\obj\Debug\Message.g.resources
+C:\Temp\MixingApplication\Source code\Message\obj\Debug\Message.Properties.Resources.resources
+C:\Temp\MixingApplication\Source code\Message\obj\Debug\Message.csproj.GenerateResource.cache
+C:\Temp\MixingApplication\Source code\Message\obj\Debug\Message.csproj.CoreCompileInputs.cache
+C:\Temp\MixingApplication\Source code\Message\obj\Debug\Message.csproj.CopyComplete
+C:\Temp\MixingApplication\Source code\Message\obj\Debug\Message.exe
+C:\Temp\MixingApplication\Source code\Message\obj\Debug\Message.pdb

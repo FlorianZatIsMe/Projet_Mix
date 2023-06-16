@@ -1,0 +1,380 @@
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\DB_backup.bat
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\DB_restore.bat
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\DB_backup_part_table.bat
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_alarm_act.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_alarm_dis.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_alarm_en.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_audit_trail_dis.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_audit_trail_en.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_backup_archive_dis.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_backup_archive_en.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_copy_dis.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_copy_en.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_daily_test_dis.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_daily_test_en.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_delete_dis.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_delete_en.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_home_dis.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_home_en.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_log_in_en.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_modify_dis.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_modify_en.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_new_dis.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_new_en.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_parameter_dis.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_parameter_en.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_recipes_dis.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_recipes_en.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_start_dis.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_stop_dis.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_stop_en.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_web_design.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\Integra-Logo.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\UserManagement.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_start_en.png
+C:\Temp\MixingApplication\Main\bin\Debug\nlog.config
+C:\Temp\MixingApplication\Main\bin\Debug\MixingApplication.exe.config
+C:\Temp\MixingApplication\Main\bin\Debug\MixingApplication.exe
+C:\Temp\MixingApplication\Main\bin\Debug\MixingApplication.pdb
+C:\Temp\MixingApplication\Main\bin\Debug\Alarm_Management.dll
+C:\Temp\MixingApplication\Main\bin\Debug\ColdTrap.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Database.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Driver_Ethernet.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Driver_Ethernet_Weight.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Driver_RS232.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Message.exe
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Configuration.Binder.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Configuration.CommandLine.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Configuration.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Configuration.EnvironmentVariables.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Configuration.FileExtensions.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Configuration.Json.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Configuration.UserSecrets.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.DependencyInjection.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.FileProviders.Abstractions.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.FileProviders.Physical.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.FileSystemGlobbing.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Hosting.Abstractions.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Hosting.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Logging.Configuration.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Logging.Console.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Logging.Debug.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Logging.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Logging.EventLog.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Logging.EventSource.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Options.ConfigurationExtensions.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Options.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Primitives.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
+C:\Temp\MixingApplication\Main\bin\Debug\MigraDoc.DocumentObjectModel-gdi.dll
+C:\Temp\MixingApplication\Main\bin\Debug\MigraDoc.Rendering-gdi.dll
+C:\Temp\MixingApplication\Main\bin\Debug\MigraDoc.RtfRendering-gdi.dll
+C:\Temp\MixingApplication\Main\bin\Debug\MySqlConnector.dll
+C:\Temp\MixingApplication\Main\bin\Debug\NationalInstruments.Common.dll
+C:\Temp\MixingApplication\Main\bin\Debug\NationalInstruments.DAQmx.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Newtonsoft.Json.dll
+C:\Temp\MixingApplication\Main\bin\Debug\NLog.dll
+C:\Temp\MixingApplication\Main\bin\Debug\PdfSharp-gdi.dll
+C:\Temp\MixingApplication\Main\bin\Debug\PdfSharp.Charting-gdi.dll
+C:\Temp\MixingApplication\Main\bin\Debug\System.Buffers.dll
+C:\Temp\MixingApplication\Main\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+C:\Temp\MixingApplication\Main\bin\Debug\System.Drawing.Common.dll
+C:\Temp\MixingApplication\Main\bin\Debug\System.Memory.dll
+C:\Temp\MixingApplication\Main\bin\Debug\System.Numerics.Vectors.dll
+C:\Temp\MixingApplication\Main\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Temp\MixingApplication\Main\bin\Debug\System.Text.Encoding.CodePages.dll
+C:\Temp\MixingApplication\Main\bin\Debug\System.Text.Encodings.Web.dll
+C:\Temp\MixingApplication\Main\bin\Debug\System.Text.Json.dll
+C:\Temp\MixingApplication\Main\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Temp\MixingApplication\Main\bin\Debug\System.ValueTuple.dll
+C:\Temp\MixingApplication\Main\bin\Debug\User_Management.dll
+C:\Temp\MixingApplication\Main\bin\Debug\EasyModbus.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Alarm_Management.pdb
+C:\Temp\MixingApplication\Main\bin\Debug\Alarm_Management.dll.config
+C:\Temp\MixingApplication\Main\bin\Debug\ColdTrap.pdb
+C:\Temp\MixingApplication\Main\bin\Debug\ColdTrap.dll.config
+C:\Temp\MixingApplication\Main\bin\Debug\Database.pdb
+C:\Temp\MixingApplication\Main\bin\Debug\Database.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Database.dll.config
+C:\Temp\MixingApplication\Main\bin\Debug\Driver_Ethernet.pdb
+C:\Temp\MixingApplication\Main\bin\Debug\Driver_Ethernet_Weight.pdb
+C:\Temp\MixingApplication\Main\bin\Debug\Driver_RS232.pdb
+C:\Temp\MixingApplication\Main\bin\Debug\Driver_RS232.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Driver_RS232.dll.config
+C:\Temp\MixingApplication\Main\bin\Debug\Message.pdb
+C:\Temp\MixingApplication\Main\bin\Debug\Message.exe.config
+C:\Temp\MixingApplication\Main\bin\Debug\User_Management.pdb
+C:\Temp\MixingApplication\Main\bin\Debug\User_Management.xml
+C:\Temp\MixingApplication\Main\bin\Debug\User_Management.dll.config
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Bcl.AsyncInterfaces.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Configuration.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Configuration.Abstractions.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Configuration.Binder.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Configuration.CommandLine.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Configuration.EnvironmentVariables.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Configuration.FileExtensions.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Configuration.Json.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Configuration.UserSecrets.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.DependencyInjection.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.FileProviders.Abstractions.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.FileProviders.Physical.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.FileSystemGlobbing.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Hosting.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Hosting.Abstractions.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Logging.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Logging.Abstractions.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Logging.Configuration.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Logging.Console.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Logging.Debug.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Logging.EventLog.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Logging.EventSource.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Options.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Options.ConfigurationExtensions.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.Extensions.Primitives.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
+C:\Temp\MixingApplication\Main\bin\Debug\MigraDoc.DocumentObjectModel-gdi.xml
+C:\Temp\MixingApplication\Main\bin\Debug\MigraDoc.Rendering-gdi.xml
+C:\Temp\MixingApplication\Main\bin\Debug\MigraDoc.RtfRendering-gdi.xml
+C:\Temp\MixingApplication\Main\bin\Debug\MySqlConnector.xml
+C:\Temp\MixingApplication\Main\bin\Debug\NationalInstruments.Common.xml
+C:\Temp\MixingApplication\Main\bin\Debug\NationalInstruments.DAQmx.xml
+C:\Temp\MixingApplication\Main\bin\Debug\Newtonsoft.Json.xml
+C:\Temp\MixingApplication\Main\bin\Debug\NLog.xml
+C:\Temp\MixingApplication\Main\bin\Debug\PdfSharp-gdi.xml
+C:\Temp\MixingApplication\Main\bin\Debug\PdfSharp.Charting-gdi.xml
+C:\Temp\MixingApplication\Main\bin\Debug\System.Buffers.xml
+C:\Temp\MixingApplication\Main\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+C:\Temp\MixingApplication\Main\bin\Debug\System.Drawing.Common.xml
+C:\Temp\MixingApplication\Main\bin\Debug\System.Memory.xml
+C:\Temp\MixingApplication\Main\bin\Debug\System.Numerics.Vectors.xml
+C:\Temp\MixingApplication\Main\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Temp\MixingApplication\Main\bin\Debug\System.Text.Encoding.CodePages.xml
+C:\Temp\MixingApplication\Main\bin\Debug\System.Text.Encodings.Web.xml
+C:\Temp\MixingApplication\Main\bin\Debug\System.Text.Json.xml
+C:\Temp\MixingApplication\Main\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Temp\MixingApplication\Main\bin\Debug\System.ValueTuple.xml
+C:\Temp\MixingApplication\Main\bin\Debug\de\MigraDoc.DocumentObjectModel-gdi.resources.dll
+C:\Temp\MixingApplication\Main\bin\Debug\de\MigraDoc.Rendering-gdi.resources.dll
+C:\Temp\MixingApplication\Main\bin\Debug\de\MigraDoc.RtfRendering-gdi.resources.dll
+C:\Temp\MixingApplication\Main\bin\Debug\de\PdfSharp-gdi.resources.dll
+C:\Temp\MixingApplication\Main\bin\Debug\de\PdfSharp.Charting-gdi.resources.dll
+C:\Temp\MixingApplication\Main\obj\Debug\Main.csproj.AssemblyReference.cache
+C:\Temp\MixingApplication\Main\obj\Debug\Main.csproj.SuggestedBindingRedirects.cache
+C:\Temp\MixingApplication\Main\obj\Debug\MainWindow.baml
+C:\Temp\MixingApplication\Main\obj\Debug\LogIn.g.cs
+C:\Temp\MixingApplication\Main\obj\Debug\MainWindow.g.cs
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\ActiveAlarms.g.cs
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\Archiving.g.cs
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\AuditTrail.g.cs
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\Backup.g.cs
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\Parameters.g.cs
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\Recipe.g.cs
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\SubCycle\PreCycle.g.cs
+C:\Temp\MixingApplication\Main\obj\Debug\App.g.cs
+C:\Temp\MixingApplication\Main\obj\Debug\MixingApplication_Content.g.cs
+C:\Temp\MixingApplication\Main\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Temp\MixingApplication\Main\obj\Debug\MixingApplication_MarkupCompile.cache
+C:\Temp\MixingApplication\Main\obj\Debug\MixingApplication_MarkupCompile.lref
+C:\Temp\MixingApplication\Main\obj\Debug\App.baml
+C:\Temp\MixingApplication\Main\obj\Debug\LogIn.baml
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\ActiveAlarms.baml
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\Archiving.baml
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\AuditTrail.baml
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\Backup.baml
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\Parameters.baml
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\Recipe.baml
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\SubCycle\PreCycle.baml
+C:\Temp\MixingApplication\Main\obj\Debug\MixingApplication.g.resources
+C:\Temp\MixingApplication\Main\obj\Debug\Main.Properties.Resources.resources
+C:\Temp\MixingApplication\Main\obj\Debug\Main.csproj.GenerateResource.cache
+C:\Temp\MixingApplication\Main\obj\Debug\Main.csproj.CoreCompileInputs.cache
+C:\Temp\MixingApplication\Main\obj\Debug\Main.csproj.CopyComplete
+C:\Temp\MixingApplication\Main\obj\Debug\MixingApplication.exe
+C:\Temp\MixingApplication\Main\obj\Debug\MixingApplication.pdb
+C:\Temp\MixingApplication\Main\bin\Debug\Driver_Ethernet.dll.config
+C:\Temp\MixingApplication\Main\bin\Debug\Driver_Ethernet_Weight.dll.config
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_archive_dis.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_archive_en.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_backup_dis.png
+C:\Temp\MixingApplication\Main\bin\Debug\Resources\img_backup_en.png
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\Status.g.cs
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\Status.baml
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\SubCycle\CycleWeight.g.cs
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\SubCycle\CycleWeight.baml
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\SubCycle\CycleInfo.g.cs
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\SubCycle\CycleInfo.baml
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\SubCycle\CycleSpeedMixer.g.cs
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\SubCycle\CycleSpeedMixer.baml
+C:\Temp\MixingApplication\Main\bin\Debug\Driver_MODBUS.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Driver_RS232_Pump.dll
+C:\Temp\MixingApplication\Main\bin\Debug\Driver_RS232_Pump.pdb
+C:\Temp\MixingApplication\Main\bin\Debug\Driver_RS232_Pump.dll.config
+C:\Temp\MixingApplication\Main\bin\Debug\Driver_MODBUS.pdb
+C:\Temp\MixingApplication\Main\bin\Debug\Driver_MODBUS.dll.config
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\SubRecipe\RecipeSpeedMixer.g.cs
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\SubRecipe\RecipeWeight.g.cs
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\SubRecipe\RecipeSpeedMixer.baml
+C:\Temp\MixingApplication\Main\obj\Debug\Pages\SubRecipe\RecipeWeight.baml
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\DB_backup.bat
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\DB_restore.bat
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\DB_backup_part_table.bat
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_alarm_act.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_alarm_dis.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_alarm_en.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_archive_dis.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_archive_en.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_audit_trail_dis.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_audit_trail_en.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_backup_archive_dis.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_backup_archive_en.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_backup_dis.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_backup_en.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_copy_dis.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_copy_en.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_daily_test_dis.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_daily_test_en.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_delete_dis.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_delete_en.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_home_dis.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_home_en.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_log_in_en.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_modify_dis.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_modify_en.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_new_dis.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_new_en.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_parameter_dis.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_parameter_en.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_recipes_dis.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_recipes_en.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_start_dis.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_stop_dis.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_stop_en.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_web_design.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\Integra-Logo.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\UserManagement.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Resources\img_start_en.png
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\nlog.config
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\MixingApplication.exe.config
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\MixingApplication.exe
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\MixingApplication.pdb
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Alarm_Management.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\ColdTrap.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Database.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_Ethernet.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_Ethernet_Weight.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_MODBUS.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_RS232.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_RS232_Pump.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Message.exe
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\MigraDoc.DocumentObjectModel-gdi.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\MigraDoc.Rendering-gdi.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\MigraDoc.RtfRendering-gdi.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\MySqlConnector.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\NationalInstruments.Common.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\NationalInstruments.DAQmx.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\NLog.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\PdfSharp-gdi.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\PdfSharp.Charting-gdi.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\System.Buffers.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\User_Management.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\EasyModbus.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Alarm_Management.pdb
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Alarm_Management.dll.config
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\ColdTrap.pdb
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\ColdTrap.dll.config
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Database.pdb
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Database.xml
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Database.dll.config
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_RS232_Pump.pdb
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_RS232_Pump.dll.config
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_Ethernet.pdb
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_Ethernet.dll.config
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_Ethernet_Weight.pdb
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_Ethernet_Weight.dll.config
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_MODBUS.pdb
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_MODBUS.dll.config
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_RS232.pdb
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_RS232.xml
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_RS232.dll.config
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Message.pdb
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Message.exe.config
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\User_Management.pdb
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\User_Management.xml
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\User_Management.dll.config
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\MigraDoc.DocumentObjectModel-gdi.xml
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\MigraDoc.Rendering-gdi.xml
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\MigraDoc.RtfRendering-gdi.xml
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\MySqlConnector.xml
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\NationalInstruments.Common.xml
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\NationalInstruments.DAQmx.xml
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\NLog.xml
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\PdfSharp-gdi.xml
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\PdfSharp.Charting-gdi.xml
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\System.Buffers.xml
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\de\MigraDoc.DocumentObjectModel-gdi.resources.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\de\MigraDoc.Rendering-gdi.resources.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\de\MigraDoc.RtfRendering-gdi.resources.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\de\PdfSharp-gdi.resources.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\de\PdfSharp.Charting-gdi.resources.dll
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Main.csproj.AssemblyReference.cache
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Main.csproj.SuggestedBindingRedirects.cache
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\LogIn.g.cs
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\MainWindow.g.cs
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\ActiveAlarms.g.cs
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\Archiving.g.cs
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\AuditTrail.g.cs
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\Backup.g.cs
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\Parameters.g.cs
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\Recipe.g.cs
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\Status.g.cs
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\SubCycle\CycleInfo.g.cs
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\SubCycle\CycleSpeedMixer.g.cs
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\SubCycle\CycleWeight.g.cs
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\SubCycle\PreCycle.g.cs
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\SubRecipe\RecipeSpeedMixer.g.cs
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\SubRecipe\RecipeWeight.g.cs
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\App.g.cs
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\MixingApplication_Content.g.cs
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\MixingApplication_MarkupCompile.cache
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\MixingApplication_MarkupCompile.lref
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\App.baml
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\LogIn.baml
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\MainWindow.baml
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\ActiveAlarms.baml
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\Archiving.baml
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\AuditTrail.baml
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\Backup.baml
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\Parameters.baml
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\Recipe.baml
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\Status.baml
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\SubCycle\CycleInfo.baml
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\SubCycle\CycleSpeedMixer.baml
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\SubCycle\CycleWeight.baml
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\SubCycle\PreCycle.baml
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\SubRecipe\RecipeSpeedMixer.baml
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Pages\SubRecipe\RecipeWeight.baml
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\MixingApplication.g.resources
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Main.Properties.Resources.resources
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Main.csproj.GenerateResource.cache
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Main.csproj.CoreCompileInputs.cache
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\Main.csproj.CopyComplete
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\MixingApplication.exe
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\MixingApplication.pdb
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\System.Memory.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\System.Numerics.Vectors.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\System.Memory.xml
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\System.Numerics.Vectors.xml

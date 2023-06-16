@@ -1,0 +1,456 @@
+id: ColdTrap
+language: CSharp
+name:
+  Default: ColdTrap
+qualifiedName:
+  Default: ColdTrap
+type: Assembly
+modifiers: {}
+items:
+- id: Driver_ColdTrap
+  commentId: N:Driver_ColdTrap
+  language: CSharp
+  name:
+    CSharp: Driver_ColdTrap
+    VB: Driver_ColdTrap
+  nameWithType:
+    CSharp: Driver_ColdTrap
+    VB: Driver_ColdTrap
+  qualifiedName:
+    CSharp: Driver_ColdTrap
+    VB: Driver_ColdTrap
+  type: Namespace
+  assemblies:
+  - ColdTrap
+  modifiers: {}
+  items:
+  - id: Driver_ColdTrap.ColdTrap
+    commentId: T:Driver_ColdTrap.ColdTrap
+    language: CSharp
+    name:
+      CSharp: ColdTrap
+      VB: ColdTrap
+    nameWithType:
+      CSharp: ColdTrap
+      VB: ColdTrap
+    qualifiedName:
+      CSharp: Driver_ColdTrap.ColdTrap
+      VB: Driver_ColdTrap.ColdTrap
+    type: Class
+    assemblies:
+    - ColdTrap
+    namespace: Driver_ColdTrap
+    source:
+      id: ColdTrap
+      path: C:\Temp\MixingApplication\Source code\ColdTrap\ColdTrap.cs
+      startLine: 11
+    syntax:
+      content:
+        CSharp: public static class ColdTrap
+        VB: Public Module ColdTrap
+    inheritance:
+    - System.Object
+    inheritedMembers:
+    - System.Object.ToString
+    - System.Object.Equals(System.Object)
+    - System.Object.Equals(System.Object,System.Object)
+    - System.Object.ReferenceEquals(System.Object,System.Object)
+    - System.Object.GetHashCode
+    - System.Object.GetType
+    - System.Object.MemberwiseClone
+    modifiers:
+      CSharp:
+      - public
+      - static
+      - class
+      VB:
+      - Public
+      - Module
+    items:
+    - id: Driver_ColdTrap.ColdTrap.IsTempOK
+      commentId: M:Driver_ColdTrap.ColdTrap.IsTempOK
+      language: CSharp
+      name:
+        CSharp: IsTempOK()
+        VB: IsTempOK()
+      nameWithType:
+        CSharp: ColdTrap.IsTempOK()
+        VB: ColdTrap.IsTempOK()
+      qualifiedName:
+        CSharp: Driver_ColdTrap.ColdTrap.IsTempOK()
+        VB: Driver_ColdTrap.ColdTrap.IsTempOK()
+      type: Method
+      assemblies:
+      - ColdTrap
+      namespace: Driver_ColdTrap
+      source:
+        id: IsTempOK
+        path: C:\Temp\MixingApplication\Source code\ColdTrap\ColdTrap.cs
+        startLine: 52
+      syntax:
+        content:
+          CSharp: public static bool IsTempOK()
+          VB: Public Shared Function IsTempOK As Boolean
+        return:
+          type: System.Boolean
+      overload: Driver_ColdTrap.ColdTrap.IsTempOK*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+references:
+  System:
+    name:
+      CSharp:
+      - name: System
+        nameWithType: System
+        qualifiedName: System
+        isExternal: true
+      VB:
+      - name: System
+        nameWithType: System
+        qualifiedName: System
+    isDefinition: true
+    commentId: N:System
+  System.Object:
+    name:
+      CSharp:
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      VB:
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+    isDefinition: true
+    parent: System
+    commentId: T:System.Object
+  System.Object.ToString:
+    name:
+      CSharp:
+      - id: System.Object.ToString
+        name: ToString
+        nameWithType: Object.ToString
+        qualifiedName: System.Object.ToString
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.ToString
+        name: ToString
+        nameWithType: Object.ToString
+        qualifiedName: System.Object.ToString
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.ToString
+  System.Object.Equals(System.Object):
+    name:
+      CSharp:
+      - id: System.Object.Equals(System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.Equals(System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.Equals(System.Object)
+  System.Object.Equals(System.Object,System.Object):
+    name:
+      CSharp:
+      - id: System.Object.Equals(System.Object,System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.Equals(System.Object,System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.Equals(System.Object,System.Object)
+  System.Object.ReferenceEquals(System.Object,System.Object):
+    name:
+      CSharp:
+      - id: System.Object.ReferenceEquals(System.Object,System.Object)
+        name: ReferenceEquals
+        nameWithType: Object.ReferenceEquals
+        qualifiedName: System.Object.ReferenceEquals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.ReferenceEquals(System.Object,System.Object)
+        name: ReferenceEquals
+        nameWithType: Object.ReferenceEquals
+        qualifiedName: System.Object.ReferenceEquals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  System.Object.GetHashCode:
+    name:
+      CSharp:
+      - id: System.Object.GetHashCode
+        name: GetHashCode
+        nameWithType: Object.GetHashCode
+        qualifiedName: System.Object.GetHashCode
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.GetHashCode
+        name: GetHashCode
+        nameWithType: Object.GetHashCode
+        qualifiedName: System.Object.GetHashCode
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.GetHashCode
+  System.Object.GetType:
+    name:
+      CSharp:
+      - id: System.Object.GetType
+        name: GetType
+        nameWithType: Object.GetType
+        qualifiedName: System.Object.GetType
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.GetType
+        name: GetType
+        nameWithType: Object.GetType
+        qualifiedName: System.Object.GetType
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.GetType
+  System.Object.MemberwiseClone:
+    name:
+      CSharp:
+      - id: System.Object.MemberwiseClone
+        name: MemberwiseClone
+        nameWithType: Object.MemberwiseClone
+        qualifiedName: System.Object.MemberwiseClone
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.MemberwiseClone
+        name: MemberwiseClone
+        nameWithType: Object.MemberwiseClone
+        qualifiedName: System.Object.MemberwiseClone
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.MemberwiseClone
+  System.Boolean:
+    name:
+      CSharp:
+      - id: System.Boolean
+        name: Boolean
+        nameWithType: Boolean
+        qualifiedName: System.Boolean
+        isExternal: true
+      VB:
+      - id: System.Boolean
+        name: Boolean
+        nameWithType: Boolean
+        qualifiedName: System.Boolean
+        isExternal: true
+    isDefinition: true
+    parent: System
+    commentId: T:System.Boolean
+  Driver_ColdTrap.ColdTrap.IsTempOK*:
+    name:
+      CSharp:
+      - id: Driver_ColdTrap.ColdTrap.IsTempOK*
+        name: IsTempOK
+        nameWithType: ColdTrap.IsTempOK
+        qualifiedName: Driver_ColdTrap.ColdTrap.IsTempOK
+      VB:
+      - id: Driver_ColdTrap.ColdTrap.IsTempOK*
+        name: IsTempOK
+        nameWithType: ColdTrap.IsTempOK
+        qualifiedName: Driver_ColdTrap.ColdTrap.IsTempOK
+    isDefinition: true
+    commentId: Overload:Driver_ColdTrap.ColdTrap.IsTempOK
+  Driver_ColdTrap.ColdTrap:
+    name:
+      CSharp:
+      - id: Driver_ColdTrap.ColdTrap
+        name: ColdTrap
+        nameWithType: ColdTrap
+        qualifiedName: Driver_ColdTrap.ColdTrap
+      VB:
+      - id: Driver_ColdTrap.ColdTrap
+        name: ColdTrap
+        nameWithType: ColdTrap
+        qualifiedName: Driver_ColdTrap.ColdTrap
+    isDefinition: true
+    commentId: T:Driver_ColdTrap.ColdTrap
+  Driver_ColdTrap:
+    name:
+      CSharp:
+      - name: Driver_ColdTrap
+        nameWithType: Driver_ColdTrap
+        qualifiedName: Driver_ColdTrap
+      VB:
+      - name: Driver_ColdTrap
+        nameWithType: Driver_ColdTrap
+        qualifiedName: Driver_ColdTrap
+    isDefinition: true
+    commentId: N:Driver_ColdTrap

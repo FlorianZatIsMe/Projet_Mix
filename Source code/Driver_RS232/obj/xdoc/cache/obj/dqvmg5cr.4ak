@@ -1,0 +1,954 @@
+id: Driver_RS232
+language: CSharp
+name:
+  Default: Driver_RS232
+qualifiedName:
+  Default: Driver_RS232
+type: Assembly
+modifiers: {}
+items:
+- id: Driver_RS232
+  commentId: N:Driver_RS232
+  language: CSharp
+  name:
+    CSharp: Driver_RS232
+    VB: Driver_RS232
+  nameWithType:
+    CSharp: Driver_RS232
+    VB: Driver_RS232
+  qualifiedName:
+    CSharp: Driver_RS232
+    VB: Driver_RS232
+  type: Namespace
+  assemblies:
+  - Driver_RS232
+  modifiers: {}
+  items:
+  - id: Driver_RS232.IniInfo
+    commentId: T:Driver_RS232.IniInfo
+    language: CSharp
+    name:
+      CSharp: IniInfo
+      VB: IniInfo
+    nameWithType:
+      CSharp: IniInfo
+      VB: IniInfo
+    qualifiedName:
+      CSharp: Driver_RS232.IniInfo
+      VB: Driver_RS232.IniInfo
+    type: Struct
+    assemblies:
+    - Driver_RS232
+    namespace: Driver_RS232
+    source:
+      id: IniInfo
+      path: C:\Temp\MixingApplication\Driver_RS232\RS232.cs
+      startLine: 11
+    syntax:
+      content:
+        CSharp: public struct IniInfo
+        VB: Public Structure IniInfo
+    inheritedMembers:
+    - System.ValueType.Equals(System.Object)
+    - System.ValueType.GetHashCode
+    - System.ValueType.ToString
+    - System.Object.Equals(System.Object,System.Object)
+    - System.Object.ReferenceEquals(System.Object,System.Object)
+    - System.Object.GetType
+    modifiers:
+      CSharp:
+      - public
+      - struct
+      VB:
+      - Public
+      - Structure
+    items:
+    - id: Driver_RS232.IniInfo.Window
+      commentId: F:Driver_RS232.IniInfo.Window
+      language: CSharp
+      name:
+        CSharp: Window
+        VB: Window
+      nameWithType:
+        CSharp: IniInfo.Window
+        VB: IniInfo.Window
+      qualifiedName:
+        CSharp: Driver_RS232.IniInfo.Window
+        VB: Driver_RS232.IniInfo.Window
+      type: Field
+      assemblies:
+      - Driver_RS232
+      namespace: Driver_RS232
+      source:
+        id: Window
+        path: C:\Temp\MixingApplication\Driver_RS232\RS232.cs
+        startLine: 13
+      syntax:
+        content:
+          CSharp: public Window Window
+          VB: Public Window As Window
+        return:
+          type: System.Windows.Window
+      modifiers:
+        CSharp:
+        - public
+        VB:
+        - Public
+  - id: Driver_RS232.RS232
+    commentId: T:Driver_RS232.RS232
+    language: CSharp
+    name:
+      CSharp: RS232
+      VB: RS232
+    nameWithType:
+      CSharp: RS232
+      VB: RS232
+    qualifiedName:
+      CSharp: Driver_RS232.RS232
+      VB: Driver_RS232.RS232
+    type: Class
+    assemblies:
+    - Driver_RS232
+    namespace: Driver_RS232
+    source:
+      id: RS232
+      path: C:\Temp\MixingApplication\Driver_RS232\RS232.cs
+      startLine: 16
+    syntax:
+      content:
+        CSharp: public class RS232
+        VB: Public Class RS232
+    inheritance:
+    - System.Object
+    inheritedMembers:
+    - System.Object.ToString
+    - System.Object.Equals(System.Object)
+    - System.Object.Equals(System.Object,System.Object)
+    - System.Object.ReferenceEquals(System.Object,System.Object)
+    - System.Object.GetHashCode
+    - System.Object.GetType
+    - System.Object.MemberwiseClone
+    modifiers:
+      CSharp:
+      - public
+      - class
+      VB:
+      - Public
+      - Class
+    items:
+    - id: Driver_RS232.RS232.#ctor(System.IO.Ports.SerialPort,System.Int32,System.Int32,System.IO.Ports.SerialDataReceivedEventHandler)
+      commentId: M:Driver_RS232.RS232.#ctor(System.IO.Ports.SerialPort,System.Int32,System.Int32,System.IO.Ports.SerialDataReceivedEventHandler)
+      language: CSharp
+      name:
+        CSharp: RS232(SerialPort, Int32, Int32, SerialDataReceivedEventHandler)
+        VB: RS232(SerialPort, Int32, Int32, SerialDataReceivedEventHandler)
+      nameWithType:
+        CSharp: RS232.RS232(SerialPort, Int32, Int32, SerialDataReceivedEventHandler)
+        VB: RS232.RS232(SerialPort, Int32, Int32, SerialDataReceivedEventHandler)
+      qualifiedName:
+        CSharp: Driver_RS232.RS232.RS232(System.IO.Ports.SerialPort, System.Int32, System.Int32, System.IO.Ports.SerialDataReceivedEventHandler)
+        VB: Driver_RS232.RS232.RS232(System.IO.Ports.SerialPort, System.Int32, System.Int32, System.IO.Ports.SerialDataReceivedEventHandler)
+      type: Constructor
+      assemblies:
+      - Driver_RS232
+      namespace: Driver_RS232
+      source:
+        id: .ctor
+        path: C:\Temp\MixingApplication\Driver_RS232\RS232.cs
+        startLine: 45
+      syntax:
+        content:
+          CSharp: public RS232(SerialPort serialPort_arg, int alarmConnectId1_arg, int alarmConnectId2_arg, SerialDataReceivedEventHandler target)
+          VB: Public Sub New(serialPort_arg As SerialPort, alarmConnectId1_arg As Integer, alarmConnectId2_arg As Integer, target As SerialDataReceivedEventHandler)
+        parameters:
+        - id: serialPort_arg
+          type: System.IO.Ports.SerialPort
+        - id: alarmConnectId1_arg
+          type: System.Int32
+        - id: alarmConnectId2_arg
+          type: System.Int32
+        - id: target
+          type: System.IO.Ports.SerialDataReceivedEventHandler
+      overload: Driver_RS232.RS232.#ctor*
+      modifiers:
+        CSharp:
+        - public
+        VB:
+        - Public
+    - id: Driver_RS232.RS232.Initialize
+      commentId: M:Driver_RS232.RS232.Initialize
+      language: CSharp
+      name:
+        CSharp: Initialize()
+        VB: Initialize()
+      nameWithType:
+        CSharp: RS232.Initialize()
+        VB: RS232.Initialize()
+      qualifiedName:
+        CSharp: Driver_RS232.RS232.Initialize()
+        VB: Driver_RS232.RS232.Initialize()
+      type: Method
+      assemblies:
+      - Driver_RS232
+      namespace: Driver_RS232
+      source:
+        id: Initialize
+        path: C:\Temp\MixingApplication\Driver_RS232\RS232.cs
+        startLine: 85
+      syntax:
+        content:
+          CSharp: public void Initialize()
+          VB: Public Sub Initialize
+      overload: Driver_RS232.RS232.Initialize*
+      modifiers:
+        CSharp:
+        - public
+        VB:
+        - Public
+    - id: Driver_RS232.RS232.IsOpen
+      commentId: M:Driver_RS232.RS232.IsOpen
+      language: CSharp
+      name:
+        CSharp: IsOpen()
+        VB: IsOpen()
+      nameWithType:
+        CSharp: RS232.IsOpen()
+        VB: RS232.IsOpen()
+      qualifiedName:
+        CSharp: Driver_RS232.RS232.IsOpen()
+        VB: Driver_RS232.RS232.IsOpen()
+      type: Method
+      assemblies:
+      - Driver_RS232
+      namespace: Driver_RS232
+      source:
+        id: IsOpen
+        path: C:\Temp\MixingApplication\Driver_RS232\RS232.cs
+        startLine: 96
+      syntax:
+        content:
+          CSharp: public bool IsOpen()
+          VB: Public Function IsOpen As Boolean
+        return:
+          type: System.Boolean
+      overload: Driver_RS232.RS232.IsOpen*
+      modifiers:
+        CSharp:
+        - public
+        VB:
+        - Public
+    - id: Driver_RS232.RS232.SetCommand(System.String)
+      commentId: M:Driver_RS232.RS232.SetCommand(System.String)
+      language: CSharp
+      name:
+        CSharp: SetCommand(String)
+        VB: SetCommand(String)
+      nameWithType:
+        CSharp: RS232.SetCommand(String)
+        VB: RS232.SetCommand(String)
+      qualifiedName:
+        CSharp: Driver_RS232.RS232.SetCommand(System.String)
+        VB: Driver_RS232.RS232.SetCommand(System.String)
+      type: Method
+      assemblies:
+      - Driver_RS232
+      namespace: Driver_RS232
+      source:
+        id: SetCommand
+        path: C:\Temp\MixingApplication\Driver_RS232\RS232.cs
+        startLine: 100
+      syntax:
+        content:
+          CSharp: public bool SetCommand(string command)
+          VB: Public Function SetCommand(command As String) As Boolean
+        parameters:
+        - id: command
+          type: System.String
+        return:
+          type: System.Boolean
+      overload: Driver_RS232.RS232.SetCommand*
+      modifiers:
+        CSharp:
+        - public
+        VB:
+        - Public
+    - id: Driver_RS232.RS232.GetLastCommand
+      commentId: M:Driver_RS232.RS232.GetLastCommand
+      language: CSharp
+      name:
+        CSharp: GetLastCommand()
+        VB: GetLastCommand()
+      nameWithType:
+        CSharp: RS232.GetLastCommand()
+        VB: RS232.GetLastCommand()
+      qualifiedName:
+        CSharp: Driver_RS232.RS232.GetLastCommand()
+        VB: Driver_RS232.RS232.GetLastCommand()
+      type: Method
+      assemblies:
+      - Driver_RS232
+      namespace: Driver_RS232
+      source:
+        id: GetLastCommand
+        path: C:\Temp\MixingApplication\Driver_RS232\RS232.cs
+        startLine: 115
+      syntax:
+        content:
+          CSharp: public string GetLastCommand()
+          VB: Public Function GetLastCommand As String
+        return:
+          type: System.String
+      overload: Driver_RS232.RS232.GetLastCommand*
+      modifiers:
+        CSharp:
+        - public
+        VB:
+        - Public
+references:
+  System:
+    name:
+      CSharp:
+      - name: System
+        nameWithType: System
+        qualifiedName: System
+        isExternal: true
+      VB:
+      - name: System
+        nameWithType: System
+        qualifiedName: System
+    isDefinition: true
+    commentId: N:System
+  System.ValueType:
+    name:
+      CSharp:
+      - id: System.ValueType
+        name: ValueType
+        nameWithType: ValueType
+        qualifiedName: System.ValueType
+        isExternal: true
+      VB:
+      - id: System.ValueType
+        name: ValueType
+        nameWithType: ValueType
+        qualifiedName: System.ValueType
+        isExternal: true
+    isDefinition: true
+    parent: System
+    commentId: T:System.ValueType
+  System.ValueType.Equals(System.Object):
+    name:
+      CSharp:
+      - id: System.ValueType.Equals(System.Object)
+        name: Equals
+        nameWithType: ValueType.Equals
+        qualifiedName: System.ValueType.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.ValueType.Equals(System.Object)
+        name: Equals
+        nameWithType: ValueType.Equals
+        qualifiedName: System.ValueType.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.ValueType
+    commentId: M:System.ValueType.Equals(System.Object)
+  System.ValueType.GetHashCode:
+    name:
+      CSharp:
+      - id: System.ValueType.GetHashCode
+        name: GetHashCode
+        nameWithType: ValueType.GetHashCode
+        qualifiedName: System.ValueType.GetHashCode
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.ValueType.GetHashCode
+        name: GetHashCode
+        nameWithType: ValueType.GetHashCode
+        qualifiedName: System.ValueType.GetHashCode
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.ValueType
+    commentId: M:System.ValueType.GetHashCode
+  System.ValueType.ToString:
+    name:
+      CSharp:
+      - id: System.ValueType.ToString
+        name: ToString
+        nameWithType: ValueType.ToString
+        qualifiedName: System.ValueType.ToString
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.ValueType.ToString
+        name: ToString
+        nameWithType: ValueType.ToString
+        qualifiedName: System.ValueType.ToString
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.ValueType
+    commentId: M:System.ValueType.ToString
+  System.Object:
+    name:
+      CSharp:
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      VB:
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+    isDefinition: true
+    parent: System
+    commentId: T:System.Object
+  System.Object.Equals(System.Object,System.Object):
+    name:
+      CSharp:
+      - id: System.Object.Equals(System.Object,System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.Equals(System.Object,System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.Equals(System.Object,System.Object)
+  System.Object.ReferenceEquals(System.Object,System.Object):
+    name:
+      CSharp:
+      - id: System.Object.ReferenceEquals(System.Object,System.Object)
+        name: ReferenceEquals
+        nameWithType: Object.ReferenceEquals
+        qualifiedName: System.Object.ReferenceEquals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.ReferenceEquals(System.Object,System.Object)
+        name: ReferenceEquals
+        nameWithType: Object.ReferenceEquals
+        qualifiedName: System.Object.ReferenceEquals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  System.Object.GetType:
+    name:
+      CSharp:
+      - id: System.Object.GetType
+        name: GetType
+        nameWithType: Object.GetType
+        qualifiedName: System.Object.GetType
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.GetType
+        name: GetType
+        nameWithType: Object.GetType
+        qualifiedName: System.Object.GetType
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.GetType
+  System.Windows:
+    name:
+      CSharp:
+      - name: System.Windows
+        nameWithType: System.Windows
+        qualifiedName: System.Windows
+        isExternal: true
+      VB:
+      - name: System.Windows
+        nameWithType: System.Windows
+        qualifiedName: System.Windows
+    isDefinition: true
+    commentId: N:System.Windows
+  System.Windows.Window:
+    name:
+      CSharp:
+      - id: System.Windows.Window
+        name: Window
+        nameWithType: Window
+        qualifiedName: System.Windows.Window
+        isExternal: true
+      VB:
+      - id: System.Windows.Window
+        name: Window
+        nameWithType: Window
+        qualifiedName: System.Windows.Window
+        isExternal: true
+    isDefinition: true
+    parent: System.Windows
+    commentId: T:System.Windows.Window
+  Driver_RS232.IniInfo:
+    name:
+      CSharp:
+      - id: Driver_RS232.IniInfo
+        name: IniInfo
+        nameWithType: IniInfo
+        qualifiedName: Driver_RS232.IniInfo
+      VB:
+      - id: Driver_RS232.IniInfo
+        name: IniInfo
+        nameWithType: IniInfo
+        qualifiedName: Driver_RS232.IniInfo
+    isDefinition: true
+    commentId: T:Driver_RS232.IniInfo
+  System.Object.ToString:
+    name:
+      CSharp:
+      - id: System.Object.ToString
+        name: ToString
+        nameWithType: Object.ToString
+        qualifiedName: System.Object.ToString
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.ToString
+        name: ToString
+        nameWithType: Object.ToString
+        qualifiedName: System.Object.ToString
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.ToString
+  System.Object.Equals(System.Object):
+    name:
+      CSharp:
+      - id: System.Object.Equals(System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.Equals(System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.Equals(System.Object)
+  System.Object.GetHashCode:
+    name:
+      CSharp:
+      - id: System.Object.GetHashCode
+        name: GetHashCode
+        nameWithType: Object.GetHashCode
+        qualifiedName: System.Object.GetHashCode
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.GetHashCode
+        name: GetHashCode
+        nameWithType: Object.GetHashCode
+        qualifiedName: System.Object.GetHashCode
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.GetHashCode
+  System.Object.MemberwiseClone:
+    name:
+      CSharp:
+      - id: System.Object.MemberwiseClone
+        name: MemberwiseClone
+        nameWithType: Object.MemberwiseClone
+        qualifiedName: System.Object.MemberwiseClone
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.MemberwiseClone
+        name: MemberwiseClone
+        nameWithType: Object.MemberwiseClone
+        qualifiedName: System.Object.MemberwiseClone
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.MemberwiseClone
+  System.IO.Ports:
+    name:
+      CSharp:
+      - name: System.IO.Ports
+        nameWithType: System.IO.Ports
+        qualifiedName: System.IO.Ports
+        isExternal: true
+      VB:
+      - name: System.IO.Ports
+        nameWithType: System.IO.Ports
+        qualifiedName: System.IO.Ports
+    isDefinition: true
+    commentId: N:System.IO.Ports
+  System.IO.Ports.SerialPort:
+    name:
+      CSharp:
+      - id: System.IO.Ports.SerialPort
+        name: SerialPort
+        nameWithType: SerialPort
+        qualifiedName: System.IO.Ports.SerialPort
+        isExternal: true
+      VB:
+      - id: System.IO.Ports.SerialPort
+        name: SerialPort
+        nameWithType: SerialPort
+        qualifiedName: System.IO.Ports.SerialPort
+        isExternal: true
+    isDefinition: true
+    parent: System.IO.Ports
+    commentId: T:System.IO.Ports.SerialPort
+  System.Int32:
+    name:
+      CSharp:
+      - id: System.Int32
+        name: Int32
+        nameWithType: Int32
+        qualifiedName: System.Int32
+        isExternal: true
+      VB:
+      - id: System.Int32
+        name: Int32
+        nameWithType: Int32
+        qualifiedName: System.Int32
+        isExternal: true
+    isDefinition: true
+    parent: System
+    commentId: T:System.Int32
+  System.IO.Ports.SerialDataReceivedEventHandler:
+    name:
+      CSharp:
+      - id: System.IO.Ports.SerialDataReceivedEventHandler
+        name: SerialDataReceivedEventHandler
+        nameWithType: SerialDataReceivedEventHandler
+        qualifiedName: System.IO.Ports.SerialDataReceivedEventHandler
+        isExternal: true
+      VB:
+      - id: System.IO.Ports.SerialDataReceivedEventHandler
+        name: SerialDataReceivedEventHandler
+        nameWithType: SerialDataReceivedEventHandler
+        qualifiedName: System.IO.Ports.SerialDataReceivedEventHandler
+        isExternal: true
+    isDefinition: true
+    parent: System.IO.Ports
+    commentId: T:System.IO.Ports.SerialDataReceivedEventHandler
+  Driver_RS232.RS232.#ctor*:
+    name:
+      CSharp:
+      - id: Driver_RS232.RS232.#ctor*
+        name: RS232
+        nameWithType: RS232.RS232
+        qualifiedName: Driver_RS232.RS232.RS232
+      VB:
+      - id: Driver_RS232.RS232.#ctor*
+        name: RS232
+        nameWithType: RS232.RS232
+        qualifiedName: Driver_RS232.RS232.RS232
+    isDefinition: true
+    commentId: Overload:Driver_RS232.RS232.#ctor
+  Driver_RS232.RS232.Initialize*:
+    name:
+      CSharp:
+      - id: Driver_RS232.RS232.Initialize*
+        name: Initialize
+        nameWithType: RS232.Initialize
+        qualifiedName: Driver_RS232.RS232.Initialize
+      VB:
+      - id: Driver_RS232.RS232.Initialize*
+        name: Initialize
+        nameWithType: RS232.Initialize
+        qualifiedName: Driver_RS232.RS232.Initialize
+    isDefinition: true
+    commentId: Overload:Driver_RS232.RS232.Initialize
+  System.Boolean:
+    name:
+      CSharp:
+      - id: System.Boolean
+        name: Boolean
+        nameWithType: Boolean
+        qualifiedName: System.Boolean
+        isExternal: true
+      VB:
+      - id: System.Boolean
+        name: Boolean
+        nameWithType: Boolean
+        qualifiedName: System.Boolean
+        isExternal: true
+    isDefinition: true
+    parent: System
+    commentId: T:System.Boolean
+  Driver_RS232.RS232.IsOpen*:
+    name:
+      CSharp:
+      - id: Driver_RS232.RS232.IsOpen*
+        name: IsOpen
+        nameWithType: RS232.IsOpen
+        qualifiedName: Driver_RS232.RS232.IsOpen
+      VB:
+      - id: Driver_RS232.RS232.IsOpen*
+        name: IsOpen
+        nameWithType: RS232.IsOpen
+        qualifiedName: Driver_RS232.RS232.IsOpen
+    isDefinition: true
+    commentId: Overload:Driver_RS232.RS232.IsOpen
+  System.String:
+    name:
+      CSharp:
+      - id: System.String
+        name: String
+        nameWithType: String
+        qualifiedName: System.String
+        isExternal: true
+      VB:
+      - id: System.String
+        name: String
+        nameWithType: String
+        qualifiedName: System.String
+        isExternal: true
+    isDefinition: true
+    parent: System
+    commentId: T:System.String
+  Driver_RS232.RS232.SetCommand*:
+    name:
+      CSharp:
+      - id: Driver_RS232.RS232.SetCommand*
+        name: SetCommand
+        nameWithType: RS232.SetCommand
+        qualifiedName: Driver_RS232.RS232.SetCommand
+      VB:
+      - id: Driver_RS232.RS232.SetCommand*
+        name: SetCommand
+        nameWithType: RS232.SetCommand
+        qualifiedName: Driver_RS232.RS232.SetCommand
+    isDefinition: true
+    commentId: Overload:Driver_RS232.RS232.SetCommand
+  Driver_RS232.RS232.GetLastCommand*:
+    name:
+      CSharp:
+      - id: Driver_RS232.RS232.GetLastCommand*
+        name: GetLastCommand
+        nameWithType: RS232.GetLastCommand
+        qualifiedName: Driver_RS232.RS232.GetLastCommand
+      VB:
+      - id: Driver_RS232.RS232.GetLastCommand*
+        name: GetLastCommand
+        nameWithType: RS232.GetLastCommand
+        qualifiedName: Driver_RS232.RS232.GetLastCommand
+    isDefinition: true
+    commentId: Overload:Driver_RS232.RS232.GetLastCommand
+  Driver_RS232.RS232:
+    name:
+      CSharp:
+      - id: Driver_RS232.RS232
+        name: RS232
+        nameWithType: RS232
+        qualifiedName: Driver_RS232.RS232
+      VB:
+      - id: Driver_RS232.RS232
+        name: RS232
+        nameWithType: RS232
+        qualifiedName: Driver_RS232.RS232
+    isDefinition: true
+    commentId: T:Driver_RS232.RS232
+  Driver_RS232:
+    name:
+      CSharp:
+      - name: Driver_RS232
+        nameWithType: Driver_RS232
+        qualifiedName: Driver_RS232
+      VB:
+      - name: Driver_RS232
+        nameWithType: Driver_RS232
+        qualifiedName: Driver_RS232
+    isDefinition: true
+    commentId: N:Driver_RS232

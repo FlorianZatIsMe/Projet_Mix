@@ -1,0 +1,68 @@
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\Driver_Ethernet.dll
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\Driver_Ethernet.pdb
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\Alarm_Management.dll
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\NLog.dll
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\Database.dll
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\MySqlConnector.dll
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\System.Memory.dll
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\System.Buffers.dll
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\System.Numerics.Vectors.dll
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\Alarm_Management.pdb
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\Alarm_Management.dll.config
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\NLog.xml
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\Database.pdb
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\Database.xml
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\Database.dll.config
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\MySqlConnector.xml
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\System.Memory.xml
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\System.Buffers.xml
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\System.Numerics.Vectors.xml
+C:\Temp\MixingApplication\Driver_Ethernet\obj\Debug\Driver_Ethernet.csproj.AssemblyReference.cache
+C:\Temp\MixingApplication\Driver_Ethernet\obj\Debug\Driver_Ethernet.csproj.CoreCompileInputs.cache
+C:\Temp\MixingApplication\Driver_Ethernet\obj\Debug\Driver_Ethernet.csproj.CopyComplete
+C:\Temp\MixingApplication\Driver_Ethernet\obj\Debug\Driver_Ethernet.dll
+C:\Temp\MixingApplication\Driver_Ethernet\obj\Debug\Driver_Ethernet.pdb
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\Message.exe
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\Message.pdb
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\Message.exe.config
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\Driver_Ethernet.dll.config
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+C:\Temp\MixingApplication\Driver_Ethernet\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\Driver_Ethernet.dll.config
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\Driver_Ethernet.dll
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\Driver_Ethernet.pdb
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\Alarm_Management.dll
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\Message.exe
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\NLog.dll
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\Database.dll
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\MySqlConnector.dll
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\System.Memory.dll
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\System.Buffers.dll
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\System.Numerics.Vectors.dll
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\Alarm_Management.pdb
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\Alarm_Management.dll.config
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\Message.pdb
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\Message.exe.config
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\NLog.xml
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\Database.pdb
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\Database.xml
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\Database.dll.config
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\MySqlConnector.xml
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\System.Memory.xml
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\System.Buffers.xml
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\bin\Debug\System.Numerics.Vectors.xml
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\obj\Debug\Driver_Ethernet.csproj.AssemblyReference.cache
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\obj\Debug\Driver_Ethernet.csproj.CoreCompileInputs.cache
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\obj\Debug\Driver_Ethernet.csproj.CopyComplete
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\obj\Debug\Driver_Ethernet.dll
+C:\Temp\MixingApplication\Source code\Driver_Ethernet\obj\Debug\Driver_Ethernet.pdb

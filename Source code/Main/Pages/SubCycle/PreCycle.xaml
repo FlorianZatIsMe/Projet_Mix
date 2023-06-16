@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="Main.Pages.SubCycle.PreCycle"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Main.Pages.SubCycle"
+             xmlns:p="clr-namespace:Main.Properties"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <Grid x:Name = "FormLayoutGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width = "Auto" />
+            <ColumnDefinition Width = "*" />
+            <ColumnDefinition Width = "Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height = "Auto" />
+            <RowDefinition Height = "Auto" />
+            <RowDefinition Height = "Auto" />
+            <RowDefinition Height = "Auto" />
+            <RowDefinition Height = "*" />
+            <RowDefinition Height = "Auto" />
+            <RowDefinition Height = "Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row = "0" Grid.Column = "0" Text = "{Binding Source={x:Static p:Settings.Default}, Path=PreCycle_JobNumber_Field}" Margin = "10" HorizontalAlignment = "Left" VerticalAlignment = "Center" Style="{DynamicResource Label1}"/>
+        <TextBox x:Name="tbJobNumber" Grid.Row = "0" Grid.Column = "1" Margin = "10" LostFocus="tbJobBatchNumber_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{DynamicResource TextBoxStyle1}"/>
+
+        <TextBlock Grid.Row = "1" Grid.Column = "0" Text = "{Binding Source={x:Static p:Settings.Default}, Path=PreCycle_BatchNumber_Field}" Margin = "10" HorizontalAlignment = "Left" VerticalAlignment = "Center" Style="{DynamicResource Label1}"/>
+        <TextBox x:Name="tbBatchNumber" Grid.Row = "1" Grid.Column = "1" Margin = "10" LostFocus="tbJobBatchNumber_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{DynamicResource TextBoxStyle1}"/>
+
+        <TextBlock Grid.Row = "2" Grid.Column = "0" Text = "{Binding Source={x:Static p:Settings.Default}, Path=PreCycle_ProductCode_Field}" Style="{DynamicResource Label1}" Margin = "10" HorizontalAlignment = "Left" VerticalAlignment = "Center"/>
+        <TextBox x:Name="tbRecipeName" Grid.Row = "2" Grid.Column = "1" Margin = "10" LostFocus="tbRecipeName_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{DynamicResource TextBoxStyle1}"/>
+        <ComboBox x:Name="cbxRecipeName" Style="{DynamicResource ComboBoxStyle1}" Grid.Row = "2" Grid.Column = "1" Margin="10" Width="Auto" IsSynchronizedWithCurrentItem="True" SelectionChanged="cbxProgramName_SelectionChanged" Visibility="Collapsed"/>
+        <ToggleButton x:Name="tgBarcodeOption" Content="{Binding Source={x:Static p:Settings.Default}, Path=PreCycle_TbList_List}" Grid.Row = "2" Grid.Column = "2" Margin="15" Click="tgBarcodeOption_Click" Style="{DynamicResource ToggleButtonStyle1}"/>
+
+        <TextBlock x:Name="lbFinalWeight" Grid.Row = "3" Grid.Column = "0" Text = "Masse cible (g) [# ; #]" Style="{DynamicResource Label1}" Margin = "10" HorizontalAlignment = "Left" VerticalAlignment = "Center"/>
+        <TextBox x:Name="tbFinalWeight" Grid.Row = "3" Grid.Column = "1" Margin = "10" GotFocus="ShowKeyBoard" LostFocus="HideKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{DynamicResource TextBoxStyle1}"/>
+
+        <Button x:Name="tbOk" Style="{DynamicResource ButtonStyle1}" Grid.Row = "5" Grid.Column = "2" Content = "{Binding Source={x:Static p:Settings.Default}, Path=OkButton_Content}" Margin = "10" Click="FxOK"/>
+        <Button Grid.Row = "6" Grid.Column = "2" Content = "Annuler" Style="{DynamicResource ButtonStyle1}" Margin = "10" Click="FxAnnuler"/>
+    </Grid>
+</UserControl>

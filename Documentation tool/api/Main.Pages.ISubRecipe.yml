@@ -1,0 +1,189 @@
+### YamlMime:ManagedReference
+items:
+- uid: Main.Pages.ISubRecipe
+  commentId: T:Main.Pages.ISubRecipe
+  id: ISubRecipe
+  parent: Main.Pages
+  children:
+  - Main.Pages.ISubRecipe.GetPage
+  - Main.Pages.ISubRecipe.IsFormatOk
+  - Main.Pages.ISubRecipe.SetPage(Database.ISeqTabInfo)
+  - Main.Pages.ISubRecipe.SetSeqNumber(System.Int32)
+  langs:
+  - csharp
+  - vb
+  name: ISubRecipe
+  nameWithType: ISubRecipe
+  fullName: Main.Pages.ISubRecipe
+  type: Interface
+  source:
+    id: ISubRecipe
+    path: C:\Temp\MixingApplication\Main\Pages\Recipe.xaml.cs
+    startLine: 16
+  assemblies:
+  - MixingApplication
+  namespace: Main.Pages
+  syntax:
+    content: public interface ISubRecipe
+    content.vb: Public Interface ISubRecipe
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Main.Pages.ISubRecipe.SetPage(Database.ISeqTabInfo)
+  commentId: M:Main.Pages.ISubRecipe.SetPage(Database.ISeqTabInfo)
+  id: SetPage(Database.ISeqTabInfo)
+  parent: Main.Pages.ISubRecipe
+  langs:
+  - csharp
+  - vb
+  name: SetPage(ISeqTabInfo)
+  nameWithType: ISubRecipe.SetPage(ISeqTabInfo)
+  fullName: Main.Pages.ISubRecipe.SetPage(Database.ISeqTabInfo)
+  type: Method
+  source:
+    id: SetPage
+    path: C:\Temp\MixingApplication\Main\Pages\Recipe.xaml.cs
+    startLine: 18
+  assemblies:
+  - MixingApplication
+  namespace: Main.Pages
+  syntax:
+    content: void SetPage(ISeqTabInfo seqInfo)
+    parameters:
+    - id: seqInfo
+      type: Database.ISeqTabInfo
+    content.vb: Sub SetPage(seqInfo As ISeqTabInfo)
+  overload: Main.Pages.ISubRecipe.SetPage*
+- uid: Main.Pages.ISubRecipe.GetPage
+  commentId: M:Main.Pages.ISubRecipe.GetPage
+  id: GetPage
+  parent: Main.Pages.ISubRecipe
+  langs:
+  - csharp
+  - vb
+  name: GetPage()
+  nameWithType: ISubRecipe.GetPage()
+  fullName: Main.Pages.ISubRecipe.GetPage()
+  type: Method
+  source:
+    id: GetPage
+    path: C:\Temp\MixingApplication\Main\Pages\Recipe.xaml.cs
+    startLine: 19
+  assemblies:
+  - MixingApplication
+  namespace: Main.Pages
+  syntax:
+    content: ISeqTabInfo GetPage()
+    return:
+      type: Database.ISeqTabInfo
+    content.vb: Function GetPage As ISeqTabInfo
+  overload: Main.Pages.ISubRecipe.GetPage*
+- uid: Main.Pages.ISubRecipe.IsFormatOk
+  commentId: M:Main.Pages.ISubRecipe.IsFormatOk
+  id: IsFormatOk
+  parent: Main.Pages.ISubRecipe
+  langs:
+  - csharp
+  - vb
+  name: IsFormatOk()
+  nameWithType: ISubRecipe.IsFormatOk()
+  fullName: Main.Pages.ISubRecipe.IsFormatOk()
+  type: Method
+  source:
+    id: IsFormatOk
+    path: C:\Temp\MixingApplication\Main\Pages\Recipe.xaml.cs
+    startLine: 20
+  assemblies:
+  - MixingApplication
+  namespace: Main.Pages
+  syntax:
+    content: bool IsFormatOk()
+    return:
+      type: System.Boolean
+    content.vb: Function IsFormatOk As Boolean
+  overload: Main.Pages.ISubRecipe.IsFormatOk*
+- uid: Main.Pages.ISubRecipe.SetSeqNumber(System.Int32)
+  commentId: M:Main.Pages.ISubRecipe.SetSeqNumber(System.Int32)
+  id: SetSeqNumber(System.Int32)
+  parent: Main.Pages.ISubRecipe
+  langs:
+  - csharp
+  - vb
+  name: SetSeqNumber(Int32)
+  nameWithType: ISubRecipe.SetSeqNumber(Int32)
+  fullName: Main.Pages.ISubRecipe.SetSeqNumber(System.Int32)
+  type: Method
+  source:
+    id: SetSeqNumber
+    path: C:\Temp\MixingApplication\Main\Pages\Recipe.xaml.cs
+    startLine: 21
+  assemblies:
+  - MixingApplication
+  namespace: Main.Pages
+  syntax:
+    content: void SetSeqNumber(int n)
+    parameters:
+    - id: n
+      type: System.Int32
+    content.vb: Sub SetSeqNumber(n As Integer)
+  overload: Main.Pages.ISubRecipe.SetSeqNumber*
+references:
+- uid: Main.Pages
+  commentId: N:Main.Pages
+  name: Main.Pages
+  nameWithType: Main.Pages
+  fullName: Main.Pages
+- uid: Main.Pages.ISubRecipe.SetPage*
+  commentId: Overload:Main.Pages.ISubRecipe.SetPage
+  name: SetPage
+  nameWithType: ISubRecipe.SetPage
+  fullName: Main.Pages.ISubRecipe.SetPage
+- uid: Database.ISeqTabInfo
+  commentId: T:Database.ISeqTabInfo
+  parent: Database
+  name: ISeqTabInfo
+  nameWithType: ISeqTabInfo
+  fullName: Database.ISeqTabInfo
+- uid: Database
+  commentId: N:Database
+  name: Database
+  nameWithType: Database
+  fullName: Database
+- uid: Main.Pages.ISubRecipe.GetPage*
+  commentId: Overload:Main.Pages.ISubRecipe.GetPage
+  name: GetPage
+  nameWithType: ISubRecipe.GetPage
+  fullName: Main.Pages.ISubRecipe.GetPage
+- uid: Main.Pages.ISubRecipe.IsFormatOk*
+  commentId: Overload:Main.Pages.ISubRecipe.IsFormatOk
+  name: IsFormatOk
+  nameWithType: ISubRecipe.IsFormatOk
+  fullName: Main.Pages.ISubRecipe.IsFormatOk
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Main.Pages.ISubRecipe.SetSeqNumber*
+  commentId: Overload:Main.Pages.ISubRecipe.SetSeqNumber
+  name: SetSeqNumber
+  nameWithType: ISubRecipe.SetSeqNumber
+  fullName: Main.Pages.ISubRecipe.SetSeqNumber
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32

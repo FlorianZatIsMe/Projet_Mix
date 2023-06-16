@@ -1,0 +1,1197 @@
+### YamlMime:ManagedReference
+items:
+- uid: Database.AccessTableInfo
+  commentId: T:Database.AccessTableInfo
+  id: AccessTableInfo
+  parent: Database
+  children:
+  - Database.AccessTableInfo.#ctor
+  - Database.AccessTableInfo.AckAlarm
+  - Database.AccessTableInfo.AdministratorRole
+  - Database.AccessTableInfo.ApplicationStop
+  - Database.AccessTableInfo.Backup
+  - Database.AccessTableInfo.Columns
+  - Database.AccessTableInfo.CycleStart
+  - Database.AccessTableInfo.DailyTest
+  - Database.AccessTableInfo.Id
+  - Database.AccessTableInfo.Ids
+  - Database.AccessTableInfo.NoneRole
+  - Database.AccessTableInfo.OperatorRole
+  - Database.AccessTableInfo.Parameters
+  - Database.AccessTableInfo.RecipeUpdate
+  - Database.AccessTableInfo.Role
+  - Database.AccessTableInfo.SupervisorRole
+  - Database.AccessTableInfo.TabName
+  langs:
+  - csharp
+  - vb
+  name: AccessTableInfo
+  nameWithType: AccessTableInfo
+  fullName: Database.AccessTableInfo
+  type: Class
+  source:
+    id: AccessTableInfo
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 194
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nClass containing the infomration of the access database table. The table must contain at least the following colummns: \nId,\nRole,\ncyclestart... (TBD).\n<p>Creation revision: 001</p>\n"
+  example: []
+  syntax:
+    content: 'public class AccessTableInfo : IComTabInfo, IBasTabInfo'
+    content.vb: >-
+      Public Class AccessTableInfo
+
+          Implements IComTabInfo, IBasTabInfo
+  inheritance:
+  - System.Object
+  implements:
+  - Database.IComTabInfo
+  - Database.IBasTabInfo
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Database.AccessTableInfo.#ctor
+  commentId: M:Database.AccessTableInfo.#ctor
+  id: '#ctor'
+  parent: Database.AccessTableInfo
+  langs:
+  - csharp
+  - vb
+  name: AccessTableInfo()
+  nameWithType: AccessTableInfo.AccessTableInfo()
+  fullName: Database.AccessTableInfo.AccessTableInfo()
+  type: Constructor
+  source:
+    id: .ctor
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 199
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nSets all the variables of the class except the values of the variable Columns\n"
+  example: []
+  syntax:
+    content: public AccessTableInfo()
+    content.vb: Public Sub New
+  overload: Database.AccessTableInfo.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Database.AccessTableInfo.TabName
+  commentId: P:Database.AccessTableInfo.TabName
+  id: TabName
+  parent: Database.AccessTableInfo
+  langs:
+  - csharp
+  - vb
+  name: TabName
+  nameWithType: AccessTableInfo.TabName
+  fullName: Database.AccessTableInfo.TabName
+  type: Property
+  source:
+    id: TabName
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 239
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public string TabName { get; }
+    parameters: []
+    return:
+      type: System.String
+      description: Name of the database table. From IBasTabInfo interface
+    content.vb: Public ReadOnly Property TabName As String
+  overload: Database.AccessTableInfo.TabName*
+  implements:
+  - Database.IBasTabInfo.TabName
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.AccessTableInfo.Columns
+  commentId: P:Database.AccessTableInfo.Columns
+  id: Columns
+  parent: Database.AccessTableInfo
+  langs:
+  - csharp
+  - vb
+  name: Columns
+  nameWithType: AccessTableInfo.Columns
+  fullName: Database.AccessTableInfo.Columns
+  type: Property
+  source:
+    id: Columns
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 242
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public List<Column> Columns { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{Database.Column}
+      description: Columns of the database table. From IBasTabInfo interface
+    content.vb: Public Property Columns As List(Of Column)
+  overload: Database.AccessTableInfo.Columns*
+  implements:
+  - Database.IBasTabInfo.Columns
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Database.AccessTableInfo.Ids
+  commentId: P:Database.AccessTableInfo.Ids
+  id: Ids
+  parent: Database.AccessTableInfo
+  langs:
+  - csharp
+  - vb
+  name: Ids
+  nameWithType: AccessTableInfo.Ids
+  fullName: Database.AccessTableInfo.Ids
+  type: Property
+  source:
+    id: Ids
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 245
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public string[] Ids { get; }
+    parameters: []
+    return:
+      type: System.String[]
+      description: Name of the columns of the database table. From IBasTabInfo interface
+    content.vb: Public ReadOnly Property Ids As String()
+  overload: Database.AccessTableInfo.Ids*
+  implements:
+  - Database.IBasTabInfo.Ids
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.AccessTableInfo.Id
+  commentId: P:Database.AccessTableInfo.Id
+  id: Id
+  parent: Database.AccessTableInfo
+  langs:
+  - csharp
+  - vb
+  name: Id
+  nameWithType: AccessTableInfo.Id
+  fullName: Database.AccessTableInfo.Id
+  type: Property
+  source:
+    id: Id
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 248
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int Id { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: 'Index of the id column (usually the first one: 0). This column <code>must be</code> an integer, usually automatically incremented. From IComTabInfo interface'
+    content.vb: Public ReadOnly Property Id As Integer
+  overload: Database.AccessTableInfo.Id*
+  implements:
+  - Database.IComTabInfo.Id
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.AccessTableInfo.Role
+  commentId: P:Database.AccessTableInfo.Role
+  id: Role
+  parent: Database.AccessTableInfo
+  langs:
+  - csharp
+  - vb
+  name: Role
+  nameWithType: AccessTableInfo.Role
+  fullName: Database.AccessTableInfo.Role
+  type: Property
+  source:
+    id: Role
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 251
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int Role { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the role column. This column contains the name of the applicable access role
+    content.vb: Public ReadOnly Property Role As Integer
+  overload: Database.AccessTableInfo.Role*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.AccessTableInfo.CycleStart
+  commentId: P:Database.AccessTableInfo.CycleStart
+  id: CycleStart
+  parent: Database.AccessTableInfo
+  langs:
+  - csharp
+  - vb
+  name: CycleStart
+  nameWithType: AccessTableInfo.CycleStart
+  fullName: Database.AccessTableInfo.CycleStart
+  type: Property
+  source:
+    id: CycleStart
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 254
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public static int CycleStart { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the cycle start column. This column is the access right of the action start a cycle for the applicable access role
+    content.vb: Public Shared ReadOnly Property CycleStart As Integer
+  overload: Database.AccessTableInfo.CycleStart*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Database.AccessTableInfo.RecipeUpdate
+  commentId: P:Database.AccessTableInfo.RecipeUpdate
+  id: RecipeUpdate
+  parent: Database.AccessTableInfo
+  langs:
+  - csharp
+  - vb
+  name: RecipeUpdate
+  nameWithType: AccessTableInfo.RecipeUpdate
+  fullName: Database.AccessTableInfo.RecipeUpdate
+  type: Property
+  source:
+    id: RecipeUpdate
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 257
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public static int RecipeUpdate { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the create recipe column. This column is the access the right of the action create a recipe for the applicable access role
+    content.vb: Public Shared ReadOnly Property RecipeUpdate As Integer
+  overload: Database.AccessTableInfo.RecipeUpdate*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Database.AccessTableInfo.Backup
+  commentId: P:Database.AccessTableInfo.Backup
+  id: Backup
+  parent: Database.AccessTableInfo
+  langs:
+  - csharp
+  - vb
+  name: Backup
+  nameWithType: AccessTableInfo.Backup
+  fullName: Database.AccessTableInfo.Backup
+  type: Property
+  source:
+    id: Backup
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 260
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public static int Backup { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the backup column. This column is the access the right of the backup and archiving actions
+    content.vb: Public Shared ReadOnly Property Backup As Integer
+  overload: Database.AccessTableInfo.Backup*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Database.AccessTableInfo.Parameters
+  commentId: P:Database.AccessTableInfo.Parameters
+  id: Parameters
+  parent: Database.AccessTableInfo
+  langs:
+  - csharp
+  - vb
+  name: Parameters
+  nameWithType: AccessTableInfo.Parameters
+  fullName: Database.AccessTableInfo.Parameters
+  type: Property
+  source:
+    id: Parameters
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 263
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public static int Parameters { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the parameters column. This column is the access the right of the parameters screen
+    content.vb: Public Shared ReadOnly Property Parameters As Integer
+  overload: Database.AccessTableInfo.Parameters*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Database.AccessTableInfo.DailyTest
+  commentId: P:Database.AccessTableInfo.DailyTest
+  id: DailyTest
+  parent: Database.AccessTableInfo
+  langs:
+  - csharp
+  - vb
+  name: DailyTest
+  nameWithType: AccessTableInfo.DailyTest
+  fullName: Database.AccessTableInfo.DailyTest
+  type: Property
+  source:
+    id: DailyTest
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 266
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public static int DailyTest { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the daily test column. This column is the access the right of the daily test
+    content.vb: Public Shared ReadOnly Property DailyTest As Integer
+  overload: Database.AccessTableInfo.DailyTest*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Database.AccessTableInfo.AckAlarm
+  commentId: P:Database.AccessTableInfo.AckAlarm
+  id: AckAlarm
+  parent: Database.AccessTableInfo
+  langs:
+  - csharp
+  - vb
+  name: AckAlarm
+  nameWithType: AccessTableInfo.AckAlarm
+  fullName: Database.AccessTableInfo.AckAlarm
+  type: Property
+  source:
+    id: AckAlarm
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 269
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public static int AckAlarm { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the ackowledgment of alarm column. This column is the access the right of the ackowledgment of alarm
+    content.vb: Public Shared ReadOnly Property AckAlarm As Integer
+  overload: Database.AccessTableInfo.AckAlarm*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Database.AccessTableInfo.ApplicationStop
+  commentId: P:Database.AccessTableInfo.ApplicationStop
+  id: ApplicationStop
+  parent: Database.AccessTableInfo
+  langs:
+  - csharp
+  - vb
+  name: ApplicationStop
+  nameWithType: AccessTableInfo.ApplicationStop
+  fullName: Database.AccessTableInfo.ApplicationStop
+  type: Property
+  source:
+    id: ApplicationStop
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 272
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public static int ApplicationStop { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the application stop column. This column is the access the right of the action stop the application for the applicable access role
+    content.vb: Public Shared ReadOnly Property ApplicationStop As Integer
+  overload: Database.AccessTableInfo.ApplicationStop*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Database.AccessTableInfo.OperatorRole
+  commentId: P:Database.AccessTableInfo.OperatorRole
+  id: OperatorRole
+  parent: Database.AccessTableInfo
+  langs:
+  - csharp
+  - vb
+  name: OperatorRole
+  nameWithType: AccessTableInfo.OperatorRole
+  fullName: Database.AccessTableInfo.OperatorRole
+  type: Property
+  source:
+    id: OperatorRole
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 275
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public static string OperatorRole { get; }
+    parameters: []
+    return:
+      type: System.String
+      description: Name of the operator access role
+    content.vb: Public Shared ReadOnly Property OperatorRole As String
+  overload: Database.AccessTableInfo.OperatorRole*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Database.AccessTableInfo.SupervisorRole
+  commentId: P:Database.AccessTableInfo.SupervisorRole
+  id: SupervisorRole
+  parent: Database.AccessTableInfo
+  langs:
+  - csharp
+  - vb
+  name: SupervisorRole
+  nameWithType: AccessTableInfo.SupervisorRole
+  fullName: Database.AccessTableInfo.SupervisorRole
+  type: Property
+  source:
+    id: SupervisorRole
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 278
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public static string SupervisorRole { get; }
+    parameters: []
+    return:
+      type: System.String
+      description: Name of the supervisor access role
+    content.vb: Public Shared ReadOnly Property SupervisorRole As String
+  overload: Database.AccessTableInfo.SupervisorRole*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Database.AccessTableInfo.AdministratorRole
+  commentId: P:Database.AccessTableInfo.AdministratorRole
+  id: AdministratorRole
+  parent: Database.AccessTableInfo
+  langs:
+  - csharp
+  - vb
+  name: AdministratorRole
+  nameWithType: AccessTableInfo.AdministratorRole
+  fullName: Database.AccessTableInfo.AdministratorRole
+  type: Property
+  source:
+    id: AdministratorRole
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 281
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public static string AdministratorRole { get; }
+    parameters: []
+    return:
+      type: System.String
+      description: Name of the administrator access role
+    content.vb: Public Shared ReadOnly Property AdministratorRole As String
+  overload: Database.AccessTableInfo.AdministratorRole*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Database.AccessTableInfo.NoneRole
+  commentId: P:Database.AccessTableInfo.NoneRole
+  id: NoneRole
+  parent: Database.AccessTableInfo
+  langs:
+  - csharp
+  - vb
+  name: NoneRole
+  nameWithType: AccessTableInfo.NoneRole
+  fullName: Database.AccessTableInfo.NoneRole
+  type: Property
+  source:
+    id: NoneRole
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 284
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public static string NoneRole { get; }
+    parameters: []
+    return:
+      type: System.String
+      description: Name of the guest access role (role without access)
+    content.vb: Public Shared ReadOnly Property NoneRole As String
+  overload: Database.AccessTableInfo.NoneRole*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+references:
+- uid: Database
+  commentId: N:Database
+  name: Database
+  nameWithType: Database
+  fullName: Database
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Database.IComTabInfo
+  commentId: T:Database.IComTabInfo
+  parent: Database
+  name: IComTabInfo
+  nameWithType: IComTabInfo
+  fullName: Database.IComTabInfo
+- uid: Database.IBasTabInfo
+  commentId: T:Database.IBasTabInfo
+  parent: Database
+  name: IBasTabInfo
+  nameWithType: IBasTabInfo
+  fullName: Database.IBasTabInfo
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Database.AccessTableInfo.#ctor*
+  commentId: Overload:Database.AccessTableInfo.#ctor
+  name: AccessTableInfo
+  nameWithType: AccessTableInfo.AccessTableInfo
+  fullName: Database.AccessTableInfo.AccessTableInfo
+- uid: Database.AccessTableInfo.TabName*
+  commentId: Overload:Database.AccessTableInfo.TabName
+  name: TabName
+  nameWithType: AccessTableInfo.TabName
+  fullName: Database.AccessTableInfo.TabName
+- uid: Database.IBasTabInfo.TabName
+  commentId: P:Database.IBasTabInfo.TabName
+  parent: Database.IBasTabInfo
+  name: TabName
+  nameWithType: IBasTabInfo.TabName
+  fullName: Database.IBasTabInfo.TabName
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Database.AccessTableInfo.Columns*
+  commentId: Overload:Database.AccessTableInfo.Columns
+  name: Columns
+  nameWithType: AccessTableInfo.Columns
+  fullName: Database.AccessTableInfo.Columns
+- uid: Database.IBasTabInfo.Columns
+  commentId: P:Database.IBasTabInfo.Columns
+  parent: Database.IBasTabInfo
+  name: Columns
+  nameWithType: IBasTabInfo.Columns
+  fullName: Database.IBasTabInfo.Columns
+- uid: System.Collections.Generic.List{Database.Column}
+  commentId: T:System.Collections.Generic.List{Database.Column}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<Column>
+  nameWithType: List<Column>
+  fullName: System.Collections.Generic.List<Database.Column>
+  nameWithType.vb: List(Of Column)
+  fullName.vb: System.Collections.Generic.List(Of Database.Column)
+  name.vb: List(Of Column)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Database.Column
+    name: Column
+    nameWithType: Column
+    fullName: Database.Column
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Database.Column
+    name: Column
+    nameWithType: Column
+    fullName: Database.Column
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: Database.AccessTableInfo.Ids*
+  commentId: Overload:Database.AccessTableInfo.Ids
+  name: Ids
+  nameWithType: AccessTableInfo.Ids
+  fullName: Database.AccessTableInfo.Ids
+- uid: Database.IBasTabInfo.Ids
+  commentId: P:Database.IBasTabInfo.Ids
+  parent: Database.IBasTabInfo
+  name: Ids
+  nameWithType: IBasTabInfo.Ids
+  fullName: Database.IBasTabInfo.Ids
+- uid: System.String[]
+  isExternal: true
+  name: String[]
+  nameWithType: String[]
+  fullName: System.String[]
+  nameWithType.vb: String()
+  fullName.vb: System.String()
+  name.vb: String()
+  spec.csharp:
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: Database.AccessTableInfo.Id*
+  commentId: Overload:Database.AccessTableInfo.Id
+  name: Id
+  nameWithType: AccessTableInfo.Id
+  fullName: Database.AccessTableInfo.Id
+- uid: Database.IComTabInfo.Id
+  commentId: P:Database.IComTabInfo.Id
+  parent: Database.IComTabInfo
+  name: Id
+  nameWithType: IComTabInfo.Id
+  fullName: Database.IComTabInfo.Id
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Database.AccessTableInfo.Role*
+  commentId: Overload:Database.AccessTableInfo.Role
+  name: Role
+  nameWithType: AccessTableInfo.Role
+  fullName: Database.AccessTableInfo.Role
+- uid: Database.AccessTableInfo.CycleStart*
+  commentId: Overload:Database.AccessTableInfo.CycleStart
+  name: CycleStart
+  nameWithType: AccessTableInfo.CycleStart
+  fullName: Database.AccessTableInfo.CycleStart
+- uid: Database.AccessTableInfo.RecipeUpdate*
+  commentId: Overload:Database.AccessTableInfo.RecipeUpdate
+  name: RecipeUpdate
+  nameWithType: AccessTableInfo.RecipeUpdate
+  fullName: Database.AccessTableInfo.RecipeUpdate
+- uid: Database.AccessTableInfo.Backup*
+  commentId: Overload:Database.AccessTableInfo.Backup
+  name: Backup
+  nameWithType: AccessTableInfo.Backup
+  fullName: Database.AccessTableInfo.Backup
+- uid: Database.AccessTableInfo.Parameters*
+  commentId: Overload:Database.AccessTableInfo.Parameters
+  name: Parameters
+  nameWithType: AccessTableInfo.Parameters
+  fullName: Database.AccessTableInfo.Parameters
+- uid: Database.AccessTableInfo.DailyTest*
+  commentId: Overload:Database.AccessTableInfo.DailyTest
+  name: DailyTest
+  nameWithType: AccessTableInfo.DailyTest
+  fullName: Database.AccessTableInfo.DailyTest
+- uid: Database.AccessTableInfo.AckAlarm*
+  commentId: Overload:Database.AccessTableInfo.AckAlarm
+  name: AckAlarm
+  nameWithType: AccessTableInfo.AckAlarm
+  fullName: Database.AccessTableInfo.AckAlarm
+- uid: Database.AccessTableInfo.ApplicationStop*
+  commentId: Overload:Database.AccessTableInfo.ApplicationStop
+  name: ApplicationStop
+  nameWithType: AccessTableInfo.ApplicationStop
+  fullName: Database.AccessTableInfo.ApplicationStop
+- uid: Database.AccessTableInfo.OperatorRole*
+  commentId: Overload:Database.AccessTableInfo.OperatorRole
+  name: OperatorRole
+  nameWithType: AccessTableInfo.OperatorRole
+  fullName: Database.AccessTableInfo.OperatorRole
+- uid: Database.AccessTableInfo.SupervisorRole*
+  commentId: Overload:Database.AccessTableInfo.SupervisorRole
+  name: SupervisorRole
+  nameWithType: AccessTableInfo.SupervisorRole
+  fullName: Database.AccessTableInfo.SupervisorRole
+- uid: Database.AccessTableInfo.AdministratorRole*
+  commentId: Overload:Database.AccessTableInfo.AdministratorRole
+  name: AdministratorRole
+  nameWithType: AccessTableInfo.AdministratorRole
+  fullName: Database.AccessTableInfo.AdministratorRole
+- uid: Database.AccessTableInfo.NoneRole*
+  commentId: Overload:Database.AccessTableInfo.NoneRole
+  name: NoneRole
+  nameWithType: AccessTableInfo.NoneRole
+  fullName: Database.AccessTableInfo.NoneRole

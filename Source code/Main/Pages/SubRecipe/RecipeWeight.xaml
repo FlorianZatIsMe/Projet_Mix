@@ -1,0 +1,169 @@
+﻿<UserControl x:Class="Main.Pages.SubRecipe.RecipeWeight"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Main.Pages.SubRecipe"
+             xmlns:p="clr-namespace:Main.Properties"
+             mc:Ignorable="d" 
+             d:DesignHeight="350" d:DesignWidth="1400"
+             Background="Transparent">
+
+    <UserControl.DataContext>
+        <local:WeightViewModel/>
+    </UserControl.DataContext>
+
+    <Border Background="{DynamicResource Backgroup_Sequence}" BorderThickness="0" BorderBrush="Green" CornerRadius="15" Margin="5">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="55"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Column="0" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock x:Name="tbSeqNumber"
+                       Grid.Column="0"
+                       Grid.RowSpan="2"
+                       Text="#" 
+                       Style="{DynamicResource Label1}"
+                       HorizontalAlignment="Center"/>
+                <Button Grid.Column="0"
+                        Grid.RowSpan="2"
+                        Content="Supprimer"
+                        Style="{DynamicResource ButtonStyle1}"
+                        Margin="0,10,0,0"
+                        Click="ButtonDeleteSequence_Click"/>
+            </StackPanel>
+
+            <WrapPanel Grid.Column="1" Grid.Row="0" Margin="0,10,0,0" VerticalAlignment="Top">
+                <RadioButton Content="Pesée"
+                                 IsChecked="True"
+                                 Style="{DynamicResource SubSeqRadioButton}"/>
+                <RadioButton  x:Name="rbSpeedMixer"
+                                 Content="SpeedMixer"
+                                 Margin="10,0,0,0"
+                                 IsChecked="False"
+                                 Click="RadioButton_Click_1"
+                                  Style="{DynamicResource SubSeqRadioButton}"/>
+            </WrapPanel>
+
+            <StackPanel Grid.Column="1" Grid.Row="1">
+                <WrapPanel>
+                    <Grid Width="400" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Margin="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Produit"
+                                   Grid.Column="0"
+                                   Margin="0,0,20,0"
+                                   Style="{DynamicResource Label1}"
+                                   VerticalAlignment="Center"/>
+                        <TextBox x:Name="tbProduct" 
+                             Grid.Column="1"
+                             VerticalContentAlignment="Center"
+                             LostFocus="TbProduct_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"
+                             Style="{DynamicResource TextBoxStyle1}"/>
+                    </Grid>
+
+                    <ToggleButton x:Name="cbIsSolvent" 
+                                  Content="Solvant" 
+                                  IsChecked="False" 
+                                  HorizontalAlignment="Left" 
+                                  Margin="20,0,0,0"
+                                  Style="{DynamicResource ToggleButtonStyle1}" />
+
+                    <Grid Margin="25,0,0,0" HorizontalAlignment="Left" >
+                        <TextBox x:Name="tbBarcode" 
+                             HorizontalContentAlignment="Left" 
+                             Style="{DynamicResource TextBoxStyle2}"  
+                             BorderThickness="1"
+                             BorderBrush="{StaticResource Color_SubS_rbOn}"
+                             Margin="125,0,0,0" 
+                             Width="400" 
+                             Visibility="Hidden"
+                             LostFocus="TbBarcode_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
+                        <ToggleButton x:Name="cbIsBarcode" 
+                                  Content="Contrôle du code barres" 
+                                  IsChecked="False" 
+                                  Width="180"
+                                  HorizontalAlignment="Left" 
+                                  Style="{DynamicResource ToggleButtonStyle1}" 
+                                  Checked="CbIsBarcode_Checked" 
+                                  Unchecked="CbIsBarcode_Unchecked"/>
+                    </Grid>
+                </WrapPanel>
+
+                <WrapPanel Margin="0,15,0,10">
+
+                    <Border Width="600" 
+                        Height="150" 
+                        Background="{DynamicResource Backgroup_SubSequence}" 
+                        BorderThickness="2"
+                        CornerRadius="10"
+                        HorizontalAlignment="Left"
+                            Margin="10">
+                        <Grid Margin="10,0,10,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Valeur" 
+                                       Margin="5,5,0,0" 
+                                       Grid.ColumnSpan="2"
+                                       Grid.Row="0"
+                                       Style="{DynamicResource Label1}"
+                                       HorizontalAlignment="Center"/>
+
+                            <WrapPanel Grid.Column="0" Grid.Row="1" VerticalAlignment="Center">
+                                <TextBlock Margin="0,0,0,0" 
+                                           Style="{DynamicResource Label1}"
+                                           Text="{Binding TextBlockSetpoint}"
+                                           VerticalAlignment="Center"/>
+                                <TextBox x:Name="tbSetpoint" 
+                                         Margin="10,0,0,0" 
+                                         Width="100" 
+                                         LostFocus="TbSetpoint_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"
+                                         Style="{DynamicResource TextBoxStyle1}"/>
+                            </WrapPanel>
+
+                            <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Center">
+                                <WrapPanel>
+                                    <TextBlock Margin="0,0,0,0" 
+                                               Style="{DynamicResource Label1}"
+                                               Text="{Binding TextBlockRange}"
+                                               VerticalAlignment="Center"/>
+                                    <TextBox x:Name="tbRange" 
+                                             Margin="10,0,0,0" 
+                                             Width="100" 
+                                             LostFocus="TbRange_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"
+                                             Style="{DynamicResource TextBoxStyle1}"/>
+                                </WrapPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </WrapPanel>
+
+
+
+
+                <WrapPanel Visibility="Collapsed">
+                    <CheckBox x:Name="cbIsBarcode_old" Margin="0,10,0,0" Foreground="Wheat" Content="Contrôle du code barres" Checked="CbIsBarcode_Checked" Unchecked="CbIsBarcode_Unchecked"/>
+                    <TextBox x:Name="tbBarcode_old" Margin="10,10,0,0" Width="200" LostFocus="TbBarcode_LostFocus" Visibility="Collapsed"/>
+                </WrapPanel>
+
+            </StackPanel>
+
+        </Grid>
+    </Border>
+</UserControl>

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>User_Management</name>
+    </assembly>
+    <members>
+        <member name="T:User_Management.IniInfo">
+            <summary>
+            Structure of the information from other projects required to initialize the main class
+            </summary>
+        </member>
+        <member name="F:User_Management.IniInfo.Window">
+            <value>Main window of the application. Is used to attach the MessageBoxes to it</value>
+        </member>
+        <member name="T:User_Management.UserManagement">
+            <summary>
+            This class allows the update of the access table variable. The access table can then be used by other projects to allow or avoid accesses.
+            <para>Creation revision: 001</para>
+            </summary>
+        </member>
+        <member name="M:User_Management.UserManagement.UpdateAccessTable(System.String,System.String)">
+            <summary>
+            Update the access table variable
+            </summary>
+            <param name="username">Name a windows account</param>
+            <param name="password">Password of the windows account</param>
+            <returns>The name of role of the windows account username</returns>
+        </member>
+        <member name="M:User_Management.UserManagement.SetNoneAccess">
+            <summary>
+            Update the current access table with the guest rights
+            </summary>
+            <returns>True if the table was updated, false otherwirse</returns>
+        </member>
+        <member name="M:User_Management.UserManagement.GetCurrentAccessTable">
+            <returns>The access table variable</returns>
+        </member>
+    </members>
+</doc>

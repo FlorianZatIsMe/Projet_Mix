@@ -1,0 +1,854 @@
+id: Driver_Ethernet
+language: CSharp
+name:
+  Default: Driver_Ethernet
+qualifiedName:
+  Default: Driver_Ethernet
+type: Assembly
+modifiers: {}
+items:
+- id: Driver_Ethernet
+  commentId: N:Driver_Ethernet
+  language: CSharp
+  name:
+    CSharp: Driver_Ethernet
+    VB: Driver_Ethernet
+  nameWithType:
+    CSharp: Driver_Ethernet
+    VB: Driver_Ethernet
+  qualifiedName:
+    CSharp: Driver_Ethernet
+    VB: Driver_Ethernet
+  type: Namespace
+  assemblies:
+  - Driver_Ethernet
+  modifiers: {}
+  items:
+  - id: Driver_Ethernet.Config
+    commentId: T:Driver_Ethernet.Config
+    language: CSharp
+    name:
+      CSharp: Config
+      VB: Config
+    nameWithType:
+      CSharp: Config
+      VB: Config
+    qualifiedName:
+      CSharp: Driver_Ethernet.Config
+      VB: Driver_Ethernet.Config
+    type: Class
+    assemblies:
+    - Driver_Ethernet
+    namespace: Driver_Ethernet
+    source:
+      id: Config
+      path: C:\Temp\MixingApplication\Driver_Ethernet\Ethernet.cs
+      startLine: 13
+    syntax:
+      content:
+        CSharp: public class Config
+        VB: Public Class Config
+    inheritance:
+    - System.Object
+    inheritedMembers:
+    - System.Object.ToString
+    - System.Object.Equals(System.Object)
+    - System.Object.Equals(System.Object,System.Object)
+    - System.Object.ReferenceEquals(System.Object,System.Object)
+    - System.Object.GetHashCode
+    - System.Object.GetType
+    - System.Object.MemberwiseClone
+    modifiers:
+      CSharp:
+      - public
+      - class
+      VB:
+      - Public
+      - Class
+    items: []
+  - id: Driver_Ethernet.Ethernet
+    commentId: T:Driver_Ethernet.Ethernet
+    language: CSharp
+    name:
+      CSharp: Ethernet
+      VB: Ethernet
+    nameWithType:
+      CSharp: Ethernet
+      VB: Ethernet
+    qualifiedName:
+      CSharp: Driver_Ethernet.Ethernet
+      VB: Driver_Ethernet.Ethernet
+    type: Class
+    assemblies:
+    - Driver_Ethernet
+    namespace: Driver_Ethernet
+    source:
+      id: Ethernet
+      path: C:\Temp\MixingApplication\Driver_Ethernet\Ethernet.cs
+      startLine: 19
+    syntax:
+      content:
+        CSharp: public class Ethernet
+        VB: Public Class Ethernet
+    inheritance:
+    - System.Object
+    inheritedMembers:
+    - System.Object.ToString
+    - System.Object.Equals(System.Object)
+    - System.Object.Equals(System.Object,System.Object)
+    - System.Object.ReferenceEquals(System.Object,System.Object)
+    - System.Object.GetHashCode
+    - System.Object.GetType
+    - System.Object.MemberwiseClone
+    modifiers:
+      CSharp:
+      - public
+      - class
+      VB:
+      - Public
+      - Class
+    items:
+    - id: Driver_Ethernet.Ethernet.endLine
+      commentId: F:Driver_Ethernet.Ethernet.endLine
+      language: CSharp
+      name:
+        CSharp: endLine
+        VB: endLine
+      nameWithType:
+        CSharp: Ethernet.endLine
+        VB: Ethernet.endLine
+      qualifiedName:
+        CSharp: Driver_Ethernet.Ethernet.endLine
+        VB: Driver_Ethernet.Ethernet.endLine
+      type: Field
+      assemblies:
+      - Driver_Ethernet
+      namespace: Driver_Ethernet
+      source:
+        id: endLine
+        path: C:\Temp\MixingApplication\Driver_Ethernet\Ethernet.cs
+        startLine: 24
+      syntax:
+        content:
+          CSharp: public readonly string endLine
+          VB: Public ReadOnly endLine As String
+        return:
+          type: System.String
+      modifiers:
+        CSharp:
+        - public
+        - readonly
+        VB:
+        - Public
+        - ReadOnly
+    - id: Driver_Ethernet.Ethernet.#ctor(System.String,System.Int32,System.String,System.Int32,System.Int32)
+      commentId: M:Driver_Ethernet.Ethernet.#ctor(System.String,System.Int32,System.String,System.Int32,System.Int32)
+      language: CSharp
+      name:
+        CSharp: Ethernet(String, Int32, String, Int32, Int32)
+        VB: Ethernet(String, Int32, String, Int32, Int32)
+      nameWithType:
+        CSharp: Ethernet.Ethernet(String, Int32, String, Int32, Int32)
+        VB: Ethernet.Ethernet(String, Int32, String, Int32, Int32)
+      qualifiedName:
+        CSharp: Driver_Ethernet.Ethernet.Ethernet(System.String, System.Int32, System.String, System.Int32, System.Int32)
+        VB: Driver_Ethernet.Ethernet.Ethernet(System.String, System.Int32, System.String, System.Int32, System.Int32)
+      type: Constructor
+      assemblies:
+      - Driver_Ethernet
+      namespace: Driver_Ethernet
+      source:
+        id: .ctor
+        path: C:\Temp\MixingApplication\Driver_Ethernet\Ethernet.cs
+        startLine: 33
+      syntax:
+        content:
+          CSharp: public Ethernet(string ipAddress_arg, int port_arg, string endLine_arg = "", int alarmConnectId1_arg = -1, int alarmConnectId2_arg = -1)
+          VB: Public Sub New(ipAddress_arg As String, port_arg As Integer, endLine_arg As String = "", alarmConnectId1_arg As Integer = -1, alarmConnectId2_arg As Integer = -1)
+        parameters:
+        - id: ipAddress_arg
+          type: System.String
+        - id: port_arg
+          type: System.Int32
+        - id: endLine_arg
+          type: System.String
+        - id: alarmConnectId1_arg
+          type: System.Int32
+        - id: alarmConnectId2_arg
+          type: System.Int32
+      overload: Driver_Ethernet.Ethernet.#ctor*
+      modifiers:
+        CSharp:
+        - public
+        VB:
+        - Public
+    - id: Driver_Ethernet.Ethernet.Connect
+      commentId: M:Driver_Ethernet.Ethernet.Connect
+      language: CSharp
+      name:
+        CSharp: Connect()
+        VB: Connect()
+      nameWithType:
+        CSharp: Ethernet.Connect()
+        VB: Ethernet.Connect()
+      qualifiedName:
+        CSharp: Driver_Ethernet.Ethernet.Connect()
+        VB: Driver_Ethernet.Ethernet.Connect()
+      type: Method
+      assemblies:
+      - Driver_Ethernet
+      namespace: Driver_Ethernet
+      source:
+        id: Connect
+        path: C:\Temp\MixingApplication\Driver_Ethernet\Ethernet.cs
+        startLine: 83
+      syntax:
+        content:
+          CSharp: public void Connect()
+          VB: Public Sub Connect
+      overload: Driver_Ethernet.Ethernet.Connect*
+      modifiers:
+        CSharp:
+        - public
+        VB:
+        - Public
+    - id: Driver_Ethernet.Ethernet.IsConnected
+      commentId: M:Driver_Ethernet.Ethernet.IsConnected
+      language: CSharp
+      name:
+        CSharp: IsConnected()
+        VB: IsConnected()
+      nameWithType:
+        CSharp: Ethernet.IsConnected()
+        VB: Ethernet.IsConnected()
+      qualifiedName:
+        CSharp: Driver_Ethernet.Ethernet.IsConnected()
+        VB: Driver_Ethernet.Ethernet.IsConnected()
+      type: Method
+      assemblies:
+      - Driver_Ethernet
+      namespace: Driver_Ethernet
+      source:
+        id: IsConnected
+        path: C:\Temp\MixingApplication\Driver_Ethernet\Ethernet.cs
+        startLine: 104
+      syntax:
+        content:
+          CSharp: public bool IsConnected()
+          VB: Public Function IsConnected As Boolean
+        return:
+          type: System.Boolean
+      overload: Driver_Ethernet.Ethernet.IsConnected*
+      modifiers:
+        CSharp:
+        - public
+        VB:
+        - Public
+    - id: Driver_Ethernet.Ethernet.Disconnect
+      commentId: M:Driver_Ethernet.Ethernet.Disconnect
+      language: CSharp
+      name:
+        CSharp: Disconnect()
+        VB: Disconnect()
+      nameWithType:
+        CSharp: Ethernet.Disconnect()
+        VB: Ethernet.Disconnect()
+      qualifiedName:
+        CSharp: Driver_Ethernet.Ethernet.Disconnect()
+        VB: Driver_Ethernet.Ethernet.Disconnect()
+      type: Method
+      assemblies:
+      - Driver_Ethernet
+      namespace: Driver_Ethernet
+      source:
+        id: Disconnect
+        path: C:\Temp\MixingApplication\Driver_Ethernet\Ethernet.cs
+        startLine: 109
+      syntax:
+        content:
+          CSharp: public void Disconnect()
+          VB: Public Sub Disconnect
+      overload: Driver_Ethernet.Ethernet.Disconnect*
+      modifiers:
+        CSharp:
+        - public
+        VB:
+        - Public
+    - id: Driver_Ethernet.Ethernet.WriteData(System.String)
+      commentId: M:Driver_Ethernet.Ethernet.WriteData(System.String)
+      language: CSharp
+      name:
+        CSharp: WriteData(String)
+        VB: WriteData(String)
+      nameWithType:
+        CSharp: Ethernet.WriteData(String)
+        VB: Ethernet.WriteData(String)
+      qualifiedName:
+        CSharp: Driver_Ethernet.Ethernet.WriteData(System.String)
+        VB: Driver_Ethernet.Ethernet.WriteData(System.String)
+      type: Method
+      assemblies:
+      - Driver_Ethernet
+      namespace: Driver_Ethernet
+      source:
+        id: WriteData
+        path: C:\Temp\MixingApplication\Driver_Ethernet\Ethernet.cs
+        startLine: 120
+      syntax:
+        content:
+          CSharp: public bool WriteData(string dataToSend)
+          VB: Public Function WriteData(dataToSend As String) As Boolean
+        parameters:
+        - id: dataToSend
+          type: System.String
+        return:
+          type: System.Boolean
+      overload: Driver_Ethernet.Ethernet.WriteData*
+      modifiers:
+        CSharp:
+        - public
+        VB:
+        - Public
+    - id: Driver_Ethernet.Ethernet.ReadData(System.Int32)
+      commentId: M:Driver_Ethernet.Ethernet.ReadData(System.Int32)
+      language: CSharp
+      name:
+        CSharp: ReadData(Int32)
+        VB: ReadData(Int32)
+      nameWithType:
+        CSharp: Ethernet.ReadData(Int32)
+        VB: Ethernet.ReadData(Int32)
+      qualifiedName:
+        CSharp: Driver_Ethernet.Ethernet.ReadData(System.Int32)
+        VB: Driver_Ethernet.Ethernet.ReadData(System.Int32)
+      type: Method
+      assemblies:
+      - Driver_Ethernet
+      namespace: Driver_Ethernet
+      source:
+        id: ReadData
+        path: C:\Temp\MixingApplication\Driver_Ethernet\Ethernet.cs
+        startLine: 131
+      syntax:
+        content:
+          CSharp: public string ReadData(int msWaitTime = 1000)
+          VB: Public Function ReadData(msWaitTime As Integer = 1000) As String
+        parameters:
+        - id: msWaitTime
+          type: System.Int32
+        return:
+          type: System.String
+      overload: Driver_Ethernet.Ethernet.ReadData*
+      modifiers:
+        CSharp:
+        - public
+        VB:
+        - Public
+    - id: Driver_Ethernet.Ethernet.ReadData(System.String,System.Int32)
+      commentId: M:Driver_Ethernet.Ethernet.ReadData(System.String,System.Int32)
+      language: CSharp
+      name:
+        CSharp: ReadData(String, Int32)
+        VB: ReadData(String, Int32)
+      nameWithType:
+        CSharp: Ethernet.ReadData(String, Int32)
+        VB: Ethernet.ReadData(String, Int32)
+      qualifiedName:
+        CSharp: Driver_Ethernet.Ethernet.ReadData(System.String, System.Int32)
+        VB: Driver_Ethernet.Ethernet.ReadData(System.String, System.Int32)
+      type: Method
+      assemblies:
+      - Driver_Ethernet
+      namespace: Driver_Ethernet
+      source:
+        id: ReadData
+        path: C:\Temp\MixingApplication\Driver_Ethernet\Ethernet.cs
+        startLine: 162
+      syntax:
+        content:
+          CSharp: public string ReadData(string dataToSend, int msWaitTime = -1)
+          VB: Public Function ReadData(dataToSend As String, msWaitTime As Integer = -1) As String
+        parameters:
+        - id: dataToSend
+          type: System.String
+        - id: msWaitTime
+          type: System.Int32
+        return:
+          type: System.String
+      overload: Driver_Ethernet.Ethernet.ReadData*
+      modifiers:
+        CSharp:
+        - public
+        VB:
+        - Public
+references:
+  System:
+    name:
+      CSharp:
+      - name: System
+        nameWithType: System
+        qualifiedName: System
+        isExternal: true
+      VB:
+      - name: System
+        nameWithType: System
+        qualifiedName: System
+    isDefinition: true
+    commentId: N:System
+  System.Object:
+    name:
+      CSharp:
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      VB:
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+    isDefinition: true
+    parent: System
+    commentId: T:System.Object
+  System.Object.ToString:
+    name:
+      CSharp:
+      - id: System.Object.ToString
+        name: ToString
+        nameWithType: Object.ToString
+        qualifiedName: System.Object.ToString
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.ToString
+        name: ToString
+        nameWithType: Object.ToString
+        qualifiedName: System.Object.ToString
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.ToString
+  System.Object.Equals(System.Object):
+    name:
+      CSharp:
+      - id: System.Object.Equals(System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.Equals(System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.Equals(System.Object)
+  System.Object.Equals(System.Object,System.Object):
+    name:
+      CSharp:
+      - id: System.Object.Equals(System.Object,System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.Equals(System.Object,System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.Equals(System.Object,System.Object)
+  System.Object.ReferenceEquals(System.Object,System.Object):
+    name:
+      CSharp:
+      - id: System.Object.ReferenceEquals(System.Object,System.Object)
+        name: ReferenceEquals
+        nameWithType: Object.ReferenceEquals
+        qualifiedName: System.Object.ReferenceEquals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.ReferenceEquals(System.Object,System.Object)
+        name: ReferenceEquals
+        nameWithType: Object.ReferenceEquals
+        qualifiedName: System.Object.ReferenceEquals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  System.Object.GetHashCode:
+    name:
+      CSharp:
+      - id: System.Object.GetHashCode
+        name: GetHashCode
+        nameWithType: Object.GetHashCode
+        qualifiedName: System.Object.GetHashCode
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.GetHashCode
+        name: GetHashCode
+        nameWithType: Object.GetHashCode
+        qualifiedName: System.Object.GetHashCode
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.GetHashCode
+  System.Object.GetType:
+    name:
+      CSharp:
+      - id: System.Object.GetType
+        name: GetType
+        nameWithType: Object.GetType
+        qualifiedName: System.Object.GetType
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.GetType
+        name: GetType
+        nameWithType: Object.GetType
+        qualifiedName: System.Object.GetType
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.GetType
+  System.Object.MemberwiseClone:
+    name:
+      CSharp:
+      - id: System.Object.MemberwiseClone
+        name: MemberwiseClone
+        nameWithType: Object.MemberwiseClone
+        qualifiedName: System.Object.MemberwiseClone
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.MemberwiseClone
+        name: MemberwiseClone
+        nameWithType: Object.MemberwiseClone
+        qualifiedName: System.Object.MemberwiseClone
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.MemberwiseClone
+  Driver_Ethernet.Config:
+    name:
+      CSharp:
+      - id: Driver_Ethernet.Config
+        name: Config
+        nameWithType: Config
+        qualifiedName: Driver_Ethernet.Config
+      VB:
+      - id: Driver_Ethernet.Config
+        name: Config
+        nameWithType: Config
+        qualifiedName: Driver_Ethernet.Config
+    isDefinition: true
+    commentId: T:Driver_Ethernet.Config
+  System.String:
+    name:
+      CSharp:
+      - id: System.String
+        name: String
+        nameWithType: String
+        qualifiedName: System.String
+        isExternal: true
+      VB:
+      - id: System.String
+        name: String
+        nameWithType: String
+        qualifiedName: System.String
+        isExternal: true
+    isDefinition: true
+    parent: System
+    commentId: T:System.String
+  System.Int32:
+    name:
+      CSharp:
+      - id: System.Int32
+        name: Int32
+        nameWithType: Int32
+        qualifiedName: System.Int32
+        isExternal: true
+      VB:
+      - id: System.Int32
+        name: Int32
+        nameWithType: Int32
+        qualifiedName: System.Int32
+        isExternal: true
+    isDefinition: true
+    parent: System
+    commentId: T:System.Int32
+  Driver_Ethernet.Ethernet.#ctor*:
+    name:
+      CSharp:
+      - id: Driver_Ethernet.Ethernet.#ctor*
+        name: Ethernet
+        nameWithType: Ethernet.Ethernet
+        qualifiedName: Driver_Ethernet.Ethernet.Ethernet
+      VB:
+      - id: Driver_Ethernet.Ethernet.#ctor*
+        name: Ethernet
+        nameWithType: Ethernet.Ethernet
+        qualifiedName: Driver_Ethernet.Ethernet.Ethernet
+    isDefinition: true
+    commentId: Overload:Driver_Ethernet.Ethernet.#ctor
+  Driver_Ethernet.Ethernet.Connect*:
+    name:
+      CSharp:
+      - id: Driver_Ethernet.Ethernet.Connect*
+        name: Connect
+        nameWithType: Ethernet.Connect
+        qualifiedName: Driver_Ethernet.Ethernet.Connect
+      VB:
+      - id: Driver_Ethernet.Ethernet.Connect*
+        name: Connect
+        nameWithType: Ethernet.Connect
+        qualifiedName: Driver_Ethernet.Ethernet.Connect
+    isDefinition: true
+    commentId: Overload:Driver_Ethernet.Ethernet.Connect
+  System.Boolean:
+    name:
+      CSharp:
+      - id: System.Boolean
+        name: Boolean
+        nameWithType: Boolean
+        qualifiedName: System.Boolean
+        isExternal: true
+      VB:
+      - id: System.Boolean
+        name: Boolean
+        nameWithType: Boolean
+        qualifiedName: System.Boolean
+        isExternal: true
+    isDefinition: true
+    parent: System
+    commentId: T:System.Boolean
+  Driver_Ethernet.Ethernet.IsConnected*:
+    name:
+      CSharp:
+      - id: Driver_Ethernet.Ethernet.IsConnected*
+        name: IsConnected
+        nameWithType: Ethernet.IsConnected
+        qualifiedName: Driver_Ethernet.Ethernet.IsConnected
+      VB:
+      - id: Driver_Ethernet.Ethernet.IsConnected*
+        name: IsConnected
+        nameWithType: Ethernet.IsConnected
+        qualifiedName: Driver_Ethernet.Ethernet.IsConnected
+    isDefinition: true
+    commentId: Overload:Driver_Ethernet.Ethernet.IsConnected
+  Driver_Ethernet.Ethernet.Disconnect*:
+    name:
+      CSharp:
+      - id: Driver_Ethernet.Ethernet.Disconnect*
+        name: Disconnect
+        nameWithType: Ethernet.Disconnect
+        qualifiedName: Driver_Ethernet.Ethernet.Disconnect
+      VB:
+      - id: Driver_Ethernet.Ethernet.Disconnect*
+        name: Disconnect
+        nameWithType: Ethernet.Disconnect
+        qualifiedName: Driver_Ethernet.Ethernet.Disconnect
+    isDefinition: true
+    commentId: Overload:Driver_Ethernet.Ethernet.Disconnect
+  Driver_Ethernet.Ethernet.WriteData*:
+    name:
+      CSharp:
+      - id: Driver_Ethernet.Ethernet.WriteData*
+        name: WriteData
+        nameWithType: Ethernet.WriteData
+        qualifiedName: Driver_Ethernet.Ethernet.WriteData
+      VB:
+      - id: Driver_Ethernet.Ethernet.WriteData*
+        name: WriteData
+        nameWithType: Ethernet.WriteData
+        qualifiedName: Driver_Ethernet.Ethernet.WriteData
+    isDefinition: true
+    commentId: Overload:Driver_Ethernet.Ethernet.WriteData
+  Driver_Ethernet.Ethernet.ReadData*:
+    name:
+      CSharp:
+      - id: Driver_Ethernet.Ethernet.ReadData*
+        name: ReadData
+        nameWithType: Ethernet.ReadData
+        qualifiedName: Driver_Ethernet.Ethernet.ReadData
+      VB:
+      - id: Driver_Ethernet.Ethernet.ReadData*
+        name: ReadData
+        nameWithType: Ethernet.ReadData
+        qualifiedName: Driver_Ethernet.Ethernet.ReadData
+    isDefinition: true
+    commentId: Overload:Driver_Ethernet.Ethernet.ReadData
+  Driver_Ethernet.Ethernet:
+    name:
+      CSharp:
+      - id: Driver_Ethernet.Ethernet
+        name: Ethernet
+        nameWithType: Ethernet
+        qualifiedName: Driver_Ethernet.Ethernet
+      VB:
+      - id: Driver_Ethernet.Ethernet
+        name: Ethernet
+        nameWithType: Ethernet
+        qualifiedName: Driver_Ethernet.Ethernet
+    isDefinition: true
+    commentId: T:Driver_Ethernet.Ethernet
+  Driver_Ethernet:
+    name:
+      CSharp:
+      - name: Driver_Ethernet
+        nameWithType: Driver_Ethernet
+        qualifiedName: Driver_Ethernet
+      VB:
+      - name: Driver_Ethernet
+        nameWithType: Driver_Ethernet
+        qualifiedName: Driver_Ethernet
+    isDefinition: true
+    commentId: N:Driver_Ethernet

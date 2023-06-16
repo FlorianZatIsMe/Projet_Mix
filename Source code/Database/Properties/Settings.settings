@@ -1,0 +1,832 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Database.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="scanConnectTimer_Interval" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="AuditTrail_TableName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">audit_trail</Value>
+    </Setting>
+    <Setting Name="AuditTrail_ColIds" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;id&lt;/string&gt;
+  &lt;string&gt;date_time&lt;/string&gt;
+  &lt;string&gt;username&lt;/string&gt;
+  &lt;string&gt;event_type&lt;/string&gt;
+  &lt;string&gt;description&lt;/string&gt;
+  &lt;string&gt;value_before&lt;/string&gt;
+  &lt;string&gt;value_after&lt;/string&gt;
+  &lt;string&gt;comment&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="Recipe_TableName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">recipe</Value>
+    </Setting>
+    <Setting Name="Recipe_ColIds" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;id&lt;/string&gt;
+  &lt;string&gt;first_seq_type&lt;/string&gt;
+  &lt;string&gt;first_seq_id&lt;/string&gt;
+  &lt;string&gt;name&lt;/string&gt;
+  &lt;string&gt;version&lt;/string&gt;
+  &lt;string&gt;status&lt;/string&gt;
+  &lt;string&gt;finalweight_min&lt;/string&gt;
+  &lt;string&gt;finalweight_max&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="AuditTrail_ColN_id" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="AuditTrail_ColN_dateTime" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="AuditTrail_ColN_username" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="AuditTrail_ColN_eventType" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="AuditTrail_ColN_description" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="AuditTrail_ColN_valueBefore" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="AuditTrail_ColN_valueAfter" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="AuditTrail_ColN_comment" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="Recipe_ColN_id" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Recipe_ColN_nextSeqType" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="Recipe_ColN_nextSeqId" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="Recipe_ColN_recipeName" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="Recipe_ColN_version" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="Recipe_ColN_status" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_TableName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">recipe_weight</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_ColIds" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;id&lt;/string&gt;
+  &lt;string&gt;next_seq_type&lt;/string&gt;
+  &lt;string&gt;next_seq_id&lt;/string&gt;
+  &lt;string&gt;name&lt;/string&gt;
+  &lt;string&gt;is_barcode_used&lt;/string&gt;
+  &lt;string&gt;barcode&lt;/string&gt;
+  &lt;string&gt;unit&lt;/string&gt;
+  &lt;string&gt;decimal_number&lt;/string&gt;
+  &lt;string&gt;setpoint&lt;/string&gt;
+  &lt;string&gt;criteria&lt;/string&gt;
+  &lt;string&gt;is_solvent&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_ColN_id" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_ColN_nextSeqType" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_ColN_nextSeqId" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_ColN_seqName" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_ColN_isBarcodeUsed" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_ColN_barcode" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_ColN_unit" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_ColN_decimalNumber" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_ColN_setpoint" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_ColN_criteria" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">9</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_ColN_isSolvent" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_TableName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">recipe_speedmixer</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_ColIds" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;id&lt;/string&gt;
+  &lt;string&gt;next_seq_type&lt;/string&gt;
+  &lt;string&gt;next_seq_id&lt;/string&gt;
+  &lt;string&gt;acceleration&lt;/string&gt;
+  &lt;string&gt;deceleration&lt;/string&gt;
+  &lt;string&gt;vaccum_control&lt;/string&gt;
+  &lt;string&gt;pressure_unit&lt;/string&gt;
+  &lt;string&gt;coldtrap&lt;/string&gt;
+  &lt;string&gt;speed00&lt;/string&gt;
+  &lt;string&gt;time00&lt;/string&gt;
+  &lt;string&gt;pressure00&lt;/string&gt;
+  &lt;string&gt;speed01&lt;/string&gt;
+  &lt;string&gt;time01&lt;/string&gt;
+  &lt;string&gt;pressure01&lt;/string&gt;
+  &lt;string&gt;speed02&lt;/string&gt;
+  &lt;string&gt;time02&lt;/string&gt;
+  &lt;string&gt;pressure02&lt;/string&gt;
+  &lt;string&gt;speed03&lt;/string&gt;
+  &lt;string&gt;time03&lt;/string&gt;
+  &lt;string&gt;pressure03&lt;/string&gt;
+  &lt;string&gt;speed04&lt;/string&gt;
+  &lt;string&gt;time04&lt;/string&gt;
+  &lt;string&gt;pressure04&lt;/string&gt;
+  &lt;string&gt;speed05&lt;/string&gt;
+  &lt;string&gt;time05&lt;/string&gt;
+  &lt;string&gt;pressure05&lt;/string&gt;
+  &lt;string&gt;speed06&lt;/string&gt;
+  &lt;string&gt;time06&lt;/string&gt;
+  &lt;string&gt;pressure06&lt;/string&gt;
+  &lt;string&gt;speed07&lt;/string&gt;
+  &lt;string&gt;time07&lt;/string&gt;
+  &lt;string&gt;pressure07&lt;/string&gt;
+  &lt;string&gt;speed08&lt;/string&gt;
+  &lt;string&gt;time08&lt;/string&gt;
+  &lt;string&gt;pressure08&lt;/string&gt;
+  &lt;string&gt;speed09&lt;/string&gt;
+  &lt;string&gt;time09&lt;/string&gt;
+  &lt;string&gt;pressure09&lt;/string&gt;
+  &lt;string&gt;speed_min&lt;/string&gt;
+  &lt;string&gt;speed_max&lt;/string&gt;
+  &lt;string&gt;pressure_min&lt;/string&gt;
+  &lt;string&gt;pressure_max&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_ColN_id" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_ColN_nextSeqType" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_ColN_nextSeqId" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_ColN_acceleration" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_ColN_deceleration" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_ColN_vaccumControl" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_ColN_pressureUnit" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_ColN_coldtrap" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_ColN_speed00" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_ColN_time00" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">9</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_ColN_pressure00" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_ColN_speedMin" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">38</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_ColN_speedMax" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">39</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_ColN_pressureMin" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">40</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_ColN_pressureMax" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">41</Value>
+    </Setting>
+    <Setting Name="RecipeWeight_seqType" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_seqType" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="Cycle_TableName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">cycle</Value>
+    </Setting>
+    <Setting Name="Cycle_ColIds" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;id&lt;/string&gt;
+  &lt;string&gt;next_seq_type&lt;/string&gt;
+  &lt;string&gt;next_seq_id&lt;/string&gt;
+  &lt;string&gt;job_number&lt;/string&gt;
+  &lt;string&gt;batch_number&lt;/string&gt;
+  &lt;string&gt;quantity_value&lt;/string&gt;
+  &lt;string&gt;quantity_unit&lt;/string&gt;
+  &lt;string&gt;item_number&lt;/string&gt;
+  &lt;string&gt;recipe_name&lt;/string&gt;
+  &lt;string&gt;recipe_version&lt;/string&gt;
+  &lt;string&gt;equipment_name&lt;/string&gt;
+  &lt;string&gt;date_time_start_cycle&lt;/string&gt;
+  &lt;string&gt;date_time_end_cycle&lt;/string&gt;
+  &lt;string&gt;username&lt;/string&gt;
+  &lt;string&gt;first_alarm_id&lt;/string&gt;
+  &lt;string&gt;last_alarm_id&lt;/string&gt;
+  &lt;string&gt;comment&lt;/string&gt;
+  &lt;string&gt;is_it_a_test&lt;/string&gt;
+  &lt;string&gt;bowl_weight&lt;/string&gt;
+  &lt;string&gt;last_weight_th&lt;/string&gt;
+  &lt;string&gt;last_weight_eff&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_id" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_nextSeqType" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_nextSeqId" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_jobNumber" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_batchNumber" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_quantityValue" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_quantityUnit" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_itemNumber" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_recipeName" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_recipeVersion" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">9</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_equipmentName" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_dateTimeStartCycle" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">11</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_dateTimeEndCycle" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">12</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_username" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">13</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_firstAlarmId" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">14</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_lastAlarmId" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_comment" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">16</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_isItATest" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">17</Value>
+    </Setting>
+    <Setting Name="CycleWeight_TableName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">cycle_weight</Value>
+    </Setting>
+    <Setting Name="CycleWeight_ColIds" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;id&lt;/string&gt;
+  &lt;string&gt;next_seq_type&lt;/string&gt;
+  &lt;string&gt;next_seq_id&lt;/string&gt;
+  &lt;string&gt;product&lt;/string&gt;
+  &lt;string&gt;was_weight_manual&lt;/string&gt;
+  &lt;string&gt;date_time&lt;/string&gt;
+  &lt;string&gt;actual_value&lt;/string&gt;
+  &lt;string&gt;setpoint&lt;/string&gt;
+  &lt;string&gt;minimum&lt;/string&gt;
+  &lt;string&gt;maximum&lt;/string&gt;
+  &lt;string&gt;unit&lt;/string&gt;
+  &lt;string&gt;decimal_number&lt;/string&gt;
+  &lt;string&gt;is_solvent&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="CycleWeight_ColN_id" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="CycleWeight_ColN_nextSeqType" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="CycleWeight_ColN_nextSeqId" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="CycleWeight_ColN_product" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="CycleWeight_ColN_wasWeightManual" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="CycleWeight_ColN_dateTime" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="CycleWeight_ColN_actualValue" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="CycleWeight_ColN_setpoint" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="CycleWeight_ColN_min" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="CycleWeight_ColN_max" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">9</Value>
+    </Setting>
+    <Setting Name="CycleWeight_ColN_unit" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="CycleWeight_ColN_decimalNumber" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">11</Value>
+    </Setting>
+    <Setting Name="CycleWeight_seqType" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_seqType" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_TableName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">cycle_speedmixer</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_ColIds" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;id&lt;/string&gt;
+  &lt;string&gt;next_seq_type&lt;/string&gt;
+  &lt;string&gt;next_seq_id&lt;/string&gt;
+  &lt;string&gt;date_time_start&lt;/string&gt;
+  &lt;string&gt;date_time_end&lt;/string&gt;
+  &lt;string&gt;time_mix_th&lt;/string&gt;
+  &lt;string&gt;time_mix_eff&lt;/string&gt;
+  &lt;string&gt;pressure_unit&lt;/string&gt;
+  &lt;string&gt;speed_min&lt;/string&gt;
+  &lt;string&gt;speed_max&lt;/string&gt;
+  &lt;string&gt;pressure_min&lt;/string&gt;
+  &lt;string&gt;pressure_max&lt;/string&gt;
+  &lt;string&gt;speed_mean&lt;/string&gt;
+  &lt;string&gt;pressure_mean&lt;/string&gt;
+  &lt;string&gt;speed_std&lt;/string&gt;
+  &lt;string&gt;pressure_std&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_ColN_id" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_ColN_nextSeqType" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_ColN_nextSeqId" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_ColN_dateTimeStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_ColN_dateTimeEnd" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_ColN_timeMixTh" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_ColN_timeMixEff" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_ColN_pressureUnit" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_ColN_speedMin" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_ColN_speedMax" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">9</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_ColN_pressureMin" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_ColN_pressureMax" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">11</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_ColN_speedMean" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">12</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_ColN_pressureMean" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">13</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_ColN_speedStd" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">14</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_ColN_pressureStd" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="Info01" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Tentative de reconnexion. Statut: </Value>
+    </Setting>
+    <Setting Name="Error_connectToDbFailed" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Connection à la base de données échouée</Value>
+    </Setting>
+    <Setting Name="Error02" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Création de la commande incorrecte</Value>
+    </Setting>
+    <Setting Name="Error03" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Non, ce n'est pas vrai. Non non NON !</Value>
+    </Setting>
+    <Setting Name="Error04" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Le reader n'est pas disponible</Value>
+    </Setting>
+    <Setting Name="Error05" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">La commande renvoie plus d'une ligne</Value>
+    </Setting>
+    <Setting Name="Error06" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Le nombre de colonnes est différent du nombre de valeurs</Value>
+    </Setting>
+    <Setting Name="Error07" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">La variable tableInfo est null</Value>
+    </Setting>
+    <Setting Name="Error08" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Il n'y a pas de colonne</Value>
+    </Setting>
+    <Setting Name="Error09" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Aucune valeur n'a été renseignée</Value>
+    </Setting>
+    <Setting Name="Error10" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Il y a plus d'index que de colonnes</Value>
+    </Setting>
+    <Setting Name="Error11" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C'est pas bon ça, regarde le log</Value>
+    </Setting>
+    <Setting Name="Error12" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">La classe n'est pas initialisée</Value>
+    </Setting>
+    <Setting Name="Temp_TableName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">temp</Value>
+    </Setting>
+    <Setting Name="Error13" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Numéro de ligne manquant</Value>
+    </Setting>
+    <Setting Name="Error14" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Nombre de colonnes incorrect</Value>
+    </Setting>
+    <Setting Name="Error15" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Le tableau contient au moins 2 lignes avec le même id</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_PressureUnit_Torr" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Torr</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_PressureUnit_mBar" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">mBar</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_PressureUnit_inHg" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">inHg</Value>
+    </Setting>
+    <Setting Name="RecipeSpeedMixer_PressureUnit_PSIA" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">PSIA</Value>
+    </Setting>
+    <Setting Name="General_TrueValue_Read" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="General_FalseValue_Read" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="AccessTable_ColIds" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;id&lt;/string&gt;
+  &lt;string&gt;role&lt;/string&gt;
+  &lt;string&gt;cycle_start&lt;/string&gt;
+  &lt;string&gt;recipe_update&lt;/string&gt;
+  &lt;string&gt;backup&lt;/string&gt;
+  &lt;string&gt;parameters&lt;/string&gt;
+  &lt;string&gt;daily_test&lt;/string&gt;
+  &lt;string&gt;application_stop&lt;/string&gt;
+  &lt;string&gt;ack_alarm&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="AccessTable_TableName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">access_table</Value>
+    </Setting>
+    <Setting Name="AccessTable_ColN_id" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="AccessTable_ColN_role" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="AccessTable_ColN_cycleStart" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="AccessTable_ColN_recipeCreate" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="AccessTable_ColN_applicationStop" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="AccessTable_Role_operator" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">opérateur</Value>
+    </Setting>
+    <Setting Name="AccessTable_Role_supervisor" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">superviseur</Value>
+    </Setting>
+    <Setting Name="AccessTable_Role_administrator" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">administrateur</Value>
+    </Setting>
+    <Setting Name="AccessTable_Role_none" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">invité</Value>
+    </Setting>
+    <Setting Name="CycleWeight_ColDesc" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;Produit&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;Date et heure de pesée&lt;/string&gt;
+  &lt;string&gt;Valeur pesée&lt;/string&gt;
+  &lt;string&gt;Valeur nominal&lt;/string&gt;
+  &lt;string&gt;Minimum&lt;/string&gt;
+  &lt;string&gt;Maximum&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;Solvant&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="CycleSpeedMixer_ColDesc" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;Début séquence&lt;/string&gt;
+  &lt;string&gt;Fin séquence&lt;/string&gt;
+  &lt;string&gt;Durée Mix théorique&lt;/string&gt;
+  &lt;string&gt;Durée Mix effective&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="Error16" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Arguments manquants</Value>
+    </Setting>
+    <Setting Name="Error17" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">La commande ne renvoie rien</Value>
+    </Setting>
+    <Setting Name="Temp_ColIds" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;speed&lt;/string&gt;
+  &lt;string&gt;pressure&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="Temp_ColN_speed" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Temp_ColN_pressure" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="TempResult_ColN" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="TempResult_ColN_speedMean" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="TempResult_ColN_pressureMean" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="TempResult_ColN_speedStd" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="TempResult_ColN_pressureStd" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="General_TrueValue_Write" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="General_FalseValue_Write" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="AuditTrail_ColDesc" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;ID&lt;/string&gt;
+  &lt;string&gt;Date et heure&lt;/string&gt;
+  &lt;string&gt;Utilisateur&lt;/string&gt;
+  &lt;string&gt;Type d'évènement&lt;/string&gt;
+  &lt;string&gt;Description&lt;/string&gt;
+  &lt;string&gt;Valeur avant&lt;/string&gt;
+  &lt;string&gt;Valeur après&lt;/string&gt;
+  &lt;string&gt;Commentaire&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="DBAppFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Program Files\MariaDB 10.9\bin</Value>
+    </Setting>
+    <Setting Name="Recipe_ColDesc" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;recette&lt;/string&gt;
+  &lt;string&gt;version&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;0&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="MaxNumbRows" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10000</Value>
+    </Setting>
+    <Setting Name="Error_NumbRowsIncorrect" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Nombre de lignes demandées incorrect</Value>
+    </Setting>
+    <Setting Name="Error_IDidntReadItAll" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Je n'ai pas réussi à tout lire, il y a en trop</Value>
+    </Setting>
+    <Setting Name="Error_ReadAudit_ArgIncorrect" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Date et temps avant ou après incorrect</Value>
+    </Setting>
+    <Setting Name="ICycleSeqInfo_Error_RecipeIncorrect" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Type de la recette utilisé incorrect</Value>
+    </Setting>
+    <Setting Name="Error_FromHere" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Elle vient d'ici l'erreur</Value>
+    </Setting>
+    <Setting Name="ICycleSeqInfo_Error_convRatioIncorrect" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Unités de pesée incorrectes</Value>
+    </Setting>
+    <Setting Name="QueueEmptyTimer_Interval" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="IsQueueAvailableTimer_Interval" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="QueueEmptyCount_Max" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="TaskDeQueue_Wait" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="Disconnect_WaitTime" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="Recipe_ColN_FinalWeightMin" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="Recipe_ColN_FinalWeightMax" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_bowlWeight" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">18</Value>
+    </Setting>
+    <Setting Name="CycleWeight_ColN_isSolvent" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">12</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_lastWeightTh" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">19</Value>
+    </Setting>
+    <Setting Name="Cycle_ColN_lastWeightEff" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">20</Value>
+    </Setting>
+    <Setting Name="DailyTest_ColIds" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;id&lt;/string&gt;
+  &lt;string&gt;username&lt;/string&gt;
+  &lt;string&gt;date_time&lt;/string&gt;
+  &lt;string&gt;equipment_name&lt;/string&gt;
+  &lt;string&gt;setpoint1&lt;/string&gt;
+  &lt;string&gt;setpoint2&lt;/string&gt;
+  &lt;string&gt;setpoint3&lt;/string&gt;
+  &lt;string&gt;setpoint4&lt;/string&gt;
+  &lt;string&gt;measure1&lt;/string&gt;
+  &lt;string&gt;measure2&lt;/string&gt;
+  &lt;string&gt;measure3&lt;/string&gt;
+  &lt;string&gt;measure4&lt;/string&gt;
+  &lt;string&gt;status&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="DailyTest_ColDesc" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;0&lt;/string&gt;
+  &lt;string&gt;Nom d'utilisateur&lt;/string&gt;
+  &lt;string&gt;Date et heure de l'étalonnage&lt;/string&gt;
+  &lt;string&gt;Nom de l'équipement&lt;/string&gt;
+  &lt;string&gt;Poids étalon 1&lt;/string&gt;
+  &lt;string&gt;Poids étalon 2&lt;/string&gt;
+  &lt;string&gt;Poids étalon 3&lt;/string&gt;
+  &lt;string&gt;Poids étalon 4&lt;/string&gt;
+  &lt;string&gt;Masse mesurée&lt;/string&gt;
+  &lt;string&gt;Masse mesurée&lt;/string&gt;
+  &lt;string&gt;Masse mesurée&lt;/string&gt;
+  &lt;string&gt;Masse mesurée&lt;/string&gt;
+  &lt;string&gt;Statut&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="DailyTest_TableName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">daily_test</Value>
+    </Setting>
+    <Setting Name="DailyTest_ColN_id" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="DailyTest_ColN_dateTime" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="DailyTest_ColN_setpoint1" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="DailyTest_ColN_setpoint2" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="DailyTest_ColN_setpoint3" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="DailyTest_ColN_setpoint4" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="DailyTest_ColN_measure1" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="DailyTest_ColN_measure2" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">9</Value>
+    </Setting>
+    <Setting Name="DailyTest_ColN_measure3" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="DailyTest_ColN_measure4" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">11</Value>
+    </Setting>
+    <Setting Name="DailyTest_ColN_status" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">12</Value>
+    </Setting>
+    <Setting Name="DailyTest_ColN_username" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="Timestamp_Format" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">yyyy-MM-dd HH:mm:ss</Value>
+    </Setting>
+    <Setting Name="DailyTest_ColN_equipmentName" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="AccessTable_ColN_Backup" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="AccessTable_ColN_Parameters" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="AccessTable_ColN_DailyTest" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="AccessTable_ColN_AckAlarm" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="ConnectionInfo" Type="Database.ConnectionInfo" Scope="Application">
+      <Value Profile="(Default)">
+          &lt;ConnectionInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+            &lt;Server&gt;localhost&lt;/Server&gt;
+            &lt;UserID&gt;root&lt;/UserID&gt;
+            &lt;Password&gt;fDdViXrfIK0s3nNIFU4UAyKljiDYdMzCkJ2cyXi8kGM=&lt;/Password&gt;
+            &lt;Db&gt;db1&lt;/Db&gt;
+          &lt;/ConnectionInfo&gt;
+        </Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="User_Management.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Group_operator" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">INTEGRA\F-CHLOC-PRJ-LTR-RW</Value>
+    </Setting>
+    <Setting Name="Group_supervisor" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">INTEGRA\F-CHLOC-PRJ-LIC-RW</Value>
+    </Setting>
+    <Setting Name="Group_administrator" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">INTEGRA\F-CHLOC-PRJ-LIC-WRX</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

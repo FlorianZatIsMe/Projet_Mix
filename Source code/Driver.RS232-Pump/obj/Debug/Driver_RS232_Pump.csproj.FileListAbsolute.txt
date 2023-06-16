@@ -1,0 +1,136 @@
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Alarm_Management.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Database.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Driver_RS232.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Configuration.Binder.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Configuration.CommandLine.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Configuration.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Configuration.EnvironmentVariables.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Configuration.FileExtensions.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Configuration.Json.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Configuration.UserSecrets.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.DependencyInjection.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.FileProviders.Abstractions.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.FileProviders.Physical.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.FileSystemGlobbing.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Hosting.Abstractions.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Hosting.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Logging.Configuration.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Logging.Console.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Logging.Debug.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Logging.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Logging.EventLog.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Logging.EventSource.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Options.ConfigurationExtensions.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Options.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Primitives.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Newtonsoft.Json.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\NLog.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\System.Buffers.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\System.Memory.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\System.Numerics.Vectors.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\System.Text.Encodings.Web.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\System.Text.Json.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\System.ValueTuple.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\MySqlConnector.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Alarm_Management.pdb
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Alarm_Management.dll.config
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Database.pdb
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Database.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Database.dll.config
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Driver_RS232.pdb
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Driver_RS232.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Driver_RS232.dll.config
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Bcl.AsyncInterfaces.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Configuration.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Configuration.Abstractions.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Configuration.Binder.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Configuration.CommandLine.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Configuration.EnvironmentVariables.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Configuration.FileExtensions.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Configuration.Json.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Configuration.UserSecrets.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.DependencyInjection.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.FileProviders.Abstractions.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.FileProviders.Physical.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.FileSystemGlobbing.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Hosting.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Hosting.Abstractions.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Logging.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Logging.Abstractions.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Logging.Configuration.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Logging.Console.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Logging.Debug.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Logging.EventLog.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Logging.EventSource.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Options.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Options.ConfigurationExtensions.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Microsoft.Extensions.Primitives.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Newtonsoft.Json.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\NLog.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\System.Buffers.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\System.Memory.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\System.Numerics.Vectors.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\System.Text.Encodings.Web.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\System.Text.Json.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\System.ValueTuple.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\MySqlConnector.xml
+C:\Temp\MixingApplication\Driver.RS232-Pump\obj\Debug\Driver_RS232_Pump.csproj.AssemblyReference.cache
+C:\Temp\MixingApplication\Driver.RS232-Pump\obj\Debug\Driver_RS232_Pump.csproj.CoreCompileInputs.cache
+C:\Temp\MixingApplication\Driver.RS232-Pump\obj\Debug\Driver_RS232_Pump.csproj.CopyComplete
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Message.exe
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Message.pdb
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Message.exe.config
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Driver_RS232_Pump.dll.config
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Driver_RS232_Pump.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\bin\Debug\Driver_RS232_Pump.pdb
+C:\Temp\MixingApplication\Driver.RS232-Pump\obj\Debug\Driver_RS232_Pump.dll
+C:\Temp\MixingApplication\Driver.RS232-Pump\obj\Debug\Driver_RS232_Pump.pdb
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\Driver_RS232_Pump.dll.config
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\Driver_RS232_Pump.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\Driver_RS232_Pump.pdb
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\Alarm_Management.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\Database.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\Driver_RS232.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\Message.exe
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\NLog.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\System.Buffers.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\System.Memory.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\System.Numerics.Vectors.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\MySqlConnector.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\Alarm_Management.pdb
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\Alarm_Management.dll.config
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\Database.pdb
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\Database.xml
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\Database.dll.config
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\Driver_RS232.pdb
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\Driver_RS232.xml
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\Driver_RS232.dll.config
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\Message.pdb
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\Message.exe.config
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\NLog.xml
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\System.Buffers.xml
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\System.Memory.xml
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\System.Numerics.Vectors.xml
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Debug\MySqlConnector.xml
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\obj\Debug\Driver_RS232_Pump.csproj.AssemblyReference.cache
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\obj\Debug\Driver_RS232_Pump.csproj.CoreCompileInputs.cache
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\obj\Debug\Driver_RS232_Pump.csproj.CopyComplete
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\obj\Debug\Driver_RS232_Pump.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\obj\Debug\Driver_RS232_Pump.pdb

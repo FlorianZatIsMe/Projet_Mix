@@ -1,0 +1,1033 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Database</name>
+    </assembly>
+    <members>
+        <member name="T:Database.ConnectionInfo">
+            <summary>
+            Class to store information of connection to the database in the settings
+            </summary>
+            <para>Creation revision: 001</para>
+        </member>
+        <member name="P:Database.ConnectionInfo.Server">
+            <value>Database server name</value>
+        </member>
+        <member name="P:Database.ConnectionInfo.UserID">
+            <value>User ID to log on the database</value>
+        </member>
+        <member name="P:Database.ConnectionInfo.Password">
+            <value>Password of the user ID</value>
+        </member>
+        <member name="P:Database.ConnectionInfo.Db">
+            <value>Database to use</value>
+        </member>
+        <member name="T:Database.IniInfo">
+            <summary>
+            Structure of the information from other projects required to initialize the main class
+            </summary>
+            <para>Creation revision: 001</para>
+        </member>
+        <member name="F:Database.IniInfo.AlarmType_Alarm">
+            <value>Event type to put in the audit trail in case of alarm (see class AuditTrailInfo)</value>
+        </member>
+        <member name="F:Database.IniInfo.AlarmType_Warning">
+            <value>Event type to put in the audit trail in case of warning (see class AuditTrailInfo)</value>
+        </member>
+        <member name="F:Database.IniInfo.RecipeWeight_mgG_Unit">
+            <value>Unit mg/g to put in the weight recipe database table (used by the class CycleWeightInfo)</value>
+        </member>
+        <member name="F:Database.IniInfo.RecipeWeight_mgG_Conversion">
+            <value>Conversion value of the unit mg/g. Used to calculate the conversion ratio in the class CycleWeightInfo</value>
+        </member>
+        <member name="F:Database.IniInfo.RecipeWeight_gG_Unit">
+            <value>Unit g/g to put in the weight recipe database table (used by the class CycleWeightInfo)</value>
+        </member>
+        <member name="F:Database.IniInfo.RecipeWeight_gG_Conversion">
+            <value>Conversion value of the unit g/g. Used to calculate the conversion ratio in the class CycleWeightInfo</value>
+        </member>
+        <member name="F:Database.IniInfo.CycleFinalWeight_g_Unit">
+            <value>Unit g to put in the cycle database table (used by the class CycleWeightInfo)</value>
+        </member>
+        <member name="F:Database.IniInfo.Window">
+            <value>Main window of the application. Is used to attach the MessageBoxes to it</value>
+        </member>
+        <member name="T:Database.RecipeStatus">
+            <summary>
+            Enumeration of the status of the recipes. Can be used to filter recipes by one of those status 
+            </summary>
+            <remarks>See method GetRecipeStatus to translate the status to put in the applicable database table</remarks>
+        </member>
+        <member name="F:Database.RecipeStatus.PROD">
+            <value>Production status (recipes in production can be used for production)</value>
+        </member>
+        <member name="F:Database.RecipeStatus.DRAFT">
+            <value>Draft status (recipes in draft can't be used in production but can be tested by allowed user)</value>
+        </member>
+        <member name="F:Database.RecipeStatus.OBSOLETE">
+            <value>Obsolete status (obsolete recipes can't be used at all but they can be brought back by allowed user)</value>
+        </member>
+        <member name="F:Database.RecipeStatus.PRODnDRAFT">
+            <value>Production or draft recipes (value used to filter recipes in production or in draft)</value>
+        </member>
+        <member name="F:Database.RecipeStatus.None">
+            <value>No status. Recipes should have this status</value>
+        </member>
+        <member name="T:Database.DatabaseSettings">
+            <summary>
+            Static class used to allow other projects to access some values from the settings
+            </summary>
+        </member>
+        <member name="P:Database.DatabaseSettings.Error_connectToDbFailed">
+            <value>Message displayed if the connection to the database fails</value>
+        </member>
+        <member name="P:Database.DatabaseSettings.General_TrueValue_Read">
+            <value>Value "true" when read from a database table</value>
+        </member>
+        <member name="P:Database.DatabaseSettings.General_FalseValue_Read">
+            <value>Value "false" when read from a database table</value>
+        </member>
+        <member name="P:Database.DatabaseSettings.General_TrueValue_Write">
+            <value>Value "true" to write to a database table</value>
+        </member>
+        <member name="P:Database.DatabaseSettings.General_FalseValue_Write">
+            <value>Value "false" to write to a database table</value>
+        </member>
+        <member name="P:Database.DatabaseSettings.ConnectionInfo">
+            <value>Information of connection to the database</value>
+        </member>
+        <member name="P:Database.DatabaseSettings.DBAppFolder">
+            <value>Folder of the application of the database</value>
+        </member>
+        <member name="P:Database.DatabaseSettings.Timestamp_Format">
+            <value>Format of timestamps</value>
+        </member>
+        <member name="T:Database.ReadInfo">
+            <summary>
+            Class containing the parameters required by other method (usually to select one or several row in a database table)
+            </summary>
+        </member>
+        <member name="P:Database.ReadInfo.TableInfo">
+            <value>Object of database table. The values of this object can be used to select a set of rows</value>
+        </member>
+        <member name="P:Database.ReadInfo.OrderBy">
+            <value>Must contains the id of the column to use to sort the rows</value>
+        </member>
+        <member name="P:Database.ReadInfo.IsOrderAsc">
+            <value>If value value = true then the order of the sort is ascending. Descending if false</value>
+        </member>
+        <member name="P:Database.ReadInfo.DtBefore">
+            <value>Used for tables containing a date and time column: date and time of the first row to filter</value>
+        </member>
+        <member name="P:Database.ReadInfo.DtAfter">
+            <value>Used for tables containing a date and time column: date and time of the last row to filter</value>
+        </member>
+        <member name="P:Database.ReadInfo.EventTypes">
+            <value>Used for tables containing an event type column. List of event types to filter</value>
+        </member>
+        <member name="P:Database.ReadInfo.CustomWhere">
+            <value>Parameter containing a custom SQL command to put after the WHERE statetement</value>
+        </member>
+        <member name="M:Database.ReadInfo.#ctor(Database.IComTabInfo,System.String,System.Boolean,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.String[],System.String)">
+            <summary>
+            Initialize all variables of the class from parameters
+            </summary>
+            <param name="_tableInfo"><see cref="P:Database.ReadInfo.TableInfo"/></param>
+            <param name="_orderBy"><see cref="P:Database.ReadInfo.OrderBy"/></param>
+            <param name="_isOrderAsc"><see cref="P:Database.ReadInfo.IsOrderAsc"/></param>
+            <param name="_dtBefore"><see cref="P:Database.ReadInfo.DtBefore"/></param>
+            <param name="_dtAfter"><see cref="P:Database.ReadInfo.DtAfter"/></param>
+            <param name="_eventTypes"><see cref="P:Database.ReadInfo.EventTypes"/></param>
+            <param name="_customWhere"><see cref="P:Database.ReadInfo.CustomWhere"/></param>
+        </member>
+        <member name="M:Database.ReadInfo.#ctor(Database.ReadInfo,Database.IComTabInfo)">
+            <summary>
+            Initialize all variables of the class from another object of the same class (the database table is replaced though)
+            </summary>
+            <param name="_readInfo">Object of the same class</param>
+            <param name="_tableInfo"><see cref="P:Database.ReadInfo.TableInfo"/></param>
+        </member>
+        <member name="T:Database.MyDatabase">
+            <summary>
+            Main class of the namespace. This class allow the interface with a database (connect, disconnect, insert rows, update rows, delete rows, read rows)
+            </summary>
+        </member>
+        <member name="F:Database.MyDatabase.info">
+            <value>
+            Variable initialized by other projects
+            </value>
+        </member>
+        <member name="M:Database.MyDatabase.Initialize(Database.IniInfo)">
+            <summary>
+            Method called by other project which initializes the variable <see cref="F:Database.MyDatabase.info"/>
+            </summary>
+            <param name="info_arg"><see cref="T:Database.IniInfo"/> variable which contains the applicable settings from the calling project</param>
+        </member>
+        <member name="M:Database.MyDatabase.TaskEnQueue(System.Func{System.Object})">
+            <summary>
+            Only allowed method to interact with the database. This method adds a task to be executed to the task queue 
+            </summary>
+            <param name="function">Method to be added to the queue</param>
+            <returns>The added task, it allows to interact with the task (e.g. wait it ends, get its return value)</returns>
+        </member>
+        <member name="M:Database.MyDatabase.Connect">
+            <summary>
+            Connection to the database
+            </summary>
+        </member>
+        <member name="M:Database.MyDatabase.Disconnect">
+            <summary>
+            Disconnection of the database
+            </summary>
+        </member>
+        <member name="M:Database.MyDatabase.IsConnected">
+            <summary>
+            Get the status of the connection
+            </summary>
+            <returns>True if the database is connected, false otherwise</returns>
+        </member>
+        <member name="T:Database.IBasTabInfo">
+            <summary>
+            Basic interface for a database table.
+            <para>Creation revision: 001</para> 
+            </summary>
+        </member>
+        <member name="P:Database.IBasTabInfo.TabName">
+            <value>Name of the database table</value>
+        </member>
+        <member name="P:Database.IBasTabInfo.Ids">
+            <value>Name of the columns of the database table</value>
+        </member>
+        <member name="P:Database.IBasTabInfo.Descriptions">
+            <value>Description of the columns of the database table</value>
+        </member>
+        <member name="T:Database.IComTabInfo">
+            <summary>
+            Interface of a common database table.
+            Based on the basic database table interface
+            <para>Creation revision: 001</para>
+            </summary>
+        </member>
+        <member name="P:Database.IComTabInfo.Id">
+            <value>Index of the id column (usually the first one: 0). This column <c>must be</c> an integer, usually automatically incremented.</value>
+        </member>
+        <member name="T:Database.IDtTabInfo">
+            <summary>
+            Interface of a basic table which contains a date and time column.
+            Based on the basic database table interface
+            <para>Creation revision: 001</para>
+            </summary>
+        </member>
+        <member name="P:Database.IDtTabInfo.DateTime">
+            <value>Index of the date and time column</value>
+        </member>
+        <member name="T:Database.ISeqTabInfo">
+            <summary>
+            Interface of a sequential table (table whose rows can refer to another row from the same table or another sequential table).
+            Based on the common database table interface
+            <para>Creation revision: 001</para>
+            </summary>
+        </member>
+        <member name="P:Database.ISeqTabInfo.SeqType">
+            <value>Identification number of the current sequential table</value>
+        </member>
+        <member name="P:Database.ISeqTabInfo.NextSeqType">
+            <value>Index of the next sequential type column. The type is a variable used to identify the next sequential table</value>
+        </member>
+        <member name="P:Database.ISeqTabInfo.NextSeqId">
+            <value>Index of the next sequential id column. This column contains the id (see Id from IComTabInfo) of the row of the next sequential table</value>
+        </member>
+        <member name="T:Database.ICycleSeqInfo">
+            <summary>
+            Interface of a cycle sequential table. This type of table contains the information of the sequence of a cycle (results and recipe information). Recipe information is based on the applicable recipe table (which is a sequential table)
+            Based on the sequential database table interface
+            <para>Creation revision: 001</para>
+            </summary>
+        </member>
+        <member name="M:Database.ICycleSeqInfo.GetRecipeParameters(System.Object[],System.Int32)">
+            <summary>
+            Method which returns the recipe information related to the applicable recipe table 
+            </summary>
+            <param name="recipe">Variable containing the recipe information</param>
+            <param name="idCycle">The value of the id column (see Id from IComTabInfo) of the row of the first cycle sequential table</param>
+        </member>
+        <member name="T:Database.AuditTrailInfo">
+            <summary>
+            Class containing the infomration of the audit trail database table. The table must contain at least the following colummns: 
+            Id (UNIQUE INTEGER)
+            DateTime, 
+            username, 
+            eventType, 
+            description, 
+            valueBefore, 
+            valueAfter, 
+            comment
+            <para>Creation revision: 001</para>
+            </summary>
+        </member>
+        <member name="M:Database.AuditTrailInfo.#ctor">
+            <summary>
+            Sets all the variables of the class except the values of the variable Columns
+            </summary>
+        </member>
+        <member name="P:Database.AuditTrailInfo.TabName">
+            <value>Name of the database table. From IBasTabInfo interface</value>
+        </member>
+        <member name="P:Database.AuditTrailInfo.Ids">
+            <value>Name of the columns of the database table. From IBasTabInfo interface</value>
+        </member>
+        <member name="P:Database.AuditTrailInfo.Descriptions">
+            <value>Description of the columns of the database table</value>
+        </member>
+        <member name="P:Database.AuditTrailInfo.Id">
+            <value>Index of the id column (usually the first one: 0). This column <c>must be</c> an integer, usually automatically incremented. From IComTabInfo interface</value>
+        </member>
+        <member name="P:Database.AuditTrailInfo.DateTime">
+            <value>Index of the date and time column. This column contains the date and time of the insertion the rows. From IDtTabInfo</value>
+        </member>
+        <member name="P:Database.AuditTrailInfo.Username">
+            <value>Index of the username column. This column contains the username of the user who performed the event to be logged in the audit trail</value>
+        </member>
+        <member name="P:Database.AuditTrailInfo.EventType">
+            <value>Index of the event type column. This column contains the type the event to be logged in the audit trail</value>
+        </member>
+        <member name="P:Database.AuditTrailInfo.Description">
+            <value>Index of the description column. This column contains the description the event to be logged in the audit trail</value>
+        </member>
+        <member name="P:Database.AuditTrailInfo.ValueBefore">
+            <value>Index of the value before column. This column contains the value before the event to be logged in the audit trail</value>
+        </member>
+        <member name="P:Database.AuditTrailInfo.ValueAfter">
+            <value>Index of the value after column. This column contains the value after the event to be logged in the audit trail</value>
+        </member>
+        <member name="P:Database.AuditTrailInfo.Comment">
+            <value>Index of the comment column. This column contains the comment of the event to be logged in the audit trail</value>
+        </member>
+        <member name="T:Database.AccessTableInfo">
+            <summary>
+            Class containing the infomration of the access database table. The table must contain at least the following colummns: 
+            Id,
+            Role,
+            cyclestart... (TBD).
+            <para>Creation revision: 001</para>
+            </summary>
+        </member>
+        <member name="M:Database.AccessTableInfo.#ctor">
+            <summary>
+            Sets all the variables of the class except the values of the variable Columns
+            </summary>
+        </member>
+        <member name="P:Database.AccessTableInfo.TabName">
+            <value>Name of the database table. From IBasTabInfo interface</value>
+        </member>
+        <member name="P:Database.AccessTableInfo.Ids">
+            <value>Name of the columns of the database table. From IBasTabInfo interface</value>
+        </member>
+        <member name="P:Database.AccessTableInfo.Descriptions">
+            <value>Description of the columns of the database table</value>
+        </member>
+        <member name="P:Database.AccessTableInfo.Id">
+            <value>Index of the id column (usually the first one: 0). This column <c>must be</c> an integer, usually automatically incremented. From IComTabInfo interface</value>
+        </member>
+        <member name="P:Database.AccessTableInfo.Role">
+            <value>Index of the role column. This column contains the name of the applicable access role</value>
+        </member>
+        <member name="P:Database.AccessTableInfo.CycleStart">
+            <value>Index of the cycle start column. This column is the access right of the action start a cycle for the applicable access role</value>
+        </member>
+        <member name="P:Database.AccessTableInfo.RecipeUpdate">
+            <value>Index of the create recipe column. This column is the access the right of the action create a recipe for the applicable access role</value>
+        </member>
+        <member name="P:Database.AccessTableInfo.Backup">
+            <value>Index of the backup column. This column is the access the right of the backup and archiving actions</value>
+        </member>
+        <member name="P:Database.AccessTableInfo.Parameters">
+            <value>Index of the parameters column. This column is the access the right of the parameters screen</value>
+        </member>
+        <member name="P:Database.AccessTableInfo.DailyTest">
+            <value>Index of the daily test column. This column is the access the right of the daily test</value>
+        </member>
+        <member name="P:Database.AccessTableInfo.AckAlarm">
+            <value>Index of the ackowledgment of alarm column. This column is the access the right of the ackowledgment of alarm</value>
+        </member>
+        <member name="P:Database.AccessTableInfo.ApplicationStop">
+            <value>Index of the application stop column. This column is the access the right of the action stop the application for the applicable access role</value>
+        </member>
+        <member name="P:Database.AccessTableInfo.OperatorRole">
+            <value>Name of the operator access role</value>
+        </member>
+        <member name="P:Database.AccessTableInfo.SupervisorRole">
+            <value>Name of the supervisor access role</value>
+        </member>
+        <member name="P:Database.AccessTableInfo.AdministratorRole">
+            <value>Name of the administrator access role</value>
+        </member>
+        <member name="P:Database.AccessTableInfo.NoneRole">
+            <value>Name of the guest access role (role without access)</value>
+        </member>
+        <member name="T:Database.RecipeInfo">
+            <summary>
+            Class containing the infomration of the recipe database table. The table must contain at least the following colummns: 
+            id, 
+            firstSeqType, 
+            firstSeqId, 
+            recipeName, 
+            version, 
+            status
+            <para>Creation revision: 001</para>
+            </summary>
+            <remarks>Recipes are sequences of rows of sequencetial tables based on ISeqTabInfo interface</remarks>
+        </member>
+        <member name="M:Database.RecipeInfo.#ctor">
+            <summary>
+            Sets all the variables of the class except the values of the variable Columns
+            </summary>
+        </member>
+        <member name="P:Database.RecipeInfo.TabName">
+            <value>Name of the database table. From IBasTabInfo interface</value>
+        </member>
+        <member name="P:Database.RecipeInfo.Ids">
+            <value>Name of the columns of the database table. From IBasTabInfo interface</value>
+        </member>
+        <member name="P:Database.RecipeInfo.Descriptions">
+            <value>Description of the columns of the database table</value>
+        </member>
+        <member name="P:Database.RecipeInfo.SeqType">
+            <value>Identification number of the current sequential table. From ISeqTabInfo interface</value>
+        </member>
+        <member name="P:Database.RecipeInfo.Id">
+            <value>Index of the id column (usually the first one: 0). This column <c>must be</c> an integer, usually automatically incremented. From IComTabInfo interface</value>
+        </member>
+        <member name="P:Database.RecipeInfo.NextSeqType">
+            <value>Index of the next sequential type column. The type is a variable used to identify the next sequential table. From ISeqTabInfo interface</value>
+        </member>
+        <member name="P:Database.RecipeInfo.NextSeqId">
+            <value>Index of the next sequential id column. This column contains the id (see Id from IComTabInfo) of the row of the next sequential table. From ISeqTabInfo interface</value>
+        </member>
+        <member name="P:Database.RecipeInfo.Name">
+            <value>Index of the name column. This column is the name of the recipe</value>
+        </member>
+        <member name="P:Database.RecipeInfo.Version">
+            <value>Index of the version column. This column is the version of the recipe</value>
+        </member>
+        <member name="P:Database.RecipeInfo.Status">
+            <value>Index of the status column. This column is the status of the recipe (e.g. draft, production, obsolete)</value>
+        </member>
+        <member name="P:Database.RecipeInfo.FinaleWeightMin">
+            <value>Index of the final weight min column. This column contains the minimum acceptable final weight of the product</value>
+        </member>
+        <member name="P:Database.RecipeInfo.FinaleWeightMax">
+            <value>Index of the final weight max column. This column contains the maximum acceptable final weight of the product</value>
+        </member>
+        <member name="T:Database.RecipeWeightInfo">
+            <summary>
+            Class containing the infomration of the recipe weight database table. The table must contain at least the following colummns: 
+            id, 
+            nextSeqType, 
+            nextSeqId, 
+            seqName, 
+            isBarcodeUsed, 
+            barcode, 
+            unit, 
+            decimalNumber, 
+            setpoint, 
+            min, 
+            max
+            <para>Creation revision: 001</para>
+            </summary>
+            <remarks>This table contains the required information to perform cycle weight sequences</remarks>
+        </member>
+        <member name="M:Database.RecipeWeightInfo.#ctor">
+            <summary>
+            Sets all the variables of the class except the values of the variable Columns
+            </summary>
+        </member>
+        <member name="P:Database.RecipeWeightInfo.TabName">
+            <value>Name of the database table. From IBasTabInfo interface</value>
+        </member>
+        <member name="P:Database.RecipeWeightInfo.Ids">
+            <value>Name of the columns of the database table. From IBasTabInfo interface</value>
+        </member>
+        <member name="P:Database.RecipeWeightInfo.Descriptions">
+            <value>Description of the columns of the database table</value>
+        </member>
+        <member name="P:Database.RecipeWeightInfo.SeqType">
+            <value>Identification number of the current sequential table. From ISeqTabInfo interface</value>
+        </member>
+        <member name="P:Database.RecipeWeightInfo.Id">
+            <value>Index of the id column (usually the first one: 0). This column <c>must be</c> an integer, usually automatically incremented. From IComTabInfo interface</value>
+        </member>
+        <member name="P:Database.RecipeWeightInfo.NextSeqType">
+            <value>Index of the next sequential type column. The type is a variable used to identify the next sequential table. From ISeqTabInfo interface</value>
+        </member>
+        <member name="P:Database.RecipeWeightInfo.NextSeqId">
+            <value>Index of the next sequential id column. This column contains the id (see Id from IComTabInfo) of the row of the next sequential table. From ISeqTabInfo interface</value>
+        </member>
+        <member name="P:Database.RecipeWeightInfo.Name">
+            <value>Index of the name column. This column is the name of the product to be weighted</value>
+        </member>
+        <member name="P:Database.RecipeWeightInfo.IsBarcodeUsed">
+            <value>Index of the is barcode column. This column informs if the barcode of the product needs to be controlled during the cycle sequence</value>
+        </member>
+        <member name="P:Database.RecipeWeightInfo.Barcode">
+            <value>Index of the barcode column. This column contains the value of the barcode to be controlled</value>
+        </member>
+        <member name="P:Database.RecipeWeightInfo.Unit">
+            <value>Index of the unit column. This column contains the unit of the setpoint, min and max</value>
+        </member>
+        <member name="P:Database.RecipeWeightInfo.DecimalNumber">
+            <value>Index of the decimal number column. This column contains the number of decimal places to be displays for the setpoint, min, max and value of the weight during the cycle sequence</value>
+        </member>
+        <member name="P:Database.RecipeWeightInfo.Setpoint">
+            <value>Index of the setpoings column. This column contains the target weight by unit of final product</value>
+        </member>
+        <member name="P:Database.RecipeWeightInfo.Criteria">
+            <value>Index of the min column. This column contains the minimum acceptable weight by unit of final product</value>
+        </member>
+        <member name="P:Database.RecipeWeightInfo.IsSolvent">
+            <value>Index of the is solvent column. This column if the product is a solvent (if it must be evaporated at the end of the cycle)</value>
+        </member>
+        <member name="T:Database.RecipeSpeedMixerInfo">
+            <summary>
+            Class containing the infomration of the recipe speedmixer database table. The table must contain at least the following colummns: 
+            id, 
+            nextSeqType, 
+            nextSeqId, 
+            seqName, 
+            acceleration, 
+            deceleration, 
+            vaccum_control, 
+            isVentgasAir, 
+            monitorType, 
+            pressureUnit, 
+            scurve, 
+            coldtrap, 
+            speed00, 
+            time00, 
+            pressure00, 
+            speed01, 
+            time01, 
+            pressure01, 
+            speed02, 
+            time02, 
+            pressure02, 
+            speed03, 
+            time03, 
+            pressure03, 
+            speed04, 
+            time04, 
+            pressure04, 
+            speed05, 
+            time05, 
+            pressure05, 
+            speed06, 
+            time06, 
+            pressure06, 
+            speed07, 
+            time07, 
+            pressure07, 
+            speed08, 
+            time08, 
+            pressure08, 
+            speed09, 
+            time09, 
+            pressure09, 
+            speedMin, 
+            speedMax, 
+            pressureMin, 
+            pressureMax
+            <para>Creation revision: 001</para>
+            </summary>
+            <remarks>This table contains the required information to perform cycle speedmixer sequences</remarks>
+        </member>
+        <member name="M:Database.RecipeSpeedMixerInfo.#ctor">
+            <summary>
+            Sets all the variables of the class except the values of the variable Columns
+            </summary>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.TabName">
+            <value>Name of the database table. From IBasTabInfo interface</value>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.Ids">
+            <value>Name of the columns of the database table. From IBasTabInfo interface</value>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.Descriptions">
+            <value>Description of the columns of the database table</value>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.SeqType">
+            <value>Identification number of the current sequential table. From ISeqTabInfo interface</value>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.Id">
+            <value>Index of the id column (usually the first one: 0). This column <c>must be</c> an integer, usually automatically incremented. From IComTabInfo interface</value>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.NextSeqType">
+            <value>Index of the next sequential type column. The type is a variable used to identify the next sequential table. From ISeqTabInfo interface</value>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.NextSeqId">
+            <value>Index of the next sequential id column. This column contains the id (see Id from IComTabInfo) of the row of the next sequential table. From ISeqTabInfo interface</value>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.Acceleration">
+            <value>Index of the name column. This column contains of the speedmixer sequence</value>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.Deceleration">
+            <value>Index of the name column. This column contains of the speedmixer sequence</value>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.Vaccum_control">
+            <value>Index of the name column. This column contains of the speedmixer sequence</value>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.PressureUnit">
+            <value>Index of the name column. This column contains of the speedmixer sequence</value>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.Coldtrap">
+            <value>Index of the name column. This column contains of the speedmixer sequence</value>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.Speed00">
+            <value>Index of the name column. This column contains of the speedmixer sequence</value>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.Time00">
+            <value>Index of the name column. This column contains of the speedmixer sequence</value>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.Pressure00">
+            <value>Index of the name column. This column contains of the speedmixer sequence</value>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.SpeedMin">
+            <value>Index of the name column. This column contains of the speedmixer sequence</value>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.SpeedMax">
+            <value>Index of the name column. This column contains of the speedmixer sequence</value>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.PressureMin">
+            <value>Index of the name column. This column contains of the speedmixer sequence</value>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.PressureMax">
+            <value>Index of the name column. This column contains of the speedmixer sequence</value>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.PUnit_Torr">
+            <value>The value of the pressure unit Torr to be put in the database table</value>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.PUnit_mBar">
+            <value>The value of the pressure unit mBar to be put in the database table</value>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.PUnit_inHg">
+            <value>The value of the pressure unit inHg to be put in the database table</value>
+        </member>
+        <member name="P:Database.RecipeSpeedMixerInfo.PUnit_PSIA">
+            <value>The value of the pressure unit PSIA to be put in the database table</value>
+        </member>
+        <member name="T:Database.CycleTableInfo">
+            <summary>
+            Class containing the information of the cycle database table. The table must contain at least the following colummns: 
+            id, 
+            nextSeqType, 
+            nextSeqId, 
+            jobNumber, 
+            batchNumber, 
+            quantityValue, 
+            quantityUnit, 
+            itemNumber, 
+            recipeName, 
+            recipeVersion, 
+            equipmentName, 
+            dateTimeStartCycle, 
+            dateTimeEndCycle, 
+            username, 
+            firstAlarmId, 
+            lastAlarmId, 
+            comment, 
+            isItATest
+            <para>Creation revision: 001</para>
+            </summary>
+            <remarks>The information related to a cycle is separated in different rows of sequencetial tables based on ISeqTabInfo interface. The database table related to this class is the first sequence of the cycle information</remarks>
+        </member>
+        <member name="M:Database.CycleTableInfo.#ctor">
+            <summary>
+            Sets all the variables of the class except the values of the variable Columns
+            </summary>
+        </member>
+        <member name="P:Database.CycleTableInfo.TabName">
+            <value>Name of the database table. From IBasTabInfo interface</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.Ids">
+            <value>Name of the columns of the database table. From IBasTabInfo interface</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.Descriptions">
+            <value>Description of the columns of the database table</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.SeqType">
+            <value>Identification number of the current sequential table. From ISeqTabInfo interface</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.Id">
+            <value>Index of the id column (usually the first one: 0). This column <c>must be</c> an integer, usually automatically incremented. From IComTabInfo interface</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.NextSeqType">
+            <value>Index of the next sequential type column. The type is a variable used to identify the next sequential table. From ISeqTabInfo interface</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.NextSeqId">
+            <value>Index of the next sequential id column. This column contains the id (see Id from IComTabInfo) of the row of the next sequential table. From ISeqTabInfo interface</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.JobNumber">
+            <value>Index of the job number column. This column contains the job number of the cycle</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.BatchNumber">
+            <value>Index of the batch number column. This column contains the batch number of the cycle</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.FinalWeight">
+            <value>Index of the final weight column. This column contains wight of the final product at the end of the cycle</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.FinalWeightUnit">
+            <value>Index of the final weight unit column. This column contains unit of the final weight</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.ItemNumber">
+            <value>Index of the item number column. This column contains the item number of the cycle</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.RecipeName">
+            <value>Index of the recipe name column. This column contains the name of the recipe executed during the cycle</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.RecipeVersion">
+            <value>Index of the recipe version column. This column contains the version of the executed recipe</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.EquipmentName">
+            <value>Index of the equipment name column. This column contains the name of the equipment which performed the cycle</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.DateTimeStartCycle">
+            <value>Index of the start date and time column. This column contains date and time of the start of the cycle</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.DateTimeEndCycle">
+            <value>Index of the end date and time column. This column contains date and time of the end of the cycle</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.Username">
+            <value>Index of the username column. This column contains name of the user who started the cycle</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.FirstAlarmId">
+            <value>Index of the first alarm id column. This column contains value of the id column of the audit trail for the fist active alarm or the last audit trail event</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.LastAlarmId">
+            <value>Index of the last alarm id column. This column contains value of the id column of the audit trail for the last audit trail event</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.Comment">
+            <value>Index of the comment column. This column contains the comment logged during the test</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.IsItATest">
+            <value>Index of the is a test column. This column informs if the cycle was executed during production circumpstance or not</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.bowlWeight">
+            <value>Index of the bowl weight column. This column contains the weight of the empty bowl</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.lastWeightTh">
+            <value>Index of the theoritical last weight column. This column contains the expected weight the empty bowl and product at the end of the mix</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.lastWeightEff">
+            <value>Index of the actual last weighcolumn. This column contains the actual weight the empty bowl and product at the end of the mix</value>
+        </member>
+        <member name="P:Database.CycleTableInfo.DateTime">
+            <value>Index of the date and time column. From IDtTabInfo</value>
+        </member>
+        <member name="T:Database.CycleWeightInfo">
+            <summary>
+            Class containing the infomration of the cycle weight sequence database table. The table must contain at least the following colummns: 
+            id, 
+            nextSeqType, 
+            nextSeqId, 
+            product, 
+            wasWeightManual, 
+            dateTime, 
+            actualValue, 
+            setpoint, 
+            min, 
+            max, 
+            unit, 
+            decimalNumber
+            <para>Creation revision: 001</para>
+            </summary>
+            <remarks>This table contains the information of the cycle weight sequences</remarks>
+        </member>
+        <member name="M:Database.CycleWeightInfo.#ctor">
+            <summary>
+            Sets all the variables of the class except the values of the variable Columns
+            </summary>
+        </member>
+        <member name="P:Database.CycleWeightInfo.TabName">
+            <value>Name of the database table. From IBasTabInfo interface</value>
+        </member>
+        <member name="P:Database.CycleWeightInfo.Ids">
+            <value>Name of the columns of the database table. From IBasTabInfo interface</value>
+        </member>
+        <member name="P:Database.CycleWeightInfo.Descriptions">
+            <value>Description of the columns of the database table</value>
+        </member>
+        <member name="P:Database.CycleWeightInfo.SeqType">
+            <value>Identification number of the current sequential table. From ISeqTabInfo interface</value>
+        </member>
+        <member name="P:Database.CycleWeightInfo.Id">
+            <value>Index of the id column (usually the first one: 0). This column <c>must be</c> an integer, usually automatically incremented. From IComTabInfo interface</value>
+        </member>
+        <member name="P:Database.CycleWeightInfo.NextSeqType">
+            <value>Index of the next sequential type column. The type is a variable used to identify the next sequential table. From ISeqTabInfo interface</value>
+        </member>
+        <member name="P:Database.CycleWeightInfo.NextSeqId">
+            <value>Index of the next sequential id column. This column contains the id (see Id from IComTabInfo) of the row of the next sequential table. From ISeqTabInfo interface</value>
+        </member>
+        <member name="P:Database.CycleWeightInfo.Product">
+            <value>Index of the product column. This column contains the weighted product (from the name column of the weight recipe)</value>
+        </member>
+        <member name="P:Database.CycleWeightInfo.WasWeightManual">
+            <value>Index of the was weight manual column. This column informs if the user entered the weighedt value manually or not</value>
+        </member>
+        <member name="P:Database.CycleWeightInfo.DateTime">
+            <value>Index of the date and time column. This column contains the date and time of the weighting. From IDtTabInfo</value>
+        </member>
+        <member name="P:Database.CycleWeightInfo.ActualValue">
+            <value>Index of the weighted value column. This column contains weighted value of the product</value>
+        </member>
+        <member name="P:Database.CycleWeightInfo.Setpoint">
+            <value>Index of the setpoint column. This column contains the target weight (equals basically the setpoint from the weight recipe multiplied by the final weight)</value>
+        </member>
+        <member name="P:Database.CycleWeightInfo.Min">
+            <value>Index of the min column. This column contains the minimum weight (equals basically the minimum from the weight recipe multiplied by the final weight)</value>
+        </member>
+        <member name="P:Database.CycleWeightInfo.Max">
+            <value>Index of the max column. This column contains the maximum weight (equals basically the maximum from the weight recipe multiplied by the final weight)</value>
+        </member>
+        <member name="P:Database.CycleWeightInfo.Unit">
+            <value>Index of the unit column. This column contains the unit of the weight</value>
+        </member>
+        <member name="P:Database.CycleWeightInfo.DecimalNumber">
+            <value>Index of the decimal number column. This column contains number of decimal places to be displayed (from the weight recipe)</value>
+        </member>
+        <member name="P:Database.CycleWeightInfo.IsSolvent">
+            <value>Index of the is solvent column. This column informs if the product is a solvent (from the weight recipe)</value>
+        </member>
+        <member name="M:Database.CycleWeightInfo.GetRecipeParameters(System.Object[],System.Int32)">
+            <summary>
+            Method which returns the recipe information related to the applicable recipe table 
+            </summary>
+            <param name="recipe">Variable containing the recipe information</param>
+            <param name="idCycle">The value of the id column (see Id from IComTabInfo) of the row of the first cycle sequential table</param>
+        </member>
+        <member name="T:Database.CycleSpeedMixerInfo">
+            <summary>
+            Class containing the infomration of the cycle speedmixer sequence database table. The table must contain at least the following colummns: 
+            id, 
+            nextSeqType, 
+            nextSeqId, 
+            dateTimeStart, 
+            dateTimeEnd, 
+            timeMixTh, 
+            timeMixEff, 
+            pressureUnit, 
+            speedMin, 
+            speedMax, 
+            pressureMin, 
+            pressureMax, 
+            speedMean, 
+            pressureMean, 
+            speedStd, 
+            pressureStd
+            <para>Creation revision: 001</para>
+            </summary>
+            <remarks>This table contains the information of the cycle speedmixer sequences</remarks>
+        </member>
+        <member name="M:Database.CycleSpeedMixerInfo.#ctor">
+            <summary>
+            Sets all the variables of the class except the values of the variable Columns
+            </summary>
+        </member>
+        <member name="P:Database.CycleSpeedMixerInfo.TabName">
+            <value>Name of the database table. From IBasTabInfo interface</value>
+        </member>
+        <member name="P:Database.CycleSpeedMixerInfo.Ids">
+            <value>Name of the columns of the database table. From IBasTabInfo interface</value>
+        </member>
+        <member name="P:Database.CycleSpeedMixerInfo.Descriptions">
+            <value>Description of the columns of the database table</value>
+        </member>
+        <member name="P:Database.CycleSpeedMixerInfo.SeqType">
+            <value>Identification number of the current sequential table. From ISeqTabInfo interface</value>
+        </member>
+        <member name="P:Database.CycleSpeedMixerInfo.Id">
+            <value>Index of the id column (usually the first one: 0). This column <c>must be</c> an integer, usually automatically incremented. From IComTabInfo interface</value>
+        </member>
+        <member name="P:Database.CycleSpeedMixerInfo.NextSeqType">
+            <value>Index of the next sequential type column. The type is a variable used to identify the next sequential table. From ISeqTabInfo interface</value>
+        </member>
+        <member name="P:Database.CycleSpeedMixerInfo.NextSeqId">
+            <value>Index of the next sequential id column. This column contains the id (see Id from IComTabInfo) of the row of the next sequential table. From ISeqTabInfo interface</value>
+        </member>
+        <member name="P:Database.CycleSpeedMixerInfo.DateTimeStart">
+            <value>Index of the start date and time column. This column contains the date and time of the start of the sequence</value>
+        </member>
+        <member name="P:Database.CycleSpeedMixerInfo.DateTimeEnd">
+            <value>Index of the end date and time column. This column contains the date and time of the end of the sequence</value>
+        </member>
+        <member name="P:Database.CycleSpeedMixerInfo.TimeSeqTh">
+            <value>Index of the theoritical time of the sequence column. This column contains theoritical time of the sequence (from the recipe)</value>
+        </member>
+        <member name="P:Database.CycleSpeedMixerInfo.TimeSeqEff">
+            <value>Index of the actual time of the sequence column. This column contains actual time of the sequence</value>
+        </member>
+        <member name="P:Database.CycleSpeedMixerInfo.PressureUnit">
+            <value>Index of the pressure unit column. This column contains unit of the pressure from the recipe</value>
+        </member>
+        <member name="P:Database.CycleSpeedMixerInfo.SpeedMin">
+            <value>Index of the min speed column. This column contains the minimum allowed average speed from the recipe</value>
+        </member>
+        <member name="P:Database.CycleSpeedMixerInfo.SpeedMax">
+            <value>Index of the max speed column. This column contains the maximum allowed average speed from the recipe</value>
+        </member>
+        <member name="P:Database.CycleSpeedMixerInfo.PressureMin">
+            <value>Index of the min pressure column. This column contains the minimum allowed average pressure from the recipe</value>
+        </member>
+        <member name="P:Database.CycleSpeedMixerInfo.PressureMax">
+            <value>Index of the max pressure column. This column contains the maximum allowed average pressure from the recipe</value>
+        </member>
+        <member name="P:Database.CycleSpeedMixerInfo.SpeedAvg">
+            <value>Index of the average speed column. This column contains average of the speed during the sequence</value>
+        </member>
+        <member name="P:Database.CycleSpeedMixerInfo.PressureAvg">
+            <value>Index of the average pressure column. This column contains average of the pressure during the sequence</value>
+        </member>
+        <member name="P:Database.CycleSpeedMixerInfo.SpeedStd">
+            <value>Index of the standard deviation speed column. This column contains standard deviation of the speed during the sequence</value>
+        </member>
+        <member name="P:Database.CycleSpeedMixerInfo.PressureStd">
+            <value>Index of the standard deviation pressure column. This column contains standard deviation of the pressure during the sequence</value>
+        </member>
+        <member name="P:Database.CycleSpeedMixerInfo.DateTime">
+            <value>Index of the date and time column. From IDtTabInfo</value>
+        </member>
+        <member name="M:Database.CycleSpeedMixerInfo.GetRecipeParameters(System.Object[],System.Int32)">
+            <summary>
+            Method which returns the recipe information related to the applicable recipe table 
+            </summary>
+            <param name="recipeValues">Variable containing the recipe information</param>
+            <param name="idCycle">The value of the id column (see Id from IComTabInfo) of the row of the first cycle sequential table</param>
+        </member>
+        <member name="T:Database.TempInfo">
+            <summary>
+            Class containing the infomration of the temp database table generated during a speedmixer sequence. The table must contain at least the following colummns: 
+            speed, pressure
+            <para>Creation revision: 001</para>
+            </summary>
+        </member>
+        <member name="M:Database.TempInfo.#ctor">
+            <summary>
+            Sets all the variables of the class except the values of the variable Columns
+            </summary>
+        </member>
+        <member name="P:Database.TempInfo.TabName">
+            <value>Name of the database table. From IBasTabInfo interface</value>
+        </member>
+        <member name="P:Database.TempInfo.Ids">
+            <value>Name of the columns of the database table. From IBasTabInfo interface</value>
+        </member>
+        <member name="P:Database.TempInfo.Descriptions">
+            <value>Description of the columns of the database table</value>
+        </member>
+        <member name="P:Database.TempInfo.Speed">
+            <value>Index of the speed column. This column contains speed logged during the speedmixer's sequence</value>
+        </member>
+        <member name="P:Database.TempInfo.Pressure">
+            <value>Index of the pressure column. This column contains pressure logged during the speedmixer's sequence</value>
+        </member>
+        <member name="T:Database.TempResultInfo">
+            <summary>
+            Class containing the infomration of the temp result database table generated at the end of a speedmixer sequence. The table must contain at least the following colummns: 
+            speed average and standard deviation, pressure average and standard deviation
+            <para>Creation revision: 001</para>
+            </summary>
+        </member>
+        <member name="M:Database.TempResultInfo.#ctor">
+            <summary>
+            Sets all the variables of the class except the values of the variable Columns
+            </summary>
+        </member>
+        <member name="P:Database.TempResultInfo.TabName">
+            <value>Name of the database table. From IBasTabInfo interface</value>
+        </member>
+        <member name="P:Database.TempResultInfo.Ids">
+            <value>Name of the columns of the database table. From IBasTabInfo interface</value>
+        </member>
+        <member name="P:Database.TempResultInfo.Descriptions">
+            <value>Description of the columns of the database table</value>
+        </member>
+        <member name="P:Database.TempResultInfo.SpeedAvg">
+            <value>Index of the average speed column. This column contains average speed calculated at the end of the speedmixer's sequence</value>
+        </member>
+        <member name="P:Database.TempResultInfo.PressureAvg">
+            <value>Index of the average pressure column. This column contains average pressure calculated at the end of the speedmixer's sequence</value>
+        </member>
+        <member name="P:Database.TempResultInfo.SpeedStd">
+            <value>Index of the standard deviation speed column. This column contains average standard deviation calculated at the end of the speedmixer's sequence</value>
+        </member>
+        <member name="P:Database.TempResultInfo.PressureStd">
+            <value>Index of the standard deviation pressure column. This column contains standard deviation pressure calculated at the end of the speedmixer's sequence</value>
+        </member>
+        <member name="T:Database.DailyTestInfo">
+            <summary>
+            Class containing the infomration of the sample database table. The table must contain at least the following colummns: 
+            Id (UNIQUE INTEGER)
+            DateTime, 
+            setpoints (from 1 to 4), 
+            measures (from 1 to 4), 
+            status
+            <para>Creation revision: 001</para>
+            </summary>
+        </member>
+        <member name="M:Database.DailyTestInfo.#ctor">
+            <summary>
+            Sets all the variables of the class except the values of the variable Columns
+            </summary>
+        </member>
+        <member name="P:Database.DailyTestInfo.TabName">
+            <value>Name of the database table. From IBasTabInfo interface</value>
+        </member>
+        <member name="P:Database.DailyTestInfo.Ids">
+            <value>Name of the columns of the database table. From IBasTabInfo interface</value>
+        </member>
+        <member name="P:Database.DailyTestInfo.Descriptions">
+            <value>Description of the columns of the database table</value>
+        </member>
+        <member name="P:Database.DailyTestInfo.Id">
+            <value>Index of the id column (usually the first one: 0). This column <c>must be</c> an integer, usually automatically incremented. From IComTabInfo interface</value>
+        </member>
+        <member name="P:Database.DailyTestInfo.Username">
+            <value>Index of the usernmae column. This column contains the name of the user who performed the sampling</value>
+        </member>
+        <member name="P:Database.DailyTestInfo.DateTime">
+            <value>Index of the date and time column. This column contains the date and time of the insertion the rows. From IDtTabInfo</value>
+        </member>
+        <member name="P:Database.DailyTestInfo.EquipmentName">
+            <value>Index of the equipment name column. This column contains the name of the equipment used for the sampling</value>
+        </member>
+        <member name="P:Database.DailyTestInfo.Setpoint1">
+            <value>Index of the setpoint 1 column. This column contains the value of the first weight sample</value>
+        </member>
+        <member name="P:Database.DailyTestInfo.Setpoint2">
+            <value>Index of the setpoint 2 column. This column contains the value of the second weight sample</value>
+        </member>
+        <member name="P:Database.DailyTestInfo.Setpoint3">
+            <value>Index of the setpoint 3 column. This column contains the value of the third weight sample</value>
+        </member>
+        <member name="P:Database.DailyTestInfo.Setpoint4">
+            <value>Index of the setpoint 4 column. This column contains the value of the fourth weight sample</value>
+        </member>
+        <member name="P:Database.DailyTestInfo.Measure1">
+            <value>Index of the measure 1 column. This column contains the measure weight of the setpoint 1</value>
+        </member>
+        <member name="P:Database.DailyTestInfo.Measure2">
+            <value>Index of the measure 2 column. This column contains the measure weight of the setpoint 2</value>
+        </member>
+        <member name="P:Database.DailyTestInfo.Measure3">
+            <value>Index of the measure 3 column. This column contains the measure weight of the setpoint 3</value>
+        </member>
+        <member name="P:Database.DailyTestInfo.Measure4">
+            <value>Index of the measure 4 column. This column contains the measure weight of the setpoint 4</value>
+        </member>
+        <member name="P:Database.DailyTestInfo.Status">
+            <value>Index of the status column. This column contains the status of the sample</value>
+        </member>
+        <member name="P:Database.DailyTestInfo.SamplesNumber">
+            <value>Index of the sample number column. This column contains the number of samples which can be measured</value>
+        </member>
+    </members>
+</doc>

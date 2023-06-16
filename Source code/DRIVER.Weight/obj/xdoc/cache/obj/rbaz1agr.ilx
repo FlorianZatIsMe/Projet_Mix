@@ -1,0 +1,343 @@
+id: DRIVER.Weight
+language: CSharp
+name:
+  Default: DRIVER.Weight
+qualifiedName:
+  Default: DRIVER.Weight
+type: Assembly
+modifiers: {}
+items:
+- id: DRIVER_RS232_Weight
+  commentId: N:DRIVER_RS232_Weight
+  language: CSharp
+  name:
+    CSharp: DRIVER_RS232_Weight
+    VB: DRIVER_RS232_Weight
+  nameWithType:
+    CSharp: DRIVER_RS232_Weight
+    VB: DRIVER_RS232_Weight
+  qualifiedName:
+    CSharp: DRIVER_RS232_Weight
+    VB: DRIVER_RS232_Weight
+  type: Namespace
+  assemblies:
+  - DRIVER.Weight
+  modifiers: {}
+  items:
+  - id: DRIVER_RS232_Weight.RS232Weight
+    commentId: T:DRIVER_RS232_Weight.RS232Weight
+    language: CSharp
+    name:
+      CSharp: RS232Weight
+      VB: RS232Weight
+    nameWithType:
+      CSharp: RS232Weight
+      VB: RS232Weight
+    qualifiedName:
+      CSharp: DRIVER_RS232_Weight.RS232Weight
+      VB: DRIVER_RS232_Weight.RS232Weight
+    type: Class
+    assemblies:
+    - DRIVER.Weight
+    namespace: DRIVER_RS232_Weight
+    source:
+      id: RS232Weight
+      path: C:\Temp\MixingApplication\Source code\DRIVER.Weight\RS232Weight.cs
+      startLine: 15
+    syntax:
+      content:
+        CSharp: 'public static class RS232Weight : object'
+        VB: >-
+          Public Module RS232Weight
+
+              Inherits Object
+    inheritance:
+    - System.Object
+    modifiers:
+      CSharp:
+      - public
+      - static
+      - class
+      VB:
+      - Public
+      - Module
+    items:
+    - id: DRIVER_RS232_Weight.RS232Weight.rs232
+      commentId: F:DRIVER_RS232_Weight.RS232Weight.rs232
+      language: CSharp
+      name:
+        CSharp: rs232
+        VB: rs232
+      nameWithType:
+        CSharp: RS232Weight.rs232
+        VB: RS232Weight.rs232
+      qualifiedName:
+        CSharp: DRIVER_RS232_Weight.RS232Weight.rs232
+        VB: DRIVER_RS232_Weight.RS232Weight.rs232
+      type: Field
+      assemblies:
+      - DRIVER.Weight
+      namespace: DRIVER_RS232_Weight
+      source:
+        id: rs232
+        path: C:\Temp\MixingApplication\Source code\DRIVER.Weight\RS232Weight.cs
+        startLine: 17
+      syntax:
+        content:
+          CSharp: public static RS232 rs232
+          VB: Public Shared rs232 As RS232
+        return:
+          type: Driver_RS232.RS232
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: DRIVER_RS232_Weight.RS232Weight.GetData
+      commentId: M:DRIVER_RS232_Weight.RS232Weight.GetData
+      language: CSharp
+      name:
+        CSharp: GetData()
+        VB: GetData()
+      nameWithType:
+        CSharp: RS232Weight.GetData()
+        VB: RS232Weight.GetData()
+      qualifiedName:
+        CSharp: DRIVER_RS232_Weight.RS232Weight.GetData()
+        VB: DRIVER_RS232_Weight.RS232Weight.GetData()
+      type: Method
+      assemblies:
+      - DRIVER.Weight
+      namespace: DRIVER_RS232_Weight
+      source:
+        id: GetData
+        path: C:\Temp\MixingApplication\Source code\DRIVER.Weight\RS232Weight.cs
+        startLine: 40
+      syntax:
+        content:
+          CSharp: public static string GetData()
+          VB: Public Shared Function GetData As String
+        return:
+          type: System.String
+      overload: DRIVER_RS232_Weight.RS232Weight.GetData*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: DRIVER_RS232_Weight.RS232Weight.GetWeight
+      commentId: M:DRIVER_RS232_Weight.RS232Weight.GetWeight
+      language: CSharp
+      name:
+        CSharp: GetWeight()
+        VB: GetWeight()
+      nameWithType:
+        CSharp: RS232Weight.GetWeight()
+        VB: RS232Weight.GetWeight()
+      qualifiedName:
+        CSharp: DRIVER_RS232_Weight.RS232Weight.GetWeight()
+        VB: DRIVER_RS232_Weight.RS232Weight.GetWeight()
+      type: Method
+      assemblies:
+      - DRIVER.Weight
+      namespace: DRIVER_RS232_Weight
+      source:
+        id: GetWeight
+        path: C:\Temp\MixingApplication\Source code\DRIVER.Weight\RS232Weight.cs
+        startLine: 41
+      syntax:
+        content:
+          CSharp: public static decimal GetWeight()
+          VB: Public Shared Function GetWeight As Decimal
+        return:
+          type: System.Decimal
+      overload: DRIVER_RS232_Weight.RS232Weight.GetWeight*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: DRIVER_RS232_Weight.RS232Weight.IsWeightStable
+      commentId: M:DRIVER_RS232_Weight.RS232Weight.IsWeightStable
+      language: CSharp
+      name:
+        CSharp: IsWeightStable()
+        VB: IsWeightStable()
+      nameWithType:
+        CSharp: RS232Weight.IsWeightStable()
+        VB: RS232Weight.IsWeightStable()
+      qualifiedName:
+        CSharp: DRIVER_RS232_Weight.RS232Weight.IsWeightStable()
+        VB: DRIVER_RS232_Weight.RS232Weight.IsWeightStable()
+      type: Method
+      assemblies:
+      - DRIVER.Weight
+      namespace: DRIVER_RS232_Weight
+      source:
+        id: IsWeightStable
+        path: C:\Temp\MixingApplication\Source code\DRIVER.Weight\RS232Weight.cs
+        startLine: 42
+      syntax:
+        content:
+          CSharp: public static bool IsWeightStable()
+          VB: Public Shared Function IsWeightStable As Boolean
+        return:
+          type: System.Boolean
+      overload: DRIVER_RS232_Weight.RS232Weight.IsWeightStable*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+references:
+  Driver_RS232:
+    name:
+      CSharp:
+      - name: Driver_RS232
+        nameWithType: Driver_RS232
+        qualifiedName: Driver_RS232
+      VB:
+      - name: Driver_RS232
+        nameWithType: Driver_RS232
+        qualifiedName: Driver_RS232
+    isDefinition: true
+    commentId: N:Driver_RS232
+  Driver_RS232.RS232:
+    name:
+      CSharp:
+      - id: Driver_RS232.RS232
+        name: RS232
+        nameWithType: RS232
+        qualifiedName: Driver_RS232.RS232
+      VB:
+      - id: Driver_RS232.RS232
+        name: RS232
+        nameWithType: RS232
+        qualifiedName: Driver_RS232.RS232
+    isDefinition: true
+    parent: Driver_RS232
+    commentId: T:Driver_RS232.RS232
+  System.String:
+    name:
+      CSharp:
+      - id: System.String
+        name: String
+        nameWithType: String
+        qualifiedName: System.String
+        isExternal: true
+      VB:
+      - id: System.String
+        name: String
+        nameWithType: String
+        qualifiedName: System.String
+        isExternal: true
+    isDefinition: true
+    commentId: '!:System.String'
+  DRIVER_RS232_Weight.RS232Weight.GetData*:
+    name:
+      CSharp:
+      - id: DRIVER_RS232_Weight.RS232Weight.GetData*
+        name: GetData
+        nameWithType: RS232Weight.GetData
+        qualifiedName: DRIVER_RS232_Weight.RS232Weight.GetData
+      VB:
+      - id: DRIVER_RS232_Weight.RS232Weight.GetData*
+        name: GetData
+        nameWithType: RS232Weight.GetData
+        qualifiedName: DRIVER_RS232_Weight.RS232Weight.GetData
+    isDefinition: true
+    commentId: Overload:DRIVER_RS232_Weight.RS232Weight.GetData
+  System.Decimal:
+    name:
+      CSharp:
+      - id: System.Decimal
+        name: Decimal
+        nameWithType: Decimal
+        qualifiedName: System.Decimal
+        isExternal: true
+      VB:
+      - id: System.Decimal
+        name: Decimal
+        nameWithType: Decimal
+        qualifiedName: System.Decimal
+        isExternal: true
+    isDefinition: true
+    commentId: '!:System.Decimal'
+  DRIVER_RS232_Weight.RS232Weight.GetWeight*:
+    name:
+      CSharp:
+      - id: DRIVER_RS232_Weight.RS232Weight.GetWeight*
+        name: GetWeight
+        nameWithType: RS232Weight.GetWeight
+        qualifiedName: DRIVER_RS232_Weight.RS232Weight.GetWeight
+      VB:
+      - id: DRIVER_RS232_Weight.RS232Weight.GetWeight*
+        name: GetWeight
+        nameWithType: RS232Weight.GetWeight
+        qualifiedName: DRIVER_RS232_Weight.RS232Weight.GetWeight
+    isDefinition: true
+    commentId: Overload:DRIVER_RS232_Weight.RS232Weight.GetWeight
+  System.Boolean:
+    name:
+      CSharp:
+      - id: System.Boolean
+        name: Boolean
+        nameWithType: Boolean
+        qualifiedName: System.Boolean
+        isExternal: true
+      VB:
+      - id: System.Boolean
+        name: Boolean
+        nameWithType: Boolean
+        qualifiedName: System.Boolean
+        isExternal: true
+    isDefinition: true
+    commentId: '!:System.Boolean'
+  DRIVER_RS232_Weight.RS232Weight.IsWeightStable*:
+    name:
+      CSharp:
+      - id: DRIVER_RS232_Weight.RS232Weight.IsWeightStable*
+        name: IsWeightStable
+        nameWithType: RS232Weight.IsWeightStable
+        qualifiedName: DRIVER_RS232_Weight.RS232Weight.IsWeightStable
+      VB:
+      - id: DRIVER_RS232_Weight.RS232Weight.IsWeightStable*
+        name: IsWeightStable
+        nameWithType: RS232Weight.IsWeightStable
+        qualifiedName: DRIVER_RS232_Weight.RS232Weight.IsWeightStable
+    isDefinition: true
+    commentId: Overload:DRIVER_RS232_Weight.RS232Weight.IsWeightStable
+  DRIVER_RS232_Weight.RS232Weight:
+    name:
+      CSharp:
+      - id: DRIVER_RS232_Weight.RS232Weight
+        name: RS232Weight
+        nameWithType: RS232Weight
+        qualifiedName: DRIVER_RS232_Weight.RS232Weight
+      VB:
+      - id: DRIVER_RS232_Weight.RS232Weight
+        name: RS232Weight
+        nameWithType: RS232Weight
+        qualifiedName: DRIVER_RS232_Weight.RS232Weight
+    isDefinition: true
+    commentId: T:DRIVER_RS232_Weight.RS232Weight
+  DRIVER_RS232_Weight:
+    name:
+      CSharp:
+      - name: DRIVER_RS232_Weight
+        nameWithType: DRIVER_RS232_Weight
+        qualifiedName: DRIVER_RS232_Weight
+      VB:
+      - name: DRIVER_RS232_Weight
+        nameWithType: DRIVER_RS232_Weight
+        qualifiedName: DRIVER_RS232_Weight
+    isDefinition: true
+    commentId: N:DRIVER_RS232_Weight

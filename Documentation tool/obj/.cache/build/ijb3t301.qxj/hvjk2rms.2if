@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class DailyTestInfo
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class DailyTestInfo
+   ">
+    <meta name="generator" content="docfx 2.59.4.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Database.DailyTestInfo">
+  
+  
+  <h1 id="Database_DailyTestInfo" data-uid="Database.DailyTestInfo" class="text-break">Class DailyTestInfo
+  </h1>
+  <div class="markdown level0 summary"><p sourcefile="api/Database.DailyTestInfo.yml" sourcestartlinenumber="2">Class containing the infomration of the sample database table. The table must contain at least the following colummns:
+Id (UNIQUE INTEGER)
+DateTime,
+setpoints (from 1 to 4),
+measures (from 1 to 4),
+status</p>
+<p>Creation revision: 001</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">DailyTestInfo</span></div>
+  </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Database.IComTabInfo.html">IComTabInfo</a></div>
+    <div><a class="xref" href="Database.IDtTabInfo.html">IDtTabInfo</a></div>
+    <div><a class="xref" href="Database.IBasTabInfo.html">IBasTabInfo</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Database.html">Database</a></h6>
+  <h6><strong>Assembly</strong>: Database.dll</h6>
+  <h5 id="Database_DailyTestInfo_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class DailyTestInfo : IComTabInfo, IDtTabInfo, IBasTabInfo</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  
+  
+  <a id="Database_DailyTestInfo__ctor_" data-uid="Database.DailyTestInfo.#ctor*"></a>
+  <h4 id="Database_DailyTestInfo__ctor" data-uid="Database.DailyTestInfo.#ctor">DailyTestInfo()</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/Database.DailyTestInfo.yml" sourcestartlinenumber="2">Sets all the variables of the class except the values of the variable Columns</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DailyTestInfo()</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  
+  
+  <a id="Database_DailyTestInfo_Columns_" data-uid="Database.DailyTestInfo.Columns*"></a>
+  <h4 id="Database_DailyTestInfo_Columns" data-uid="Database.DailyTestInfo.Columns">Columns</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Column&gt; Columns { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Database.Column.html">Column</a>&gt;</td>
+        <td><p sourcefile="api/Database.DailyTestInfo.yml" sourcestartlinenumber="1">Columns of the database table. From IBasTabInfo interface</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Database_DailyTestInfo_DateTime_" data-uid="Database.DailyTestInfo.DateTime*"></a>
+  <h4 id="Database_DailyTestInfo_DateTime" data-uid="Database.DailyTestInfo.DateTime">DateTime</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int DateTime { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><p sourcefile="api/Database.DailyTestInfo.yml" sourcestartlinenumber="1">Index of the date and time column. This column contains the date and time of the insertion the rows. From IDtTabInfo</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Database_DailyTestInfo_EquipmentName_" data-uid="Database.DailyTestInfo.EquipmentName*"></a>
+  <h4 id="Database_DailyTestInfo_EquipmentName" data-uid="Database.DailyTestInfo.EquipmentName">EquipmentName</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int EquipmentName { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><p sourcefile="api/Database.DailyTestInfo.yml" sourcestartlinenumber="1">Index of the equipment name column. This column contains the name of the equipment used for the sampling</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Database_DailyTestInfo_Id_" data-uid="Database.DailyTestInfo.Id*"></a>
+  <h4 id="Database_DailyTestInfo_Id" data-uid="Database.DailyTestInfo.Id">Id</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Id { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><p sourcefile="api/Database.DailyTestInfo.yml" sourcestartlinenumber="1">Index of the id column (usually the first one: 0). This column <code>must be</code> an integer, usually automatically incremented. From IComTabInfo interface</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Database_DailyTestInfo_Ids_" data-uid="Database.DailyTestInfo.Ids*"></a>
+  <h4 id="Database_DailyTestInfo_Ids" data-uid="Database.DailyTestInfo.Ids">Ids</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string[] Ids { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span>[]</td>
+        <td><p sourcefile="api/Database.DailyTestInfo.yml" sourcestartlinenumber="1">Name of the columns of the database table. From IBasTabInfo interface</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Database_DailyTestInfo_Measure1_" data-uid="Database.DailyTestInfo.Measure1*"></a>
+  <h4 id="Database_DailyTestInfo_Measure1" data-uid="Database.DailyTestInfo.Measure1">Measure1</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Measure1 { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><p sourcefile="api/Database.DailyTestInfo.yml" sourcestartlinenumber="1">Index of the measure 1 column. This column contains the measure weight of the setpoint 1</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Database_DailyTestInfo_Measure2_" data-uid="Database.DailyTestInfo.Measure2*"></a>
+  <h4 id="Database_DailyTestInfo_Measure2" data-uid="Database.DailyTestInfo.Measure2">Measure2</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Measure2 { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><p sourcefile="api/Database.DailyTestInfo.yml" sourcestartlinenumber="1">Index of the measure 2 column. This column contains the measure weight of the setpoint 2</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Database_DailyTestInfo_Measure3_" data-uid="Database.DailyTestInfo.Measure3*"></a>
+  <h4 id="Database_DailyTestInfo_Measure3" data-uid="Database.DailyTestInfo.Measure3">Measure3</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Measure3 { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><p sourcefile="api/Database.DailyTestInfo.yml" sourcestartlinenumber="1">Index of the measure 3 column. This column contains the measure weight of the setpoint 3</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Database_DailyTestInfo_Measure4_" data-uid="Database.DailyTestInfo.Measure4*"></a>
+  <h4 id="Database_DailyTestInfo_Measure4" data-uid="Database.DailyTestInfo.Measure4">Measure4</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Measure4 { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><p sourcefile="api/Database.DailyTestInfo.yml" sourcestartlinenumber="1">Index of the measure 4 column. This column contains the measure weight of the setpoint 4</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Database_DailyTestInfo_SamplesNumber_" data-uid="Database.DailyTestInfo.SamplesNumber*"></a>
+  <h4 id="Database_DailyTestInfo_SamplesNumber" data-uid="Database.DailyTestInfo.SamplesNumber">SamplesNumber</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int SamplesNumber { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><p sourcefile="api/Database.DailyTestInfo.yml" sourcestartlinenumber="1">Index of the sample number column. This column contains the number of samples which can be measured</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Database_DailyTestInfo_Setpoint1_" data-uid="Database.DailyTestInfo.Setpoint1*"></a>
+  <h4 id="Database_DailyTestInfo_Setpoint1" data-uid="Database.DailyTestInfo.Setpoint1">Setpoint1</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Setpoint1 { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><p sourcefile="api/Database.DailyTestInfo.yml" sourcestartlinenumber="1">Index of the setpoint 1 column. This column contains the value of the first weight sample</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Database_DailyTestInfo_Setpoint2_" data-uid="Database.DailyTestInfo.Setpoint2*"></a>
+  <h4 id="Database_DailyTestInfo_Setpoint2" data-uid="Database.DailyTestInfo.Setpoint2">Setpoint2</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Setpoint2 { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><p sourcefile="api/Database.DailyTestInfo.yml" sourcestartlinenumber="1">Index of the setpoint 2 column. This column contains the value of the second weight sample</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Database_DailyTestInfo_Setpoint3_" data-uid="Database.DailyTestInfo.Setpoint3*"></a>
+  <h4 id="Database_DailyTestInfo_Setpoint3" data-uid="Database.DailyTestInfo.Setpoint3">Setpoint3</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Setpoint3 { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><p sourcefile="api/Database.DailyTestInfo.yml" sourcestartlinenumber="1">Index of the setpoint 3 column. This column contains the value of the third weight sample</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Database_DailyTestInfo_Setpoint4_" data-uid="Database.DailyTestInfo.Setpoint4*"></a>
+  <h4 id="Database_DailyTestInfo_Setpoint4" data-uid="Database.DailyTestInfo.Setpoint4">Setpoint4</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Setpoint4 { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><p sourcefile="api/Database.DailyTestInfo.yml" sourcestartlinenumber="1">Index of the setpoint 4 column. This column contains the value of the fourth weight sample</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Database_DailyTestInfo_Status_" data-uid="Database.DailyTestInfo.Status*"></a>
+  <h4 id="Database_DailyTestInfo_Status" data-uid="Database.DailyTestInfo.Status">Status</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Status { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><p sourcefile="api/Database.DailyTestInfo.yml" sourcestartlinenumber="1">Index of the status column. This column contains the status of the sample</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Database_DailyTestInfo_TabName_" data-uid="Database.DailyTestInfo.TabName*"></a>
+  <h4 id="Database_DailyTestInfo_TabName" data-uid="Database.DailyTestInfo.TabName">TabName</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string TabName { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><p sourcefile="api/Database.DailyTestInfo.yml" sourcestartlinenumber="1">Name of the database table. From IBasTabInfo interface</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Database_DailyTestInfo_Username_" data-uid="Database.DailyTestInfo.Username*"></a>
+  <h4 id="Database_DailyTestInfo_Username" data-uid="Database.DailyTestInfo.Username">Username</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Username { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><p sourcefile="api/Database.DailyTestInfo.yml" sourcestartlinenumber="1">Index of the usernmae column. This column contains the name of the user who performed the sampling</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Database.IComTabInfo.html">IComTabInfo</a>
+  </div>
+  <div>
+      <a class="xref" href="Database.IDtTabInfo.html">IDtTabInfo</a>
+  </div>
+  <div>
+      <a class="xref" href="Database.IBasTabInfo.html">IBasTabInfo</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,1393 @@
+id: Driver_Ethernet_Weight
+language: CSharp
+name:
+  Default: Driver_Ethernet_Weight
+qualifiedName:
+  Default: Driver_Ethernet_Weight
+type: Assembly
+modifiers: {}
+items:
+- id: Driver_Ethernet_Balance
+  commentId: N:Driver_Ethernet_Balance
+  language: CSharp
+  name:
+    CSharp: Driver_Ethernet_Balance
+    VB: Driver_Ethernet_Balance
+  nameWithType:
+    CSharp: Driver_Ethernet_Balance
+    VB: Driver_Ethernet_Balance
+  qualifiedName:
+    CSharp: Driver_Ethernet_Balance
+    VB: Driver_Ethernet_Balance
+  type: Namespace
+  assemblies:
+  - Driver_Ethernet_Weight
+  modifiers: {}
+  items:
+  - id: Driver_Ethernet_Balance.Weight
+    commentId: T:Driver_Ethernet_Balance.Weight
+    language: CSharp
+    name:
+      CSharp: Weight
+      VB: Weight
+    nameWithType:
+      CSharp: Weight
+      VB: Weight
+    qualifiedName:
+      CSharp: Driver_Ethernet_Balance.Weight
+      VB: Driver_Ethernet_Balance.Weight
+    type: Class
+    assemblies:
+    - Driver_Ethernet_Weight
+    namespace: Driver_Ethernet_Balance
+    source:
+      id: Weight
+      path: C:\Temp\MixingApplication\Driver_Ethernet_Weight\Balance.cs
+      startLine: 11
+    syntax:
+      content:
+        CSharp: public class Weight
+        VB: Public Class Weight
+    inheritance:
+    - System.Object
+    inheritedMembers:
+    - System.Object.ToString
+    - System.Object.Equals(System.Object)
+    - System.Object.Equals(System.Object,System.Object)
+    - System.Object.ReferenceEquals(System.Object,System.Object)
+    - System.Object.GetHashCode
+    - System.Object.GetType
+    - System.Object.MemberwiseClone
+    modifiers:
+      CSharp:
+      - public
+      - class
+      VB:
+      - Public
+      - Class
+    items:
+    - id: Driver_Ethernet_Balance.Weight.value
+      commentId: P:Driver_Ethernet_Balance.Weight.value
+      language: CSharp
+      name:
+        CSharp: value
+        VB: value
+      nameWithType:
+        CSharp: Weight.value
+        VB: Weight.value
+      qualifiedName:
+        CSharp: Driver_Ethernet_Balance.Weight.value
+        VB: Driver_Ethernet_Balance.Weight.value
+      type: Property
+      assemblies:
+      - Driver_Ethernet_Weight
+      namespace: Driver_Ethernet_Balance
+      source:
+        id: value
+        path: C:\Temp\MixingApplication\Driver_Ethernet_Weight\Balance.cs
+        startLine: 13
+      syntax:
+        content:
+          CSharp: public decimal value { get; set; }
+          VB: Public Property value As Decimal
+        parameters: []
+        return:
+          type: System.Decimal
+      overload: Driver_Ethernet_Balance.Weight.value*
+      modifiers:
+        CSharp:
+        - public
+        - get
+        - set
+        VB:
+        - Public
+    - id: Driver_Ethernet_Balance.Weight.isStable
+      commentId: P:Driver_Ethernet_Balance.Weight.isStable
+      language: CSharp
+      name:
+        CSharp: isStable
+        VB: isStable
+      nameWithType:
+        CSharp: Weight.isStable
+        VB: Weight.isStable
+      qualifiedName:
+        CSharp: Driver_Ethernet_Balance.Weight.isStable
+        VB: Driver_Ethernet_Balance.Weight.isStable
+      type: Property
+      assemblies:
+      - Driver_Ethernet_Weight
+      namespace: Driver_Ethernet_Balance
+      source:
+        id: isStable
+        path: C:\Temp\MixingApplication\Driver_Ethernet_Weight\Balance.cs
+        startLine: 14
+      syntax:
+        content:
+          CSharp: public bool isStable { get; set; }
+          VB: Public Property isStable As Boolean
+        parameters: []
+        return:
+          type: System.Boolean
+      overload: Driver_Ethernet_Balance.Weight.isStable*
+      modifiers:
+        CSharp:
+        - public
+        - get
+        - set
+        VB:
+        - Public
+  - id: Driver_Ethernet_Balance.IniInfo
+    commentId: T:Driver_Ethernet_Balance.IniInfo
+    language: CSharp
+    name:
+      CSharp: IniInfo
+      VB: IniInfo
+    nameWithType:
+      CSharp: IniInfo
+      VB: IniInfo
+    qualifiedName:
+      CSharp: Driver_Ethernet_Balance.IniInfo
+      VB: Driver_Ethernet_Balance.IniInfo
+    type: Struct
+    assemblies:
+    - Driver_Ethernet_Weight
+    namespace: Driver_Ethernet_Balance
+    source:
+      id: IniInfo
+      path: C:\Temp\MixingApplication\Driver_Ethernet_Weight\Balance.cs
+      startLine: 17
+    syntax:
+      content:
+        CSharp: public struct IniInfo
+        VB: Public Structure IniInfo
+    inheritedMembers:
+    - System.ValueType.Equals(System.Object)
+    - System.ValueType.GetHashCode
+    - System.ValueType.ToString
+    - System.Object.Equals(System.Object,System.Object)
+    - System.Object.ReferenceEquals(System.Object,System.Object)
+    - System.Object.GetType
+    modifiers:
+      CSharp:
+      - public
+      - struct
+      VB:
+      - Public
+      - Structure
+    items:
+    - id: Driver_Ethernet_Balance.IniInfo.Window
+      commentId: F:Driver_Ethernet_Balance.IniInfo.Window
+      language: CSharp
+      name:
+        CSharp: Window
+        VB: Window
+      nameWithType:
+        CSharp: IniInfo.Window
+        VB: IniInfo.Window
+      qualifiedName:
+        CSharp: Driver_Ethernet_Balance.IniInfo.Window
+        VB: Driver_Ethernet_Balance.IniInfo.Window
+      type: Field
+      assemblies:
+      - Driver_Ethernet_Weight
+      namespace: Driver_Ethernet_Balance
+      source:
+        id: Window
+        path: C:\Temp\MixingApplication\Driver_Ethernet_Weight\Balance.cs
+        startLine: 19
+      syntax:
+        content:
+          CSharp: public Window Window
+          VB: Public Window As Window
+        return:
+          type: System.Windows.Window
+      modifiers:
+        CSharp:
+        - public
+        VB:
+        - Public
+  - id: Driver_Ethernet_Balance.Balance
+    commentId: T:Driver_Ethernet_Balance.Balance
+    language: CSharp
+    name:
+      CSharp: Balance
+      VB: Balance
+    nameWithType:
+      CSharp: Balance
+      VB: Balance
+    qualifiedName:
+      CSharp: Driver_Ethernet_Balance.Balance
+      VB: Driver_Ethernet_Balance.Balance
+    type: Class
+    assemblies:
+    - Driver_Ethernet_Weight
+    namespace: Driver_Ethernet_Balance
+    source:
+      id: Balance
+      path: C:\Temp\MixingApplication\Driver_Ethernet_Weight\Balance.cs
+      startLine: 22
+    syntax:
+      content:
+        CSharp: public static class Balance
+        VB: Public Module Balance
+    inheritance:
+    - System.Object
+    inheritedMembers:
+    - System.Object.ToString
+    - System.Object.Equals(System.Object)
+    - System.Object.Equals(System.Object,System.Object)
+    - System.Object.ReferenceEquals(System.Object,System.Object)
+    - System.Object.GetHashCode
+    - System.Object.GetType
+    - System.Object.MemberwiseClone
+    modifiers:
+      CSharp:
+      - public
+      - static
+      - class
+      VB:
+      - Public
+      - Module
+    items:
+    - id: Driver_Ethernet_Balance.Balance.Connect
+      commentId: M:Driver_Ethernet_Balance.Balance.Connect
+      language: CSharp
+      name:
+        CSharp: Connect()
+        VB: Connect()
+      nameWithType:
+        CSharp: Balance.Connect()
+        VB: Balance.Connect()
+      qualifiedName:
+        CSharp: Driver_Ethernet_Balance.Balance.Connect()
+        VB: Driver_Ethernet_Balance.Balance.Connect()
+      type: Method
+      assemblies:
+      - Driver_Ethernet_Weight
+      namespace: Driver_Ethernet_Balance
+      source:
+        id: Connect
+        path: C:\Temp\MixingApplication\Driver_Ethernet_Weight\Balance.cs
+        startLine: 49
+      syntax:
+        content:
+          CSharp: public static bool Connect()
+          VB: Public Shared Function Connect As Boolean
+        return:
+          type: System.Boolean
+      overload: Driver_Ethernet_Balance.Balance.Connect*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: Driver_Ethernet_Balance.Balance.Disconnect
+      commentId: M:Driver_Ethernet_Balance.Balance.Disconnect
+      language: CSharp
+      name:
+        CSharp: Disconnect()
+        VB: Disconnect()
+      nameWithType:
+        CSharp: Balance.Disconnect()
+        VB: Balance.Disconnect()
+      qualifiedName:
+        CSharp: Driver_Ethernet_Balance.Balance.Disconnect()
+        VB: Driver_Ethernet_Balance.Balance.Disconnect()
+      type: Method
+      assemblies:
+      - Driver_Ethernet_Weight
+      namespace: Driver_Ethernet_Balance
+      source:
+        id: Disconnect
+        path: C:\Temp\MixingApplication\Driver_Ethernet_Weight\Balance.cs
+        startLine: 56
+      syntax:
+        content:
+          CSharp: public static void Disconnect()
+          VB: Public Shared Sub Disconnect
+      overload: Driver_Ethernet_Balance.Balance.Disconnect*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: Driver_Ethernet_Balance.Balance.IsConnected
+      commentId: M:Driver_Ethernet_Balance.Balance.IsConnected
+      language: CSharp
+      name:
+        CSharp: IsConnected()
+        VB: IsConnected()
+      nameWithType:
+        CSharp: Balance.IsConnected()
+        VB: Balance.IsConnected()
+      qualifiedName:
+        CSharp: Driver_Ethernet_Balance.Balance.IsConnected()
+        VB: Driver_Ethernet_Balance.Balance.IsConnected()
+      type: Method
+      assemblies:
+      - Driver_Ethernet_Weight
+      namespace: Driver_Ethernet_Balance
+      source:
+        id: IsConnected
+        path: C:\Temp\MixingApplication\Driver_Ethernet_Weight\Balance.cs
+        startLine: 61
+      syntax:
+        content:
+          CSharp: public static bool IsConnected()
+          VB: Public Shared Function IsConnected As Boolean
+        return:
+          type: System.Boolean
+      overload: Driver_Ethernet_Balance.Balance.IsConnected*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: Driver_Ethernet_Balance.Balance.BlockUse
+      commentId: M:Driver_Ethernet_Balance.Balance.BlockUse
+      language: CSharp
+      name:
+        CSharp: BlockUse()
+        VB: BlockUse()
+      nameWithType:
+        CSharp: Balance.BlockUse()
+        VB: Balance.BlockUse()
+      qualifiedName:
+        CSharp: Driver_Ethernet_Balance.Balance.BlockUse()
+        VB: Driver_Ethernet_Balance.Balance.BlockUse()
+      type: Method
+      assemblies:
+      - Driver_Ethernet_Weight
+      namespace: Driver_Ethernet_Balance
+      source:
+        id: BlockUse
+        path: C:\Temp\MixingApplication\Driver_Ethernet_Weight\Balance.cs
+        startLine: 70
+      syntax:
+        content:
+          CSharp: public static void BlockUse()
+          VB: Public Shared Sub BlockUse
+      overload: Driver_Ethernet_Balance.Balance.BlockUse*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: Driver_Ethernet_Balance.Balance.FreeUse
+      commentId: M:Driver_Ethernet_Balance.Balance.FreeUse
+      language: CSharp
+      name:
+        CSharp: FreeUse()
+        VB: FreeUse()
+      nameWithType:
+        CSharp: Balance.FreeUse()
+        VB: Balance.FreeUse()
+      qualifiedName:
+        CSharp: Driver_Ethernet_Balance.Balance.FreeUse()
+        VB: Driver_Ethernet_Balance.Balance.FreeUse()
+      type: Method
+      assemblies:
+      - Driver_Ethernet_Weight
+      namespace: Driver_Ethernet_Balance
+      source:
+        id: FreeUse
+        path: C:\Temp\MixingApplication\Driver_Ethernet_Weight\Balance.cs
+        startLine: 71
+      syntax:
+        content:
+          CSharp: public static void FreeUse()
+          VB: Public Shared Sub FreeUse
+      overload: Driver_Ethernet_Balance.Balance.FreeUse*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: Driver_Ethernet_Balance.Balance.IsFree
+      commentId: M:Driver_Ethernet_Balance.Balance.IsFree
+      language: CSharp
+      name:
+        CSharp: IsFree()
+        VB: IsFree()
+      nameWithType:
+        CSharp: Balance.IsFree()
+        VB: Balance.IsFree()
+      qualifiedName:
+        CSharp: Driver_Ethernet_Balance.Balance.IsFree()
+        VB: Driver_Ethernet_Balance.Balance.IsFree()
+      type: Method
+      assemblies:
+      - Driver_Ethernet_Weight
+      namespace: Driver_Ethernet_Balance
+      source:
+        id: IsFree
+        path: C:\Temp\MixingApplication\Driver_Ethernet_Weight\Balance.cs
+        startLine: 72
+      syntax:
+        content:
+          CSharp: public static bool IsFree()
+          VB: Public Shared Function IsFree As Boolean
+        return:
+          type: System.Boolean
+      overload: Driver_Ethernet_Balance.Balance.IsFree*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: Driver_Ethernet_Balance.Balance.SendZeroCommand
+      commentId: M:Driver_Ethernet_Balance.Balance.SendZeroCommand
+      language: CSharp
+      name:
+        CSharp: SendZeroCommand()
+        VB: SendZeroCommand()
+      nameWithType:
+        CSharp: Balance.SendZeroCommand()
+        VB: Balance.SendZeroCommand()
+      qualifiedName:
+        CSharp: Driver_Ethernet_Balance.Balance.SendZeroCommand()
+        VB: Driver_Ethernet_Balance.Balance.SendZeroCommand()
+      type: Method
+      assemblies:
+      - Driver_Ethernet_Weight
+      namespace: Driver_Ethernet_Balance
+      source:
+        id: SendZeroCommand
+        path: C:\Temp\MixingApplication\Driver_Ethernet_Weight\Balance.cs
+        startLine: 105
+      syntax:
+        content:
+          CSharp: public static int SendZeroCommand()
+          VB: Public Shared Function SendZeroCommand As Integer
+        return:
+          type: System.Int32
+      overload: Driver_Ethernet_Balance.Balance.SendZeroCommand*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: Driver_Ethernet_Balance.Balance.SendTareCommand
+      commentId: M:Driver_Ethernet_Balance.Balance.SendTareCommand
+      language: CSharp
+      name:
+        CSharp: SendTareCommand()
+        VB: SendTareCommand()
+      nameWithType:
+        CSharp: Balance.SendTareCommand()
+        VB: Balance.SendTareCommand()
+      qualifiedName:
+        CSharp: Driver_Ethernet_Balance.Balance.SendTareCommand()
+        VB: Driver_Ethernet_Balance.Balance.SendTareCommand()
+      type: Method
+      assemblies:
+      - Driver_Ethernet_Weight
+      namespace: Driver_Ethernet_Balance
+      source:
+        id: SendTareCommand
+        path: C:\Temp\MixingApplication\Driver_Ethernet_Weight\Balance.cs
+        startLine: 117
+      syntax:
+        content:
+          CSharp: public static int SendTareCommand()
+          VB: Public Shared Function SendTareCommand As Integer
+        return:
+          type: System.Int32
+      overload: Driver_Ethernet_Balance.Balance.SendTareCommand*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: Driver_Ethernet_Balance.Balance.TareBalance
+      commentId: M:Driver_Ethernet_Balance.Balance.TareBalance
+      language: CSharp
+      name:
+        CSharp: TareBalance()
+        VB: TareBalance()
+      nameWithType:
+        CSharp: Balance.TareBalance()
+        VB: Balance.TareBalance()
+      qualifiedName:
+        CSharp: Driver_Ethernet_Balance.Balance.TareBalance()
+        VB: Driver_Ethernet_Balance.Balance.TareBalance()
+      type: Method
+      assemblies:
+      - Driver_Ethernet_Weight
+      namespace: Driver_Ethernet_Balance
+      source:
+        id: TareBalance
+        path: C:\Temp\MixingApplication\Driver_Ethernet_Weight\Balance.cs
+        startLine: 129
+      syntax:
+        content:
+          CSharp: public static int TareBalance()
+          VB: Public Shared Function TareBalance As Integer
+        return:
+          type: System.Int32
+      overload: Driver_Ethernet_Balance.Balance.TareBalance*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: Driver_Ethernet_Balance.Balance.GetOneWeight
+      commentId: M:Driver_Ethernet_Balance.Balance.GetOneWeight
+      language: CSharp
+      name:
+        CSharp: GetOneWeight()
+        VB: GetOneWeight()
+      nameWithType:
+        CSharp: Balance.GetOneWeight()
+        VB: Balance.GetOneWeight()
+      qualifiedName:
+        CSharp: Driver_Ethernet_Balance.Balance.GetOneWeight()
+        VB: Driver_Ethernet_Balance.Balance.GetOneWeight()
+      type: Method
+      assemblies:
+      - Driver_Ethernet_Weight
+      namespace: Driver_Ethernet_Balance
+      source:
+        id: GetOneWeight
+        path: C:\Temp\MixingApplication\Driver_Ethernet_Weight\Balance.cs
+        startLine: 142
+      syntax:
+        content:
+          CSharp: public static Weight GetOneWeight()
+          VB: Public Shared Function GetOneWeight As Weight
+        return:
+          type: Driver_Ethernet_Balance.Weight
+      overload: Driver_Ethernet_Balance.Balance.GetOneWeight*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: Driver_Ethernet_Balance.Balance.StartContRead
+      commentId: M:Driver_Ethernet_Balance.Balance.StartContRead
+      language: CSharp
+      name:
+        CSharp: StartContRead()
+        VB: StartContRead()
+      nameWithType:
+        CSharp: Balance.StartContRead()
+        VB: Balance.StartContRead()
+      qualifiedName:
+        CSharp: Driver_Ethernet_Balance.Balance.StartContRead()
+        VB: Driver_Ethernet_Balance.Balance.StartContRead()
+      type: Method
+      assemblies:
+      - Driver_Ethernet_Weight
+      namespace: Driver_Ethernet_Balance
+      source:
+        id: StartContRead
+        path: C:\Temp\MixingApplication\Driver_Ethernet_Weight\Balance.cs
+        startLine: 187
+      syntax:
+        content:
+          CSharp: public static void StartContRead()
+          VB: Public Shared Sub StartContRead
+      overload: Driver_Ethernet_Balance.Balance.StartContRead*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: Driver_Ethernet_Balance.Balance.StopContRead
+      commentId: M:Driver_Ethernet_Balance.Balance.StopContRead
+      language: CSharp
+      name:
+        CSharp: StopContRead()
+        VB: StopContRead()
+      nameWithType:
+        CSharp: Balance.StopContRead()
+        VB: Balance.StopContRead()
+      qualifiedName:
+        CSharp: Driver_Ethernet_Balance.Balance.StopContRead()
+        VB: Driver_Ethernet_Balance.Balance.StopContRead()
+      type: Method
+      assemblies:
+      - Driver_Ethernet_Weight
+      namespace: Driver_Ethernet_Balance
+      source:
+        id: StopContRead
+        path: C:\Temp\MixingApplication\Driver_Ethernet_Weight\Balance.cs
+        startLine: 194
+      syntax:
+        content:
+          CSharp: public static bool StopContRead()
+          VB: Public Shared Function StopContRead As Boolean
+        return:
+          type: System.Boolean
+      overload: Driver_Ethernet_Balance.Balance.StopContRead*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+references:
+  System:
+    name:
+      CSharp:
+      - name: System
+        nameWithType: System
+        qualifiedName: System
+        isExternal: true
+      VB:
+      - name: System
+        nameWithType: System
+        qualifiedName: System
+    isDefinition: true
+    commentId: N:System
+  System.Object:
+    name:
+      CSharp:
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      VB:
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+    isDefinition: true
+    parent: System
+    commentId: T:System.Object
+  System.Object.ToString:
+    name:
+      CSharp:
+      - id: System.Object.ToString
+        name: ToString
+        nameWithType: Object.ToString
+        qualifiedName: System.Object.ToString
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.ToString
+        name: ToString
+        nameWithType: Object.ToString
+        qualifiedName: System.Object.ToString
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.ToString
+  System.Object.Equals(System.Object):
+    name:
+      CSharp:
+      - id: System.Object.Equals(System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.Equals(System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.Equals(System.Object)
+  System.Object.Equals(System.Object,System.Object):
+    name:
+      CSharp:
+      - id: System.Object.Equals(System.Object,System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.Equals(System.Object,System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.Equals(System.Object,System.Object)
+  System.Object.ReferenceEquals(System.Object,System.Object):
+    name:
+      CSharp:
+      - id: System.Object.ReferenceEquals(System.Object,System.Object)
+        name: ReferenceEquals
+        nameWithType: Object.ReferenceEquals
+        qualifiedName: System.Object.ReferenceEquals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.ReferenceEquals(System.Object,System.Object)
+        name: ReferenceEquals
+        nameWithType: Object.ReferenceEquals
+        qualifiedName: System.Object.ReferenceEquals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  System.Object.GetHashCode:
+    name:
+      CSharp:
+      - id: System.Object.GetHashCode
+        name: GetHashCode
+        nameWithType: Object.GetHashCode
+        qualifiedName: System.Object.GetHashCode
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.GetHashCode
+        name: GetHashCode
+        nameWithType: Object.GetHashCode
+        qualifiedName: System.Object.GetHashCode
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.GetHashCode
+  System.Object.GetType:
+    name:
+      CSharp:
+      - id: System.Object.GetType
+        name: GetType
+        nameWithType: Object.GetType
+        qualifiedName: System.Object.GetType
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.GetType
+        name: GetType
+        nameWithType: Object.GetType
+        qualifiedName: System.Object.GetType
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.GetType
+  System.Object.MemberwiseClone:
+    name:
+      CSharp:
+      - id: System.Object.MemberwiseClone
+        name: MemberwiseClone
+        nameWithType: Object.MemberwiseClone
+        qualifiedName: System.Object.MemberwiseClone
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.MemberwiseClone
+        name: MemberwiseClone
+        nameWithType: Object.MemberwiseClone
+        qualifiedName: System.Object.MemberwiseClone
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.MemberwiseClone
+  System.Decimal:
+    name:
+      CSharp:
+      - id: System.Decimal
+        name: Decimal
+        nameWithType: Decimal
+        qualifiedName: System.Decimal
+        isExternal: true
+      VB:
+      - id: System.Decimal
+        name: Decimal
+        nameWithType: Decimal
+        qualifiedName: System.Decimal
+        isExternal: true
+    isDefinition: true
+    parent: System
+    commentId: T:System.Decimal
+  Driver_Ethernet_Balance.Weight.value*:
+    name:
+      CSharp:
+      - id: Driver_Ethernet_Balance.Weight.value*
+        name: value
+        nameWithType: Weight.value
+        qualifiedName: Driver_Ethernet_Balance.Weight.value
+      VB:
+      - id: Driver_Ethernet_Balance.Weight.value*
+        name: value
+        nameWithType: Weight.value
+        qualifiedName: Driver_Ethernet_Balance.Weight.value
+    isDefinition: true
+    commentId: Overload:Driver_Ethernet_Balance.Weight.value
+  System.Boolean:
+    name:
+      CSharp:
+      - id: System.Boolean
+        name: Boolean
+        nameWithType: Boolean
+        qualifiedName: System.Boolean
+        isExternal: true
+      VB:
+      - id: System.Boolean
+        name: Boolean
+        nameWithType: Boolean
+        qualifiedName: System.Boolean
+        isExternal: true
+    isDefinition: true
+    parent: System
+    commentId: T:System.Boolean
+  Driver_Ethernet_Balance.Weight.isStable*:
+    name:
+      CSharp:
+      - id: Driver_Ethernet_Balance.Weight.isStable*
+        name: isStable
+        nameWithType: Weight.isStable
+        qualifiedName: Driver_Ethernet_Balance.Weight.isStable
+      VB:
+      - id: Driver_Ethernet_Balance.Weight.isStable*
+        name: isStable
+        nameWithType: Weight.isStable
+        qualifiedName: Driver_Ethernet_Balance.Weight.isStable
+    isDefinition: true
+    commentId: Overload:Driver_Ethernet_Balance.Weight.isStable
+  Driver_Ethernet_Balance.Weight:
+    name:
+      CSharp:
+      - id: Driver_Ethernet_Balance.Weight
+        name: Weight
+        nameWithType: Weight
+        qualifiedName: Driver_Ethernet_Balance.Weight
+      VB:
+      - id: Driver_Ethernet_Balance.Weight
+        name: Weight
+        nameWithType: Weight
+        qualifiedName: Driver_Ethernet_Balance.Weight
+    isDefinition: true
+    parent: Driver_Ethernet_Balance
+    commentId: T:Driver_Ethernet_Balance.Weight
+  System.ValueType:
+    name:
+      CSharp:
+      - id: System.ValueType
+        name: ValueType
+        nameWithType: ValueType
+        qualifiedName: System.ValueType
+        isExternal: true
+      VB:
+      - id: System.ValueType
+        name: ValueType
+        nameWithType: ValueType
+        qualifiedName: System.ValueType
+        isExternal: true
+    isDefinition: true
+    parent: System
+    commentId: T:System.ValueType
+  System.ValueType.Equals(System.Object):
+    name:
+      CSharp:
+      - id: System.ValueType.Equals(System.Object)
+        name: Equals
+        nameWithType: ValueType.Equals
+        qualifiedName: System.ValueType.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.ValueType.Equals(System.Object)
+        name: Equals
+        nameWithType: ValueType.Equals
+        qualifiedName: System.ValueType.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.ValueType
+    commentId: M:System.ValueType.Equals(System.Object)
+  System.ValueType.GetHashCode:
+    name:
+      CSharp:
+      - id: System.ValueType.GetHashCode
+        name: GetHashCode
+        nameWithType: ValueType.GetHashCode
+        qualifiedName: System.ValueType.GetHashCode
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.ValueType.GetHashCode
+        name: GetHashCode
+        nameWithType: ValueType.GetHashCode
+        qualifiedName: System.ValueType.GetHashCode
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.ValueType
+    commentId: M:System.ValueType.GetHashCode
+  System.ValueType.ToString:
+    name:
+      CSharp:
+      - id: System.ValueType.ToString
+        name: ToString
+        nameWithType: ValueType.ToString
+        qualifiedName: System.ValueType.ToString
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.ValueType.ToString
+        name: ToString
+        nameWithType: ValueType.ToString
+        qualifiedName: System.ValueType.ToString
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.ValueType
+    commentId: M:System.ValueType.ToString
+  System.Windows:
+    name:
+      CSharp:
+      - name: System.Windows
+        nameWithType: System.Windows
+        qualifiedName: System.Windows
+        isExternal: true
+      VB:
+      - name: System.Windows
+        nameWithType: System.Windows
+        qualifiedName: System.Windows
+    isDefinition: true
+    commentId: N:System.Windows
+  System.Windows.Window:
+    name:
+      CSharp:
+      - id: System.Windows.Window
+        name: Window
+        nameWithType: Window
+        qualifiedName: System.Windows.Window
+        isExternal: true
+      VB:
+      - id: System.Windows.Window
+        name: Window
+        nameWithType: Window
+        qualifiedName: System.Windows.Window
+        isExternal: true
+    isDefinition: true
+    parent: System.Windows
+    commentId: T:System.Windows.Window
+  Driver_Ethernet_Balance.IniInfo:
+    name:
+      CSharp:
+      - id: Driver_Ethernet_Balance.IniInfo
+        name: IniInfo
+        nameWithType: IniInfo
+        qualifiedName: Driver_Ethernet_Balance.IniInfo
+      VB:
+      - id: Driver_Ethernet_Balance.IniInfo
+        name: IniInfo
+        nameWithType: IniInfo
+        qualifiedName: Driver_Ethernet_Balance.IniInfo
+    isDefinition: true
+    commentId: T:Driver_Ethernet_Balance.IniInfo
+  Driver_Ethernet_Balance.Balance.Connect*:
+    name:
+      CSharp:
+      - id: Driver_Ethernet_Balance.Balance.Connect*
+        name: Connect
+        nameWithType: Balance.Connect
+        qualifiedName: Driver_Ethernet_Balance.Balance.Connect
+      VB:
+      - id: Driver_Ethernet_Balance.Balance.Connect*
+        name: Connect
+        nameWithType: Balance.Connect
+        qualifiedName: Driver_Ethernet_Balance.Balance.Connect
+    isDefinition: true
+    commentId: Overload:Driver_Ethernet_Balance.Balance.Connect
+  Driver_Ethernet_Balance.Balance.Disconnect*:
+    name:
+      CSharp:
+      - id: Driver_Ethernet_Balance.Balance.Disconnect*
+        name: Disconnect
+        nameWithType: Balance.Disconnect
+        qualifiedName: Driver_Ethernet_Balance.Balance.Disconnect
+      VB:
+      - id: Driver_Ethernet_Balance.Balance.Disconnect*
+        name: Disconnect
+        nameWithType: Balance.Disconnect
+        qualifiedName: Driver_Ethernet_Balance.Balance.Disconnect
+    isDefinition: true
+    commentId: Overload:Driver_Ethernet_Balance.Balance.Disconnect
+  Driver_Ethernet_Balance.Balance.IsConnected*:
+    name:
+      CSharp:
+      - id: Driver_Ethernet_Balance.Balance.IsConnected*
+        name: IsConnected
+        nameWithType: Balance.IsConnected
+        qualifiedName: Driver_Ethernet_Balance.Balance.IsConnected
+      VB:
+      - id: Driver_Ethernet_Balance.Balance.IsConnected*
+        name: IsConnected
+        nameWithType: Balance.IsConnected
+        qualifiedName: Driver_Ethernet_Balance.Balance.IsConnected
+    isDefinition: true
+    commentId: Overload:Driver_Ethernet_Balance.Balance.IsConnected
+  Driver_Ethernet_Balance.Balance.BlockUse*:
+    name:
+      CSharp:
+      - id: Driver_Ethernet_Balance.Balance.BlockUse*
+        name: BlockUse
+        nameWithType: Balance.BlockUse
+        qualifiedName: Driver_Ethernet_Balance.Balance.BlockUse
+      VB:
+      - id: Driver_Ethernet_Balance.Balance.BlockUse*
+        name: BlockUse
+        nameWithType: Balance.BlockUse
+        qualifiedName: Driver_Ethernet_Balance.Balance.BlockUse
+    isDefinition: true
+    commentId: Overload:Driver_Ethernet_Balance.Balance.BlockUse
+  Driver_Ethernet_Balance.Balance.FreeUse*:
+    name:
+      CSharp:
+      - id: Driver_Ethernet_Balance.Balance.FreeUse*
+        name: FreeUse
+        nameWithType: Balance.FreeUse
+        qualifiedName: Driver_Ethernet_Balance.Balance.FreeUse
+      VB:
+      - id: Driver_Ethernet_Balance.Balance.FreeUse*
+        name: FreeUse
+        nameWithType: Balance.FreeUse
+        qualifiedName: Driver_Ethernet_Balance.Balance.FreeUse
+    isDefinition: true
+    commentId: Overload:Driver_Ethernet_Balance.Balance.FreeUse
+  Driver_Ethernet_Balance.Balance.IsFree*:
+    name:
+      CSharp:
+      - id: Driver_Ethernet_Balance.Balance.IsFree*
+        name: IsFree
+        nameWithType: Balance.IsFree
+        qualifiedName: Driver_Ethernet_Balance.Balance.IsFree
+      VB:
+      - id: Driver_Ethernet_Balance.Balance.IsFree*
+        name: IsFree
+        nameWithType: Balance.IsFree
+        qualifiedName: Driver_Ethernet_Balance.Balance.IsFree
+    isDefinition: true
+    commentId: Overload:Driver_Ethernet_Balance.Balance.IsFree
+  System.Int32:
+    name:
+      CSharp:
+      - id: System.Int32
+        name: Int32
+        nameWithType: Int32
+        qualifiedName: System.Int32
+        isExternal: true
+      VB:
+      - id: System.Int32
+        name: Int32
+        nameWithType: Int32
+        qualifiedName: System.Int32
+        isExternal: true
+    isDefinition: true
+    parent: System
+    commentId: T:System.Int32
+  Driver_Ethernet_Balance.Balance.SendZeroCommand*:
+    name:
+      CSharp:
+      - id: Driver_Ethernet_Balance.Balance.SendZeroCommand*
+        name: SendZeroCommand
+        nameWithType: Balance.SendZeroCommand
+        qualifiedName: Driver_Ethernet_Balance.Balance.SendZeroCommand
+      VB:
+      - id: Driver_Ethernet_Balance.Balance.SendZeroCommand*
+        name: SendZeroCommand
+        nameWithType: Balance.SendZeroCommand
+        qualifiedName: Driver_Ethernet_Balance.Balance.SendZeroCommand
+    isDefinition: true
+    commentId: Overload:Driver_Ethernet_Balance.Balance.SendZeroCommand
+  Driver_Ethernet_Balance.Balance.SendTareCommand*:
+    name:
+      CSharp:
+      - id: Driver_Ethernet_Balance.Balance.SendTareCommand*
+        name: SendTareCommand
+        nameWithType: Balance.SendTareCommand
+        qualifiedName: Driver_Ethernet_Balance.Balance.SendTareCommand
+      VB:
+      - id: Driver_Ethernet_Balance.Balance.SendTareCommand*
+        name: SendTareCommand
+        nameWithType: Balance.SendTareCommand
+        qualifiedName: Driver_Ethernet_Balance.Balance.SendTareCommand
+    isDefinition: true
+    commentId: Overload:Driver_Ethernet_Balance.Balance.SendTareCommand
+  Driver_Ethernet_Balance.Balance.TareBalance*:
+    name:
+      CSharp:
+      - id: Driver_Ethernet_Balance.Balance.TareBalance*
+        name: TareBalance
+        nameWithType: Balance.TareBalance
+        qualifiedName: Driver_Ethernet_Balance.Balance.TareBalance
+      VB:
+      - id: Driver_Ethernet_Balance.Balance.TareBalance*
+        name: TareBalance
+        nameWithType: Balance.TareBalance
+        qualifiedName: Driver_Ethernet_Balance.Balance.TareBalance
+    isDefinition: true
+    commentId: Overload:Driver_Ethernet_Balance.Balance.TareBalance
+  Driver_Ethernet_Balance:
+    name:
+      CSharp:
+      - name: Driver_Ethernet_Balance
+        nameWithType: Driver_Ethernet_Balance
+        qualifiedName: Driver_Ethernet_Balance
+      VB:
+      - name: Driver_Ethernet_Balance
+        nameWithType: Driver_Ethernet_Balance
+        qualifiedName: Driver_Ethernet_Balance
+    isDefinition: true
+    commentId: N:Driver_Ethernet_Balance
+  Driver_Ethernet_Balance.Balance.GetOneWeight*:
+    name:
+      CSharp:
+      - id: Driver_Ethernet_Balance.Balance.GetOneWeight*
+        name: GetOneWeight
+        nameWithType: Balance.GetOneWeight
+        qualifiedName: Driver_Ethernet_Balance.Balance.GetOneWeight
+      VB:
+      - id: Driver_Ethernet_Balance.Balance.GetOneWeight*
+        name: GetOneWeight
+        nameWithType: Balance.GetOneWeight
+        qualifiedName: Driver_Ethernet_Balance.Balance.GetOneWeight
+    isDefinition: true
+    commentId: Overload:Driver_Ethernet_Balance.Balance.GetOneWeight
+  Driver_Ethernet_Balance.Balance.StartContRead*:
+    name:
+      CSharp:
+      - id: Driver_Ethernet_Balance.Balance.StartContRead*
+        name: StartContRead
+        nameWithType: Balance.StartContRead
+        qualifiedName: Driver_Ethernet_Balance.Balance.StartContRead
+      VB:
+      - id: Driver_Ethernet_Balance.Balance.StartContRead*
+        name: StartContRead
+        nameWithType: Balance.StartContRead
+        qualifiedName: Driver_Ethernet_Balance.Balance.StartContRead
+    isDefinition: true
+    commentId: Overload:Driver_Ethernet_Balance.Balance.StartContRead
+  Driver_Ethernet_Balance.Balance.StopContRead*:
+    name:
+      CSharp:
+      - id: Driver_Ethernet_Balance.Balance.StopContRead*
+        name: StopContRead
+        nameWithType: Balance.StopContRead
+        qualifiedName: Driver_Ethernet_Balance.Balance.StopContRead
+      VB:
+      - id: Driver_Ethernet_Balance.Balance.StopContRead*
+        name: StopContRead
+        nameWithType: Balance.StopContRead
+        qualifiedName: Driver_Ethernet_Balance.Balance.StopContRead
+    isDefinition: true
+    commentId: Overload:Driver_Ethernet_Balance.Balance.StopContRead
+  Driver_Ethernet_Balance.Balance:
+    name:
+      CSharp:
+      - id: Driver_Ethernet_Balance.Balance
+        name: Balance
+        nameWithType: Balance
+        qualifiedName: Driver_Ethernet_Balance.Balance
+      VB:
+      - id: Driver_Ethernet_Balance.Balance
+        name: Balance
+        nameWithType: Balance
+        qualifiedName: Driver_Ethernet_Balance.Balance
+    isDefinition: true
+    commentId: T:Driver_Ethernet_Balance.Balance

@@ -1,0 +1,100 @@
+﻿<UserControl x:Class="Main.Pages.AuditTrail"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Main.Pages"
+             xmlns:p="clr-namespace:Main.Properties"
+             xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="1600"
+             Background="Transparent">
+
+    <Grid x:Name="grid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80" />
+
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+
+        <WrapPanel Grid.Row="0" VerticalAlignment="Center" Margin="20">
+            <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=AuditTrail_StartDateTime, Mode=OneWay}"
+                       VerticalAlignment="Center"
+                       Margin="0,0,0,0"
+                       Style="{DynamicResource Label1}"/>
+            <DatePicker x:Name="dpDateBefore" 
+                        Margin="10,0,0,0" 
+                        FontSize="{DynamicResource FontSize_DatePicker1}"
+                        VerticalAlignment="center"
+                        LayoutUpdated="DpDateBefore_LayoutUpdated" 
+                        PreviewMouseDown="DpDateBefore_PreviewMouseDown"/>
+            <TextBox x:Name="tbTimeBefore" 
+                     Text="{Binding Source={x:Static p:Settings.Default}, Path=AuditTrail_DefaultTime, Mode=OneWay}"
+                     Margin="10,0,0,0"
+                     TextAlignment="Center" 
+                     Style="{DynamicResource TextBoxStyle1}"
+                     PreviewMouseLeftButtonDown="TbTimeBefore_PreviewMouseLeftButtonDown" 
+                     LayoutUpdated="TbTimeBefore_LayoutUpdated" 
+                     PreviewKeyDown="TbTimeBefore_PreviewKeyDown" 
+                     GotFocus="ShowKeyBoard" 
+                     LostFocus="HideKeyBoard"/>
+
+            <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=AuditTrail_EndDateTime, Mode=OneWay}" 
+                       Margin="20,0,0,0"
+                       VerticalAlignment="Center"
+                       Style="{DynamicResource Label1}"/>
+            <DatePicker x:Name="dpDateAfter" 
+                        Margin="10,0,0,0" 
+                        VerticalAlignment="Center"
+                        FontSize="{DynamicResource FontSize_DatePicker1}"
+                        PreviewMouseDown="DpDateAfter_PreviewMouseDown" 
+                        LayoutUpdated="DpDateAfter_LayoutUpdated"/>
+            <TextBox x:Name="tbTimeAfter" 
+                     Text="{Binding Source={x:Static p:Settings.Default}, Path=AuditTrail_DefaultTime, Mode=OneWay}" 
+                     TextAlignment="Center"  
+                     Margin="10,0,0,0"
+                     Style="{DynamicResource TextBoxStyle1}"
+                     PreviewMouseLeftButtonDown="TbTimeAfter_PreviewMouseLeftButtonDown" 
+                     LayoutUpdated="TbTimeAfter_LayoutUpdated" 
+                     PreviewKeyDown="TbTimeAfter_PreviewKeyDown" 
+                     GotFocus="ShowKeyBoard" 
+                     LostFocus="HideKeyBoard"/>
+
+            <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=AuditTrail_EventType_Field, Mode=OneWay}"  
+                       Margin="20,0,0,0" 
+                       VerticalAlignment="Center"
+                       Style="{DynamicResource Label1}"/>
+            <CheckBox x:Name="cbEvent" Margin="10,0,0,0" 
+                      Content="{Binding Source={x:Static p:Settings.Default}, Path=AuditTrail_EventType_Event, Mode=OneWay}" 
+                       VerticalAlignment="Center"
+                      Foreground="{DynamicResource MyFont1_Foreground}" 
+                      FontFamily="{DynamicResource MyFont1}" 
+                      FontSize="{DynamicResource FontSize_CheckBox1}"/>
+            <CheckBox x:Name="cbAlarm" 
+                      Margin="10,0,0,0" 
+                      Content="{Binding Source={x:Static p:Settings.Default}, Path=AuditTrail_EventType_Alarm, Mode=OneWay}"               
+                       VerticalAlignment="Center"        
+                      Foreground="{DynamicResource MyFont1_Foreground}" 
+                      FontFamily="{DynamicResource MyFont1}" 
+                      FontSize="{DynamicResource FontSize_CheckBox1}"/>
+            <CheckBox x:Name="cbWarning" 
+                      Margin="10,0,0,0" 
+                      Content="{Binding Source={x:Static p:Settings.Default}, Path=AuditTrail_EventType_Warning, Mode=OneWay}" 
+                       VerticalAlignment="Center"
+                      Foreground="{DynamicResource MyFont1_Foreground}" 
+                      FontFamily="{DynamicResource MyFont1}" 
+                      FontSize="{DynamicResource FontSize_CheckBox1}"/>
+        </WrapPanel>
+
+        <Button Margin="20" 
+                Content="{Binding Source={x:Static p:Settings.Default}, Path=AuditTrail_FilterButton, Mode=OneWay}" 
+                Style="{DynamicResource ButtonStyle1}" 
+                VerticalAlignment="Center" 
+                HorizontalAlignment="Right" 
+                Click="ButtonFilter_Click"/>
+
+        <DataGrid Grid.Row="1" Name="dataGridAuditTrail"
+                  FontSize="{DynamicResource FontSize_DataGrid1}"
+                  Loaded="LoadAuditTrail"/>
+    </Grid>
+</UserControl>

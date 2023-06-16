@@ -1,0 +1,70 @@
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\Driver_RS232.dll.config
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\Driver_RS232.xml
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\Driver_RS232.dll
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\Driver_RS232.pdb
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\Alarm_Management.dll
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\NLog.dll
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\Database.dll
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\MySqlConnector.dll
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\System.Memory.dll
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\System.Buffers.dll
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\System.Numerics.Vectors.dll
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\Alarm_Management.pdb
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\Alarm_Management.dll.config
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\NLog.xml
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\Database.pdb
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\Database.xml
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\Database.dll.config
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\MySqlConnector.xml
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\System.Memory.xml
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\System.Buffers.xml
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\System.Numerics.Vectors.xml
+C:\Temp\MixingApplication\Driver_RS232\obj\Debug\Driver_RS232.csproj.AssemblyReference.cache
+C:\Temp\MixingApplication\Driver_RS232\obj\Debug\Driver_RS232.csproj.CoreCompileInputs.cache
+C:\Temp\MixingApplication\Driver_RS232\obj\Debug\Driver_RS232.csproj.CopyComplete
+C:\Temp\MixingApplication\Driver_RS232\obj\Debug\Driver_RS232.dll
+C:\Temp\MixingApplication\Driver_RS232\obj\Debug\Driver_RS232.pdb
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\Message.exe
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\Message.pdb
+C:\Temp\MixingApplication\Driver_RS232\bin\Debug\Message.exe.config
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\Driver_RS232.dll.config
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\Driver_RS232.xml
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\Driver_RS232.dll
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\Driver_RS232.pdb
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\Alarm_Management.dll
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\Message.exe
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\NLog.dll
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\Database.dll
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\MySqlConnector.dll
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\System.Memory.dll
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\System.Buffers.dll
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\System.Numerics.Vectors.dll
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\Alarm_Management.pdb
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\Alarm_Management.dll.config
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\Message.pdb
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\Message.exe.config
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\NLog.xml
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\Database.pdb
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\Database.xml
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\Database.dll.config
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\MySqlConnector.xml
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\System.Memory.xml
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\System.Buffers.xml
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Temp\MixingApplication\Source code\Driver_RS232\bin\Debug\System.Numerics.Vectors.xml
+C:\Temp\MixingApplication\Source code\Driver_RS232\obj\Debug\Driver_RS232.csproj.AssemblyReference.cache
+C:\Temp\MixingApplication\Source code\Driver_RS232\obj\Debug\Driver_RS232.csproj.CoreCompileInputs.cache
+C:\Temp\MixingApplication\Source code\Driver_RS232\obj\Debug\Driver_RS232.csproj.CopyComplete
+C:\Temp\MixingApplication\Source code\Driver_RS232\obj\Debug\Driver_RS232.dll
+C:\Temp\MixingApplication\Source code\Driver_RS232\obj\Debug\Driver_RS232.pdb

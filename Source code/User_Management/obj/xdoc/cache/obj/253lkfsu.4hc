@@ -1,0 +1,819 @@
+id: User_Management
+language: CSharp
+name:
+  Default: User_Management
+qualifiedName:
+  Default: User_Management
+type: Assembly
+modifiers: {}
+items:
+- id: User_Management
+  commentId: N:User_Management
+  language: CSharp
+  name:
+    CSharp: User_Management
+    VB: User_Management
+  nameWithType:
+    CSharp: User_Management
+    VB: User_Management
+  qualifiedName:
+    CSharp: User_Management
+    VB: User_Management
+  type: Namespace
+  assemblies:
+  - User_Management
+  modifiers: {}
+  items:
+  - id: User_Management.IniInfo
+    commentId: T:User_Management.IniInfo
+    language: CSharp
+    name:
+      CSharp: IniInfo
+      VB: IniInfo
+    nameWithType:
+      CSharp: IniInfo
+      VB: IniInfo
+    qualifiedName:
+      CSharp: User_Management.IniInfo
+      VB: User_Management.IniInfo
+    type: Struct
+    assemblies:
+    - User_Management
+    namespace: User_Management
+    source:
+      id: IniInfo
+      path: C:\Temp\MixingApplication\Source code\User_Management\UserManagement.cs
+      startLine: 14
+    summary: "\nStructure of the information from other projects required to initialize the main class\n"
+    example: []
+    syntax:
+      content:
+        CSharp: public struct IniInfo
+        VB: Public Structure IniInfo
+    inheritedMembers:
+    - System.ValueType.Equals(System.Object)
+    - System.ValueType.GetHashCode
+    - System.ValueType.ToString
+    - System.Object.Equals(System.Object,System.Object)
+    - System.Object.ReferenceEquals(System.Object,System.Object)
+    - System.Object.GetType
+    modifiers:
+      CSharp:
+      - public
+      - struct
+      VB:
+      - Public
+      - Structure
+    items:
+    - id: User_Management.IniInfo.Window
+      commentId: F:User_Management.IniInfo.Window
+      language: CSharp
+      name:
+        CSharp: Window
+        VB: Window
+      nameWithType:
+        CSharp: IniInfo.Window
+        VB: IniInfo.Window
+      qualifiedName:
+        CSharp: User_Management.IniInfo.Window
+        VB: User_Management.IniInfo.Window
+      type: Field
+      assemblies:
+      - User_Management
+      namespace: User_Management
+      source:
+        id: Window
+        path: C:\Temp\MixingApplication\Source code\User_Management\UserManagement.cs
+        startLine: 17
+      example: []
+      syntax:
+        content:
+          CSharp: public Window Window
+          VB: Public Window As Window
+        return:
+          type: System.Windows.Window
+          description: Main window of the application. Is used to attach the MessageBoxes to it
+      modifiers:
+        CSharp:
+        - public
+        VB:
+        - Public
+  - id: User_Management.UserManagement
+    commentId: T:User_Management.UserManagement
+    language: CSharp
+    name:
+      CSharp: UserManagement
+      VB: UserManagement
+    nameWithType:
+      CSharp: UserManagement
+      VB: UserManagement
+    qualifiedName:
+      CSharp: User_Management.UserManagement
+      VB: User_Management.UserManagement
+    type: Class
+    assemblies:
+    - User_Management
+    namespace: User_Management
+    source:
+      id: UserManagement
+      path: C:\Temp\MixingApplication\Source code\User_Management\UserManagement.cs
+      startLine: 24
+    summary: "\nThis class allows the update of the access table variable. The access table can then be used by other projects to allow or avoid accesses.\n<p>Creation revision: 001</p>\n"
+    example: []
+    syntax:
+      content:
+        CSharp: public static class UserManagement
+        VB: Public Module UserManagement
+    inheritance:
+    - System.Object
+    inheritedMembers:
+    - System.Object.ToString
+    - System.Object.Equals(System.Object)
+    - System.Object.Equals(System.Object,System.Object)
+    - System.Object.ReferenceEquals(System.Object,System.Object)
+    - System.Object.GetHashCode
+    - System.Object.GetType
+    - System.Object.MemberwiseClone
+    modifiers:
+      CSharp:
+      - public
+      - static
+      - class
+      VB:
+      - Public
+      - Module
+    items:
+    - id: User_Management.UserManagement.UpdateAccessTable(System.String,System.String)
+      commentId: M:User_Management.UserManagement.UpdateAccessTable(System.String,System.String)
+      language: CSharp
+      name:
+        CSharp: UpdateAccessTable(String, String)
+        VB: UpdateAccessTable(String, String)
+      nameWithType:
+        CSharp: UserManagement.UpdateAccessTable(String, String)
+        VB: UserManagement.UpdateAccessTable(String, String)
+      qualifiedName:
+        CSharp: User_Management.UserManagement.UpdateAccessTable(System.String, System.String)
+        VB: User_Management.UserManagement.UpdateAccessTable(System.String, System.String)
+      type: Method
+      assemblies:
+      - User_Management
+      namespace: User_Management
+      source:
+        id: UpdateAccessTable
+        path: C:\Temp\MixingApplication\Source code\User_Management\UserManagement.cs
+        startLine: 50
+      summary: "\nUpdate the access table variable\n"
+      example: []
+      syntax:
+        content:
+          CSharp: public static string UpdateAccessTable(string username = null, string password = null)
+          VB: Public Shared Function UpdateAccessTable(username As String = Nothing, password As String = Nothing) As String
+        parameters:
+        - id: username
+          type: System.String
+          description: Name a windows account
+        - id: password
+          type: System.String
+          description: Password of the windows account
+        return:
+          type: System.String
+          description: The name of role of the windows account username
+      overload: User_Management.UserManagement.UpdateAccessTable*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: User_Management.UserManagement.SetNoneAccess
+      commentId: M:User_Management.UserManagement.SetNoneAccess
+      language: CSharp
+      name:
+        CSharp: SetNoneAccess()
+        VB: SetNoneAccess()
+      nameWithType:
+        CSharp: UserManagement.SetNoneAccess()
+        VB: UserManagement.SetNoneAccess()
+      qualifiedName:
+        CSharp: User_Management.UserManagement.SetNoneAccess()
+        VB: User_Management.UserManagement.SetNoneAccess()
+      type: Method
+      assemblies:
+      - User_Management
+      namespace: User_Management
+      source:
+        id: SetNoneAccess
+        path: C:\Temp\MixingApplication\Source code\User_Management\UserManagement.cs
+        startLine: 184
+      summary: "\nUpdate the current access table with the guest rights\n"
+      example: []
+      syntax:
+        content:
+          CSharp: public static void SetNoneAccess()
+          VB: Public Shared Sub SetNoneAccess
+      overload: User_Management.UserManagement.SetNoneAccess*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+    - id: User_Management.UserManagement.GetCurrentAccessTable
+      commentId: M:User_Management.UserManagement.GetCurrentAccessTable
+      language: CSharp
+      name:
+        CSharp: GetCurrentAccessTable()
+        VB: GetCurrentAccessTable()
+      nameWithType:
+        CSharp: UserManagement.GetCurrentAccessTable()
+        VB: UserManagement.GetCurrentAccessTable()
+      qualifiedName:
+        CSharp: User_Management.UserManagement.GetCurrentAccessTable()
+        VB: User_Management.UserManagement.GetCurrentAccessTable()
+      type: Method
+      assemblies:
+      - User_Management
+      namespace: User_Management
+      source:
+        id: GetCurrentAccessTable
+        path: C:\Temp\MixingApplication\Source code\User_Management\UserManagement.cs
+        startLine: 238
+      example: []
+      syntax:
+        content:
+          CSharp: public static bool[] GetCurrentAccessTable()
+          VB: Public Shared Function GetCurrentAccessTable As Boolean()
+        return:
+          type: System.Boolean[]
+          description: The access table variable
+      overload: User_Management.UserManagement.GetCurrentAccessTable*
+      modifiers:
+        CSharp:
+        - public
+        - static
+        VB:
+        - Public
+        - Shared
+references:
+  System:
+    name:
+      CSharp:
+      - name: System
+        nameWithType: System
+        qualifiedName: System
+        isExternal: true
+      VB:
+      - name: System
+        nameWithType: System
+        qualifiedName: System
+    isDefinition: true
+    commentId: N:System
+  System.ValueType:
+    name:
+      CSharp:
+      - id: System.ValueType
+        name: ValueType
+        nameWithType: ValueType
+        qualifiedName: System.ValueType
+        isExternal: true
+      VB:
+      - id: System.ValueType
+        name: ValueType
+        nameWithType: ValueType
+        qualifiedName: System.ValueType
+        isExternal: true
+    isDefinition: true
+    parent: System
+    commentId: T:System.ValueType
+  System.ValueType.Equals(System.Object):
+    name:
+      CSharp:
+      - id: System.ValueType.Equals(System.Object)
+        name: Equals
+        nameWithType: ValueType.Equals
+        qualifiedName: System.ValueType.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.ValueType.Equals(System.Object)
+        name: Equals
+        nameWithType: ValueType.Equals
+        qualifiedName: System.ValueType.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.ValueType
+    commentId: M:System.ValueType.Equals(System.Object)
+  System.ValueType.GetHashCode:
+    name:
+      CSharp:
+      - id: System.ValueType.GetHashCode
+        name: GetHashCode
+        nameWithType: ValueType.GetHashCode
+        qualifiedName: System.ValueType.GetHashCode
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.ValueType.GetHashCode
+        name: GetHashCode
+        nameWithType: ValueType.GetHashCode
+        qualifiedName: System.ValueType.GetHashCode
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.ValueType
+    commentId: M:System.ValueType.GetHashCode
+  System.ValueType.ToString:
+    name:
+      CSharp:
+      - id: System.ValueType.ToString
+        name: ToString
+        nameWithType: ValueType.ToString
+        qualifiedName: System.ValueType.ToString
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.ValueType.ToString
+        name: ToString
+        nameWithType: ValueType.ToString
+        qualifiedName: System.ValueType.ToString
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.ValueType
+    commentId: M:System.ValueType.ToString
+  System.Object:
+    name:
+      CSharp:
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      VB:
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+    isDefinition: true
+    parent: System
+    commentId: T:System.Object
+  System.Object.Equals(System.Object,System.Object):
+    name:
+      CSharp:
+      - id: System.Object.Equals(System.Object,System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.Equals(System.Object,System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.Equals(System.Object,System.Object)
+  System.Object.ReferenceEquals(System.Object,System.Object):
+    name:
+      CSharp:
+      - id: System.Object.ReferenceEquals(System.Object,System.Object)
+        name: ReferenceEquals
+        nameWithType: Object.ReferenceEquals
+        qualifiedName: System.Object.ReferenceEquals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.ReferenceEquals(System.Object,System.Object)
+        name: ReferenceEquals
+        nameWithType: Object.ReferenceEquals
+        qualifiedName: System.Object.ReferenceEquals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: ', '
+        nameWithType: ', '
+        qualifiedName: ', '
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  System.Object.GetType:
+    name:
+      CSharp:
+      - id: System.Object.GetType
+        name: GetType
+        nameWithType: Object.GetType
+        qualifiedName: System.Object.GetType
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.GetType
+        name: GetType
+        nameWithType: Object.GetType
+        qualifiedName: System.Object.GetType
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.GetType
+  System.Windows:
+    name:
+      CSharp:
+      - name: System.Windows
+        nameWithType: System.Windows
+        qualifiedName: System.Windows
+        isExternal: true
+      VB:
+      - name: System.Windows
+        nameWithType: System.Windows
+        qualifiedName: System.Windows
+    isDefinition: true
+    commentId: N:System.Windows
+  System.Windows.Window:
+    name:
+      CSharp:
+      - id: System.Windows.Window
+        name: Window
+        nameWithType: Window
+        qualifiedName: System.Windows.Window
+        isExternal: true
+      VB:
+      - id: System.Windows.Window
+        name: Window
+        nameWithType: Window
+        qualifiedName: System.Windows.Window
+        isExternal: true
+    isDefinition: true
+    parent: System.Windows
+    commentId: T:System.Windows.Window
+  User_Management.IniInfo:
+    name:
+      CSharp:
+      - id: User_Management.IniInfo
+        name: IniInfo
+        nameWithType: IniInfo
+        qualifiedName: User_Management.IniInfo
+      VB:
+      - id: User_Management.IniInfo
+        name: IniInfo
+        nameWithType: IniInfo
+        qualifiedName: User_Management.IniInfo
+    isDefinition: true
+    commentId: T:User_Management.IniInfo
+  System.Object.ToString:
+    name:
+      CSharp:
+      - id: System.Object.ToString
+        name: ToString
+        nameWithType: Object.ToString
+        qualifiedName: System.Object.ToString
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.ToString
+        name: ToString
+        nameWithType: Object.ToString
+        qualifiedName: System.Object.ToString
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.ToString
+  System.Object.Equals(System.Object):
+    name:
+      CSharp:
+      - id: System.Object.Equals(System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.Equals(System.Object)
+        name: Equals
+        nameWithType: Object.Equals
+        qualifiedName: System.Object.Equals
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - id: System.Object
+        name: Object
+        nameWithType: Object
+        qualifiedName: System.Object
+        isExternal: true
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.Equals(System.Object)
+  System.Object.GetHashCode:
+    name:
+      CSharp:
+      - id: System.Object.GetHashCode
+        name: GetHashCode
+        nameWithType: Object.GetHashCode
+        qualifiedName: System.Object.GetHashCode
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.GetHashCode
+        name: GetHashCode
+        nameWithType: Object.GetHashCode
+        qualifiedName: System.Object.GetHashCode
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.GetHashCode
+  System.Object.MemberwiseClone:
+    name:
+      CSharp:
+      - id: System.Object.MemberwiseClone
+        name: MemberwiseClone
+        nameWithType: Object.MemberwiseClone
+        qualifiedName: System.Object.MemberwiseClone
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+      VB:
+      - id: System.Object.MemberwiseClone
+        name: MemberwiseClone
+        nameWithType: Object.MemberwiseClone
+        qualifiedName: System.Object.MemberwiseClone
+        isExternal: true
+      - name: (
+        nameWithType: (
+        qualifiedName: (
+      - name: )
+        nameWithType: )
+        qualifiedName: )
+    isDefinition: true
+    parent: System.Object
+    commentId: M:System.Object.MemberwiseClone
+  System.String:
+    name:
+      CSharp:
+      - id: System.String
+        name: String
+        nameWithType: String
+        qualifiedName: System.String
+        isExternal: true
+      VB:
+      - id: System.String
+        name: String
+        nameWithType: String
+        qualifiedName: System.String
+        isExternal: true
+    isDefinition: true
+    parent: System
+    commentId: T:System.String
+  User_Management.UserManagement.UpdateAccessTable*:
+    name:
+      CSharp:
+      - id: User_Management.UserManagement.UpdateAccessTable*
+        name: UpdateAccessTable
+        nameWithType: UserManagement.UpdateAccessTable
+        qualifiedName: User_Management.UserManagement.UpdateAccessTable
+      VB:
+      - id: User_Management.UserManagement.UpdateAccessTable*
+        name: UpdateAccessTable
+        nameWithType: UserManagement.UpdateAccessTable
+        qualifiedName: User_Management.UserManagement.UpdateAccessTable
+    isDefinition: true
+    commentId: Overload:User_Management.UserManagement.UpdateAccessTable
+  User_Management.UserManagement.SetNoneAccess*:
+    name:
+      CSharp:
+      - id: User_Management.UserManagement.SetNoneAccess*
+        name: SetNoneAccess
+        nameWithType: UserManagement.SetNoneAccess
+        qualifiedName: User_Management.UserManagement.SetNoneAccess
+      VB:
+      - id: User_Management.UserManagement.SetNoneAccess*
+        name: SetNoneAccess
+        nameWithType: UserManagement.SetNoneAccess
+        qualifiedName: User_Management.UserManagement.SetNoneAccess
+    isDefinition: true
+    commentId: Overload:User_Management.UserManagement.SetNoneAccess
+  System.Boolean[]:
+    name:
+      CSharp:
+      - id: System.Boolean
+        name: Boolean
+        nameWithType: Boolean
+        qualifiedName: System.Boolean
+        isExternal: true
+      - name: '[]'
+        nameWithType: '[]'
+        qualifiedName: '[]'
+      VB:
+      - id: System.Boolean
+        name: Boolean
+        nameWithType: Boolean
+        qualifiedName: System.Boolean
+        isExternal: true
+      - name: ()
+        nameWithType: ()
+        qualifiedName: ()
+    isDefinition: false
+  User_Management.UserManagement.GetCurrentAccessTable*:
+    name:
+      CSharp:
+      - id: User_Management.UserManagement.GetCurrentAccessTable*
+        name: GetCurrentAccessTable
+        nameWithType: UserManagement.GetCurrentAccessTable
+        qualifiedName: User_Management.UserManagement.GetCurrentAccessTable
+      VB:
+      - id: User_Management.UserManagement.GetCurrentAccessTable*
+        name: GetCurrentAccessTable
+        nameWithType: UserManagement.GetCurrentAccessTable
+        qualifiedName: User_Management.UserManagement.GetCurrentAccessTable
+    isDefinition: true
+    commentId: Overload:User_Management.UserManagement.GetCurrentAccessTable
+  User_Management.UserManagement:
+    name:
+      CSharp:
+      - id: User_Management.UserManagement
+        name: UserManagement
+        nameWithType: UserManagement
+        qualifiedName: User_Management.UserManagement
+      VB:
+      - id: User_Management.UserManagement
+        name: UserManagement
+        nameWithType: UserManagement
+        qualifiedName: User_Management.UserManagement
+    isDefinition: true
+    commentId: T:User_Management.UserManagement
+  User_Management:
+    name:
+      CSharp:
+      - name: User_Management
+        nameWithType: User_Management
+        qualifiedName: User_Management
+      VB:
+      - name: User_Management
+        nameWithType: User_Management
+        qualifiedName: User_Management
+    isDefinition: true
+    commentId: N:User_Management

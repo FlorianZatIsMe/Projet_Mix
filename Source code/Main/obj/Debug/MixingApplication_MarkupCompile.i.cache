@@ -1,0 +1,20 @@
+﻿MixingApplication
+
+
+exe
+C#
+.cs
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\
+Main
+none
+false
+DEBUG;TRACE
+C:\Temp\MixingApplication\Source code\Main\App.xaml
+15271333481
+38855356156
+221240037512
+44680292746
+LogIn.xaml;MainWindow.xaml;Pages\ActiveAlarms.xaml;Pages\Archiving.xaml;Pages\AuditTrail.xaml;Pages\Backup.xaml;Pages\Parameters.xaml;Pages\Recipe.xaml;Pages\Status.xaml;Pages\SubCycle\CycleInfo.xaml;Pages\SubCycle\CycleSpeedMixer.xaml;Pages\SubCycle\CycleWeight.xaml;Pages\SubCycle\PreCycle.xaml;Pages\SubRecipe\RecipeSpeedMixer.xaml;Pages\SubRecipe\RecipeWeight.xaml;
+
+True
+
