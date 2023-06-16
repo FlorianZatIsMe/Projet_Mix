@@ -1,0 +1,206 @@
+### YamlMime:ManagedReference
+items:
+- uid: Database.ISeqTabInfo
+  commentId: T:Database.ISeqTabInfo
+  id: ISeqTabInfo
+  parent: Database
+  children:
+  - Database.ISeqTabInfo.NextSeqId
+  - Database.ISeqTabInfo.NextSeqType
+  - Database.ISeqTabInfo.SeqType
+  langs:
+  - csharp
+  - vb
+  name: ISeqTabInfo
+  nameWithType: ISeqTabInfo
+  fullName: Database.ISeqTabInfo
+  type: Interface
+  source:
+    id: ISeqTabInfo
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 79
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nInterface of a sequential table (table whose rows can refer to another row from the same table or another sequential table).\nBased on the common database table interface\n<p>Creation revision: 001</p>\n"
+  example: []
+  syntax:
+    content: 'public interface ISeqTabInfo : IComTabInfo, IBasTabInfo'
+    content.vb: >-
+      Public Interface ISeqTabInfo
+
+          Inherits IComTabInfo
+  inheritedMembers:
+  - Database.IComTabInfo.Id
+  - Database.IBasTabInfo.TabName
+  - Database.IBasTabInfo.Columns
+  - Database.IBasTabInfo.Ids
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Database.ISeqTabInfo.SeqType
+  commentId: P:Database.ISeqTabInfo.SeqType
+  id: SeqType
+  parent: Database.ISeqTabInfo
+  langs:
+  - csharp
+  - vb
+  name: SeqType
+  nameWithType: ISeqTabInfo.SeqType
+  fullName: Database.ISeqTabInfo.SeqType
+  type: Property
+  source:
+    id: SeqType
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 82
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: int SeqType { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Identification number of the current sequential table
+    content.vb: ReadOnly Property SeqType As Integer
+  overload: Database.ISeqTabInfo.SeqType*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Database.ISeqTabInfo.NextSeqType
+  commentId: P:Database.ISeqTabInfo.NextSeqType
+  id: NextSeqType
+  parent: Database.ISeqTabInfo
+  langs:
+  - csharp
+  - vb
+  name: NextSeqType
+  nameWithType: ISeqTabInfo.NextSeqType
+  fullName: Database.ISeqTabInfo.NextSeqType
+  type: Property
+  source:
+    id: NextSeqType
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 85
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: int NextSeqType { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the next sequential type column. The type is a variable used to identify the next sequential table
+    content.vb: ReadOnly Property NextSeqType As Integer
+  overload: Database.ISeqTabInfo.NextSeqType*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Database.ISeqTabInfo.NextSeqId
+  commentId: P:Database.ISeqTabInfo.NextSeqId
+  id: NextSeqId
+  parent: Database.ISeqTabInfo
+  langs:
+  - csharp
+  - vb
+  name: NextSeqId
+  nameWithType: ISeqTabInfo.NextSeqId
+  fullName: Database.ISeqTabInfo.NextSeqId
+  type: Property
+  source:
+    id: NextSeqId
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 88
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: int NextSeqId { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the next sequential id column. This column contains the id (see Id from IComTabInfo) of the row of the next sequential table
+    content.vb: ReadOnly Property NextSeqId As Integer
+  overload: Database.ISeqTabInfo.NextSeqId*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+references:
+- uid: Database
+  commentId: N:Database
+  name: Database
+  nameWithType: Database
+  fullName: Database
+- uid: Database.IComTabInfo.Id
+  commentId: P:Database.IComTabInfo.Id
+  parent: Database.IComTabInfo
+  name: Id
+  nameWithType: IComTabInfo.Id
+  fullName: Database.IComTabInfo.Id
+- uid: Database.IBasTabInfo.TabName
+  commentId: P:Database.IBasTabInfo.TabName
+  parent: Database.IBasTabInfo
+  name: TabName
+  nameWithType: IBasTabInfo.TabName
+  fullName: Database.IBasTabInfo.TabName
+- uid: Database.IBasTabInfo.Columns
+  commentId: P:Database.IBasTabInfo.Columns
+  parent: Database.IBasTabInfo
+  name: Columns
+  nameWithType: IBasTabInfo.Columns
+  fullName: Database.IBasTabInfo.Columns
+- uid: Database.IBasTabInfo.Ids
+  commentId: P:Database.IBasTabInfo.Ids
+  parent: Database.IBasTabInfo
+  name: Ids
+  nameWithType: IBasTabInfo.Ids
+  fullName: Database.IBasTabInfo.Ids
+- uid: Database.IComTabInfo
+  commentId: T:Database.IComTabInfo
+  parent: Database
+  name: IComTabInfo
+  nameWithType: IComTabInfo
+  fullName: Database.IComTabInfo
+- uid: Database.IBasTabInfo
+  commentId: T:Database.IBasTabInfo
+  parent: Database
+  name: IBasTabInfo
+  nameWithType: IBasTabInfo
+  fullName: Database.IBasTabInfo
+- uid: Database.ISeqTabInfo.SeqType*
+  commentId: Overload:Database.ISeqTabInfo.SeqType
+  name: SeqType
+  nameWithType: ISeqTabInfo.SeqType
+  fullName: Database.ISeqTabInfo.SeqType
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Database.ISeqTabInfo.NextSeqType*
+  commentId: Overload:Database.ISeqTabInfo.NextSeqType
+  name: NextSeqType
+  nameWithType: ISeqTabInfo.NextSeqType
+  fullName: Database.ISeqTabInfo.NextSeqType
+- uid: Database.ISeqTabInfo.NextSeqId*
+  commentId: Overload:Database.ISeqTabInfo.NextSeqId
+  name: NextSeqId
+  nameWithType: ISeqTabInfo.NextSeqId
+  fullName: Database.ISeqTabInfo.NextSeqId

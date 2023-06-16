@@ -1,0 +1,3230 @@
+### YamlMime:ManagedReference
+items:
+- uid: Database.MyDatabase
+  commentId: T:Database.MyDatabase
+  id: MyDatabase
+  parent: Database
+  children:
+  - Database.MyDatabase.Close_reader
+  - Database.MyDatabase.Connect
+  - Database.MyDatabase.CreateTempTable
+  - Database.MyDatabase.DeleteRow(Database.IComTabInfo,System.String)
+  - Database.MyDatabase.DeleteRow_new(Database.IComTabInfo,System.Object)
+  - Database.MyDatabase.DeleteRows(Database.IDtTabInfo,System.DateTime)
+  - Database.MyDatabase.Disconnect
+  - Database.MyDatabase.GetAlarms(System.Int32,System.Int32,System.Boolean)
+  - Database.MyDatabase.GetAlarms_new(System.Int32,System.Int32,System.Boolean)
+  - Database.MyDatabase.GetAuditTrailRows(Database.ReadInfo,System.Int32)
+  - Database.MyDatabase.GetAuditTrailRows_new(Database.ReadInfo,System.Int32)
+  - Database.MyDatabase.GetLastDailyTestDate(Database.DailyTestInfo,System.Nullable{System.DateTime})
+  - Database.MyDatabase.GetLastRecipes(Database.RecipeStatus)
+  - Database.MyDatabase.GetLastRecipes_new(Database.RecipeStatus)
+  - Database.MyDatabase.GetMax(Database.IComTabInfo,System.String)
+  - Database.MyDatabase.GetMax(System.String,System.String)
+  - Database.MyDatabase.GetOneArrayRow(Database.IComTabInfo,System.String)
+  - Database.MyDatabase.GetOneArrayRow_new(Database.IComTabInfo,System.String)
+  - Database.MyDatabase.GetOneBoolRow(Database.IComTabInfo)
+  - Database.MyDatabase.GetOneBoolRow_new(Database.IComTabInfo,System.Object[])
+  - Database.MyDatabase.GetOneBoolRow_new(System.Object)
+  - Database.MyDatabase.GetOneRow(System.Type,System.String,Database.IComTabInfo)
+  - Database.MyDatabase.GetOneRow_new(Database.IComTabInfo,System.Nullable{System.Int32},System.Object[])
+  - Database.MyDatabase.GetRecipeStatus(Database.RecipeStatus)
+  - Database.MyDatabase.GetResultRowTemp
+  - Database.MyDatabase.GetResultRowTemp_new
+  - Database.MyDatabase.GetRows(Database.IComTabInfo,System.Int32,System.String,System.Boolean)
+  - Database.MyDatabase.GetRows(Database.ReadInfo,System.Int32)
+  - Database.MyDatabase.GetRows_new(Database.IComTabInfo,System.Object[],System.Int32,System.String,System.Boolean)
+  - Database.MyDatabase.info
+  - Database.MyDatabase.Initialize(Database.IniInfo)
+  - Database.MyDatabase.InsertRow(Database.IBasTabInfo)
+  - Database.MyDatabase.InsertRow_new(System.Object)
+  - Database.MyDatabase.IsConnected
+  - Database.MyDatabase.IsReaderNotAvailable
+  - Database.MyDatabase.ReadNext
+  - Database.MyDatabase.ReadNext(System.Type)
+  - Database.MyDatabase.ReadNext_new
+  - Database.MyDatabase.ReadNextBool
+  - Database.MyDatabase.SendCommand(System.String,System.Collections.Generic.List{Database.Column})
+  - Database.MyDatabase.SendCommand_GetLastRecipes(Database.RecipeStatus)
+  - Database.MyDatabase.SendCommand_GetLastRecipes_new(Database.RecipeStatus)
+  - Database.MyDatabase.SendCommand_new(System.String,System.Object[])
+  - Database.MyDatabase.SendCommand_Read(Database.IComTabInfo,System.String,System.Boolean)
+  - Database.MyDatabase.SendCommand_Read(Database.ReadInfo)
+  - Database.MyDatabase.SendCommand_Read_new(Database.IComTabInfo,System.Object[],System.String,System.Boolean)
+  - Database.MyDatabase.SendCommand_ReadAlarms(System.Int32,System.Int32,System.Boolean)
+  - Database.MyDatabase.SendCommand_ReadAlarms_new(System.Int32,System.Int32,System.Boolean)
+  - Database.MyDatabase.SendCommand_ReadAuditTrail(Database.ReadInfo)
+  - Database.MyDatabase.SendCommand_ReadAuditTrail(System.DateTime,System.DateTime,System.String[],System.String,System.Boolean)
+  - Database.MyDatabase.ShowMessageBox(System.String)
+  - Database.MyDatabase.TaskEnQueue(System.Func{System.Object})
+  - Database.MyDatabase.Update_Row(Database.IComTabInfo,System.String)
+  langs:
+  - csharp
+  - vb
+  name: MyDatabase
+  nameWithType: MyDatabase
+  fullName: Database.MyDatabase
+  type: Class
+  source:
+    id: MyDatabase
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 193
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nMain class of the namespace. This class allow the interface with a database (connect, disconnect, insert rows, update rows, delete rows, read rows)\n"
+  example: []
+  syntax:
+    content: public static class MyDatabase
+    content.vb: Public Module MyDatabase
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  modifiers.csharp:
+  - public
+  - static
+  - class
+  modifiers.vb:
+  - Public
+  - Module
+- uid: Database.MyDatabase.info
+  commentId: F:Database.MyDatabase.info
+  id: info
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: info
+  nameWithType: MyDatabase.info
+  fullName: Database.MyDatabase.info
+  type: Field
+  source:
+    id: info
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 216
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public static IniInfo info
+    return:
+      type: Database.IniInfo
+      description: "\nVariable initialized by other projects\n"
+    content.vb: Public Shared info As IniInfo
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.TaskEnQueue(System.Func{System.Object})
+  commentId: M:Database.MyDatabase.TaskEnQueue(System.Func{System.Object})
+  id: TaskEnQueue(System.Func{System.Object})
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: TaskEnQueue(Func<Object>)
+  nameWithType: MyDatabase.TaskEnQueue(Func<Object>)
+  fullName: Database.MyDatabase.TaskEnQueue(System.Func<System.Object>)
+  type: Method
+  source:
+    id: TaskEnQueue
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 331
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nOnly allowed method to interact with the database. This method adds a task to be executed to the task queue \n"
+  example: []
+  syntax:
+    content: public static Task<object> TaskEnQueue(Func<object> function)
+    parameters:
+    - id: function
+      type: System.Func{System.Object}
+      description: Method to be added to the queue
+    return:
+      type: System.Threading.Tasks.Task{System.Object}
+      description: The added task, it allows to interact with the task (e.g. wait it ends, get its return value)
+    content.vb: Public Shared Function TaskEnQueue(function As Func(Of Object)) As Task(Of Object)
+  overload: Database.MyDatabase.TaskEnQueue*
+  nameWithType.vb: MyDatabase.TaskEnQueue(Func(Of Object))
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+  fullName.vb: Database.MyDatabase.TaskEnQueue(System.Func(Of System.Object))
+  name.vb: TaskEnQueue(Func(Of Object))
+- uid: Database.MyDatabase.Initialize(Database.IniInfo)
+  commentId: M:Database.MyDatabase.Initialize(Database.IniInfo)
+  id: Initialize(Database.IniInfo)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: Initialize(IniInfo)
+  nameWithType: MyDatabase.Initialize(IniInfo)
+  fullName: Database.MyDatabase.Initialize(Database.IniInfo)
+  type: Method
+  source:
+    id: Initialize
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 342
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nMethod called by other project which initializes the variable <xref href=\"Database.MyDatabase.info\" data-throw-if-not-resolved=\"false\"></xref>\n"
+  example: []
+  syntax:
+    content: public static void Initialize(IniInfo info_arg)
+    parameters:
+    - id: info_arg
+      type: Database.IniInfo
+      description: <xref href="Database.IniInfo" data-throw-if-not-resolved="false"></xref> variable which contains the applicable settings from the calling project
+    content.vb: Public Shared Sub Initialize(info_arg As IniInfo)
+  overload: Database.MyDatabase.Initialize*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.Connect
+  commentId: M:Database.MyDatabase.Connect
+  id: Connect
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: Connect()
+  nameWithType: MyDatabase.Connect()
+  fullName: Database.MyDatabase.Connect()
+  type: Method
+  source:
+    id: Connect
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 361
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nConnection to the database\n"
+  example: []
+  syntax:
+    content: public static void Connect()
+    content.vb: Public Shared Sub Connect
+  overload: Database.MyDatabase.Connect*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.Disconnect
+  commentId: M:Database.MyDatabase.Disconnect
+  id: Disconnect
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: Disconnect()
+  nameWithType: MyDatabase.Disconnect()
+  fullName: Database.MyDatabase.Disconnect()
+  type: Method
+  source:
+    id: Disconnect
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 397
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nDisconnection of the database\n"
+  example: []
+  syntax:
+    content: public static async void Disconnect()
+    content.vb: Public Shared Sub Disconnect
+  overload: Database.MyDatabase.Disconnect*
+  modifiers.csharp:
+  - public
+  - static
+  - async
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.IsConnected
+  commentId: M:Database.MyDatabase.IsConnected
+  id: IsConnected
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: IsConnected()
+  nameWithType: MyDatabase.IsConnected()
+  fullName: Database.MyDatabase.IsConnected()
+  type: Method
+  source:
+    id: IsConnected
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 426
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nGet the status of the connection\n"
+  example: []
+  syntax:
+    content: public static bool IsConnected()
+    return:
+      type: System.Boolean
+      description: True if the database is connected, false otherwise
+    content.vb: Public Shared Function IsConnected As Boolean
+  overload: Database.MyDatabase.IsConnected*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.SendCommand_new(System.String,System.Object[])
+  commentId: M:Database.MyDatabase.SendCommand_new(System.String,System.Object[])
+  id: SendCommand_new(System.String,System.Object[])
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: SendCommand_new(String, Object[])
+  nameWithType: MyDatabase.SendCommand_new(String, Object[])
+  fullName: Database.MyDatabase.SendCommand_new(System.String, System.Object[])
+  type: Method
+  source:
+    id: SendCommand_new
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 438
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nBase method to interact with the database. This method allows to execute any SQL command to the open connection.\n"
+  example: []
+  syntax:
+    content: public static bool SendCommand_new(string commandText, object[] values = null)
+    parameters:
+    - id: commandText
+      type: System.String
+      description: SQL command to send
+    - id: values
+      type: System.Object[]
+      description: 'List of columns, the non-empty values can be used in the command. Default value: null'
+    return:
+      type: System.Boolean
+      description: True if the command was correctly executed, false otherwise
+    content.vb: Public Shared Function SendCommand_new(commandText As String, values As Object() = Nothing) As Boolean
+  overload: Database.MyDatabase.SendCommand_new*
+  nameWithType.vb: MyDatabase.SendCommand_new(String, Object())
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+  fullName.vb: Database.MyDatabase.SendCommand_new(System.String, System.Object())
+  name.vb: SendCommand_new(String, Object())
+- uid: Database.MyDatabase.SendCommand(System.String,System.Collections.Generic.List{Database.Column})
+  commentId: M:Database.MyDatabase.SendCommand(System.String,System.Collections.Generic.List{Database.Column})
+  id: SendCommand(System.String,System.Collections.Generic.List{Database.Column})
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: SendCommand(String, List<Column>)
+  nameWithType: MyDatabase.SendCommand(String, List<Column>)
+  fullName: Database.MyDatabase.SendCommand(System.String, System.Collections.Generic.List<Database.Column>)
+  type: Method
+  source:
+    id: SendCommand
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 488
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nBase method to interact with the database. This method allows to execute any SQL command to the open connection.\n"
+  example: []
+  syntax:
+    content: public static bool SendCommand(string commandText, List<Column> columns = null)
+    parameters:
+    - id: commandText
+      type: System.String
+      description: SQL command to send
+    - id: columns
+      type: System.Collections.Generic.List{Database.Column}
+      description: 'List of columns, the non-empty values can be used in the command. Default value: null'
+    return:
+      type: System.Boolean
+      description: True if the command was correctly executed, false otherwise
+    content.vb: Public Shared Function SendCommand(commandText As String, columns As List(Of Column) = Nothing) As Boolean
+  overload: Database.MyDatabase.SendCommand*
+  nameWithType.vb: MyDatabase.SendCommand(String, List(Of Column))
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+  fullName.vb: Database.MyDatabase.SendCommand(System.String, System.Collections.Generic.List(Of Database.Column))
+  name.vb: SendCommand(String, List(Of Column))
+- uid: Database.MyDatabase.SendCommand_Read_new(Database.IComTabInfo,System.Object[],System.String,System.Boolean)
+  commentId: M:Database.MyDatabase.SendCommand_Read_new(Database.IComTabInfo,System.Object[],System.String,System.Boolean)
+  id: SendCommand_Read_new(Database.IComTabInfo,System.Object[],System.String,System.Boolean)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: SendCommand_Read_new(IComTabInfo, Object[], String, Boolean)
+  nameWithType: MyDatabase.SendCommand_Read_new(IComTabInfo, Object[], String, Boolean)
+  fullName: Database.MyDatabase.SendCommand_Read_new(Database.IComTabInfo, System.Object[], System.String, System.Boolean)
+  type: Method
+  source:
+    id: SendCommand_Read_new
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 532
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static void SendCommand_Read_new(IComTabInfo tableInfo, object[] values, string orderBy = null, bool isOrderAsc = true)
+    parameters:
+    - id: tableInfo
+      type: Database.IComTabInfo
+    - id: values
+      type: System.Object[]
+    - id: orderBy
+      type: System.String
+    - id: isOrderAsc
+      type: System.Boolean
+    content.vb: Public Shared Sub SendCommand_Read_new(tableInfo As IComTabInfo, values As Object(), orderBy As String = Nothing, isOrderAsc As Boolean = True)
+  overload: Database.MyDatabase.SendCommand_Read_new*
+  nameWithType.vb: MyDatabase.SendCommand_Read_new(IComTabInfo, Object(), String, Boolean)
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+  fullName.vb: Database.MyDatabase.SendCommand_Read_new(Database.IComTabInfo, System.Object(), System.String, System.Boolean)
+  name.vb: SendCommand_Read_new(IComTabInfo, Object(), String, Boolean)
+- uid: Database.MyDatabase.SendCommand_Read(Database.IComTabInfo,System.String,System.Boolean)
+  commentId: M:Database.MyDatabase.SendCommand_Read(Database.IComTabInfo,System.String,System.Boolean)
+  id: SendCommand_Read(Database.IComTabInfo,System.String,System.Boolean)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: SendCommand_Read(IComTabInfo, String, Boolean)
+  nameWithType: MyDatabase.SendCommand_Read(IComTabInfo, String, Boolean)
+  fullName: Database.MyDatabase.SendCommand_Read(Database.IComTabInfo, System.String, System.Boolean)
+  type: Method
+  source:
+    id: SendCommand_Read
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 554
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static void SendCommand_Read(IComTabInfo tableInfo, string orderBy = null, bool isOrderAsc = true)
+    parameters:
+    - id: tableInfo
+      type: Database.IComTabInfo
+    - id: orderBy
+      type: System.String
+    - id: isOrderAsc
+      type: System.Boolean
+    content.vb: Public Shared Sub SendCommand_Read(tableInfo As IComTabInfo, orderBy As String = Nothing, isOrderAsc As Boolean = True)
+  overload: Database.MyDatabase.SendCommand_Read*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.SendCommand_Read(Database.ReadInfo)
+  commentId: M:Database.MyDatabase.SendCommand_Read(Database.ReadInfo)
+  id: SendCommand_Read(Database.ReadInfo)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: SendCommand_Read(ReadInfo)
+  nameWithType: MyDatabase.SendCommand_Read(ReadInfo)
+  fullName: Database.MyDatabase.SendCommand_Read(Database.ReadInfo)
+  type: Method
+  source:
+    id: SendCommand_Read
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 575
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static void SendCommand_Read(ReadInfo readInfo)
+    parameters:
+    - id: readInfo
+      type: Database.ReadInfo
+    content.vb: Public Shared Sub SendCommand_Read(readInfo As ReadInfo)
+  overload: Database.MyDatabase.SendCommand_Read*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.SendCommand_ReadAuditTrail(System.DateTime,System.DateTime,System.String[],System.String,System.Boolean)
+  commentId: M:Database.MyDatabase.SendCommand_ReadAuditTrail(System.DateTime,System.DateTime,System.String[],System.String,System.Boolean)
+  id: SendCommand_ReadAuditTrail(System.DateTime,System.DateTime,System.String[],System.String,System.Boolean)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: SendCommand_ReadAuditTrail(DateTime, DateTime, String[], String, Boolean)
+  nameWithType: MyDatabase.SendCommand_ReadAuditTrail(DateTime, DateTime, String[], String, Boolean)
+  fullName: Database.MyDatabase.SendCommand_ReadAuditTrail(System.DateTime, System.DateTime, System.String[], System.String, System.Boolean)
+  type: Method
+  source:
+    id: SendCommand_ReadAuditTrail
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 602
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static bool SendCommand_ReadAuditTrail(DateTime dtBefore, DateTime dtAfter, string[] eventTypes = null, string orderBy = null, bool isOrderAsc = true)
+    parameters:
+    - id: dtBefore
+      type: System.DateTime
+    - id: dtAfter
+      type: System.DateTime
+    - id: eventTypes
+      type: System.String[]
+    - id: orderBy
+      type: System.String
+    - id: isOrderAsc
+      type: System.Boolean
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function SendCommand_ReadAuditTrail(dtBefore As Date, dtAfter As Date, eventTypes As String() = Nothing, orderBy As String = Nothing, isOrderAsc As Boolean = True) As Boolean
+  overload: Database.MyDatabase.SendCommand_ReadAuditTrail*
+  nameWithType.vb: MyDatabase.SendCommand_ReadAuditTrail(DateTime, DateTime, String(), String, Boolean)
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+  fullName.vb: Database.MyDatabase.SendCommand_ReadAuditTrail(System.DateTime, System.DateTime, System.String(), System.String, System.Boolean)
+  name.vb: SendCommand_ReadAuditTrail(DateTime, DateTime, String(), String, Boolean)
+- uid: Database.MyDatabase.SendCommand_ReadAuditTrail(Database.ReadInfo)
+  commentId: M:Database.MyDatabase.SendCommand_ReadAuditTrail(Database.ReadInfo)
+  id: SendCommand_ReadAuditTrail(Database.ReadInfo)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: SendCommand_ReadAuditTrail(ReadInfo)
+  nameWithType: MyDatabase.SendCommand_ReadAuditTrail(ReadInfo)
+  fullName: Database.MyDatabase.SendCommand_ReadAuditTrail(Database.ReadInfo)
+  type: Method
+  source:
+    id: SendCommand_ReadAuditTrail
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 662
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static bool SendCommand_ReadAuditTrail(ReadInfo readInfo)
+    parameters:
+    - id: readInfo
+      type: Database.ReadInfo
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function SendCommand_ReadAuditTrail(readInfo As ReadInfo) As Boolean
+  overload: Database.MyDatabase.SendCommand_ReadAuditTrail*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.SendCommand_ReadAlarms_new(System.Int32,System.Int32,System.Boolean)
+  commentId: M:Database.MyDatabase.SendCommand_ReadAlarms_new(System.Int32,System.Int32,System.Boolean)
+  id: SendCommand_ReadAlarms_new(System.Int32,System.Int32,System.Boolean)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: SendCommand_ReadAlarms_new(Int32, Int32, Boolean)
+  nameWithType: MyDatabase.SendCommand_ReadAlarms_new(Int32, Int32, Boolean)
+  fullName: Database.MyDatabase.SendCommand_ReadAlarms_new(System.Int32, System.Int32, System.Boolean)
+  type: Method
+  source:
+    id: SendCommand_ReadAlarms_new
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 729
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static bool SendCommand_ReadAlarms_new(int firstId, int lastId, bool readAlert = false)
+    parameters:
+    - id: firstId
+      type: System.Int32
+    - id: lastId
+      type: System.Int32
+    - id: readAlert
+      type: System.Boolean
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function SendCommand_ReadAlarms_new(firstId As Integer, lastId As Integer, readAlert As Boolean = False) As Boolean
+  overload: Database.MyDatabase.SendCommand_ReadAlarms_new*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.SendCommand_ReadAlarms(System.Int32,System.Int32,System.Boolean)
+  commentId: M:Database.MyDatabase.SendCommand_ReadAlarms(System.Int32,System.Int32,System.Boolean)
+  id: SendCommand_ReadAlarms(System.Int32,System.Int32,System.Boolean)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: SendCommand_ReadAlarms(Int32, Int32, Boolean)
+  nameWithType: MyDatabase.SendCommand_ReadAlarms(Int32, Int32, Boolean)
+  fullName: Database.MyDatabase.SendCommand_ReadAlarms(System.Int32, System.Int32, System.Boolean)
+  type: Method
+  source:
+    id: SendCommand_ReadAlarms
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 769
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static bool SendCommand_ReadAlarms(int firstId, int lastId, bool readAlert = false)
+    parameters:
+    - id: firstId
+      type: System.Int32
+    - id: lastId
+      type: System.Int32
+    - id: readAlert
+      type: System.Boolean
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function SendCommand_ReadAlarms(firstId As Integer, lastId As Integer, readAlert As Boolean = False) As Boolean
+  overload: Database.MyDatabase.SendCommand_ReadAlarms*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.SendCommand_GetLastRecipes_new(Database.RecipeStatus)
+  commentId: M:Database.MyDatabase.SendCommand_GetLastRecipes_new(Database.RecipeStatus)
+  id: SendCommand_GetLastRecipes_new(Database.RecipeStatus)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: SendCommand_GetLastRecipes_new(RecipeStatus)
+  nameWithType: MyDatabase.SendCommand_GetLastRecipes_new(RecipeStatus)
+  fullName: Database.MyDatabase.SendCommand_GetLastRecipes_new(Database.RecipeStatus)
+  type: Method
+  source:
+    id: SendCommand_GetLastRecipes_new
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 809
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static void SendCommand_GetLastRecipes_new(RecipeStatus status = RecipeStatus.PRODnDRAFT)
+    parameters:
+    - id: status
+      type: Database.RecipeStatus
+    content.vb: Public Shared Sub SendCommand_GetLastRecipes_new(status As RecipeStatus = RecipeStatus.PRODnDRAFT)
+  overload: Database.MyDatabase.SendCommand_GetLastRecipes_new*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.SendCommand_GetLastRecipes(Database.RecipeStatus)
+  commentId: M:Database.MyDatabase.SendCommand_GetLastRecipes(Database.RecipeStatus)
+  id: SendCommand_GetLastRecipes(Database.RecipeStatus)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: SendCommand_GetLastRecipes(RecipeStatus)
+  nameWithType: MyDatabase.SendCommand_GetLastRecipes(RecipeStatus)
+  fullName: Database.MyDatabase.SendCommand_GetLastRecipes(Database.RecipeStatus)
+  type: Method
+  source:
+    id: SendCommand_GetLastRecipes
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 854
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static void SendCommand_GetLastRecipes(RecipeStatus status = RecipeStatus.PRODnDRAFT)
+    parameters:
+    - id: status
+      type: Database.RecipeStatus
+    content.vb: Public Shared Sub SendCommand_GetLastRecipes(status As RecipeStatus = RecipeStatus.PRODnDRAFT)
+  overload: Database.MyDatabase.SendCommand_GetLastRecipes*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.ReadNext(System.Type)
+  commentId: M:Database.MyDatabase.ReadNext(System.Type)
+  id: ReadNext(System.Type)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: ReadNext(Type)
+  nameWithType: MyDatabase.ReadNext(Type)
+  fullName: Database.MyDatabase.ReadNext(System.Type)
+  type: Method
+  source:
+    id: ReadNext
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 900
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static IBasTabInfo ReadNext(Type tableType)
+    parameters:
+    - id: tableType
+      type: System.Type
+    return:
+      type: Database.IBasTabInfo
+    content.vb: Public Shared Function ReadNext(tableType As Type) As IBasTabInfo
+  overload: Database.MyDatabase.ReadNext*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.ReadNext_new
+  commentId: M:Database.MyDatabase.ReadNext_new
+  id: ReadNext_new
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: ReadNext_new()
+  nameWithType: MyDatabase.ReadNext_new()
+  fullName: Database.MyDatabase.ReadNext_new()
+  type: Method
+  source:
+    id: ReadNext_new
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 949
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static object[] ReadNext_new()
+    return:
+      type: System.Object[]
+    content.vb: Public Shared Function ReadNext_new As Object()
+  overload: Database.MyDatabase.ReadNext_new*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.ReadNext
+  commentId: M:Database.MyDatabase.ReadNext
+  id: ReadNext
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: ReadNext()
+  nameWithType: MyDatabase.ReadNext()
+  fullName: Database.MyDatabase.ReadNext()
+  type: Method
+  source:
+    id: ReadNext
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 991
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static string[] ReadNext()
+    return:
+      type: System.String[]
+    content.vb: Public Shared Function ReadNext As String()
+  overload: Database.MyDatabase.ReadNext*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.ReadNextBool
+  commentId: M:Database.MyDatabase.ReadNextBool
+  id: ReadNextBool
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: ReadNextBool()
+  nameWithType: MyDatabase.ReadNextBool()
+  fullName: Database.MyDatabase.ReadNextBool()
+  type: Method
+  source:
+    id: ReadNextBool
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1031
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static bool[] ReadNextBool()
+    return:
+      type: System.Boolean[]
+    content.vb: Public Shared Function ReadNextBool As Boolean()
+  overload: Database.MyDatabase.ReadNextBool*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.InsertRow(Database.IBasTabInfo)
+  commentId: M:Database.MyDatabase.InsertRow(Database.IBasTabInfo)
+  id: InsertRow(Database.IBasTabInfo)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: InsertRow(IBasTabInfo)
+  nameWithType: MyDatabase.InsertRow(IBasTabInfo)
+  fullName: Database.MyDatabase.InsertRow(Database.IBasTabInfo)
+  type: Method
+  source:
+    id: InsertRow
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1078
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static bool InsertRow(IBasTabInfo tableInfo)
+    parameters:
+    - id: tableInfo
+      type: Database.IBasTabInfo
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function InsertRow(tableInfo As IBasTabInfo) As Boolean
+  overload: Database.MyDatabase.InsertRow*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.InsertRow_new(System.Object)
+  commentId: M:Database.MyDatabase.InsertRow_new(System.Object)
+  id: InsertRow_new(System.Object)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: InsertRow_new(Object)
+  nameWithType: MyDatabase.InsertRow_new(Object)
+  fullName: Database.MyDatabase.InsertRow_new(System.Object)
+  type: Method
+  source:
+    id: InsertRow_new
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1146
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static bool InsertRow_new(object obj)
+    parameters:
+    - id: obj
+      type: System.Object
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function InsertRow_new(obj As Object) As Boolean
+  overload: Database.MyDatabase.InsertRow_new*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.Update_Row(Database.IComTabInfo,System.String)
+  commentId: M:Database.MyDatabase.Update_Row(Database.IComTabInfo,System.String)
+  id: Update_Row(Database.IComTabInfo,System.String)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: Update_Row(IComTabInfo, String)
+  nameWithType: MyDatabase.Update_Row(IComTabInfo, String)
+  fullName: Database.MyDatabase.Update_Row(Database.IComTabInfo, System.String)
+  type: Method
+  source:
+    id: Update_Row
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1211
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static bool Update_Row(IComTabInfo tableInfo, string id)
+    parameters:
+    - id: tableInfo
+      type: Database.IComTabInfo
+    - id: id
+      type: System.String
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function Update_Row(tableInfo As IComTabInfo, id As String) As Boolean
+  overload: Database.MyDatabase.Update_Row*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.DeleteRow_new(Database.IComTabInfo,System.Object)
+  commentId: M:Database.MyDatabase.DeleteRow_new(Database.IComTabInfo,System.Object)
+  id: DeleteRow_new(Database.IComTabInfo,System.Object)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: DeleteRow_new(IComTabInfo, Object)
+  nameWithType: MyDatabase.DeleteRow_new(IComTabInfo, Object)
+  fullName: Database.MyDatabase.DeleteRow_new(Database.IComTabInfo, System.Object)
+  type: Method
+  source:
+    id: DeleteRow_new
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1241
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static bool DeleteRow_new(IComTabInfo tableInfo, object id)
+    parameters:
+    - id: tableInfo
+      type: Database.IComTabInfo
+    - id: id
+      type: System.Object
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function DeleteRow_new(tableInfo As IComTabInfo, id As Object) As Boolean
+  overload: Database.MyDatabase.DeleteRow_new*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.DeleteRow(Database.IComTabInfo,System.String)
+  commentId: M:Database.MyDatabase.DeleteRow(Database.IComTabInfo,System.String)
+  id: DeleteRow(Database.IComTabInfo,System.String)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: DeleteRow(IComTabInfo, String)
+  nameWithType: MyDatabase.DeleteRow(IComTabInfo, String)
+  fullName: Database.MyDatabase.DeleteRow(Database.IComTabInfo, System.String)
+  type: Method
+  source:
+    id: DeleteRow
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1263
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static bool DeleteRow(IComTabInfo tableInfo, string id)
+    parameters:
+    - id: tableInfo
+      type: Database.IComTabInfo
+    - id: id
+      type: System.String
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function DeleteRow(tableInfo As IComTabInfo, id As String) As Boolean
+  overload: Database.MyDatabase.DeleteRow*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.DeleteRows(Database.IDtTabInfo,System.DateTime)
+  commentId: M:Database.MyDatabase.DeleteRows(Database.IDtTabInfo,System.DateTime)
+  id: DeleteRows(Database.IDtTabInfo,System.DateTime)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: DeleteRows(IDtTabInfo, DateTime)
+  nameWithType: MyDatabase.DeleteRows(IDtTabInfo, DateTime)
+  fullName: Database.MyDatabase.DeleteRows(Database.IDtTabInfo, System.DateTime)
+  type: Method
+  source:
+    id: DeleteRows
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1285
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static bool DeleteRows(IDtTabInfo tableInfo, DateTime lastRecordDate)
+    parameters:
+    - id: tableInfo
+      type: Database.IDtTabInfo
+    - id: lastRecordDate
+      type: System.DateTime
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function DeleteRows(tableInfo As IDtTabInfo, lastRecordDate As Date) As Boolean
+  overload: Database.MyDatabase.DeleteRows*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.GetOneRow_new(Database.IComTabInfo,System.Nullable{System.Int32},System.Object[])
+  commentId: M:Database.MyDatabase.GetOneRow_new(Database.IComTabInfo,System.Nullable{System.Int32},System.Object[])
+  id: GetOneRow_new(Database.IComTabInfo,System.Nullable{System.Int32},System.Object[])
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: GetOneRow_new(IComTabInfo, Nullable<Int32>, Object[])
+  nameWithType: MyDatabase.GetOneRow_new(IComTabInfo, Nullable<Int32>, Object[])
+  fullName: Database.MyDatabase.GetOneRow_new(Database.IComTabInfo, System.Nullable<System.Int32>, System.Object[])
+  type: Method
+  source:
+    id: GetOneRow_new
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1304
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static object[] GetOneRow_new(IComTabInfo table, int? id = null, object[] values = null)
+    parameters:
+    - id: table
+      type: Database.IComTabInfo
+    - id: id
+      type: System.Nullable{System.Int32}
+    - id: values
+      type: System.Object[]
+    return:
+      type: System.Object[]
+    content.vb: Public Shared Function GetOneRow_new(table As IComTabInfo, id As Integer? = Nothing, values As Object() = Nothing) As Object()
+  overload: Database.MyDatabase.GetOneRow_new*
+  nameWithType.vb: MyDatabase.GetOneRow_new(IComTabInfo, Nullable(Of Int32), Object())
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+  fullName.vb: Database.MyDatabase.GetOneRow_new(Database.IComTabInfo, System.Nullable(Of System.Int32), System.Object())
+  name.vb: GetOneRow_new(IComTabInfo, Nullable(Of Int32), Object())
+- uid: Database.MyDatabase.GetOneRow(System.Type,System.String,Database.IComTabInfo)
+  commentId: M:Database.MyDatabase.GetOneRow(System.Type,System.String,Database.IComTabInfo)
+  id: GetOneRow(System.Type,System.String,Database.IComTabInfo)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: GetOneRow(Type, String, IComTabInfo)
+  nameWithType: MyDatabase.GetOneRow(Type, String, IComTabInfo)
+  fullName: Database.MyDatabase.GetOneRow(System.Type, System.String, Database.IComTabInfo)
+  type: Method
+  source:
+    id: GetOneRow
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1342
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static IComTabInfo GetOneRow(Type tableType = null, string id = null, IComTabInfo table = null)
+    parameters:
+    - id: tableType
+      type: System.Type
+    - id: id
+      type: System.String
+    - id: table
+      type: Database.IComTabInfo
+    return:
+      type: Database.IComTabInfo
+    content.vb: Public Shared Function GetOneRow(tableType As Type = Nothing, id As String = Nothing, table As IComTabInfo = Nothing) As IComTabInfo
+  overload: Database.MyDatabase.GetOneRow*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.GetOneArrayRow_new(Database.IComTabInfo,System.String)
+  commentId: M:Database.MyDatabase.GetOneArrayRow_new(Database.IComTabInfo,System.String)
+  id: GetOneArrayRow_new(Database.IComTabInfo,System.String)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: GetOneArrayRow_new(IComTabInfo, String)
+  nameWithType: MyDatabase.GetOneArrayRow_new(IComTabInfo, String)
+  fullName: Database.MyDatabase.GetOneArrayRow_new(Database.IComTabInfo, System.String)
+  type: Method
+  source:
+    id: GetOneArrayRow_new
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1391
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static object[] GetOneArrayRow_new(IComTabInfo tableInfo, string id)
+    parameters:
+    - id: tableInfo
+      type: Database.IComTabInfo
+    - id: id
+      type: System.String
+    return:
+      type: System.Object[]
+    content.vb: Public Shared Function GetOneArrayRow_new(tableInfo As IComTabInfo, id As String) As Object()
+  overload: Database.MyDatabase.GetOneArrayRow_new*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.GetOneArrayRow(Database.IComTabInfo,System.String)
+  commentId: M:Database.MyDatabase.GetOneArrayRow(Database.IComTabInfo,System.String)
+  id: GetOneArrayRow(Database.IComTabInfo,System.String)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: GetOneArrayRow(IComTabInfo, String)
+  nameWithType: MyDatabase.GetOneArrayRow(IComTabInfo, String)
+  fullName: Database.MyDatabase.GetOneArrayRow(Database.IComTabInfo, System.String)
+  type: Method
+  source:
+    id: GetOneArrayRow
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1417
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static string[] GetOneArrayRow(IComTabInfo tableInfo, string id)
+    parameters:
+    - id: tableInfo
+      type: Database.IComTabInfo
+    - id: id
+      type: System.String
+    return:
+      type: System.String[]
+    content.vb: Public Shared Function GetOneArrayRow(tableInfo As IComTabInfo, id As String) As String()
+  overload: Database.MyDatabase.GetOneArrayRow*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.GetOneBoolRow_new(Database.IComTabInfo,System.Object[])
+  commentId: M:Database.MyDatabase.GetOneBoolRow_new(Database.IComTabInfo,System.Object[])
+  id: GetOneBoolRow_new(Database.IComTabInfo,System.Object[])
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: GetOneBoolRow_new(IComTabInfo, Object[])
+  nameWithType: MyDatabase.GetOneBoolRow_new(IComTabInfo, Object[])
+  fullName: Database.MyDatabase.GetOneBoolRow_new(Database.IComTabInfo, System.Object[])
+  type: Method
+  source:
+    id: GetOneBoolRow_new
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1442
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static bool[] GetOneBoolRow_new(IComTabInfo table, object[] values)
+    parameters:
+    - id: table
+      type: Database.IComTabInfo
+    - id: values
+      type: System.Object[]
+    return:
+      type: System.Boolean[]
+    content.vb: Public Shared Function GetOneBoolRow_new(table As IComTabInfo, values As Object()) As Boolean()
+  overload: Database.MyDatabase.GetOneBoolRow_new*
+  nameWithType.vb: MyDatabase.GetOneBoolRow_new(IComTabInfo, Object())
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+  fullName.vb: Database.MyDatabase.GetOneBoolRow_new(Database.IComTabInfo, System.Object())
+  name.vb: GetOneBoolRow_new(IComTabInfo, Object())
+- uid: Database.MyDatabase.GetOneBoolRow(Database.IComTabInfo)
+  commentId: M:Database.MyDatabase.GetOneBoolRow(Database.IComTabInfo)
+  id: GetOneBoolRow(Database.IComTabInfo)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: GetOneBoolRow(IComTabInfo)
+  nameWithType: MyDatabase.GetOneBoolRow(IComTabInfo)
+  fullName: Database.MyDatabase.GetOneBoolRow(Database.IComTabInfo)
+  type: Method
+  source:
+    id: GetOneBoolRow
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1476
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static bool[] GetOneBoolRow(IComTabInfo table)
+    parameters:
+    - id: table
+      type: Database.IComTabInfo
+    return:
+      type: System.Boolean[]
+    content.vb: Public Shared Function GetOneBoolRow(table As IComTabInfo) As Boolean()
+  overload: Database.MyDatabase.GetOneBoolRow*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.GetOneBoolRow_new(System.Object)
+  commentId: M:Database.MyDatabase.GetOneBoolRow_new(System.Object)
+  id: GetOneBoolRow_new(System.Object)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: GetOneBoolRow_new(Object)
+  nameWithType: MyDatabase.GetOneBoolRow_new(Object)
+  fullName: Database.MyDatabase.GetOneBoolRow_new(System.Object)
+  type: Method
+  source:
+    id: GetOneBoolRow_new
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1510
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static void GetOneBoolRow_new(object obj)
+    parameters:
+    - id: obj
+      type: System.Object
+    content.vb: Public Shared Sub GetOneBoolRow_new(obj As Object)
+  overload: Database.MyDatabase.GetOneBoolRow_new*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.GetRows_new(Database.IComTabInfo,System.Object[],System.Int32,System.String,System.Boolean)
+  commentId: M:Database.MyDatabase.GetRows_new(Database.IComTabInfo,System.Object[],System.Int32,System.String,System.Boolean)
+  id: GetRows_new(Database.IComTabInfo,System.Object[],System.Int32,System.String,System.Boolean)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: GetRows_new(IComTabInfo, Object[], Int32, String, Boolean)
+  nameWithType: MyDatabase.GetRows_new(IComTabInfo, Object[], Int32, String, Boolean)
+  fullName: Database.MyDatabase.GetRows_new(Database.IComTabInfo, System.Object[], System.Int32, System.String, System.Boolean)
+  type: Method
+  source:
+    id: GetRows_new
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1551
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static List<object[]> GetRows_new(IComTabInfo tableInfo, object[] values, int nRows = 0, string orderBy = null, bool isOrderAsc = true)
+    parameters:
+    - id: tableInfo
+      type: Database.IComTabInfo
+    - id: values
+      type: System.Object[]
+    - id: nRows
+      type: System.Int32
+    - id: orderBy
+      type: System.String
+    - id: isOrderAsc
+      type: System.Boolean
+    return:
+      type: System.Collections.Generic.List{System.Object[]}
+    content.vb: Public Shared Function GetRows_new(tableInfo As IComTabInfo, values As Object(), nRows As Integer = 0, orderBy As String = Nothing, isOrderAsc As Boolean = True) As List(Of Object())
+  overload: Database.MyDatabase.GetRows_new*
+  nameWithType.vb: MyDatabase.GetRows_new(IComTabInfo, Object(), Int32, String, Boolean)
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+  fullName.vb: Database.MyDatabase.GetRows_new(Database.IComTabInfo, System.Object(), System.Int32, System.String, System.Boolean)
+  name.vb: GetRows_new(IComTabInfo, Object(), Int32, String, Boolean)
+- uid: Database.MyDatabase.GetRows(Database.IComTabInfo,System.Int32,System.String,System.Boolean)
+  commentId: M:Database.MyDatabase.GetRows(Database.IComTabInfo,System.Int32,System.String,System.Boolean)
+  id: GetRows(Database.IComTabInfo,System.Int32,System.String,System.Boolean)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: GetRows(IComTabInfo, Int32, String, Boolean)
+  nameWithType: MyDatabase.GetRows(IComTabInfo, Int32, String, Boolean)
+  fullName: Database.MyDatabase.GetRows(Database.IComTabInfo, System.Int32, System.String, System.Boolean)
+  type: Method
+  source:
+    id: GetRows
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1591
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static List<IComTabInfo> GetRows(IComTabInfo tableInfo, int nRows = 0, string orderBy = null, bool isOrderAsc = true)
+    parameters:
+    - id: tableInfo
+      type: Database.IComTabInfo
+    - id: nRows
+      type: System.Int32
+    - id: orderBy
+      type: System.String
+    - id: isOrderAsc
+      type: System.Boolean
+    return:
+      type: System.Collections.Generic.List{Database.IComTabInfo}
+    content.vb: Public Shared Function GetRows(tableInfo As IComTabInfo, nRows As Integer = 0, orderBy As String = Nothing, isOrderAsc As Boolean = True) As List(Of IComTabInfo)
+  overload: Database.MyDatabase.GetRows*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.GetRows(Database.ReadInfo,System.Int32)
+  commentId: M:Database.MyDatabase.GetRows(Database.ReadInfo,System.Int32)
+  id: GetRows(Database.ReadInfo,System.Int32)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: GetRows(ReadInfo, Int32)
+  nameWithType: MyDatabase.GetRows(ReadInfo, Int32)
+  fullName: Database.MyDatabase.GetRows(Database.ReadInfo, System.Int32)
+  type: Method
+  source:
+    id: GetRows
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1624
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static List<IComTabInfo> GetRows(ReadInfo readInfo, int nRows = 0)
+    parameters:
+    - id: readInfo
+      type: Database.ReadInfo
+    - id: nRows
+      type: System.Int32
+    return:
+      type: System.Collections.Generic.List{Database.IComTabInfo}
+    content.vb: Public Shared Function GetRows(readInfo As ReadInfo, nRows As Integer = 0) As List(Of IComTabInfo)
+  overload: Database.MyDatabase.GetRows*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.GetAuditTrailRows_new(Database.ReadInfo,System.Int32)
+  commentId: M:Database.MyDatabase.GetAuditTrailRows_new(Database.ReadInfo,System.Int32)
+  id: GetAuditTrailRows_new(Database.ReadInfo,System.Int32)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: GetAuditTrailRows_new(ReadInfo, Int32)
+  nameWithType: MyDatabase.GetAuditTrailRows_new(ReadInfo, Int32)
+  fullName: Database.MyDatabase.GetAuditTrailRows_new(Database.ReadInfo, System.Int32)
+  type: Method
+  source:
+    id: GetAuditTrailRows_new
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1672
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static List<object[]> GetAuditTrailRows_new(ReadInfo _readInfo, int nRows = 0)
+    parameters:
+    - id: _readInfo
+      type: Database.ReadInfo
+    - id: nRows
+      type: System.Int32
+    return:
+      type: System.Collections.Generic.List{System.Object[]}
+    content.vb: Public Shared Function GetAuditTrailRows_new(_readInfo As ReadInfo, nRows As Integer = 0) As List(Of Object())
+  overload: Database.MyDatabase.GetAuditTrailRows_new*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.GetAuditTrailRows(Database.ReadInfo,System.Int32)
+  commentId: M:Database.MyDatabase.GetAuditTrailRows(Database.ReadInfo,System.Int32)
+  id: GetAuditTrailRows(Database.ReadInfo,System.Int32)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: GetAuditTrailRows(ReadInfo, Int32)
+  nameWithType: MyDatabase.GetAuditTrailRows(ReadInfo, Int32)
+  fullName: Database.MyDatabase.GetAuditTrailRows(Database.ReadInfo, System.Int32)
+  type: Method
+  source:
+    id: GetAuditTrailRows
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1714
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static List<string[]> GetAuditTrailRows(ReadInfo _readInfo, int nRows = 0)
+    parameters:
+    - id: _readInfo
+      type: Database.ReadInfo
+    - id: nRows
+      type: System.Int32
+    return:
+      type: System.Collections.Generic.List{System.String[]}
+    content.vb: Public Shared Function GetAuditTrailRows(_readInfo As ReadInfo, nRows As Integer = 0) As List(Of String())
+  overload: Database.MyDatabase.GetAuditTrailRows*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.GetAlarms_new(System.Int32,System.Int32,System.Boolean)
+  commentId: M:Database.MyDatabase.GetAlarms_new(System.Int32,System.Int32,System.Boolean)
+  id: GetAlarms_new(System.Int32,System.Int32,System.Boolean)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: GetAlarms_new(Int32, Int32, Boolean)
+  nameWithType: MyDatabase.GetAlarms_new(Int32, Int32, Boolean)
+  fullName: Database.MyDatabase.GetAlarms_new(System.Int32, System.Int32, System.Boolean)
+  type: Method
+  source:
+    id: GetAlarms_new
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1758
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static List<object[]> GetAlarms_new(int firstId, int lastId, bool readAlert = false)
+    parameters:
+    - id: firstId
+      type: System.Int32
+    - id: lastId
+      type: System.Int32
+    - id: readAlert
+      type: System.Boolean
+    return:
+      type: System.Collections.Generic.List{System.Object[]}
+    content.vb: Public Shared Function GetAlarms_new(firstId As Integer, lastId As Integer, readAlert As Boolean = False) As List(Of Object())
+  overload: Database.MyDatabase.GetAlarms_new*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.GetAlarms(System.Int32,System.Int32,System.Boolean)
+  commentId: M:Database.MyDatabase.GetAlarms(System.Int32,System.Int32,System.Boolean)
+  id: GetAlarms(System.Int32,System.Int32,System.Boolean)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: GetAlarms(Int32, Int32, Boolean)
+  nameWithType: MyDatabase.GetAlarms(Int32, Int32, Boolean)
+  fullName: Database.MyDatabase.GetAlarms(System.Int32, System.Int32, System.Boolean)
+  type: Method
+  source:
+    id: GetAlarms
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1777
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static List<AuditTrailInfo> GetAlarms(int firstId, int lastId, bool readAlert = false)
+    parameters:
+    - id: firstId
+      type: System.Int32
+    - id: lastId
+      type: System.Int32
+    - id: readAlert
+      type: System.Boolean
+    return:
+      type: System.Collections.Generic.List{Database.AuditTrailInfo}
+    content.vb: Public Shared Function GetAlarms(firstId As Integer, lastId As Integer, readAlert As Boolean = False) As List(Of AuditTrailInfo)
+  overload: Database.MyDatabase.GetAlarms*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.GetLastRecipes_new(Database.RecipeStatus)
+  commentId: M:Database.MyDatabase.GetLastRecipes_new(Database.RecipeStatus)
+  id: GetLastRecipes_new(Database.RecipeStatus)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: GetLastRecipes_new(RecipeStatus)
+  nameWithType: MyDatabase.GetLastRecipes_new(RecipeStatus)
+  fullName: Database.MyDatabase.GetLastRecipes_new(Database.RecipeStatus)
+  type: Method
+  source:
+    id: GetLastRecipes_new
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1796
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static List<object[]> GetLastRecipes_new(RecipeStatus status = RecipeStatus.PRODnDRAFT)
+    parameters:
+    - id: status
+      type: Database.RecipeStatus
+    return:
+      type: System.Collections.Generic.List{System.Object[]}
+    content.vb: Public Shared Function GetLastRecipes_new(status As RecipeStatus = RecipeStatus.PRODnDRAFT) As List(Of Object())
+  overload: Database.MyDatabase.GetLastRecipes_new*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.GetLastRecipes(Database.RecipeStatus)
+  commentId: M:Database.MyDatabase.GetLastRecipes(Database.RecipeStatus)
+  id: GetLastRecipes(Database.RecipeStatus)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: GetLastRecipes(RecipeStatus)
+  nameWithType: MyDatabase.GetLastRecipes(RecipeStatus)
+  fullName: Database.MyDatabase.GetLastRecipes(Database.RecipeStatus)
+  type: Method
+  source:
+    id: GetLastRecipes
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1815
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static List<RecipeInfo> GetLastRecipes(RecipeStatus status = RecipeStatus.PRODnDRAFT)
+    parameters:
+    - id: status
+      type: Database.RecipeStatus
+    return:
+      type: System.Collections.Generic.List{Database.RecipeInfo}
+    content.vb: Public Shared Function GetLastRecipes(status As RecipeStatus = RecipeStatus.PRODnDRAFT) As List(Of RecipeInfo)
+  overload: Database.MyDatabase.GetLastRecipes*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.GetLastDailyTestDate(Database.DailyTestInfo,System.Nullable{System.DateTime})
+  commentId: M:Database.MyDatabase.GetLastDailyTestDate(Database.DailyTestInfo,System.Nullable{System.DateTime})
+  id: GetLastDailyTestDate(Database.DailyTestInfo,System.Nullable{System.DateTime})
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: GetLastDailyTestDate(DailyTestInfo, Nullable<DateTime>)
+  nameWithType: MyDatabase.GetLastDailyTestDate(DailyTestInfo, Nullable<DateTime>)
+  fullName: Database.MyDatabase.GetLastDailyTestDate(Database.DailyTestInfo, System.Nullable<System.DateTime>)
+  type: Method
+  source:
+    id: GetLastDailyTestDate
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1835
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static DateTime? GetLastDailyTestDate(DailyTestInfo sampleInfo, DateTime? lastSample = null)
+    parameters:
+    - id: sampleInfo
+      type: Database.DailyTestInfo
+    - id: lastSample
+      type: System.Nullable{System.DateTime}
+    return:
+      type: System.Nullable{System.DateTime}
+    content.vb: Public Shared Function GetLastDailyTestDate(sampleInfo As DailyTestInfo, lastSample As Date? = Nothing) As Date?
+  overload: Database.MyDatabase.GetLastDailyTestDate*
+  nameWithType.vb: MyDatabase.GetLastDailyTestDate(DailyTestInfo, Nullable(Of DateTime))
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+  fullName.vb: Database.MyDatabase.GetLastDailyTestDate(Database.DailyTestInfo, System.Nullable(Of System.DateTime))
+  name.vb: GetLastDailyTestDate(DailyTestInfo, Nullable(Of DateTime))
+- uid: Database.MyDatabase.GetMax(Database.IComTabInfo,System.String)
+  commentId: M:Database.MyDatabase.GetMax(Database.IComTabInfo,System.String)
+  id: GetMax(Database.IComTabInfo,System.String)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: GetMax(IComTabInfo, String)
+  nameWithType: MyDatabase.GetMax(IComTabInfo, String)
+  fullName: Database.MyDatabase.GetMax(Database.IComTabInfo, System.String)
+  type: Method
+  source:
+    id: GetMax
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1883
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static int GetMax(IComTabInfo tableInfo, string column)
+    parameters:
+    - id: tableInfo
+      type: Database.IComTabInfo
+    - id: column
+      type: System.String
+    return:
+      type: System.Int32
+    content.vb: Public Shared Function GetMax(tableInfo As IComTabInfo, column As String) As Integer
+  overload: Database.MyDatabase.GetMax*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.GetMax(System.String,System.String)
+  commentId: M:Database.MyDatabase.GetMax(System.String,System.String)
+  id: GetMax(System.String,System.String)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: GetMax(String, String)
+  nameWithType: MyDatabase.GetMax(String, String)
+  fullName: Database.MyDatabase.GetMax(System.String, System.String)
+  type: Method
+  source:
+    id: GetMax
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1933
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static int GetMax(string tableName, string column)
+    parameters:
+    - id: tableName
+      type: System.String
+    - id: column
+      type: System.String
+    return:
+      type: System.Int32
+    content.vb: Public Shared Function GetMax(tableName As String, column As String) As Integer
+  overload: Database.MyDatabase.GetMax*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.CreateTempTable
+  commentId: M:Database.MyDatabase.CreateTempTable
+  id: CreateTempTable
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: CreateTempTable()
+  nameWithType: MyDatabase.CreateTempTable()
+  fullName: Database.MyDatabase.CreateTempTable()
+  type: Method
+  source:
+    id: CreateTempTable
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 1988
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static bool CreateTempTable()
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function CreateTempTable As Boolean
+  overload: Database.MyDatabase.CreateTempTable*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.GetResultRowTemp_new
+  commentId: M:Database.MyDatabase.GetResultRowTemp_new
+  id: GetResultRowTemp_new
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: GetResultRowTemp_new()
+  nameWithType: MyDatabase.GetResultRowTemp_new()
+  fullName: Database.MyDatabase.GetResultRowTemp_new()
+  type: Method
+  source:
+    id: GetResultRowTemp_new
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 2009
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static object[] GetResultRowTemp_new()
+    return:
+      type: System.Object[]
+    content.vb: Public Shared Function GetResultRowTemp_new As Object()
+  overload: Database.MyDatabase.GetResultRowTemp_new*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.GetResultRowTemp
+  commentId: M:Database.MyDatabase.GetResultRowTemp
+  id: GetResultRowTemp
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: GetResultRowTemp()
+  nameWithType: MyDatabase.GetResultRowTemp()
+  fullName: Database.MyDatabase.GetResultRowTemp()
+  type: Method
+  source:
+    id: GetResultRowTemp
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 2027
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static TempResultInfo GetResultRowTemp()
+    return:
+      type: Database.TempResultInfo
+    content.vb: Public Shared Function GetResultRowTemp As TempResultInfo
+  overload: Database.MyDatabase.GetResultRowTemp*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.Close_reader
+  commentId: M:Database.MyDatabase.Close_reader
+  id: Close_reader
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: Close_reader()
+  nameWithType: MyDatabase.Close_reader()
+  fullName: Database.MyDatabase.Close_reader()
+  type: Method
+  source:
+    id: Close_reader
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 2046
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static void Close_reader()
+    content.vb: Public Shared Sub Close_reader
+  overload: Database.MyDatabase.Close_reader*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.IsReaderNotAvailable
+  commentId: M:Database.MyDatabase.IsReaderNotAvailable
+  id: IsReaderNotAvailable
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: IsReaderNotAvailable()
+  nameWithType: MyDatabase.IsReaderNotAvailable()
+  fullName: Database.MyDatabase.IsReaderNotAvailable()
+  type: Method
+  source:
+    id: IsReaderNotAvailable
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 2047
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static bool IsReaderNotAvailable()
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Function IsReaderNotAvailable As Boolean
+  overload: Database.MyDatabase.IsReaderNotAvailable*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.GetRecipeStatus(Database.RecipeStatus)
+  commentId: M:Database.MyDatabase.GetRecipeStatus(Database.RecipeStatus)
+  id: GetRecipeStatus(Database.RecipeStatus)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: GetRecipeStatus(RecipeStatus)
+  nameWithType: MyDatabase.GetRecipeStatus(RecipeStatus)
+  fullName: Database.MyDatabase.GetRecipeStatus(Database.RecipeStatus)
+  type: Method
+  source:
+    id: GetRecipeStatus
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 2165
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static int GetRecipeStatus(RecipeStatus status)
+    parameters:
+    - id: status
+      type: Database.RecipeStatus
+    return:
+      type: System.Int32
+    content.vb: Public Shared Function GetRecipeStatus(status As RecipeStatus) As Integer
+  overload: Database.MyDatabase.GetRecipeStatus*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Database.MyDatabase.ShowMessageBox(System.String)
+  commentId: M:Database.MyDatabase.ShowMessageBox(System.String)
+  id: ShowMessageBox(System.String)
+  parent: Database.MyDatabase
+  langs:
+  - csharp
+  - vb
+  name: ShowMessageBox(String)
+  nameWithType: MyDatabase.ShowMessageBox(String)
+  fullName: Database.MyDatabase.ShowMessageBox(System.String)
+  type: Method
+  source:
+    id: ShowMessageBox
+    path: C:\Temp\MixingApplication\Database\MyDatabase.cs
+    startLine: 2180
+  assemblies:
+  - Database
+  namespace: Database
+  syntax:
+    content: public static void ShowMessageBox(string message)
+    parameters:
+    - id: message
+      type: System.String
+    content.vb: Public Shared Sub ShowMessageBox(message As String)
+  overload: Database.MyDatabase.ShowMessageBox*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+references:
+- uid: Database
+  commentId: N:Database
+  name: Database
+  nameWithType: Database
+  fullName: Database
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Database.IniInfo
+  commentId: T:Database.IniInfo
+  parent: Database
+  name: IniInfo
+  nameWithType: IniInfo
+  fullName: Database.IniInfo
+- uid: Database.MyDatabase.TaskEnQueue*
+  commentId: Overload:Database.MyDatabase.TaskEnQueue
+  name: TaskEnQueue
+  nameWithType: MyDatabase.TaskEnQueue
+  fullName: Database.MyDatabase.TaskEnQueue
+- uid: System.Func{System.Object}
+  commentId: T:System.Func{System.Object}
+  parent: System
+  definition: System.Func`1
+  name: Func<Object>
+  nameWithType: Func<Object>
+  fullName: System.Func<System.Object>
+  nameWithType.vb: Func(Of Object)
+  fullName.vb: System.Func(Of System.Object)
+  name.vb: Func(Of Object)
+  spec.csharp:
+  - uid: System.Func`1
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Func`1
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Threading.Tasks.Task{System.Object}
+  commentId: T:System.Threading.Tasks.Task{System.Object}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  name: Task<Object>
+  nameWithType: Task<Object>
+  fullName: System.Threading.Tasks.Task<System.Object>
+  nameWithType.vb: Task(Of Object)
+  fullName.vb: System.Threading.Tasks.Task(Of System.Object)
+  name.vb: Task(Of Object)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Func`1
+  commentId: T:System.Func`1
+  isExternal: true
+  name: Func<TResult>
+  nameWithType: Func<TResult>
+  fullName: System.Func<TResult>
+  nameWithType.vb: Func(Of TResult)
+  fullName.vb: System.Func(Of TResult)
+  name.vb: Func(Of TResult)
+  spec.csharp:
+  - uid: System.Func`1
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Func`1
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+- uid: Database.MyDatabase.info
+  commentId: F:Database.MyDatabase.info
+  isExternal: true
+- uid: Database.MyDatabase.Initialize*
+  commentId: Overload:Database.MyDatabase.Initialize
+  name: Initialize
+  nameWithType: MyDatabase.Initialize
+  fullName: Database.MyDatabase.Initialize
+- uid: Database.MyDatabase.Connect*
+  commentId: Overload:Database.MyDatabase.Connect
+  name: Connect
+  nameWithType: MyDatabase.Connect
+  fullName: Database.MyDatabase.Connect
+- uid: Database.MyDatabase.Disconnect*
+  commentId: Overload:Database.MyDatabase.Disconnect
+  name: Disconnect
+  nameWithType: MyDatabase.Disconnect
+  fullName: Database.MyDatabase.Disconnect
+- uid: Database.MyDatabase.IsConnected*
+  commentId: Overload:Database.MyDatabase.IsConnected
+  name: IsConnected
+  nameWithType: MyDatabase.IsConnected
+  fullName: Database.MyDatabase.IsConnected
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: Database.MyDatabase.SendCommand_new*
+  commentId: Overload:Database.MyDatabase.SendCommand_new
+  name: SendCommand_new
+  nameWithType: MyDatabase.SendCommand_new
+  fullName: Database.MyDatabase.SendCommand_new
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: System.Object[]
+  isExternal: true
+  name: Object[]
+  nameWithType: Object[]
+  fullName: System.Object[]
+  nameWithType.vb: Object()
+  fullName.vb: System.Object()
+  name.vb: Object()
+  spec.csharp:
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: Database.MyDatabase.SendCommand*
+  commentId: Overload:Database.MyDatabase.SendCommand
+  name: SendCommand
+  nameWithType: MyDatabase.SendCommand
+  fullName: Database.MyDatabase.SendCommand
+- uid: System.Collections.Generic.List{Database.Column}
+  commentId: T:System.Collections.Generic.List{Database.Column}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<Column>
+  nameWithType: List<Column>
+  fullName: System.Collections.Generic.List<Database.Column>
+  nameWithType.vb: List(Of Column)
+  fullName.vb: System.Collections.Generic.List(Of Database.Column)
+  name.vb: List(Of Column)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Database.Column
+    name: Column
+    nameWithType: Column
+    fullName: Database.Column
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Database.Column
+    name: Column
+    nameWithType: Column
+    fullName: Database.Column
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: Database.MyDatabase.SendCommand_Read_new*
+  commentId: Overload:Database.MyDatabase.SendCommand_Read_new
+  name: SendCommand_Read_new
+  nameWithType: MyDatabase.SendCommand_Read_new
+  fullName: Database.MyDatabase.SendCommand_Read_new
+- uid: Database.IComTabInfo
+  commentId: T:Database.IComTabInfo
+  parent: Database
+  name: IComTabInfo
+  nameWithType: IComTabInfo
+  fullName: Database.IComTabInfo
+- uid: Database.MyDatabase.SendCommand_Read*
+  commentId: Overload:Database.MyDatabase.SendCommand_Read
+  name: SendCommand_Read
+  nameWithType: MyDatabase.SendCommand_Read
+  fullName: Database.MyDatabase.SendCommand_Read
+- uid: Database.ReadInfo
+  commentId: T:Database.ReadInfo
+  parent: Database
+  name: ReadInfo
+  nameWithType: ReadInfo
+  fullName: Database.ReadInfo
+- uid: Database.MyDatabase.SendCommand_ReadAuditTrail*
+  commentId: Overload:Database.MyDatabase.SendCommand_ReadAuditTrail
+  name: SendCommand_ReadAuditTrail
+  nameWithType: MyDatabase.SendCommand_ReadAuditTrail
+  fullName: Database.MyDatabase.SendCommand_ReadAuditTrail
+- uid: System.DateTime
+  commentId: T:System.DateTime
+  parent: System
+  isExternal: true
+  name: DateTime
+  nameWithType: DateTime
+  fullName: System.DateTime
+- uid: System.String[]
+  isExternal: true
+  name: String[]
+  nameWithType: String[]
+  fullName: System.String[]
+  nameWithType.vb: String()
+  fullName.vb: System.String()
+  name.vb: String()
+  spec.csharp:
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: Database.MyDatabase.SendCommand_ReadAlarms_new*
+  commentId: Overload:Database.MyDatabase.SendCommand_ReadAlarms_new
+  name: SendCommand_ReadAlarms_new
+  nameWithType: MyDatabase.SendCommand_ReadAlarms_new
+  fullName: Database.MyDatabase.SendCommand_ReadAlarms_new
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Database.MyDatabase.SendCommand_ReadAlarms*
+  commentId: Overload:Database.MyDatabase.SendCommand_ReadAlarms
+  name: SendCommand_ReadAlarms
+  nameWithType: MyDatabase.SendCommand_ReadAlarms
+  fullName: Database.MyDatabase.SendCommand_ReadAlarms
+- uid: Database.MyDatabase.SendCommand_GetLastRecipes_new*
+  commentId: Overload:Database.MyDatabase.SendCommand_GetLastRecipes_new
+  name: SendCommand_GetLastRecipes_new
+  nameWithType: MyDatabase.SendCommand_GetLastRecipes_new
+  fullName: Database.MyDatabase.SendCommand_GetLastRecipes_new
+- uid: Database.RecipeStatus
+  commentId: T:Database.RecipeStatus
+  parent: Database
+  name: RecipeStatus
+  nameWithType: RecipeStatus
+  fullName: Database.RecipeStatus
+- uid: Database.MyDatabase.SendCommand_GetLastRecipes*
+  commentId: Overload:Database.MyDatabase.SendCommand_GetLastRecipes
+  name: SendCommand_GetLastRecipes
+  nameWithType: MyDatabase.SendCommand_GetLastRecipes
+  fullName: Database.MyDatabase.SendCommand_GetLastRecipes
+- uid: Database.MyDatabase.ReadNext*
+  commentId: Overload:Database.MyDatabase.ReadNext
+  name: ReadNext
+  nameWithType: MyDatabase.ReadNext
+  fullName: Database.MyDatabase.ReadNext
+- uid: System.Type
+  commentId: T:System.Type
+  parent: System
+  isExternal: true
+  name: Type
+  nameWithType: Type
+  fullName: System.Type
+- uid: Database.IBasTabInfo
+  commentId: T:Database.IBasTabInfo
+  parent: Database
+  name: IBasTabInfo
+  nameWithType: IBasTabInfo
+  fullName: Database.IBasTabInfo
+- uid: Database.MyDatabase.ReadNext_new*
+  commentId: Overload:Database.MyDatabase.ReadNext_new
+  name: ReadNext_new
+  nameWithType: MyDatabase.ReadNext_new
+  fullName: Database.MyDatabase.ReadNext_new
+- uid: Database.MyDatabase.ReadNextBool*
+  commentId: Overload:Database.MyDatabase.ReadNextBool
+  name: ReadNextBool
+  nameWithType: MyDatabase.ReadNextBool
+  fullName: Database.MyDatabase.ReadNextBool
+- uid: System.Boolean[]
+  isExternal: true
+  name: Boolean[]
+  nameWithType: Boolean[]
+  fullName: System.Boolean[]
+  nameWithType.vb: Boolean()
+  fullName.vb: System.Boolean()
+  name.vb: Boolean()
+  spec.csharp:
+  - uid: System.Boolean
+    name: Boolean
+    nameWithType: Boolean
+    fullName: System.Boolean
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.Boolean
+    name: Boolean
+    nameWithType: Boolean
+    fullName: System.Boolean
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: Database.MyDatabase.InsertRow*
+  commentId: Overload:Database.MyDatabase.InsertRow
+  name: InsertRow
+  nameWithType: MyDatabase.InsertRow
+  fullName: Database.MyDatabase.InsertRow
+- uid: Database.MyDatabase.InsertRow_new*
+  commentId: Overload:Database.MyDatabase.InsertRow_new
+  name: InsertRow_new
+  nameWithType: MyDatabase.InsertRow_new
+  fullName: Database.MyDatabase.InsertRow_new
+- uid: Database.MyDatabase.Update_Row*
+  commentId: Overload:Database.MyDatabase.Update_Row
+  name: Update_Row
+  nameWithType: MyDatabase.Update_Row
+  fullName: Database.MyDatabase.Update_Row
+- uid: Database.MyDatabase.DeleteRow_new*
+  commentId: Overload:Database.MyDatabase.DeleteRow_new
+  name: DeleteRow_new
+  nameWithType: MyDatabase.DeleteRow_new
+  fullName: Database.MyDatabase.DeleteRow_new
+- uid: Database.MyDatabase.DeleteRow*
+  commentId: Overload:Database.MyDatabase.DeleteRow
+  name: DeleteRow
+  nameWithType: MyDatabase.DeleteRow
+  fullName: Database.MyDatabase.DeleteRow
+- uid: Database.MyDatabase.DeleteRows*
+  commentId: Overload:Database.MyDatabase.DeleteRows
+  name: DeleteRows
+  nameWithType: MyDatabase.DeleteRows
+  fullName: Database.MyDatabase.DeleteRows
+- uid: Database.IDtTabInfo
+  commentId: T:Database.IDtTabInfo
+  parent: Database
+  name: IDtTabInfo
+  nameWithType: IDtTabInfo
+  fullName: Database.IDtTabInfo
+- uid: Database.MyDatabase.GetOneRow_new*
+  commentId: Overload:Database.MyDatabase.GetOneRow_new
+  name: GetOneRow_new
+  nameWithType: MyDatabase.GetOneRow_new
+  fullName: Database.MyDatabase.GetOneRow_new
+- uid: System.Nullable{System.Int32}
+  commentId: T:System.Nullable{System.Int32}
+  parent: System
+  definition: System.Nullable`1
+  name: Nullable<Int32>
+  nameWithType: Nullable<Int32>
+  fullName: System.Nullable<System.Int32>
+  nameWithType.vb: Nullable(Of Int32)
+  fullName.vb: System.Nullable(Of System.Int32)
+  name.vb: Nullable(Of Int32)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    nameWithType: Nullable
+    fullName: System.Nullable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    nameWithType: Nullable
+    fullName: System.Nullable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Nullable`1
+  commentId: T:System.Nullable`1
+  isExternal: true
+  name: Nullable<T>
+  nameWithType: Nullable<T>
+  fullName: System.Nullable<T>
+  nameWithType.vb: Nullable(Of T)
+  fullName.vb: System.Nullable(Of T)
+  name.vb: Nullable(Of T)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    nameWithType: Nullable
+    fullName: System.Nullable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    nameWithType: Nullable
+    fullName: System.Nullable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Database.MyDatabase.GetOneRow*
+  commentId: Overload:Database.MyDatabase.GetOneRow
+  name: GetOneRow
+  nameWithType: MyDatabase.GetOneRow
+  fullName: Database.MyDatabase.GetOneRow
+- uid: Database.MyDatabase.GetOneArrayRow_new*
+  commentId: Overload:Database.MyDatabase.GetOneArrayRow_new
+  name: GetOneArrayRow_new
+  nameWithType: MyDatabase.GetOneArrayRow_new
+  fullName: Database.MyDatabase.GetOneArrayRow_new
+- uid: Database.MyDatabase.GetOneArrayRow*
+  commentId: Overload:Database.MyDatabase.GetOneArrayRow
+  name: GetOneArrayRow
+  nameWithType: MyDatabase.GetOneArrayRow
+  fullName: Database.MyDatabase.GetOneArrayRow
+- uid: Database.MyDatabase.GetOneBoolRow_new*
+  commentId: Overload:Database.MyDatabase.GetOneBoolRow_new
+  name: GetOneBoolRow_new
+  nameWithType: MyDatabase.GetOneBoolRow_new
+  fullName: Database.MyDatabase.GetOneBoolRow_new
+- uid: Database.MyDatabase.GetOneBoolRow*
+  commentId: Overload:Database.MyDatabase.GetOneBoolRow
+  name: GetOneBoolRow
+  nameWithType: MyDatabase.GetOneBoolRow
+  fullName: Database.MyDatabase.GetOneBoolRow
+- uid: Database.MyDatabase.GetRows_new*
+  commentId: Overload:Database.MyDatabase.GetRows_new
+  name: GetRows_new
+  nameWithType: MyDatabase.GetRows_new
+  fullName: Database.MyDatabase.GetRows_new
+- uid: System.Collections.Generic.List{System.Object[]}
+  commentId: T:System.Collections.Generic.List{System.Object[]}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<Object[]>
+  nameWithType: List<Object[]>
+  fullName: System.Collections.Generic.List<System.Object[]>
+  nameWithType.vb: List(Of Object())
+  fullName.vb: System.Collections.Generic.List(Of System.Object())
+  name.vb: List(Of Object())
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Database.MyDatabase.GetRows*
+  commentId: Overload:Database.MyDatabase.GetRows
+  name: GetRows
+  nameWithType: MyDatabase.GetRows
+  fullName: Database.MyDatabase.GetRows
+- uid: System.Collections.Generic.List{Database.IComTabInfo}
+  commentId: T:System.Collections.Generic.List{Database.IComTabInfo}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<IComTabInfo>
+  nameWithType: List<IComTabInfo>
+  fullName: System.Collections.Generic.List<Database.IComTabInfo>
+  nameWithType.vb: List(Of IComTabInfo)
+  fullName.vb: System.Collections.Generic.List(Of Database.IComTabInfo)
+  name.vb: List(Of IComTabInfo)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Database.IComTabInfo
+    name: IComTabInfo
+    nameWithType: IComTabInfo
+    fullName: Database.IComTabInfo
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Database.IComTabInfo
+    name: IComTabInfo
+    nameWithType: IComTabInfo
+    fullName: Database.IComTabInfo
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Database.MyDatabase.GetAuditTrailRows_new*
+  commentId: Overload:Database.MyDatabase.GetAuditTrailRows_new
+  name: GetAuditTrailRows_new
+  nameWithType: MyDatabase.GetAuditTrailRows_new
+  fullName: Database.MyDatabase.GetAuditTrailRows_new
+- uid: Database.MyDatabase.GetAuditTrailRows*
+  commentId: Overload:Database.MyDatabase.GetAuditTrailRows
+  name: GetAuditTrailRows
+  nameWithType: MyDatabase.GetAuditTrailRows
+  fullName: Database.MyDatabase.GetAuditTrailRows
+- uid: System.Collections.Generic.List{System.String[]}
+  commentId: T:System.Collections.Generic.List{System.String[]}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<String[]>
+  nameWithType: List<String[]>
+  fullName: System.Collections.Generic.List<System.String[]>
+  nameWithType.vb: List(Of String())
+  fullName.vb: System.Collections.Generic.List(Of System.String())
+  name.vb: List(Of String())
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Database.MyDatabase.GetAlarms_new*
+  commentId: Overload:Database.MyDatabase.GetAlarms_new
+  name: GetAlarms_new
+  nameWithType: MyDatabase.GetAlarms_new
+  fullName: Database.MyDatabase.GetAlarms_new
+- uid: Database.MyDatabase.GetAlarms*
+  commentId: Overload:Database.MyDatabase.GetAlarms
+  name: GetAlarms
+  nameWithType: MyDatabase.GetAlarms
+  fullName: Database.MyDatabase.GetAlarms
+- uid: System.Collections.Generic.List{Database.AuditTrailInfo}
+  commentId: T:System.Collections.Generic.List{Database.AuditTrailInfo}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<AuditTrailInfo>
+  nameWithType: List<AuditTrailInfo>
+  fullName: System.Collections.Generic.List<Database.AuditTrailInfo>
+  nameWithType.vb: List(Of AuditTrailInfo)
+  fullName.vb: System.Collections.Generic.List(Of Database.AuditTrailInfo)
+  name.vb: List(Of AuditTrailInfo)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Database.AuditTrailInfo
+    name: AuditTrailInfo
+    nameWithType: AuditTrailInfo
+    fullName: Database.AuditTrailInfo
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Database.AuditTrailInfo
+    name: AuditTrailInfo
+    nameWithType: AuditTrailInfo
+    fullName: Database.AuditTrailInfo
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Database.MyDatabase.GetLastRecipes_new*
+  commentId: Overload:Database.MyDatabase.GetLastRecipes_new
+  name: GetLastRecipes_new
+  nameWithType: MyDatabase.GetLastRecipes_new
+  fullName: Database.MyDatabase.GetLastRecipes_new
+- uid: Database.MyDatabase.GetLastRecipes*
+  commentId: Overload:Database.MyDatabase.GetLastRecipes
+  name: GetLastRecipes
+  nameWithType: MyDatabase.GetLastRecipes
+  fullName: Database.MyDatabase.GetLastRecipes
+- uid: System.Collections.Generic.List{Database.RecipeInfo}
+  commentId: T:System.Collections.Generic.List{Database.RecipeInfo}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<RecipeInfo>
+  nameWithType: List<RecipeInfo>
+  fullName: System.Collections.Generic.List<Database.RecipeInfo>
+  nameWithType.vb: List(Of RecipeInfo)
+  fullName.vb: System.Collections.Generic.List(Of Database.RecipeInfo)
+  name.vb: List(Of RecipeInfo)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Database.RecipeInfo
+    name: RecipeInfo
+    nameWithType: RecipeInfo
+    fullName: Database.RecipeInfo
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Database.RecipeInfo
+    name: RecipeInfo
+    nameWithType: RecipeInfo
+    fullName: Database.RecipeInfo
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Database.MyDatabase.GetLastDailyTestDate*
+  commentId: Overload:Database.MyDatabase.GetLastDailyTestDate
+  name: GetLastDailyTestDate
+  nameWithType: MyDatabase.GetLastDailyTestDate
+  fullName: Database.MyDatabase.GetLastDailyTestDate
+- uid: Database.DailyTestInfo
+  commentId: T:Database.DailyTestInfo
+  parent: Database
+  name: DailyTestInfo
+  nameWithType: DailyTestInfo
+  fullName: Database.DailyTestInfo
+- uid: System.Nullable{System.DateTime}
+  commentId: T:System.Nullable{System.DateTime}
+  parent: System
+  definition: System.Nullable`1
+  name: Nullable<DateTime>
+  nameWithType: Nullable<DateTime>
+  fullName: System.Nullable<System.DateTime>
+  nameWithType.vb: Nullable(Of DateTime)
+  fullName.vb: System.Nullable(Of System.DateTime)
+  name.vb: Nullable(Of DateTime)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    nameWithType: Nullable
+    fullName: System.Nullable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.DateTime
+    name: DateTime
+    nameWithType: DateTime
+    fullName: System.DateTime
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    nameWithType: Nullable
+    fullName: System.Nullable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.DateTime
+    name: DateTime
+    nameWithType: DateTime
+    fullName: System.DateTime
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Database.MyDatabase.GetMax*
+  commentId: Overload:Database.MyDatabase.GetMax
+  name: GetMax
+  nameWithType: MyDatabase.GetMax
+  fullName: Database.MyDatabase.GetMax
+- uid: Database.MyDatabase.CreateTempTable*
+  commentId: Overload:Database.MyDatabase.CreateTempTable
+  name: CreateTempTable
+  nameWithType: MyDatabase.CreateTempTable
+  fullName: Database.MyDatabase.CreateTempTable
+- uid: Database.MyDatabase.GetResultRowTemp_new*
+  commentId: Overload:Database.MyDatabase.GetResultRowTemp_new
+  name: GetResultRowTemp_new
+  nameWithType: MyDatabase.GetResultRowTemp_new
+  fullName: Database.MyDatabase.GetResultRowTemp_new
+- uid: Database.MyDatabase.GetResultRowTemp*
+  commentId: Overload:Database.MyDatabase.GetResultRowTemp
+  name: GetResultRowTemp
+  nameWithType: MyDatabase.GetResultRowTemp
+  fullName: Database.MyDatabase.GetResultRowTemp
+- uid: Database.TempResultInfo
+  commentId: T:Database.TempResultInfo
+  parent: Database
+  name: TempResultInfo
+  nameWithType: TempResultInfo
+  fullName: Database.TempResultInfo
+- uid: Database.MyDatabase.Close_reader*
+  commentId: Overload:Database.MyDatabase.Close_reader
+  name: Close_reader
+  nameWithType: MyDatabase.Close_reader
+  fullName: Database.MyDatabase.Close_reader
+- uid: Database.MyDatabase.IsReaderNotAvailable*
+  commentId: Overload:Database.MyDatabase.IsReaderNotAvailable
+  name: IsReaderNotAvailable
+  nameWithType: MyDatabase.IsReaderNotAvailable
+  fullName: Database.MyDatabase.IsReaderNotAvailable
+- uid: Database.MyDatabase.GetRecipeStatus*
+  commentId: Overload:Database.MyDatabase.GetRecipeStatus
+  name: GetRecipeStatus
+  nameWithType: MyDatabase.GetRecipeStatus
+  fullName: Database.MyDatabase.GetRecipeStatus
+- uid: Database.MyDatabase.ShowMessageBox*
+  commentId: Overload:Database.MyDatabase.ShowMessageBox
+  name: ShowMessageBox
+  nameWithType: MyDatabase.ShowMessageBox
+  fullName: Database.MyDatabase.ShowMessageBox

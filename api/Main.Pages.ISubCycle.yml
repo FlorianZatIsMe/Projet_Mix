@@ -1,0 +1,138 @@
+### YamlMime:ManagedReference
+items:
+- uid: Main.Pages.ISubCycle
+  commentId: T:Main.Pages.ISubCycle
+  id: ISubCycle
+  parent: Main.Pages
+  children:
+  - Main.Pages.ISubCycle.EnablePage(System.Boolean)
+  - Main.Pages.ISubCycle.IsItATest
+  - Main.Pages.ISubCycle.StopCycle
+  langs:
+  - csharp
+  - vb
+  name: ISubCycle
+  nameWithType: ISubCycle
+  fullName: Main.Pages.ISubCycle
+  type: Interface
+  source:
+    id: ISubCycle
+    path: C:\Temp\MixingApplication\Main\Pages\Recipe.xaml.cs
+    startLine: 23
+  assemblies:
+  - MixingApplication
+  namespace: Main.Pages
+  syntax:
+    content: public interface ISubCycle
+    content.vb: Public Interface ISubCycle
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Main.Pages.ISubCycle.StopCycle
+  commentId: M:Main.Pages.ISubCycle.StopCycle
+  id: StopCycle
+  parent: Main.Pages.ISubCycle
+  langs:
+  - csharp
+  - vb
+  name: StopCycle()
+  nameWithType: ISubCycle.StopCycle()
+  fullName: Main.Pages.ISubCycle.StopCycle()
+  type: Method
+  source:
+    id: StopCycle
+    path: C:\Temp\MixingApplication\Main\Pages\Recipe.xaml.cs
+    startLine: 25
+  assemblies:
+  - MixingApplication
+  namespace: Main.Pages
+  syntax:
+    content: void StopCycle()
+    content.vb: Sub StopCycle
+  overload: Main.Pages.ISubCycle.StopCycle*
+- uid: Main.Pages.ISubCycle.EnablePage(System.Boolean)
+  commentId: M:Main.Pages.ISubCycle.EnablePage(System.Boolean)
+  id: EnablePage(System.Boolean)
+  parent: Main.Pages.ISubCycle
+  langs:
+  - csharp
+  - vb
+  name: EnablePage(Boolean)
+  nameWithType: ISubCycle.EnablePage(Boolean)
+  fullName: Main.Pages.ISubCycle.EnablePage(System.Boolean)
+  type: Method
+  source:
+    id: EnablePage
+    path: C:\Temp\MixingApplication\Main\Pages\Recipe.xaml.cs
+    startLine: 26
+  assemblies:
+  - MixingApplication
+  namespace: Main.Pages
+  syntax:
+    content: void EnablePage(bool enable)
+    parameters:
+    - id: enable
+      type: System.Boolean
+    content.vb: Sub EnablePage(enable As Boolean)
+  overload: Main.Pages.ISubCycle.EnablePage*
+- uid: Main.Pages.ISubCycle.IsItATest
+  commentId: M:Main.Pages.ISubCycle.IsItATest
+  id: IsItATest
+  parent: Main.Pages.ISubCycle
+  langs:
+  - csharp
+  - vb
+  name: IsItATest()
+  nameWithType: ISubCycle.IsItATest()
+  fullName: Main.Pages.ISubCycle.IsItATest()
+  type: Method
+  source:
+    id: IsItATest
+    path: C:\Temp\MixingApplication\Main\Pages\Recipe.xaml.cs
+    startLine: 27
+  assemblies:
+  - MixingApplication
+  namespace: Main.Pages
+  syntax:
+    content: bool IsItATest()
+    return:
+      type: System.Boolean
+    content.vb: Function IsItATest As Boolean
+  overload: Main.Pages.ISubCycle.IsItATest*
+references:
+- uid: Main.Pages
+  commentId: N:Main.Pages
+  name: Main.Pages
+  nameWithType: Main.Pages
+  fullName: Main.Pages
+- uid: Main.Pages.ISubCycle.StopCycle*
+  commentId: Overload:Main.Pages.ISubCycle.StopCycle
+  name: StopCycle
+  nameWithType: ISubCycle.StopCycle
+  fullName: Main.Pages.ISubCycle.StopCycle
+- uid: Main.Pages.ISubCycle.EnablePage*
+  commentId: Overload:Main.Pages.ISubCycle.EnablePage
+  name: EnablePage
+  nameWithType: ISubCycle.EnablePage
+  fullName: Main.Pages.ISubCycle.EnablePage
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Main.Pages.ISubCycle.IsItATest*
+  commentId: Overload:Main.Pages.ISubCycle.IsItATest
+  name: IsItATest
+  nameWithType: ISubCycle.IsItATest
+  fullName: Main.Pages.ISubCycle.IsItATest

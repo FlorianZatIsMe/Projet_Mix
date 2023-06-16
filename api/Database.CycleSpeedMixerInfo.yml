@@ -1,0 +1,1505 @@
+### YamlMime:ManagedReference
+items:
+- uid: Database.CycleSpeedMixerInfo
+  commentId: T:Database.CycleSpeedMixerInfo
+  id: CycleSpeedMixerInfo
+  parent: Database
+  children:
+  - Database.CycleSpeedMixerInfo.#ctor
+  - Database.CycleSpeedMixerInfo.Columns
+  - Database.CycleSpeedMixerInfo.DateTimeEnd
+  - Database.CycleSpeedMixerInfo.DateTimeStart
+  - Database.CycleSpeedMixerInfo.Id
+  - Database.CycleSpeedMixerInfo.Ids
+  - Database.CycleSpeedMixerInfo.Name
+  - Database.CycleSpeedMixerInfo.NextSeqId
+  - Database.CycleSpeedMixerInfo.NextSeqType
+  - Database.CycleSpeedMixerInfo.PressureAvg
+  - Database.CycleSpeedMixerInfo.PressureMax
+  - Database.CycleSpeedMixerInfo.PressureMin
+  - Database.CycleSpeedMixerInfo.PressureStd
+  - Database.CycleSpeedMixerInfo.PressureUnit
+  - Database.CycleSpeedMixerInfo.SeqType
+  - Database.CycleSpeedMixerInfo.SetRecipeParameters(Database.ISeqTabInfo,System.Int32)
+  - Database.CycleSpeedMixerInfo.SpeedAvg
+  - Database.CycleSpeedMixerInfo.SpeedMax
+  - Database.CycleSpeedMixerInfo.SpeedMin
+  - Database.CycleSpeedMixerInfo.SpeedStd
+  - Database.CycleSpeedMixerInfo.TabName
+  - Database.CycleSpeedMixerInfo.TimeSeqEff
+  - Database.CycleSpeedMixerInfo.TimeSeqTh
+  langs:
+  - csharp
+  - vb
+  name: CycleSpeedMixerInfo
+  nameWithType: CycleSpeedMixerInfo
+  fullName: Database.CycleSpeedMixerInfo
+  type: Class
+  source:
+    id: CycleSpeedMixerInfo
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1022
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nClass containing the infomration of the cycle speedmixer sequence database table. The table must contain at least the following colummns: \nid, \nnextSeqType, \nnextSeqId, \ndateTimeStart, \ndateTimeEnd, \ntimeMixTh, \ntimeMixEff, \npressureUnit, \nspeedMin, \nspeedMax, \npressureMin, \npressureMax, \nspeedMean, \npressureMean, \nspeedStd, \npressureStd\n<p>Creation revision: 001</p>\n"
+  remarks: This table contains the information of the cycle speedmixer sequences
+  example: []
+  syntax:
+    content: 'public class CycleSpeedMixerInfo : ICycleSeqInfo, ISeqTabInfo, IComTabInfo, IBasTabInfo'
+    content.vb: >-
+      Public Class CycleSpeedMixerInfo
+
+          Implements ICycleSeqInfo, ISeqTabInfo, IComTabInfo, IBasTabInfo
+  inheritance:
+  - System.Object
+  implements:
+  - Database.ICycleSeqInfo
+  - Database.ISeqTabInfo
+  - Database.IComTabInfo
+  - Database.IBasTabInfo
+  inheritedMembers:
+  - System.Object.ToString
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Database.CycleSpeedMixerInfo.#ctor
+  commentId: M:Database.CycleSpeedMixerInfo.#ctor
+  id: '#ctor'
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: CycleSpeedMixerInfo()
+  nameWithType: CycleSpeedMixerInfo.CycleSpeedMixerInfo()
+  fullName: Database.CycleSpeedMixerInfo.CycleSpeedMixerInfo()
+  type: Constructor
+  source:
+    id: .ctor
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1027
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nSets all the variables of the class except the values of the variable Columns\n"
+  example: []
+  syntax:
+    content: public CycleSpeedMixerInfo()
+    content.vb: Public Sub New
+  overload: Database.CycleSpeedMixerInfo.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Database.CycleSpeedMixerInfo.TabName
+  commentId: P:Database.CycleSpeedMixerInfo.TabName
+  id: TabName
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: TabName
+  nameWithType: CycleSpeedMixerInfo.TabName
+  fullName: Database.CycleSpeedMixerInfo.TabName
+  type: Property
+  source:
+    id: TabName
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1067
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public string TabName { get; }
+    parameters: []
+    return:
+      type: System.String
+      description: Name of the database table. From IBasTabInfo interface
+    content.vb: Public ReadOnly Property TabName As String
+  overload: Database.CycleSpeedMixerInfo.TabName*
+  implements:
+  - Database.IBasTabInfo.TabName
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleSpeedMixerInfo.Columns
+  commentId: P:Database.CycleSpeedMixerInfo.Columns
+  id: Columns
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: Columns
+  nameWithType: CycleSpeedMixerInfo.Columns
+  fullName: Database.CycleSpeedMixerInfo.Columns
+  type: Property
+  source:
+    id: Columns
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1070
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public List<Column> Columns { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{Database.Column}
+      description: Columns of the database table. From IBasTabInfo interface
+    content.vb: Public Property Columns As List(Of Column)
+  overload: Database.CycleSpeedMixerInfo.Columns*
+  implements:
+  - Database.IBasTabInfo.Columns
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Database.CycleSpeedMixerInfo.Ids
+  commentId: P:Database.CycleSpeedMixerInfo.Ids
+  id: Ids
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: Ids
+  nameWithType: CycleSpeedMixerInfo.Ids
+  fullName: Database.CycleSpeedMixerInfo.Ids
+  type: Property
+  source:
+    id: Ids
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1073
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public string[] Ids { get; set; }
+    parameters: []
+    return:
+      type: System.String[]
+      description: Name of the columns of the database table. From IBasTabInfo interface
+    content.vb: Public Property Ids As String()
+  overload: Database.CycleSpeedMixerInfo.Ids*
+  implements:
+  - Database.IBasTabInfo.Ids
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Database.CycleSpeedMixerInfo.SeqType
+  commentId: P:Database.CycleSpeedMixerInfo.SeqType
+  id: SeqType
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: SeqType
+  nameWithType: CycleSpeedMixerInfo.SeqType
+  fullName: Database.CycleSpeedMixerInfo.SeqType
+  type: Property
+  source:
+    id: SeqType
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1076
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int SeqType { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Identification number of the current sequential table. From ISeqTabInfo interface
+    content.vb: Public ReadOnly Property SeqType As Integer
+  overload: Database.CycleSpeedMixerInfo.SeqType*
+  implements:
+  - Database.ISeqTabInfo.SeqType
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleSpeedMixerInfo.Id
+  commentId: P:Database.CycleSpeedMixerInfo.Id
+  id: Id
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: Id
+  nameWithType: CycleSpeedMixerInfo.Id
+  fullName: Database.CycleSpeedMixerInfo.Id
+  type: Property
+  source:
+    id: Id
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1079
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int Id { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: 'Index of the id column (usually the first one: 0). This column <code>must be</code> an integer, usually automatically incremented. From IComTabInfo interface'
+    content.vb: Public ReadOnly Property Id As Integer
+  overload: Database.CycleSpeedMixerInfo.Id*
+  implements:
+  - Database.IComTabInfo.Id
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleSpeedMixerInfo.NextSeqType
+  commentId: P:Database.CycleSpeedMixerInfo.NextSeqType
+  id: NextSeqType
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: NextSeqType
+  nameWithType: CycleSpeedMixerInfo.NextSeqType
+  fullName: Database.CycleSpeedMixerInfo.NextSeqType
+  type: Property
+  source:
+    id: NextSeqType
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1081
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int NextSeqType { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the next sequential type column. The type is a variable used to identify the next sequential table. From ISeqTabInfo interface
+    content.vb: Public ReadOnly Property NextSeqType As Integer
+  overload: Database.CycleSpeedMixerInfo.NextSeqType*
+  implements:
+  - Database.ISeqTabInfo.NextSeqType
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleSpeedMixerInfo.NextSeqId
+  commentId: P:Database.CycleSpeedMixerInfo.NextSeqId
+  id: NextSeqId
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: NextSeqId
+  nameWithType: CycleSpeedMixerInfo.NextSeqId
+  fullName: Database.CycleSpeedMixerInfo.NextSeqId
+  type: Property
+  source:
+    id: NextSeqId
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1084
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int NextSeqId { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the next sequential id column. This column contains the id (see Id from IComTabInfo) of the row of the next sequential table. From ISeqTabInfo interface
+    content.vb: Public ReadOnly Property NextSeqId As Integer
+  overload: Database.CycleSpeedMixerInfo.NextSeqId*
+  implements:
+  - Database.ISeqTabInfo.NextSeqId
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleSpeedMixerInfo.Name
+  commentId: P:Database.CycleSpeedMixerInfo.Name
+  id: Name
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: CycleSpeedMixerInfo.Name
+  fullName: Database.CycleSpeedMixerInfo.Name
+  type: Property
+  source:
+    id: Name
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1087
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int Name { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the name column. This column contains the name of the sequence from the recipe
+    content.vb: Public ReadOnly Property Name As Integer
+  overload: Database.CycleSpeedMixerInfo.Name*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleSpeedMixerInfo.DateTimeStart
+  commentId: P:Database.CycleSpeedMixerInfo.DateTimeStart
+  id: DateTimeStart
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: DateTimeStart
+  nameWithType: CycleSpeedMixerInfo.DateTimeStart
+  fullName: Database.CycleSpeedMixerInfo.DateTimeStart
+  type: Property
+  source:
+    id: DateTimeStart
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1090
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int DateTimeStart { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the start date and time column. This column contains the date and time of the start of the sequence
+    content.vb: Public ReadOnly Property DateTimeStart As Integer
+  overload: Database.CycleSpeedMixerInfo.DateTimeStart*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleSpeedMixerInfo.DateTimeEnd
+  commentId: P:Database.CycleSpeedMixerInfo.DateTimeEnd
+  id: DateTimeEnd
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: DateTimeEnd
+  nameWithType: CycleSpeedMixerInfo.DateTimeEnd
+  fullName: Database.CycleSpeedMixerInfo.DateTimeEnd
+  type: Property
+  source:
+    id: DateTimeEnd
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1093
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int DateTimeEnd { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the end date and time column. This column contains the date and time of the end of the sequence
+    content.vb: Public ReadOnly Property DateTimeEnd As Integer
+  overload: Database.CycleSpeedMixerInfo.DateTimeEnd*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleSpeedMixerInfo.TimeSeqTh
+  commentId: P:Database.CycleSpeedMixerInfo.TimeSeqTh
+  id: TimeSeqTh
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: TimeSeqTh
+  nameWithType: CycleSpeedMixerInfo.TimeSeqTh
+  fullName: Database.CycleSpeedMixerInfo.TimeSeqTh
+  type: Property
+  source:
+    id: TimeSeqTh
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1096
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int TimeSeqTh { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the theoritical time of the sequence column. This column contains theoritical time of the sequence (from the recipe)
+    content.vb: Public ReadOnly Property TimeSeqTh As Integer
+  overload: Database.CycleSpeedMixerInfo.TimeSeqTh*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleSpeedMixerInfo.TimeSeqEff
+  commentId: P:Database.CycleSpeedMixerInfo.TimeSeqEff
+  id: TimeSeqEff
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: TimeSeqEff
+  nameWithType: CycleSpeedMixerInfo.TimeSeqEff
+  fullName: Database.CycleSpeedMixerInfo.TimeSeqEff
+  type: Property
+  source:
+    id: TimeSeqEff
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1099
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int TimeSeqEff { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the actual time of the sequence column. This column contains actual time of the sequence
+    content.vb: Public ReadOnly Property TimeSeqEff As Integer
+  overload: Database.CycleSpeedMixerInfo.TimeSeqEff*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleSpeedMixerInfo.PressureUnit
+  commentId: P:Database.CycleSpeedMixerInfo.PressureUnit
+  id: PressureUnit
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: PressureUnit
+  nameWithType: CycleSpeedMixerInfo.PressureUnit
+  fullName: Database.CycleSpeedMixerInfo.PressureUnit
+  type: Property
+  source:
+    id: PressureUnit
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1102
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int PressureUnit { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the pressure unit column. This column contains unit of the pressure from the recipe
+    content.vb: Public ReadOnly Property PressureUnit As Integer
+  overload: Database.CycleSpeedMixerInfo.PressureUnit*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleSpeedMixerInfo.SpeedMin
+  commentId: P:Database.CycleSpeedMixerInfo.SpeedMin
+  id: SpeedMin
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: SpeedMin
+  nameWithType: CycleSpeedMixerInfo.SpeedMin
+  fullName: Database.CycleSpeedMixerInfo.SpeedMin
+  type: Property
+  source:
+    id: SpeedMin
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1105
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int SpeedMin { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the min speed column. This column contains the minimum allowed average speed from the recipe
+    content.vb: Public ReadOnly Property SpeedMin As Integer
+  overload: Database.CycleSpeedMixerInfo.SpeedMin*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleSpeedMixerInfo.SpeedMax
+  commentId: P:Database.CycleSpeedMixerInfo.SpeedMax
+  id: SpeedMax
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: SpeedMax
+  nameWithType: CycleSpeedMixerInfo.SpeedMax
+  fullName: Database.CycleSpeedMixerInfo.SpeedMax
+  type: Property
+  source:
+    id: SpeedMax
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1108
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int SpeedMax { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the max speed column. This column contains the maximum allowed average speed from the recipe
+    content.vb: Public ReadOnly Property SpeedMax As Integer
+  overload: Database.CycleSpeedMixerInfo.SpeedMax*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleSpeedMixerInfo.PressureMin
+  commentId: P:Database.CycleSpeedMixerInfo.PressureMin
+  id: PressureMin
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: PressureMin
+  nameWithType: CycleSpeedMixerInfo.PressureMin
+  fullName: Database.CycleSpeedMixerInfo.PressureMin
+  type: Property
+  source:
+    id: PressureMin
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1111
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int PressureMin { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the min pressure column. This column contains the minimum allowed average pressure from the recipe
+    content.vb: Public ReadOnly Property PressureMin As Integer
+  overload: Database.CycleSpeedMixerInfo.PressureMin*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleSpeedMixerInfo.PressureMax
+  commentId: P:Database.CycleSpeedMixerInfo.PressureMax
+  id: PressureMax
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: PressureMax
+  nameWithType: CycleSpeedMixerInfo.PressureMax
+  fullName: Database.CycleSpeedMixerInfo.PressureMax
+  type: Property
+  source:
+    id: PressureMax
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1114
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int PressureMax { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the max pressure column. This column contains the maximum allowed average pressure from the recipe
+    content.vb: Public ReadOnly Property PressureMax As Integer
+  overload: Database.CycleSpeedMixerInfo.PressureMax*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleSpeedMixerInfo.SpeedAvg
+  commentId: P:Database.CycleSpeedMixerInfo.SpeedAvg
+  id: SpeedAvg
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: SpeedAvg
+  nameWithType: CycleSpeedMixerInfo.SpeedAvg
+  fullName: Database.CycleSpeedMixerInfo.SpeedAvg
+  type: Property
+  source:
+    id: SpeedAvg
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1117
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int SpeedAvg { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the average speed column. This column contains average of the speed during the sequence
+    content.vb: Public ReadOnly Property SpeedAvg As Integer
+  overload: Database.CycleSpeedMixerInfo.SpeedAvg*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleSpeedMixerInfo.PressureAvg
+  commentId: P:Database.CycleSpeedMixerInfo.PressureAvg
+  id: PressureAvg
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: PressureAvg
+  nameWithType: CycleSpeedMixerInfo.PressureAvg
+  fullName: Database.CycleSpeedMixerInfo.PressureAvg
+  type: Property
+  source:
+    id: PressureAvg
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1120
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int PressureAvg { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the average pressure column. This column contains average of the pressure during the sequence
+    content.vb: Public ReadOnly Property PressureAvg As Integer
+  overload: Database.CycleSpeedMixerInfo.PressureAvg*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleSpeedMixerInfo.SpeedStd
+  commentId: P:Database.CycleSpeedMixerInfo.SpeedStd
+  id: SpeedStd
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: SpeedStd
+  nameWithType: CycleSpeedMixerInfo.SpeedStd
+  fullName: Database.CycleSpeedMixerInfo.SpeedStd
+  type: Property
+  source:
+    id: SpeedStd
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1123
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int SpeedStd { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the standard deviation speed column. This column contains standard deviation of the speed during the sequence
+    content.vb: Public ReadOnly Property SpeedStd As Integer
+  overload: Database.CycleSpeedMixerInfo.SpeedStd*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleSpeedMixerInfo.PressureStd
+  commentId: P:Database.CycleSpeedMixerInfo.PressureStd
+  id: PressureStd
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: PressureStd
+  nameWithType: CycleSpeedMixerInfo.PressureStd
+  fullName: Database.CycleSpeedMixerInfo.PressureStd
+  type: Property
+  source:
+    id: PressureStd
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1126
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: public int PressureStd { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: Index of the standard deviation pressure column. This column contains standard deviation of the pressure during the sequence
+    content.vb: Public ReadOnly Property PressureStd As Integer
+  overload: Database.CycleSpeedMixerInfo.PressureStd*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Database.CycleSpeedMixerInfo.SetRecipeParameters(Database.ISeqTabInfo,System.Int32)
+  commentId: M:Database.CycleSpeedMixerInfo.SetRecipeParameters(Database.ISeqTabInfo,System.Int32)
+  id: SetRecipeParameters(Database.ISeqTabInfo,System.Int32)
+  parent: Database.CycleSpeedMixerInfo
+  langs:
+  - csharp
+  - vb
+  name: SetRecipeParameters(ISeqTabInfo, Int32)
+  nameWithType: CycleSpeedMixerInfo.SetRecipeParameters(ISeqTabInfo, Int32)
+  fullName: Database.CycleSpeedMixerInfo.SetRecipeParameters(Database.ISeqTabInfo, System.Int32)
+  type: Method
+  source:
+    id: SetRecipeParameters
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 1133
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nMethod which sets the recipe information related to the speedmixer recipe table \n"
+  example: []
+  syntax:
+    content: public void SetRecipeParameters(ISeqTabInfo recipe, int idCycle)
+    parameters:
+    - id: recipe
+      type: Database.ISeqTabInfo
+      description: Variable containing the recipe information
+    - id: idCycle
+      type: System.Int32
+      description: The value of the id column (see Id from IComTabInfo) of the row of the first cycle sequential table
+    content.vb: Public Sub SetRecipeParameters(recipe As ISeqTabInfo, idCycle As Integer)
+  overload: Database.CycleSpeedMixerInfo.SetRecipeParameters*
+  implements:
+  - Database.ICycleSeqInfo.SetRecipeParameters(Database.ISeqTabInfo,System.Int32)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Database
+  commentId: N:Database
+  name: Database
+  nameWithType: Database
+  fullName: Database
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Database.ICycleSeqInfo
+  commentId: T:Database.ICycleSeqInfo
+  parent: Database
+  name: ICycleSeqInfo
+  nameWithType: ICycleSeqInfo
+  fullName: Database.ICycleSeqInfo
+- uid: Database.ISeqTabInfo
+  commentId: T:Database.ISeqTabInfo
+  parent: Database
+  name: ISeqTabInfo
+  nameWithType: ISeqTabInfo
+  fullName: Database.ISeqTabInfo
+- uid: Database.IComTabInfo
+  commentId: T:Database.IComTabInfo
+  parent: Database
+  name: IComTabInfo
+  nameWithType: IComTabInfo
+  fullName: Database.IComTabInfo
+- uid: Database.IBasTabInfo
+  commentId: T:Database.IBasTabInfo
+  parent: Database
+  name: IBasTabInfo
+  nameWithType: IBasTabInfo
+  fullName: Database.IBasTabInfo
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Database.CycleSpeedMixerInfo.#ctor*
+  commentId: Overload:Database.CycleSpeedMixerInfo.#ctor
+  name: CycleSpeedMixerInfo
+  nameWithType: CycleSpeedMixerInfo.CycleSpeedMixerInfo
+  fullName: Database.CycleSpeedMixerInfo.CycleSpeedMixerInfo
+- uid: Database.CycleSpeedMixerInfo.TabName*
+  commentId: Overload:Database.CycleSpeedMixerInfo.TabName
+  name: TabName
+  nameWithType: CycleSpeedMixerInfo.TabName
+  fullName: Database.CycleSpeedMixerInfo.TabName
+- uid: Database.IBasTabInfo.TabName
+  commentId: P:Database.IBasTabInfo.TabName
+  parent: Database.IBasTabInfo
+  name: TabName
+  nameWithType: IBasTabInfo.TabName
+  fullName: Database.IBasTabInfo.TabName
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Database.CycleSpeedMixerInfo.Columns*
+  commentId: Overload:Database.CycleSpeedMixerInfo.Columns
+  name: Columns
+  nameWithType: CycleSpeedMixerInfo.Columns
+  fullName: Database.CycleSpeedMixerInfo.Columns
+- uid: Database.IBasTabInfo.Columns
+  commentId: P:Database.IBasTabInfo.Columns
+  parent: Database.IBasTabInfo
+  name: Columns
+  nameWithType: IBasTabInfo.Columns
+  fullName: Database.IBasTabInfo.Columns
+- uid: System.Collections.Generic.List{Database.Column}
+  commentId: T:System.Collections.Generic.List{Database.Column}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<Column>
+  nameWithType: List<Column>
+  fullName: System.Collections.Generic.List<Database.Column>
+  nameWithType.vb: List(Of Column)
+  fullName.vb: System.Collections.Generic.List(Of Database.Column)
+  name.vb: List(Of Column)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Database.Column
+    name: Column
+    nameWithType: Column
+    fullName: Database.Column
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Database.Column
+    name: Column
+    nameWithType: Column
+    fullName: Database.Column
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: Database.CycleSpeedMixerInfo.Ids*
+  commentId: Overload:Database.CycleSpeedMixerInfo.Ids
+  name: Ids
+  nameWithType: CycleSpeedMixerInfo.Ids
+  fullName: Database.CycleSpeedMixerInfo.Ids
+- uid: Database.IBasTabInfo.Ids
+  commentId: P:Database.IBasTabInfo.Ids
+  parent: Database.IBasTabInfo
+  name: Ids
+  nameWithType: IBasTabInfo.Ids
+  fullName: Database.IBasTabInfo.Ids
+- uid: System.String[]
+  isExternal: true
+  name: String[]
+  nameWithType: String[]
+  fullName: System.String[]
+  nameWithType.vb: String()
+  fullName.vb: System.String()
+  name.vb: String()
+  spec.csharp:
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: Database.CycleSpeedMixerInfo.SeqType*
+  commentId: Overload:Database.CycleSpeedMixerInfo.SeqType
+  name: SeqType
+  nameWithType: CycleSpeedMixerInfo.SeqType
+  fullName: Database.CycleSpeedMixerInfo.SeqType
+- uid: Database.ISeqTabInfo.SeqType
+  commentId: P:Database.ISeqTabInfo.SeqType
+  parent: Database.ISeqTabInfo
+  name: SeqType
+  nameWithType: ISeqTabInfo.SeqType
+  fullName: Database.ISeqTabInfo.SeqType
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Database.CycleSpeedMixerInfo.Id*
+  commentId: Overload:Database.CycleSpeedMixerInfo.Id
+  name: Id
+  nameWithType: CycleSpeedMixerInfo.Id
+  fullName: Database.CycleSpeedMixerInfo.Id
+- uid: Database.IComTabInfo.Id
+  commentId: P:Database.IComTabInfo.Id
+  parent: Database.IComTabInfo
+  name: Id
+  nameWithType: IComTabInfo.Id
+  fullName: Database.IComTabInfo.Id
+- uid: Database.CycleSpeedMixerInfo.NextSeqType*
+  commentId: Overload:Database.CycleSpeedMixerInfo.NextSeqType
+  name: NextSeqType
+  nameWithType: CycleSpeedMixerInfo.NextSeqType
+  fullName: Database.CycleSpeedMixerInfo.NextSeqType
+- uid: Database.ISeqTabInfo.NextSeqType
+  commentId: P:Database.ISeqTabInfo.NextSeqType
+  parent: Database.ISeqTabInfo
+  name: NextSeqType
+  nameWithType: ISeqTabInfo.NextSeqType
+  fullName: Database.ISeqTabInfo.NextSeqType
+- uid: Database.CycleSpeedMixerInfo.NextSeqId*
+  commentId: Overload:Database.CycleSpeedMixerInfo.NextSeqId
+  name: NextSeqId
+  nameWithType: CycleSpeedMixerInfo.NextSeqId
+  fullName: Database.CycleSpeedMixerInfo.NextSeqId
+- uid: Database.ISeqTabInfo.NextSeqId
+  commentId: P:Database.ISeqTabInfo.NextSeqId
+  parent: Database.ISeqTabInfo
+  name: NextSeqId
+  nameWithType: ISeqTabInfo.NextSeqId
+  fullName: Database.ISeqTabInfo.NextSeqId
+- uid: Database.CycleSpeedMixerInfo.Name*
+  commentId: Overload:Database.CycleSpeedMixerInfo.Name
+  name: Name
+  nameWithType: CycleSpeedMixerInfo.Name
+  fullName: Database.CycleSpeedMixerInfo.Name
+- uid: Database.CycleSpeedMixerInfo.DateTimeStart*
+  commentId: Overload:Database.CycleSpeedMixerInfo.DateTimeStart
+  name: DateTimeStart
+  nameWithType: CycleSpeedMixerInfo.DateTimeStart
+  fullName: Database.CycleSpeedMixerInfo.DateTimeStart
+- uid: Database.CycleSpeedMixerInfo.DateTimeEnd*
+  commentId: Overload:Database.CycleSpeedMixerInfo.DateTimeEnd
+  name: DateTimeEnd
+  nameWithType: CycleSpeedMixerInfo.DateTimeEnd
+  fullName: Database.CycleSpeedMixerInfo.DateTimeEnd
+- uid: Database.CycleSpeedMixerInfo.TimeSeqTh*
+  commentId: Overload:Database.CycleSpeedMixerInfo.TimeSeqTh
+  name: TimeSeqTh
+  nameWithType: CycleSpeedMixerInfo.TimeSeqTh
+  fullName: Database.CycleSpeedMixerInfo.TimeSeqTh
+- uid: Database.CycleSpeedMixerInfo.TimeSeqEff*
+  commentId: Overload:Database.CycleSpeedMixerInfo.TimeSeqEff
+  name: TimeSeqEff
+  nameWithType: CycleSpeedMixerInfo.TimeSeqEff
+  fullName: Database.CycleSpeedMixerInfo.TimeSeqEff
+- uid: Database.CycleSpeedMixerInfo.PressureUnit*
+  commentId: Overload:Database.CycleSpeedMixerInfo.PressureUnit
+  name: PressureUnit
+  nameWithType: CycleSpeedMixerInfo.PressureUnit
+  fullName: Database.CycleSpeedMixerInfo.PressureUnit
+- uid: Database.CycleSpeedMixerInfo.SpeedMin*
+  commentId: Overload:Database.CycleSpeedMixerInfo.SpeedMin
+  name: SpeedMin
+  nameWithType: CycleSpeedMixerInfo.SpeedMin
+  fullName: Database.CycleSpeedMixerInfo.SpeedMin
+- uid: Database.CycleSpeedMixerInfo.SpeedMax*
+  commentId: Overload:Database.CycleSpeedMixerInfo.SpeedMax
+  name: SpeedMax
+  nameWithType: CycleSpeedMixerInfo.SpeedMax
+  fullName: Database.CycleSpeedMixerInfo.SpeedMax
+- uid: Database.CycleSpeedMixerInfo.PressureMin*
+  commentId: Overload:Database.CycleSpeedMixerInfo.PressureMin
+  name: PressureMin
+  nameWithType: CycleSpeedMixerInfo.PressureMin
+  fullName: Database.CycleSpeedMixerInfo.PressureMin
+- uid: Database.CycleSpeedMixerInfo.PressureMax*
+  commentId: Overload:Database.CycleSpeedMixerInfo.PressureMax
+  name: PressureMax
+  nameWithType: CycleSpeedMixerInfo.PressureMax
+  fullName: Database.CycleSpeedMixerInfo.PressureMax
+- uid: Database.CycleSpeedMixerInfo.SpeedAvg*
+  commentId: Overload:Database.CycleSpeedMixerInfo.SpeedAvg
+  name: SpeedAvg
+  nameWithType: CycleSpeedMixerInfo.SpeedAvg
+  fullName: Database.CycleSpeedMixerInfo.SpeedAvg
+- uid: Database.CycleSpeedMixerInfo.PressureAvg*
+  commentId: Overload:Database.CycleSpeedMixerInfo.PressureAvg
+  name: PressureAvg
+  nameWithType: CycleSpeedMixerInfo.PressureAvg
+  fullName: Database.CycleSpeedMixerInfo.PressureAvg
+- uid: Database.CycleSpeedMixerInfo.SpeedStd*
+  commentId: Overload:Database.CycleSpeedMixerInfo.SpeedStd
+  name: SpeedStd
+  nameWithType: CycleSpeedMixerInfo.SpeedStd
+  fullName: Database.CycleSpeedMixerInfo.SpeedStd
+- uid: Database.CycleSpeedMixerInfo.PressureStd*
+  commentId: Overload:Database.CycleSpeedMixerInfo.PressureStd
+  name: PressureStd
+  nameWithType: CycleSpeedMixerInfo.PressureStd
+  fullName: Database.CycleSpeedMixerInfo.PressureStd
+- uid: Database.CycleSpeedMixerInfo.SetRecipeParameters*
+  commentId: Overload:Database.CycleSpeedMixerInfo.SetRecipeParameters
+  name: SetRecipeParameters
+  nameWithType: CycleSpeedMixerInfo.SetRecipeParameters
+  fullName: Database.CycleSpeedMixerInfo.SetRecipeParameters
+- uid: Database.ICycleSeqInfo.SetRecipeParameters(Database.ISeqTabInfo,System.Int32)
+  commentId: M:Database.ICycleSeqInfo.SetRecipeParameters(Database.ISeqTabInfo,System.Int32)
+  parent: Database.ICycleSeqInfo
+  isExternal: true
+  name: SetRecipeParameters(ISeqTabInfo, Int32)
+  nameWithType: ICycleSeqInfo.SetRecipeParameters(ISeqTabInfo, Int32)
+  fullName: Database.ICycleSeqInfo.SetRecipeParameters(Database.ISeqTabInfo, System.Int32)
+  spec.csharp:
+  - uid: Database.ICycleSeqInfo.SetRecipeParameters(Database.ISeqTabInfo,System.Int32)
+    name: SetRecipeParameters
+    nameWithType: ICycleSeqInfo.SetRecipeParameters
+    fullName: Database.ICycleSeqInfo.SetRecipeParameters
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Database.ISeqTabInfo
+    name: ISeqTabInfo
+    nameWithType: ISeqTabInfo
+    fullName: Database.ISeqTabInfo
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Database.ICycleSeqInfo.SetRecipeParameters(Database.ISeqTabInfo,System.Int32)
+    name: SetRecipeParameters
+    nameWithType: ICycleSeqInfo.SetRecipeParameters
+    fullName: Database.ICycleSeqInfo.SetRecipeParameters
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Database.ISeqTabInfo
+    name: ISeqTabInfo
+    nameWithType: ISeqTabInfo
+    fullName: Database.ISeqTabInfo
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )

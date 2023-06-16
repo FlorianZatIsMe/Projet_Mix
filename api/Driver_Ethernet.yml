@@ -1,0 +1,28 @@
+### YamlMime:ManagedReference
+items:
+- uid: Driver_Ethernet
+  commentId: N:Driver_Ethernet
+  id: Driver_Ethernet
+  children:
+  - Driver_Ethernet.Config
+  - Driver_Ethernet.Ethernet
+  langs:
+  - csharp
+  - vb
+  name: Driver_Ethernet
+  nameWithType: Driver_Ethernet
+  fullName: Driver_Ethernet
+  type: Namespace
+  assemblies:
+  - Driver_Ethernet
+references:
+- uid: Driver_Ethernet.Config
+  commentId: T:Driver_Ethernet.Config
+  name: Config
+  nameWithType: Config
+  fullName: Driver_Ethernet.Config
+- uid: Driver_Ethernet.Ethernet
+  commentId: T:Driver_Ethernet.Ethernet
+  name: Ethernet
+  nameWithType: Ethernet
+  fullName: Driver_Ethernet.Ethernet

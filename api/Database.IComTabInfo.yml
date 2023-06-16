@@ -1,0 +1,119 @@
+### YamlMime:ManagedReference
+items:
+- uid: Database.IComTabInfo
+  commentId: T:Database.IComTabInfo
+  id: IComTabInfo
+  parent: Database
+  children:
+  - Database.IComTabInfo.Id
+  langs:
+  - csharp
+  - vb
+  name: IComTabInfo
+  nameWithType: IComTabInfo
+  fullName: Database.IComTabInfo
+  type: Interface
+  source:
+    id: IComTabInfo
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 57
+  assemblies:
+  - Database
+  namespace: Database
+  summary: "\nInterface of a common database table.\nBased on the basic database table interface\n<p>Creation revision: 001</p>\n"
+  example: []
+  syntax:
+    content: 'public interface IComTabInfo : IBasTabInfo'
+    content.vb: >-
+      Public Interface IComTabInfo
+
+          Inherits IBasTabInfo
+  inheritedMembers:
+  - Database.IBasTabInfo.TabName
+  - Database.IBasTabInfo.Columns
+  - Database.IBasTabInfo.Ids
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Database.IComTabInfo.Id
+  commentId: P:Database.IComTabInfo.Id
+  id: Id
+  parent: Database.IComTabInfo
+  langs:
+  - csharp
+  - vb
+  name: Id
+  nameWithType: IComTabInfo.Id
+  fullName: Database.IComTabInfo.Id
+  type: Property
+  source:
+    id: Id
+    path: C:\Temp\MixingApplication\Database\TableInfo.cs
+    startLine: 60
+  assemblies:
+  - Database
+  namespace: Database
+  example: []
+  syntax:
+    content: int Id { get; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: 'Index of the id column (usually the first one: 0). This column <code>must be</code> an integer, usually automatically incremented.'
+    content.vb: ReadOnly Property Id As Integer
+  overload: Database.IComTabInfo.Id*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+references:
+- uid: Database
+  commentId: N:Database
+  name: Database
+  nameWithType: Database
+  fullName: Database
+- uid: Database.IBasTabInfo.TabName
+  commentId: P:Database.IBasTabInfo.TabName
+  parent: Database.IBasTabInfo
+  name: TabName
+  nameWithType: IBasTabInfo.TabName
+  fullName: Database.IBasTabInfo.TabName
+- uid: Database.IBasTabInfo.Columns
+  commentId: P:Database.IBasTabInfo.Columns
+  parent: Database.IBasTabInfo
+  name: Columns
+  nameWithType: IBasTabInfo.Columns
+  fullName: Database.IBasTabInfo.Columns
+- uid: Database.IBasTabInfo.Ids
+  commentId: P:Database.IBasTabInfo.Ids
+  parent: Database.IBasTabInfo
+  name: Ids
+  nameWithType: IBasTabInfo.Ids
+  fullName: Database.IBasTabInfo.Ids
+- uid: Database.IBasTabInfo
+  commentId: T:Database.IBasTabInfo
+  parent: Database
+  name: IBasTabInfo
+  nameWithType: IBasTabInfo
+  fullName: Database.IBasTabInfo
+- uid: Database.IComTabInfo.Id*
+  commentId: Overload:Database.IComTabInfo.Id
+  name: Id
+  nameWithType: IComTabInfo.Id
+  fullName: Database.IComTabInfo.Id
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
