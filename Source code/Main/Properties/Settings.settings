@@ -15,7 +15,7 @@
       <Value Profile="(Default)">Classe utilisée incorrecte</Value>
     </Setting>
     <Setting Name="CycleInfo_Mix_StatusField" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Statut</Value>
+      <Value Profile="(Default)">Statut du mix</Value>
     </Setting>
     <Setting Name="CycleInfo_Mix_StatusWaiting" Type="System.String" Scope="Application">
       <Value Profile="(Default)">En attente</Value>
@@ -96,7 +96,7 @@
       <Value Profile="(Default)">Recette inexistante ou en doublon</Value>
     </Setting>
     <Setting Name="CycleWeight_getWeightTimer_Interval" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">500</Value>
+      <Value Profile="(Default)">100</Value>
     </Setting>
     <Setting Name="CycleWeight_isManualAllowed" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
@@ -116,14 +116,8 @@
     <Setting Name="PreCycle_Request_StartCycle" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Voulez-vous démarrer le cycle ?</Value>
     </Setting>
-    <Setting Name="PreCycle_Request_StartCycle_Title" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Confirmation</Value>
-    </Setting>
     <Setting Name="RecipeMix_MaxPhaseNumber" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">10</Value>
-    </Setting>
-    <Setting Name="RecipeMix_ProgramName_nCharMax" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">30</Value>
     </Setting>
     <Setting Name="RecipeMix_Acceleration_Min" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">400</Value>
@@ -136,9 +130,6 @@
     </Setting>
     <Setting Name="RecipeMix_Deceleration_Max" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">500</Value>
-    </Setting>
-    <Setting Name="RecipeMix_SCurve_nCharMax" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">30</Value>
     </Setting>
     <Setting Name="RecipeMix_Speed_Min" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">800</Value>
@@ -164,12 +155,6 @@
     <Setting Name="RecipeWeight_Barcode_nCharMax" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">30</Value>
     </Setting>
-    <Setting Name="RecipeWeight_DecimalNumber_Min" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="RecipeWeight_DecimalNumber_Max" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">6</Value>
-    </Setting>
     <Setting Name="RecipeWeight_Setpoint_Min" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">0</Value>
     </Setting>
@@ -178,12 +163,6 @@
     </Setting>
     <Setting Name="RecipeWeight_Range_Max" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">10</Value>
-    </Setting>
-    <Setting Name="RecipeWeight_Max_Min" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="RecipeWeight_Max_Max" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1000</Value>
     </Setting>
     <Setting Name="ActiveAlarms_updateAlarmTimer_Interval" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1000</Value>
@@ -195,7 +174,7 @@
       <Value Profile="(Default)">.sql</Value>
     </Setting>
     <Setting Name="Archiving_maxArchiveCount" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">22</Value>
+      <Value Profile="(Default)">115</Value>
     </Setting>
     <Setting Name="ArchBack_progressBar_RefreshDelay" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">20</Value>
@@ -313,9 +292,6 @@
     <Setting Name="Recipe_Error_IncorrectRecipe" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Recette incorrecte</Value>
     </Setting>
-    <Setting Name="Recipe_Error_FrameNotSeen" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Je ne comprends pas... Pourquoi je ne vois pas de frame?</Value>
-    </Setting>
     <Setting Name="Recipe_WaitRecipeDisplayedDelay" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">25</Value>
     </Setting>
@@ -354,9 +330,6 @@
     </Setting>
     <Setting Name="Recipe_Info_ActDone" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Recette en production</Value>
-    </Setting>
-    <Setting Name="Recipe_DelAct_Error_NoRadiobt" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Ce n'est pas possible, tu mens</Value>
     </Setting>
     <Setting Name="Recipe_Request_SelectRecipe" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Veuillez sélectionner une recette</Value>
@@ -451,19 +424,10 @@
     <Setting Name="Report_Info_CycleInfoNotFound" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Informations du cycle manquantes</Value>
     </Setting>
-    <Setting Name="RecipeWeight_gG_Conversion" Type="System.Decimal" Scope="Application">
-      <Value Profile="(Default)">1</Value>
-    </Setting>
-    <Setting Name="RecipeWeight_mgG_Conversion" Type="System.Decimal" Scope="Application">
-      <Value Profile="(Default)">0.001</Value>
-    </Setting>
     <Setting Name="RecipeWeight_gG_Unit" Type="System.String" Scope="Application">
       <Value Profile="(Default)">g/g</Value>
     </Setting>
-    <Setting Name="RecipeWeight_mgG_Unit" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">mg/g</Value>
-    </Setting>
-    <Setting Name="Cycle_FinalWeight_g_Unit" Type="System.String" Scope="Application">
+    <Setting Name="General_Weight_Unit" Type="System.String" Scope="Application">
       <Value Profile="(Default)">g</Value>
     </Setting>
     <Setting Name="Recipe_Error_listIncorrect" Type="System.String" Scope="Application">
@@ -472,7 +436,7 @@
     <Setting Name="General_SystemUsername" Type="System.String" Scope="Application">
       <Value Profile="(Default)">système</Value>
     </Setting>
-    <Setting Name="RecipeWeight_NbDecimal" Type="System.Int32" Scope="Application">
+    <Setting Name="General_Weight_NbDecimal" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">3</Value>
     </Setting>
     <Setting Name="RecipeWeight_Setpoint_Label" Type="System.String" Scope="Application">
@@ -490,16 +454,16 @@
     <Setting Name="RecipeMix_Deceleration_Label" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Décelération (RPM/s)</Value>
     </Setting>
-    <Setting Name="RecipeMix_SpeedMin_Label" Type="System.String" Scope="Application">
+    <Setting Name="RecipeMix_SpeedMin_Field" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Minimum</Value>
     </Setting>
-    <Setting Name="RecipeMix_SpeedMax_Label" Type="System.String" Scope="Application">
+    <Setting Name="RecipeMix_SpeedMax_Field" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Maximum</Value>
     </Setting>
-    <Setting Name="RecipeMix_PressureMin_Label" Type="System.String" Scope="Application">
+    <Setting Name="RecipeMix_PressureMin_Field" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Minimum</Value>
     </Setting>
-    <Setting Name="RecipeMix_PressureMax_Label" Type="System.String" Scope="Application">
+    <Setting Name="RecipeMix_PressureMax_Field" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Maximum</Value>
     </Setting>
     <Setting Name="Cycle_FinalWeightRatio" Type="System.Decimal" Scope="Application">
@@ -521,13 +485,7 @@
       <Value Profile="(Default)">dd MMM yyyy HH:mm:ss</Value>
     </Setting>
     <Setting Name="RecipeWeight_Setpoint_Max" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1000</Value>
-    </Setting>
-    <Setting Name="RecipeWeight_Min_Min" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="RecipeWeight_Min_Max" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">1000</Value>
+      <Value Profile="(Default)">100</Value>
     </Setting>
     <Setting Name="Main_StartIconEn" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Resources/img_start_en.png</Value>
@@ -590,7 +548,7 @@
       <Value Profile="(Default)">5500</Value>
     </Setting>
     <Setting Name="Archiving_RowNumberTrigger" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">6020</Value>
+      <Value Profile="(Default)">5501</Value>
     </Setting>
     <Setting Name="Archiving_TextExtFile" Type="System.String" Scope="Application">
       <Value Profile="(Default)">.csv</Value>
@@ -603,18 +561,6 @@
     </Setting>
     <Setting Name="PreCycle_JobBatchNumber_NbChar" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">7</Value>
-    </Setting>
-    <Setting Name="Report_Print_Delay1_Time_ms" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">200</Value>
-    </Setting>
-    <Setting Name="Report_Print_Delay1_MaxCount" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">150</Value>
-    </Setting>
-    <Setting Name="Report_Print_Delay2_Time_ms" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1000</Value>
-    </Setting>
-    <Setting Name="Report_Print_Delay2_MaxCount" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">30</Value>
     </Setting>
     <Setting Name="AutoLogOff_min" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">15</Value>
@@ -638,7 +584,7 @@
       <Value Profile="(Default)">Numéro de job: </Value>
     </Setting>
     <Setting Name="CycleInfo_FinalWeight_Field" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Masse produit final: </Value>
+      <Value Profile="(Default)">Masse produit final (g): </Value>
     </Setting>
     <Setting Name="CycleInfo_Product_Field" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Code Produit: </Value>
@@ -676,10 +622,10 @@
     <Setting Name="Recipe_SeqName_SpeedMixer" Type="System.String" Scope="Application">
       <Value Profile="(Default)">SpeedMixer</Value>
     </Setting>
-    <Setting Name="RecipeMix_Speed_Label" Type="System.String" Scope="Application">
+    <Setting Name="RecipeMix_Speed_Field" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Vitesse (RPM)</Value>
     </Setting>
-    <Setting Name="RecipeMix_Pressure_Label" Type="System.String" Scope="Application">
+    <Setting Name="RecipeMix_Pressure_Field" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Pression (</Value>
     </Setting>
     <Setting Name="RecipeMix_VacuumButton_Field" Type="System.String" Scope="Application">
@@ -742,16 +688,16 @@
     <Setting Name="Parameters_NextCalibration_Field" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Prochaine calibration </Value>
     </Setting>
-    <Setting Name="Recipe_New_Name" Type="System.String" Scope="Application">
+    <Setting Name="Recipe_New_Name_Field" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Nom de la recette</Value>
     </Setting>
     <Setting Name="Recipe_NewSequence_Button" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Nouvelle séquence</Value>
     </Setting>
-    <Setting Name="Recipe_FinalWeight_Min" Type="System.String" Scope="Application">
+    <Setting Name="Recipe_FinalWeight_Min_Field" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Masse cible min (g)</Value>
     </Setting>
-    <Setting Name="Recipe_FinalWeight_Max" Type="System.String" Scope="Application">
+    <Setting Name="Recipe_FinalWeight_Max_Field" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Masse cible max (g)</Value>
     </Setting>
     <Setting Name="Recipe_New_Create_Button" Type="System.String" Scope="Application">
@@ -766,13 +712,13 @@
     <Setting Name="Recipe_Test_Field" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Tester recette</Value>
     </Setting>
-    <Setting Name="Recipe_Test_FinalProduct" Type="System.String" Scope="Application">
+    <Setting Name="Recipe_Test_FinalProduct_Field" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Masse produit final (g)</Value>
     </Setting>
     <Setting Name="Recipe_Test_Button" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Tester</Value>
     </Setting>
-    <Setting Name="Recipe_Copy_Name" Type="System.String" Scope="Application">
+    <Setting Name="Recipe_Copy_Name_Field" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Nom de la recette à copier</Value>
     </Setting>
     <Setting Name="Recipe_GUI_btCopy" Type="System.String" Scope="Application">
@@ -859,60 +805,6 @@
     <Setting Name="CycleInfo_Batch_Field" Type="System.String" Scope="User">
       <Value Profile="(Default)">Numéro de lot: </Value>
     </Setting>
-    <Setting Name="RecipeMix_IdDBControls" Type="Main.Pages.IdDBControls" Scope="Application">
-      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;IdDBControls xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
-  &lt;list&gt;
-    &lt;int&gt;3&lt;/int&gt;
-    &lt;int&gt;4&lt;/int&gt;
-    &lt;int&gt;8&lt;/int&gt;
-    &lt;int&gt;9&lt;/int&gt;
-    &lt;int&gt;10&lt;/int&gt;
-    &lt;int&gt;11&lt;/int&gt;
-    &lt;int&gt;12&lt;/int&gt;
-    &lt;int&gt;13&lt;/int&gt;
-    &lt;int&gt;14&lt;/int&gt;
-    &lt;int&gt;15&lt;/int&gt;
-    &lt;int&gt;16&lt;/int&gt;
-    &lt;int&gt;17&lt;/int&gt;
-    &lt;int&gt;18&lt;/int&gt;
-    &lt;int&gt;19&lt;/int&gt;
-    &lt;int&gt;20&lt;/int&gt;
-    &lt;int&gt;21&lt;/int&gt;
-    &lt;int&gt;22&lt;/int&gt;
-    &lt;int&gt;23&lt;/int&gt;
-    &lt;int&gt;24&lt;/int&gt;
-    &lt;int&gt;25&lt;/int&gt;
-    &lt;int&gt;26&lt;/int&gt;
-    &lt;int&gt;27&lt;/int&gt;
-    &lt;int&gt;28&lt;/int&gt;
-    &lt;int&gt;29&lt;/int&gt;
-    &lt;int&gt;30&lt;/int&gt;
-    &lt;int&gt;31&lt;/int&gt;
-    &lt;int&gt;32&lt;/int&gt;
-    &lt;int&gt;33&lt;/int&gt;
-    &lt;int&gt;34&lt;/int&gt;
-    &lt;int&gt;35&lt;/int&gt;
-    &lt;int&gt;36&lt;/int&gt;
-    &lt;int&gt;37&lt;/int&gt;
-    &lt;int&gt;38&lt;/int&gt;
-    &lt;int&gt;39&lt;/int&gt;
-    &lt;int&gt;40&lt;/int&gt;
-    &lt;int&gt;41&lt;/int&gt;
-  &lt;/list&gt;
-&lt;/IdDBControls&gt;</Value>
-    </Setting>
-    <Setting Name="RecipeWeight_IdDBControls" Type="Main.Pages.IdDBControls" Scope="Application">
-      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;IdDBControls xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
-  &lt;list&gt;
-    &lt;int&gt;3&lt;/int&gt;
-    &lt;int&gt;5&lt;/int&gt;
-    &lt;int&gt;8&lt;/int&gt;
-    &lt;int&gt;9&lt;/int&gt;
-  &lt;/list&gt;
-&lt;/IdDBControls&gt;</Value>
-    </Setting>
     <Setting Name="Status_GUI_lbSpeedMixer" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Statut speedmixer: </Value>
     </Setting>
@@ -927,6 +819,68 @@
     </Setting>
     <Setting Name="Status_Disconnected" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Déconnecté</Value>
+    </Setting>
+    <Setting Name="General_NoneUsername" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">aucun utilisateur</Value>
+    </Setting>
+    <Setting Name="RecipeMix_IdDBControls" Type="Main.Pages.IdDBControls" Scope="Application">
+      <Value Profile="(Default)">
+          &lt;IdDBControls xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+            &lt;list&gt;
+              &lt;int&gt;3&lt;/int&gt;
+              &lt;int&gt;4&lt;/int&gt;
+              &lt;int&gt;8&lt;/int&gt;
+              &lt;int&gt;9&lt;/int&gt;
+              &lt;int&gt;10&lt;/int&gt;
+              &lt;int&gt;11&lt;/int&gt;
+              &lt;int&gt;12&lt;/int&gt;
+              &lt;int&gt;13&lt;/int&gt;
+              &lt;int&gt;14&lt;/int&gt;
+              &lt;int&gt;15&lt;/int&gt;
+              &lt;int&gt;16&lt;/int&gt;
+              &lt;int&gt;17&lt;/int&gt;
+              &lt;int&gt;18&lt;/int&gt;
+              &lt;int&gt;19&lt;/int&gt;
+              &lt;int&gt;20&lt;/int&gt;
+              &lt;int&gt;21&lt;/int&gt;
+              &lt;int&gt;22&lt;/int&gt;
+              &lt;int&gt;23&lt;/int&gt;
+              &lt;int&gt;24&lt;/int&gt;
+              &lt;int&gt;25&lt;/int&gt;
+              &lt;int&gt;26&lt;/int&gt;
+              &lt;int&gt;27&lt;/int&gt;
+              &lt;int&gt;28&lt;/int&gt;
+              &lt;int&gt;29&lt;/int&gt;
+              &lt;int&gt;30&lt;/int&gt;
+              &lt;int&gt;31&lt;/int&gt;
+              &lt;int&gt;32&lt;/int&gt;
+              &lt;int&gt;33&lt;/int&gt;
+              &lt;int&gt;34&lt;/int&gt;
+              &lt;int&gt;35&lt;/int&gt;
+              &lt;int&gt;36&lt;/int&gt;
+              &lt;int&gt;37&lt;/int&gt;
+              &lt;int&gt;38&lt;/int&gt;
+              &lt;int&gt;39&lt;/int&gt;
+              &lt;int&gt;40&lt;/int&gt;
+              &lt;int&gt;41&lt;/int&gt;
+            &lt;/list&gt;
+          &lt;/IdDBControls&gt;
+        </Value>
+    </Setting>
+    <Setting Name="RecipeWeight_IdDBControls" Type="Main.Pages.IdDBControls" Scope="Application">
+      <Value Profile="(Default)">
+          &lt;IdDBControls xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+            &lt;list&gt;
+              &lt;int&gt;3&lt;/int&gt;
+              &lt;int&gt;5&lt;/int&gt;
+              &lt;int&gt;8&lt;/int&gt;
+              &lt;int&gt;9&lt;/int&gt;
+            &lt;/list&gt;
+          &lt;/IdDBControls&gt;
+        </Value>
+    </Setting>
+    <Setting Name="CycleMix_Request_WaitingTemp" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">La température n'est toujours pas bonne, voulez-vous continuer à attendre ?</Value>
     </Setting>
   </Settings>
 </SettingsFile>

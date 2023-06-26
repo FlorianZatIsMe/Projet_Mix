@@ -1,25 +1,15 @@
-﻿using Database;
-using Main.Properties;
-using Message;
+﻿
 using System;
-using System.Collections.Generic;
-using System.DirectoryServices;
 using System.DirectoryServices.AccountManagement;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Runtime.InteropServices;
+
+using Database;
+using Message;
 using User_Management;
-using System.Security;
+using Main.Properties;
 
 namespace Main
 {
@@ -47,6 +37,7 @@ namespace Main
         private void Click(string user = null)
         {
             logger.Debug("Click");
+            string role = "";
             btConnect.IsEnabled = false;
             Impersonator.ResetPassword();
             //Impersonator.password = Settings.Default.Default_Password;
@@ -54,38 +45,21 @@ namespace Main
             if (user == null)
             {
                 UserManagement.SetNoneAccess();
-
-                mainWindow.UpdateUser("aucun utilisateur", AccessTableInfo.NoneRole);
+                mainWindow.UpdateUser(Settings.Default.General_NoneUsername, AccessTableInfo.NoneRole);
             }
             else
             {
-                try
+                role = UserManagement.UpdateAccessTable(user, password.Password);
+
+                if (role == AccessTableInfo.NoneRole)
                 {
-                    PrincipalContext pc = new PrincipalContext(ContextType.Domain, "integra-ls.com", user, password.Password);
-                    bool isCredentialValid = pc.ValidateCredentials(user, password.Password);
-
-                    //PrincipalContext ctx = new PrincipalContext(ContextType.Domain, "integra-ls.com", user, password.Password);
-                    //MyMessageBox.Show(ctx.ValidateCredentials(user, password.Password).ToString());
-
-                    if (isCredentialValid)
-                    {
-                        if (user.ToLower() == "julien.aquilon") MyMessageBox.Show("Salut Chef");
-
-                        string role = UserManagement.UpdateAccessTable(user, password.Password);
-                        mainWindow.UpdateUser(user, role);
-                        Impersonator.password = password.Password;
-                    }
-                    else
-                    {
-                        MyMessageBox.Show(Settings.Default.LogIn_Info_PswIncorrect);
-                        goto End;
-                    }
+                    //UserManagement.SetNoneAccess();
+                    mainWindow.UpdateUser(Settings.Default.General_NoneUsername, AccessTableInfo.NoneRole);
                 }
-                catch (Exception)
+                else
                 {
-                    logger.Error("Problème de connexion avec l'active directory");
-                    MyMessageBox.Show("Problème de connexion avec l'active directory");
-                    goto End;
+                    mainWindow.UpdateUser(user, UserManagement.UpdateAccessTable(user, password.Password));
+                    Impersonator.password = password.Password;
                 }
             }
 
@@ -101,8 +75,7 @@ namespace Main
                 mainWindow.contentControlMain.Content = new Pages.Status();
             }
 
-            this.Close();
-        End:
+            if (role != AccessTableInfo.NoneRole) this.Close();
             btConnect.IsEnabled = true;
             //this.PreviewKeyDown += Window_PreviewKeyDown;
         }

@@ -39,7 +39,7 @@
         <TextBlock x:Name="lbFinalWeight" Grid.Row = "3" Grid.Column = "0" Text = "Masse cible (g) [# ; #]" Style="{DynamicResource Label1}" Margin = "10" HorizontalAlignment = "Left" VerticalAlignment = "Center"/>
         <TextBox x:Name="tbFinalWeight" Grid.Row = "3" Grid.Column = "1" Margin = "10" GotFocus="ShowKeyBoard" LostFocus="HideKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter" Style="{DynamicResource TextBoxStyle1}"/>
 
-        <Button x:Name="tbOk" Style="{DynamicResource ButtonStyle1}" Grid.Row = "5" Grid.Column = "2" Content = "{Binding Source={x:Static p:Settings.Default}, Path=OkButton_Content}" Margin = "10" Click="FxOK"/>
+        <Button x:Name="tbOk" Style="{DynamicResource ButtonStyle1}" Grid.Row = "5" Grid.Column = "2" Content = "{Binding Source={x:Static p:Settings.Default}, Path=General_GUI_btOk}" Margin = "10" Click="FxOK"/>
         <Button Grid.Row = "6" Grid.Column = "2" Content = "Annuler" Style="{DynamicResource ButtonStyle1}" Margin = "10" Click="FxAnnuler"/>
     </Grid>
 </UserControl>

@@ -6,12 +6,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using Main.Properties;
-using Driver_Ethernet_Balance;
-using Database;
 using System.Timers;
-using Message;
 using System.Configuration;
+
+using Database;
+using Driver_Ethernet_Balance;
+using Message;
+using Main.Properties;
 
 namespace Main.Pages.SubCycle
 {
@@ -30,6 +31,7 @@ namespace Main.Pages.SubCycle
     public partial class CycleWeight : UserControl, ISubCycle
     {
         private CurrentPhase currentPhase = CurrentPhase.None;
+        private static bool flag = false;
 
         private bool isBalanceFree = false;
         private bool isManual = false;
@@ -63,12 +65,13 @@ namespace Main.Pages.SubCycle
         private string message1Sampling = "Veuillez placer le poids étalon sur la balance puis appuyer sur le bouton";
         private string message1Cycle1 = "Veuillez peser le produit ";
         private string message1Cycle2 = " sur la balance puis appuyer sur le bouton";
-        private int timerInterval = 100;
+        //private int timerInterval;
 
         // Sampling variables
         //private bool isDailyTest = false;
         private decimal[] refWeights;
         private decimal[] measuredMasses;
+        private string[] refIDs;
         private int sampleNumber;
         private bool isDailyTestPass = true;
 
@@ -114,7 +117,7 @@ namespace Main.Pages.SubCycle
 
             subCycle = subCycleArg;
             contentControlMain = subCycle.contentControlMain;
-
+            
             //isSequenceOver = false;
             //isWeightCorrect = false;
             //wasBalanceFreeOnce = false;
@@ -137,7 +140,7 @@ namespace Main.Pages.SubCycle
 
             message1 = message1Cycle1 + recipeWeightValues[recipeWeightInfo.Name].ToString() + message1Cycle2;
             currentSetpoint = decimal.Parse(cycleWeightValues[cycleWeightInfo.Setpoint].ToString());
-            setpointText2 = "g [ " + cycleWeightValues[cycleWeightInfo.Min].ToString() + "; " + cycleWeightValues[cycleWeightInfo.Max].ToString() + " ]";
+            setpointText2 = "g [ " + decimal.Parse(cycleWeightValues[cycleWeightInfo.Min].ToString()).ToString("N" + recipeWeightValues[recipeWeightInfo.DecimalNumber].ToString()) + "; " + decimal.Parse(cycleWeightValues[cycleWeightInfo.Max].ToString()).ToString("N" + recipeWeightValues[recipeWeightInfo.DecimalNumber].ToString()) + " ]";
 
             InitializeComponent();
 
@@ -276,6 +279,7 @@ namespace Main.Pages.SubCycle
             //isDailyTest = true;
             sampleNumber = 0;
             List<decimal> refWeightsList = new List<decimal>();
+            List<string> refIDsList = new List<string>();
 
             for (int i = 0; i < 4; i++)
             {
@@ -284,6 +288,7 @@ namespace Main.Pages.SubCycle
                     if (config.AppSettings.Settings["DailyTest_Weight" + i.ToString()].Value != "")
                     {
                         refWeightsList.Add(decimal.Parse(config.AppSettings.Settings["DailyTest_Weight" + i.ToString()].Value));
+                        refIDsList.Add(config.AppSettings.Settings["DailyTest_WeightID" + i.ToString()].Value);
                     }
                     else
                     {
@@ -304,6 +309,7 @@ namespace Main.Pages.SubCycle
             if (Settings.Default.DailyTest_Weight3 != 0) refWeightsList.Add(Settings.Default.DailyTest_Weight3);
             if (Settings.Default.DailyTest_Weight4 != 0) refWeightsList.Add(Settings.Default.DailyTest_Weight4);*/
             refWeights = refWeightsList.ToArray();
+            refIDs = refIDsList.ToArray();
 
             currentSetpoint = refWeights[sampleNumber];
             //currentRatio = Settings.Default.DailyTestRatio;
@@ -320,7 +326,7 @@ namespace Main.Pages.SubCycle
             getWeightTimer = new Timer
             {
                 AutoReset = true,
-                Interval = timerInterval
+                Interval = Settings.Default.CycleWeight_getWeightTimer_Interval
             };
             getWeightTimer.Elapsed += GetWeightTimer_Elapsed;
             //*/
@@ -331,14 +337,22 @@ namespace Main.Pages.SubCycle
         private async void InitializeCycle()
         {
             bool exeTare = true;
-
             // If the balance is free, we block it
+
+            int count = 0;
+
+            while (!Balance.IsFree() && count < 10)
+            {
+                await Task.Delay(500);
+                count++;
+            }
+
             if (Balance.IsFree())
             {
                 Balance.BlockUse();
                 isBalanceFree = true;
             }
-
+            //MessageBox.Show("on commence " + Balance.IsFree().ToString() + ", isBalanceFree " + isBalanceFree.ToString());
             // While the balance is not free
             while (!isBalanceFree)
             {
@@ -355,9 +369,13 @@ namespace Main.Pages.SubCycle
                 else
                 {
                     // Else we're out
-                    Stop();
+                    while(!this.IsLoaded) await Task.Delay(100);
+                    contentControlMain.Content = new Pages.Status();
+                    //MessageBox.Show("alors");
+                    //Stop();
                     return;
                 }
+                await Task.Delay(1000);
             }
 
             // Connect the balance
@@ -368,11 +386,11 @@ namespace Main.Pages.SubCycle
                 // We ask the user if he wants to try to connect to the balance again
                 if (MyMessageBox.Show("La balance n'est pas connecté, voulez-vous attendre ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
-                    int count = 0;
-                    while (!Balance.IsConnected() && count < 10)
+                    int n = 0;
+                    while (!Balance.IsConnected() && n < 10)
                     {
                         await Task.Delay(1000);
-                        count++;
+                        n++;
                     }
 
                     // If he wants to wait, we connect to the balance
@@ -458,9 +476,10 @@ namespace Main.Pages.SubCycle
                         string setpoint = "#";
                         if (currentSetpoint != -1)
                         {
-                            setpoint = currentSetpoint.ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
+                            setpoint = currentSetpoint.ToString("N" + Settings.Default.General_Weight_NbDecimal);
                         }
-                        labelSetpoint.Text = setpointText1 + setpoint + setpointText2;
+                        labelSetpoint.Text = setpointText1 + setpoint + setpointText2 + 
+                            (currentPhase == CurrentPhase.DailyTest ? " (" + config.AppSettings.Settings["DailyTest_WeightID0"].Value + ")" : "");
                     }
 
                     // démarrage du timer qui lit en continue la valeur du poids et l'affiche
@@ -570,7 +589,7 @@ namespace Main.Pages.SubCycle
             }
             else
             {
-                if (General.Verify_Format(textBox: tbWeight, isNotNull: true, isNumber: true, parameter: Settings.Default.RecipeWeight_NbDecimal, min: 0))
+                if (General.Verify_Format(textBox: tbWeight, isNotNull: true, isNumber: true, parameter: Settings.Default.General_Weight_NbDecimal, min: 0))
                 {
                     validWeight = decimal.Parse(tbWeight.Text);
                 }
@@ -595,7 +614,7 @@ namespace Main.Pages.SubCycle
                 isgetWeightTaskActive = false;
                 getWeightTimer.Stop();
                 getWeightTimer.Dispose();
-                if (!Balance.IsFree()) Balance.FreeUse();
+                //if (!Balance.IsFree()) Balance.FreeUse();
                 EndCycle(validWeight);
             }
             else if (currentPhase == CurrentPhase.DailyTest)
@@ -628,7 +647,8 @@ namespace Main.Pages.SubCycle
                 {
                     // On met à jour la cible
                     currentSetpoint = refWeights[sampleNumber];
-                    labelSetpoint.Text = setpointText1 + currentSetpoint.ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
+                    labelSetpoint.Text = setpointText1 + currentSetpoint.ToString("N" + Settings.Default.General_Weight_NbDecimal) +
+                        (currentPhase == CurrentPhase.DailyTest ? " (" + config.AppSettings.Settings["DailyTest_WeightID" + sampleNumber.ToString()].Value + ")" : "");
 
                     tbWeight.Text = "";
                     tbWeight.Background = Brushes.White;
@@ -643,7 +663,7 @@ namespace Main.Pages.SubCycle
                     isgetWeightTaskActive = false;
                     getWeightTimer.Stop();
                     getWeightTimer.Dispose();
-                    if (!Balance.IsFree()) Balance.FreeUse();
+                    //if (!Balance.IsFree()) Balance.FreeUse();
 
                     // On met dans la base de données toutes les mesures (cible et valeur) avec le status
                     DailyTestInfo dailyTestInfo = new DailyTestInfo();
@@ -652,8 +672,9 @@ namespace Main.Pages.SubCycle
                     dailyTestValues[dailyTestInfo.EquipmentName] = General.equipement_name;
                     for (int i = 0; i < refWeights.Length; i++)
                     {
-                        dailyTestValues[dailyTestInfo.Setpoint1 + i] = refWeights[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
-                        dailyTestValues[dailyTestInfo.Measure1 + i] = measuredMasses[i].ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
+                        dailyTestValues[dailyTestInfo.Setpoint1 + i] = refWeights[i].ToString("N" + Settings.Default.General_Weight_NbDecimal);
+                        dailyTestValues[dailyTestInfo.Measure1 + i] = measuredMasses[i].ToString("N" + Settings.Default.General_Weight_NbDecimal);
+                        dailyTestValues[dailyTestInfo.Id1 + i] = refIDs[i];
                     }
                     dailyTestValues[dailyTestInfo.Status] = isDailyTestPass ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
                     Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(dailyTestInfo, dailyTestValues); });
@@ -704,7 +725,7 @@ namespace Main.Pages.SubCycle
                 }
                 else
                 {
-                    if (!Balance.IsFree()) Balance.FreeUse();
+                    //if (!Balance.IsFree()) Balance.FreeUse();
 
                     General.CurrentCycleInfo.UpdateCurrentWeightInfo(new string[] { validWeight.ToString() });
 
@@ -733,8 +754,8 @@ namespace Main.Pages.SubCycle
             }
             else if (currentPhase == CurrentPhase.BowlWeight)
             {
-                if (!Balance.IsFree()) Balance.FreeUse();
-                info.bowlWeight = validWeight.ToString("N" + Settings.Default.RecipeWeight_NbDecimal.ToString());
+                //if (!Balance.IsFree()) Balance.FreeUse();
+                info.bowlWeight = validWeight.ToString("N" + Settings.Default.General_Weight_NbDecimal.ToString());
                 General.StartCycle(info);
             }
         End:
@@ -744,10 +765,18 @@ namespace Main.Pages.SubCycle
         private void Stop()
         {
             isgetWeightTaskActive = false;
+
+            //if(!Balance.IsFree()) Balance.FreeUse();
+            if (contentControlMain.Content != this && contentControlMain.Content.GetType() != typeof(Pages.SubCycle.CycleWeight))
+            {
+                //Balance.FreeUse();
+            }
+            //MessageBox.Show("c'est fini " + Balance.IsFree().ToString());
+
             getWeightTimer.Stop();
             getWeightTimer.Dispose();
 
-            if (!Balance.IsFree()) Balance.FreeUse();
+            //if (!Balance.IsFree()) Balance.FreeUse();
 
             if (currentPhase == CurrentPhase.DailyTest)
             {
@@ -851,7 +880,7 @@ namespace Main.Pages.SubCycle
             isgetWeightTaskActive = false;
             getWeightTimer.Stop();
             getWeightTimer.Dispose();
-            if (!Balance.IsFree()) Balance.FreeUse();
+            //if (!Balance.IsFree()) Balance.FreeUse();
             EndCycle();
         }
 
@@ -937,8 +966,13 @@ namespace Main.Pages.SubCycle
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
             isgetWeightTaskActive = false;
+
+            if (!Balance.IsFree()) Balance.FreeUse();
+            //MessageBox.Show("Unload " + Balance.IsFree().ToString());
             getWeightTimer.Stop();
             getWeightTimer.Dispose();
+
+            //Stop();
             //if (!Balance.IsFree()) Balance.FreeUse();
             if (!isCycleEnded && (currentPhase == CurrentPhase.FinalWeight || currentPhase == CurrentPhase.Cycle))
             {

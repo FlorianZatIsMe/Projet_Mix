@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Database;
-using Main.Properties;
-using Message;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+
+using Database;
+using Message;
+using Main.Properties;
 
 namespace Main.Pages
 {
@@ -26,7 +27,7 @@ namespace Main.Pages
         private readonly static string textFilePath = Settings.Default.Archiving_textFilePath;// @"C:\Temp\CSV\"; 
         private readonly static string archiveExtFile = Settings.Default.ArchBack_ExtFile;// ".sql";
         private readonly static string textExtFile = Settings.Default.Archiving_TextExtFile;// ".csv";
-        private readonly int maxArchiveCount = Settings.Default.Archiving_maxArchiveCount;// 22;
+        private readonly static int maxArchiveCount = Settings.Default.Archiving_maxArchiveCount;// 22;
         private string lastArchiveFileName;
         private int nLines;
 
@@ -87,7 +88,8 @@ namespace Main.Pages
             {
                 DateTime lastRecordDate = ((DateTime)dpLastRecord.SelectedDate).AddDays(1);
 
-                Task<bool> task = Task<bool>.Factory.StartNew(() => ExecuteArchive(General.loggedUsername, lastRecordDate));
+                //Task<bool> task = Task<bool>.Factory.StartNew(() => ExecuteArchive(General.loggedUsername, lastRecordDate));
+                Task<bool> task = Task<bool>.Factory.StartNew(() => ExecuteArchive(lastRecordDate));
 
                 wpStatus.Visibility = Visibility.Visible;
 
@@ -97,7 +99,16 @@ namespace Main.Pages
                     await Task.Delay(Settings.Default.ArchBack_progressBar_RefreshDelay);
                 }
 
-                if (task.Result) lbArchives.Items.Insert(0, new ListBoxItem() { Content = lastArchiveFileName });
+                if (task.Result)
+                {
+                    //lbArchives.Items.Insert(0, new ListBoxItem() { Content = lastArchiveFileName });
+                    UpdateBackupList();
+                    MyMessageBox.Show(Settings.Default.Archiving_archivingSuccessfull);
+                }
+                else
+                {
+                    MyMessageBox.Show(Settings.Default.Archiving_archivingFailed);
+                }
                 lastArchiveFileName = "";
             }
             else
@@ -110,13 +121,13 @@ namespace Main.Pages
         //*
         public static bool ExecuteFullArchive()
         {
-            logger.Debug("ExecuteArchive");
+            logger.Debug("ExecuteFullArchive");
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
             CycleTableInfo cycleTableInfo = new CycleTableInfo();
             CycleWeightInfo cycleWeightInfo = new CycleWeightInfo();
             CycleSpeedMixerInfo cycleSpeedMixerInfo = new CycleSpeedMixerInfo();
+            DailyTestInfo dailyTestInfo = new DailyTestInfo();
 
-            bool isArchiveOk = true;
             Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(tableName: auditTrailInfo.TabName, nRow: Settings.Default.Archiving_RowNumberStartArchive, orderBy: auditTrailInfo.Ids[auditTrailInfo.DateTime], isOrderAsc: false); });
             object[] row = (object[])t.Result;
 
@@ -134,6 +145,8 @@ namespace Main.Pages
                 return false;
             }
 
+            return ExecuteArchive(Convert.ToDateTime(row[auditTrailInfo.DateTime]));
+            /*
             DateTime firstRecordDate;
             string firstRecordDate_s;
             try
@@ -148,7 +161,7 @@ namespace Main.Pages
                 return false;
             }
 
-            if (ExecuteArchive_new(auditTrailInfo, firstRecordDate_s)
+            if (ArchiveTable(auditTrailInfo, firstRecordDate_s)
              && DbTableToTextFile(auditTrailInfo, firstRecordDate_s))
             {
                 // Delete rows
@@ -159,7 +172,7 @@ namespace Main.Pages
                 isArchiveOk = false;
             }
 
-            if (ExecuteArchive_new(cycleTableInfo, firstRecordDate_s)
+            if (ArchiveTable(cycleTableInfo, firstRecordDate_s)
              && DbTableToTextFile(cycleTableInfo, firstRecordDate_s))
             {
                 // Delete rows
@@ -170,7 +183,7 @@ namespace Main.Pages
                 isArchiveOk = false;
             }
 
-            if (ExecuteArchive_new(cycleWeightInfo, firstRecordDate_s)
+            if (ArchiveTable(cycleWeightInfo, firstRecordDate_s)
              && DbTableToTextFile(cycleWeightInfo, firstRecordDate_s))
             {
                 // Delete rows
@@ -181,7 +194,7 @@ namespace Main.Pages
                 isArchiveOk = false;
             }
 
-            if (ExecuteArchive_new(cycleSpeedMixerInfo, firstRecordDate_s)
+            if (ArchiveTable(cycleSpeedMixerInfo, firstRecordDate_s)
              && DbTableToTextFile(cycleSpeedMixerInfo, firstRecordDate_s))
             {
                 // Delete rows
@@ -191,6 +204,107 @@ namespace Main.Pages
             {
                 isArchiveOk = false;
             }
+
+            if (ArchiveTable(dailyTestInfo, firstRecordDate_s)
+             && DbTableToTextFile(dailyTestInfo, firstRecordDate_s))
+            {
+                // Delete rows
+                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.DeleteRows_new(dailyTestInfo, firstRecordDate); });
+            }
+            else
+            {
+                isArchiveOk = false;
+            }
+
+            return isArchiveOk;*/
+        }//*/
+        //*
+        public static bool ExecuteArchive(DateTime firstRecordDate)
+        {
+            logger.Debug("ExecuteArchive");
+            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+            CycleTableInfo cycleTableInfo = new CycleTableInfo();
+            CycleWeightInfo cycleWeightInfo = new CycleWeightInfo();
+            CycleSpeedMixerInfo cycleSpeedMixerInfo = new CycleSpeedMixerInfo();
+            DailyTestInfo dailyTestInfo = new DailyTestInfo();
+            Task<object> t;
+            bool isArchiveOk = true;
+            General.count = 0;
+
+            string firstRecordDate_s;
+            try
+            {
+                //firstRecordDate = Convert.ToDateTime(row[auditTrailInfo.DateTime]);
+                firstRecordDate_s = firstRecordDate.ToString("yyyy-MM-dd HH:mm:ss");
+            }
+            catch (Exception ex)
+            {
+                MyMessageBox.Show(ex.Message);
+                logger.Error(ex.Message);
+                return false;
+            }
+
+            if (ArchiveTable(auditTrailInfo, firstRecordDate_s)
+             && DbTableToTextFile(auditTrailInfo, firstRecordDate_s))
+            {
+                // Delete rows
+                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.DeleteRows_new(auditTrailInfo, firstRecordDate); });
+            }
+            else
+            {
+                isArchiveOk = false;
+            }
+
+            if (ArchiveTable(cycleTableInfo, firstRecordDate_s)
+             && DbTableToTextFile(cycleTableInfo, firstRecordDate_s))
+            {
+                // Delete rows
+                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.DeleteRows_new(cycleTableInfo, firstRecordDate); });
+            }
+            else
+            {
+                isArchiveOk = false;
+            }
+
+            if (ArchiveTable(cycleWeightInfo, firstRecordDate_s)
+             && DbTableToTextFile(cycleWeightInfo, firstRecordDate_s))
+            {
+                // Delete rows
+                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.DeleteRows_new(cycleWeightInfo, firstRecordDate); });
+            }
+            else
+            {
+                isArchiveOk = false;
+            }
+
+            if (ArchiveTable(cycleSpeedMixerInfo, firstRecordDate_s)
+             && DbTableToTextFile(cycleSpeedMixerInfo, firstRecordDate_s))
+            {
+                // Delete rows
+                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.DeleteRows_new(cycleSpeedMixerInfo, firstRecordDate); });
+            }
+            else
+            {
+                isArchiveOk = false;
+            }
+
+            if (ArchiveTable(dailyTestInfo, firstRecordDate_s)
+             && DbTableToTextFile(dailyTestInfo, firstRecordDate_s))
+            {
+                // Delete rows
+                t = MyDatabase.TaskEnQueue(() => { return MyDatabase.DeleteRows_new(dailyTestInfo, firstRecordDate); });
+            }
+            else
+            {
+                isArchiveOk = false;
+            }
+
+            object[] values = new object[auditTrailInfo.Ids.Count()];
+            values[auditTrailInfo.Username] = General.loggedUsername;
+            values[auditTrailInfo.EventType] = Settings.Default.General_AuditTrailEvent_Event;
+            values[auditTrailInfo.Description] = isArchiveOk ? "Archivage de la base de données réussi" : "Archivage de la base de données échoué";
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTrailInfo, values); });
+            General.count = maxArchiveCount;
 
             return isArchiveOk;
         }//*/
@@ -253,7 +367,7 @@ namespace Main.Pages
 
             return isTransferSucceeded;
         }
-
+        /*
         private static bool DbTableToCSV(IComTabInfo table, int dateTimeColumnIndex, string dateTimeColumnValue)
         {
             bool isTransferSucceeded = true;
@@ -311,9 +425,9 @@ namespace Main.Pages
             }
 
             return isTransferSucceeded;
-        }
+        }*/
 
-        private static bool ExecuteArchive_new(IDtTabInfo dtTabInfo, string dateTimeColumnValue)
+        private static bool ArchiveTable(IDtTabInfo dtTabInfo, string dateTimeColumnValue)
         {
             bool isArchiveSucceeded = false;
 
@@ -336,7 +450,7 @@ namespace Main.Pages
                 RedirectStandardError = true,
                 RedirectStandardOutput = true
             };
-            var process = Process.Start(processInfo);/*
+            var process = Process.Start(processInfo);
             process.OutputDataReceived += (object sender, DataReceivedEventArgs e) => {
                 General.count++;
             };
@@ -345,39 +459,12 @@ namespace Main.Pages
             process.ErrorDataReceived += (object sender, DataReceivedEventArgs e) => {
                 General.count++;
             };
-            process.BeginErrorReadLine();*/
+            process.BeginErrorReadLine();
             process.WaitForExit();
 
             if (process.ExitCode == 0)
             {
                 isArchiveSucceeded = true;
-
-                // Il faut supprimer toutes les lignes sauvegarder
-                // audit_trail
-
-
-                /*
-                //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
-
-                // A CORRIGER : IF RESULT IS FALSE
-                Task<object> t1 = MyDatabase.TaskEnQueue(() => { return MyDatabase.DeleteRows(new AuditTrailInfo(), lastRecordDate); });
-                //MyDatabase.DeleteRows(new AuditTrailInfo(), lastRecordDate);
-
-                AuditTrailInfo auditTInfo = new AuditTrailInfo();
-                auditTInfo.C_olumns[auditTInfo.Username].Value = username;
-                auditTInfo.C_olumns[auditTInfo.EventType].Value = Settings.Default.General_AuditTrailEvent_Event;
-                auditTInfo.C_olumns[auditTInfo.Description].Value = General.auditTrail_ArchiveDesc;
-
-                // A CORRIGER : IF RESULT IS FALSE
-                Task<object> t2 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTInfo); });
-                //MyDatabase.InsertRow(auditTInfo);
-                //MyDatabase.Disconnect();
-
-                General.count = maxArchiveCount;
-
-                MyMessageBox.Show(Settings.Default.Archiving_archivingSuccessfull);
-                isArchiveSucceeded = true;
-                */
             }
             else
             {
@@ -387,87 +474,7 @@ namespace Main.Pages
 
                 MyMessageBox.Show(Settings.Default.Archiving_archivingFailed);
             }
-            General.count = 0;
-
-            process.Close();
-
-            return isArchiveSucceeded;
-        }
-        private static bool ExecuteArchive(string tableName, string dateTimeColumnId, string dateTimeColumnValue)
-        {
-            bool isArchiveSucceeded = false;
-
-            string lastArchiveFileName = DateTime.Now.ToString("yyyy.MM.dd_HH.mm.ss") + Settings.Default.Archiving_fileName_archive + DatabaseSettings.ConnectionInfo.Db + "_" + tableName + archiveExtFile;
-
-            string batchFile = Settings.Default.Archiving_Archive_batchFile;// @".\Resources\DB_backup_part_table";
-            string arg1 = "\"" + DatabaseSettings.DBAppFolder + "\"";// @"C:\Program Files\MariaDB 10.9\bin" + "\"";
-            string arg2 = DatabaseSettings.ConnectionInfo.UserID;// "root";
-            string arg3 = General.Decrypt(DatabaseSettings.ConnectionInfo.Password, General.key);// "Integra2022/";
-            string arg4 = DatabaseSettings.ConnectionInfo.Db;// dbName;
-            string arg5 = tableName;
-            string arg6 = "\"" + dateTimeColumnId + "<'" + dateTimeColumnValue + "'" + "\"";
-            string arg7 = archivingPath + lastArchiveFileName;
-            string command = batchFile + " " + arg1 + " " + arg2 + " " + arg3 + " " + arg4 + " " + arg5 + " " + arg6 + " " + arg7;
-            //MyMessageBox.Show(command);
-            var processInfo = new ProcessStartInfo("cmd.exe", "/c " + command)
-            {
-                CreateNoWindow = true,
-                UseShellExecute = false,
-                RedirectStandardError = true,
-                RedirectStandardOutput = true
-            };
-            var process = Process.Start(processInfo);/*
-            process.OutputDataReceived += (object sender, DataReceivedEventArgs e) => {
-                General.count++;
-            };
-            process.BeginOutputReadLine();
-
-            process.ErrorDataReceived += (object sender, DataReceivedEventArgs e) => {
-                General.count++;
-            };
-            process.BeginErrorReadLine();*/
-            process.WaitForExit();
-
-            if (process.ExitCode == 0)
-            {
-                isArchiveSucceeded = true;
-
-                // Il faut supprimer toutes les lignes sauvegarder
-                // audit_trail
-
-
-                /*
-                //if (!MyDatabase.IsConnected()) MyDatabase.Connect();
-
-                // A CORRIGER : IF RESULT IS FALSE
-                Task<object> t1 = MyDatabase.TaskEnQueue(() => { return MyDatabase.DeleteRows(new AuditTrailInfo(), lastRecordDate); });
-                //MyDatabase.DeleteRows(new AuditTrailInfo(), lastRecordDate);
-
-                AuditTrailInfo auditTInfo = new AuditTrailInfo();
-                auditTInfo.C_olumns[auditTInfo.Username].Value = username;
-                auditTInfo.C_olumns[auditTInfo.EventType].Value = Settings.Default.General_AuditTrailEvent_Event;
-                auditTInfo.C_olumns[auditTInfo.Description].Value = General.auditTrail_ArchiveDesc;
-
-                // A CORRIGER : IF RESULT IS FALSE
-                Task<object> t2 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow(auditTInfo); });
-                //MyDatabase.InsertRow(auditTInfo);
-                //MyDatabase.Disconnect();
-
-                General.count = maxArchiveCount;
-
-                MyMessageBox.Show(Settings.Default.Archiving_archivingSuccessfull);
-                isArchiveSucceeded = true;
-                */
-            }
-            else
-            {
-                //if (File.Exists(archivingPath + lastArchiveFileName)) File.Delete(archivingPath + lastArchiveFileName);
-
-                // audit trail (idem partout)
-
-                MyMessageBox.Show(Settings.Default.Archiving_archivingFailed);
-            }
-            General.count = 0;
+            //General.count = 0;
 
             process.Close();
 

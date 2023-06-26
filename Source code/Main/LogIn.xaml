@@ -45,7 +45,7 @@
                     Style="{DynamicResource ButtonStyle1}" 
                     Margin="10,0,0,0" 
                     Click="ButtonLogOff_Click"/>
-            <Button Content="{Binding Source={x:Static p:Settings.Default}, Path=Cancel_Button, Mode=OneWay}" 
+            <Button Content="{Binding Source={x:Static p:Settings.Default}, Path=General_GUI_btCancel, Mode=OneWay}" 
                     Style="{DynamicResource ButtonStyle1}"
                     Margin="10,0,0,0" 
                     Click="ButtonCancel_Click"/>

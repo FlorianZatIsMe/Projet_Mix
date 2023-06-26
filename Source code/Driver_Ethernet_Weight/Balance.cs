@@ -66,7 +66,7 @@ namespace Driver_Ethernet_Balance
             return eth.IsConnected();
         }
 
-        public static void BlockUse() { isFree = false; } // logger.Debug("Block"); }
+        public static void BlockUse() { isFree = false; logger.Debug("Block"); }
         public static void FreeUse() { isFree = true; logger.Debug("Free"); }
         public static bool IsFree() { return isFree; }
 

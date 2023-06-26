@@ -12,7 +12,7 @@ namespace User_Management.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.2.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.6.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -25,7 +25,7 @@ namespace User_Management.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("INTEGRA\\F-CHLOC-PRJ-LTR-RW")]
+        [global::System.Configuration.DefaultSettingValueAttribute("INTEGRA\\A-CHLOC-ENDEXO_Operator")]
         public string Group_operator {
             get {
                 return ((string)(this["Group_operator"]));
@@ -34,7 +34,7 @@ namespace User_Management.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("INTEGRA\\F-CHLOC-PRJ-LIC-RW")]
+        [global::System.Configuration.DefaultSettingValueAttribute("INTEGRA\\A-CHLOC-ENDEXO_Supervisor")]
         public string Group_supervisor {
             get {
                 return ((string)(this["Group_supervisor"]));
@@ -43,7 +43,7 @@ namespace User_Management.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("INTEGRA\\F-CHLOC-PRJ-LIC-WRX")]
+        [global::System.Configuration.DefaultSettingValueAttribute("INTEGRA\\A-CHLOC-ENDEXO_Administrator")]
         public string Group_administrator {
             get {
                 return ((string)(this["Group_administrator"]));

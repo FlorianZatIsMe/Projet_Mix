@@ -8,33 +8,6 @@ using System.Windows;
 
 namespace Database
 {
-    /// <summary>
-    /// Class containing the information of a column of a database table
-    /// <para>Creation revision: 001</para>
-    /// </summary>
-    /*
-    public class Column
-    {
-        /// <value>Name of the column (readonly)</value>
-        public string Id { get; }
-        /// <value>Name of the colummn to be displayed by the application (readonly)</value>
-        public string DisplayName { get; }
-        /// <value>Value of the row</value>
-        //public string Value { get; set; }
-        /// <summary>
-        /// Sets the value of the name and display name.
-        /// </summary>
-        /// <param name="Id_arg">Value of the name of the column to be set</param>
-        /// <param name="DisplayName_arg">Value of the display name of the column to be set</param>
-        public Column(string Id_arg = null, string DisplayName_arg = null) //public Column(string Id_arg = "", string DisplayName_arg = "")
-        {
-            // Set the value of the name of the column (=null if not set)
-            Id = Id_arg;
-            // Set the value of the display name of the column (=null if not set)
-            DisplayName = DisplayName_arg;
-        }
-    }*/
-
     //
     // INTERFACES
     //
@@ -1400,6 +1373,10 @@ namespace Database
             Measure2 = Settings.Default.DailyTest_ColN_measure1 + 1;
             Measure3 = Settings.Default.DailyTest_ColN_measure1 + 2;
             Measure4 = Settings.Default.DailyTest_ColN_measure1 + 3;
+            Id1 = Settings.Default.DailyTest_ColN_id1;
+            Id2 = Settings.Default.DailyTest_ColN_id1 + 1;
+            Id3 = Settings.Default.DailyTest_ColN_id1 + 2;
+            Id4 = Settings.Default.DailyTest_ColN_id1 + 3;
             Status = Settings.Default.DailyTest_ColN_status;
 
             // Set of the number of samples possible
@@ -1453,6 +1430,18 @@ namespace Database
 
         /// <value>Index of the measure 4 column. This column contains the measure weight of the setpoint 4</value>
         public int Measure4 { get; }
+
+        /// <value>Index of the ID of the weight 1 column. This column contains the Id of the weight 1</value>
+        public int Id1 { get; }
+
+        /// <value>Index of the ID of the weight 2 column. This column contains the Id of the weight 2</value>
+        public int Id2 { get; }
+
+        /// <value>Index of the ID of the weight 3 column. This column contains the Id of the weight 3</value>
+        public int Id3 { get; }
+
+        /// <value>Index of the ID of the weight 4 column. This column contains the Id of the weight 4</value>
+        public int Id4 { get; }
 
         /// <value>Index of the status column. This column contains the status of the sample</value>
         public int Status { get; }

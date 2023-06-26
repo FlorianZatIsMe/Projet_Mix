@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+
 using Alarm_Management;
 using Database;
-using Main.Properties;
 using Message;
+using Main.Properties;
 
 namespace Main.Pages.SubCycle
 {
@@ -23,6 +24,8 @@ namespace Main.Pages.SubCycle
 
         private readonly AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
         private int firstAlarmId;
+
+        private Thickness margin = new Thickness(0, 20, 0, 0);
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -162,7 +165,7 @@ namespace Main.Pages.SubCycle
 
         WrapPanel wrapPanel = new WrapPanel
         {
-            Margin = new Thickness(0, 10, 0, 0)
+            Margin = this.margin
         };
 
         TextBlock productName = new TextBlock
@@ -176,7 +179,7 @@ namespace Main.Pages.SubCycle
         {
             Style = (Style)this.FindResource("Label1"),
             Margin = new Thickness(20, 0, 0, 0),
-            Text = cycleWeightInfo.Descriptions[cycleWeightInfo.Min] + ": " +
+            Text = cycleWeightInfo.Descriptions[cycleWeightInfo.Min] + " (" + Settings.Default.General_Weight_Unit + "): " +
             Math.Round(cycleWeightInfo.GetMin(recipeWeight, finalWeight),
             int.Parse(recipeWeight[recipeWeightInfo.DecimalNumber].ToString()))
             .ToString("N" + recipeWeight[recipeWeightInfo.DecimalNumber].ToString())
@@ -186,7 +189,7 @@ namespace Main.Pages.SubCycle
         {
             Style = (Style)this.FindResource("Label1"),
             Margin = new Thickness(20, 0, 0, 0),
-            Text = cycleWeightInfo.Descriptions[cycleWeightInfo.Max] + ": " +
+            Text = cycleWeightInfo.Descriptions[cycleWeightInfo.Max] + " (" + Settings.Default.General_Weight_Unit + "): " +
             Math.Round(cycleWeightInfo.GetMax(recipeWeight, finalWeight),
             int.Parse(recipeWeight[recipeWeightInfo.DecimalNumber].ToString()))
             .ToString("N" + recipeWeight[recipeWeightInfo.DecimalNumber].ToString()).ToString()
@@ -196,7 +199,7 @@ namespace Main.Pages.SubCycle
         {
             Style = (Style)this.FindResource("Label1"),
             Margin = new Thickness(20, 0, 0, 0),
-            Text = cycleWeightInfo.Descriptions[cycleWeightInfo.ActualValue] + ": -"
+            Text = cycleWeightInfo.Descriptions[cycleWeightInfo.ActualValue] + " (" + Settings.Default.General_Weight_Unit + "): -"
         };
 
         wrapPanel.Children.Add(productName);
@@ -211,13 +214,9 @@ namespace Main.Pages.SubCycle
     {
         logger.Debug("NewInfo(RecipeSpeedMixerInfo recipeSpeedMixerInfo)");
 
-        CycleSpeedMixerInfo cycleSpeedMixerInfo = new CycleSpeedMixerInfo();
-        RecipeSpeedMixerInfo recipeSpeedMixerInfo = new RecipeSpeedMixerInfo();
-        // General.CurrentCycleInfo.NewInfoSpeedMixer(new string[] { array[3] });
-
         WrapPanel wrapPanel = new WrapPanel
         {
-            Margin = new Thickness(0, 10, 0, 0)
+            Margin = this.margin
         };
         /*
         TextBlock programName = new TextBlock

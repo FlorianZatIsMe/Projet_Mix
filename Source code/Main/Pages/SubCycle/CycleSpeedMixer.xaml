@@ -13,14 +13,14 @@
         <StackPanel>
             <!--<TextBlock x:Name="tbPhaseName" Text="#" Margin="0, 10, 0, 10" Style="{DynamicResource Label1}" Visibility="Collapsed"/>-->
             <WrapPanel>
-                <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=CycleSpeedMixer_PhaseNumber_Field}" 
+                <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=CycleMix_PhaseNumber_Field}" 
                            FontSize="{DynamicResource FontSize_Label2}"
                            Style="{DynamicResource Label1}"/>
                 <TextBlock x:Name="tbPhaseNumber" 
                            Text="#" 
                            FontSize="{DynamicResource FontSize_Label2}"
                            Style="{DynamicResource Label1}"/>
-                <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=CycleSpeedMixer_PhaseTime_Field}" 
+                <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=CycleMix_PhaseTime_Field}" 
                            Margin="20,0,0,0" 
                            FontSize="{DynamicResource FontSize_Label2}"
                            Style="{DynamicResource Label1}"/>
@@ -30,7 +30,7 @@
                            Style="{DynamicResource Label1}"/>
             </WrapPanel>
             <WrapPanel x:Name="wpTemperature">
-                <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=CycleSpeedMixer_Temperature_Field}" 
+                <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=CycleMix_Temperature_Field}" 
                            FontSize="{DynamicResource FontSize_Label2}"
                            Style="{DynamicResource Label1}"/>
                 <TextBlock x:Name="tbTemperatureOK" Text="#"
@@ -40,9 +40,9 @@
             <WrapPanel>
                 <TextBlock FontSize="{DynamicResource FontSize_Label2}" 
                            Style="{DynamicResource Label1}">
-                    <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=CycleSpeedMixer_Pressure_Field1}"/>
+                    <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=CycleMix_Pressure_Field1, Mode=OneWay}"/>
                     <Run Text="{Binding pressureUnit, Mode=OneWay}"/>
-                    <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=CycleSpeedMixer_Pressure_Field2}"/>
+                    <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=CycleMix_Pressure_Field2, Mode=OneWay}"/>
                 </TextBlock>
                 <TextBlock Name="tbPressure" Text="#" 
                            FontSize="{DynamicResource FontSize_Label2}"
@@ -50,7 +50,7 @@
                            Visibility="Visible"/>
             </WrapPanel>
             <WrapPanel>
-                <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=CycleSpeedMixer_Speed_Field}" 
+                <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=CycleMix_Speed_Field}" 
                            FontSize="{DynamicResource FontSize_Label2}"
                            Style="{DynamicResource Label1}"/>
                 <TextBlock Name="tbSpeed" Text="#" 

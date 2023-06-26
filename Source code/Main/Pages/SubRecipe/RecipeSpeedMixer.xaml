@@ -46,7 +46,7 @@
                        HorizontalAlignment="Center"/>
                 <Button Grid.Column="0"
                         Grid.RowSpan="2"
-                        Content="{Binding Source={x:Static p:Settings.Default}, Path=SpeedMixer_DelSequenceButton_Content}"
+                        Content="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_DelSequenceButton_Content}"
                         Margin="0,10,0,0"
                         Style="{DynamicResource ButtonStyle1}"
                         Click="ButtonDeleteSequence_Click"/>
@@ -127,14 +127,14 @@
                                   IsChecked="True"  
                                   VerticalAlignment="Center" 
                                   HorizontalAlignment="Left" 
-                                  Content="{Binding Source={x:Static p:Settings.Default}, Path=SpeedMixer_VacuumButton_Field, Mode=OneWay}" 
+                                  Content="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_VacuumButton_Field, Mode=OneWay}" 
                                   Style="{StaticResource ToggleButtonStyle1}" 
                                   Checked="cbVacuum_Checked" 
                                   Unchecked="cbVacuum_Unchecked"/>
                     <WrapPanel VerticalAlignment="Center" HorizontalAlignment="Right">
                         <TextBlock x:Name="labelPressureUnit" 
                                    Margin="0,10,0,0" 
-                                   Text="{Binding Source={x:Static p:Settings.Default}, Path=SpeedMixer_VacuumLabel_Field, Mode=OneWay}" Style="{DynamicResource Label1}"/>
+                                   Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_VacuumLabel_Field, Mode=OneWay}" Style="{DynamicResource Label1}"/>
                         <ComboBox Style="{DynamicResource ComboBoxStyle1}" Margin="10,0,0,0" x:Name="cbxPressureUnit" SelectedIndex="2" Width="Auto">
                             <ComboBoxItem Content="inHg"/>
                             <ComboBoxItem Content="Torr"/>
@@ -184,12 +184,12 @@
                               VerticalAlignment="Center" 
                               HorizontalAlignment="Left" 
                               IsChecked="True"
-                              Content="{Binding Source={x:Static p:Settings.Default}, Path=SpeedMixer_ColdTrapButton, Mode=OneWay}" Style="{StaticResource ToggleButtonStyle1}"/>
+                              Content="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_ColdTrapButton, Mode=OneWay}" Style="{StaticResource ToggleButtonStyle1}"/>
 
                 <TextBlock Margin="{StaticResource Margin1}" 
                            HorizontalAlignment="Left" 
                            Style="{DynamicResource Label1}">
-                        <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_Speed_Label, Mode=OneWay}"/>
+                        <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_Speed_Field, Mode=OneWay}"/>
                         <Run Text="{Binding TextBlockSpeedRange, Mode=OneWay}"/>
                 </TextBlock>
                 <Grid>
@@ -203,7 +203,7 @@
                         <TextBlock Margin="0,0,0,0" 
                                    TextWrapping="Wrap" 
                                    Style="{DynamicResource Label1}">
-                        <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_SpeedMin_Label, Mode=OneWay}"/>
+                        <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_SpeedMin_Field, Mode=OneWay}"/>
                         </TextBlock>
                         <TextBox x:Name="tbSpeedMin" 
                                  Margin="0,0,0,0" 
@@ -220,7 +220,7 @@
                                    TextWrapping="Wrap" 
                                    VerticalAlignment="Center" 
                                    Style="{DynamicResource Label1}">
-                        <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_SpeedMax_Label, Mode=OneWay}"/>
+                        <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_SpeedMax_Field, Mode=OneWay}"/>
                         </TextBlock>
                         <TextBox x:Name="tbSpeedMax" Margin="0,0,0,0" Width="150" Style="{DynamicResource TextBoxStyle1}" LostFocus="TbSpeedMax_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
                     </StackPanel>
@@ -230,7 +230,7 @@
                            Margin="{StaticResource Margin1}" 
                            TextWrapping="Wrap" 
                            HorizontalAlignment="Left" Style="{DynamicResource Label1}">
-                        <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_Pressure_Label, Mode=OneWay}"/>
+                        <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_Pressure_Field, Mode=OneWay}"/>
                         <Run Text="{Binding ElementName=cbxPressureUnit, Path=Text}"/>
                         <Run Text=") "/>
                         <Run Text="{Binding TextBlockPressure, Mode=OneWay}"/>
@@ -244,7 +244,7 @@
                     <StackPanel Grid.Column="0" 
                                 HorizontalAlignment="Left">
                         <TextBlock x:Name="labelPressureMin" Margin="0,0,0,0" TextWrapping="Wrap" Style="{DynamicResource Label1}">
-                        <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_PressureMin_Label, Mode=OneWay}"/>
+                        <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_PressureMin_Field, Mode=OneWay}"/>
                         </TextBlock>
                         <TextBox x:Name="tbPressureMin" Margin="0,0,0,0" Width="150" Style="{DynamicResource TextBoxStyle1}" LostFocus="TbPressureMin_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
                     </StackPanel>
@@ -252,7 +252,7 @@
                     <StackPanel Grid.Column="1" 
                                 HorizontalAlignment="Left">
                         <TextBlock x:Name="labelPressureMax" Margin="0,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Style="{DynamicResource Label1}">
-                        <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_PressureMax_Label, Mode=OneWay}"/>
+                        <Run Text="{Binding Source={x:Static p:Settings.Default}, Path=RecipeMix_PressureMax_Field, Mode=OneWay}"/>
                         </TextBlock>
                         <TextBox x:Name="tbPressureMax" Margin="0,0,0,0" Width="150" Style="{DynamicResource TextBoxStyle1}" LostFocus="TbPressureMax_LostFocus" GotFocus="ShowKeyBoard" PreviewKeyDown="HideKeyBoardIfEnter"/>
                     </StackPanel>

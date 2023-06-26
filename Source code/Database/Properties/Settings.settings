@@ -740,6 +740,10 @@
   &lt;string&gt;measure2&lt;/string&gt;
   &lt;string&gt;measure3&lt;/string&gt;
   &lt;string&gt;measure4&lt;/string&gt;
+  &lt;string&gt;id1&lt;/string&gt;
+  &lt;string&gt;id2&lt;/string&gt;
+  &lt;string&gt;id3&lt;/string&gt;
+  &lt;string&gt;id4&lt;/string&gt;
   &lt;string&gt;status&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
@@ -758,6 +762,10 @@
   &lt;string&gt;Masse mesurée&lt;/string&gt;
   &lt;string&gt;Masse mesurée&lt;/string&gt;
   &lt;string&gt;Masse mesurée&lt;/string&gt;
+  &lt;string&gt;ID poids étalon&lt;/string&gt;
+  &lt;string&gt;ID poids étalon&lt;/string&gt;
+  &lt;string&gt;ID poids étalon&lt;/string&gt;
+  &lt;string&gt;ID poids étalon&lt;/string&gt;
   &lt;string&gt;Statut&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
@@ -795,7 +803,7 @@
       <Value Profile="(Default)">11</Value>
     </Setting>
     <Setting Name="DailyTest_ColN_status" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">12</Value>
+      <Value Profile="(Default)">16</Value>
     </Setting>
     <Setting Name="DailyTest_ColN_username" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1</Value>
@@ -817,6 +825,9 @@
     </Setting>
     <Setting Name="AccessTable_ColN_AckAlarm" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="DailyTest_ColN_id1" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">12</Value>
     </Setting>
     <Setting Name="ConnectionInfo" Type="Database.ConnectionInfo" Scope="Application">
       <Value Profile="(Default)">

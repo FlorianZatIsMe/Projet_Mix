@@ -4,9 +4,10 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+
 using Database;
-using Main.Properties;
 using Message;
+using Main.Properties;
 
 namespace Main.Pages.SubRecipe
 {
@@ -113,8 +114,8 @@ namespace Main.Pages.SubRecipe
             //cbxDecimalNumbers.Text = recipeInfo.Columns[recipeInfo.DecimalNumber].Value;
             //tbDecimalNumber.Text = recipeInfo.columns[recipeInfo.decimalNumber].value;
 
-            tbSetpoint.Text = ((decimal)seqValues[recipeInfo.Setpoint]).ToString("N" + Settings.Default.RecipeWeight_NbDecimal.ToString());
-            tbRange.Text = ((decimal)seqValues[recipeInfo.Criteria]).ToString("N" + Settings.Default.RecipeWeight_NbDecimal.ToString());
+            tbSetpoint.Text = ((decimal)seqValues[recipeInfo.Setpoint]).ToString("N" + Settings.Default.General_Weight_NbDecimal.ToString());
+            tbRange.Text = ((decimal)seqValues[recipeInfo.Criteria]).ToString("N" + Settings.Default.General_Weight_NbDecimal.ToString());
             /*
 
             tbSetpoint.Text = decimal.Parse(recipeInfo.Columns[recipeInfo.Setpoint].Value).ToString("N" + int.Parse(cbxDecimalNumbers.Text).ToString());
@@ -143,7 +144,7 @@ namespace Main.Pages.SubRecipe
             recipeValues[recipeInfo.IsBarcodeUsed] = (bool)cbIsBarcode.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
             recipeValues[recipeInfo.Barcode] = tbBarcode.Text;
             recipeValues[recipeInfo.Unit] = Settings.Default.RecipeWeight_gG_Unit; // cbxUnit.Text;
-            recipeValues[recipeInfo.DecimalNumber] = Settings.Default.RecipeWeight_NbDecimal.ToString();
+            recipeValues[recipeInfo.DecimalNumber] = Settings.Default.General_Weight_NbDecimal.ToString();
             //recipeValues[recipeInfo.DecimalNumber] = cbxDecimalNumbers.Text;
             recipeValues[recipeInfo.Setpoint] = tbSetpoint.Text;
             recipeValues[recipeInfo.Criteria] = tbRange.Text;
@@ -169,7 +170,7 @@ namespace Main.Pages.SubRecipe
             recipeValues[recipeInfo.IsBarcodeUsed] = (bool)cbIsBarcode.IsChecked ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
             recipeValues[recipeInfo.Barcode] = tbBarcode.Text;
             recipeValues[recipeInfo.Unit] = Settings.Default.RecipeWeight_gG_Unit; // cbxUnit.Text;
-            recipeValues[recipeInfo.DecimalNumber] = Settings.Default.RecipeWeight_NbDecimal.ToString();
+            recipeValues[recipeInfo.DecimalNumber] = Settings.Default.General_Weight_NbDecimal.ToString();
             //recipeValues[recipeInfo.DecimalNumber] = cbxDecimalNumbers.Text;
             recipeValues[recipeInfo.Setpoint] = tbSetpoint.Text;
             recipeValues[recipeInfo.Criteria] = tbRange.Text;
@@ -243,7 +244,7 @@ namespace Main.Pages.SubRecipe
 
             TextBox textBox = sender as TextBox;
             int i = ControlsIDs[recipeWeightInfo.Setpoint];
-            int n = Settings.Default.RecipeWeight_NbDecimal;
+            int n = Settings.Default.General_Weight_NbDecimal;
             /*
             try
             {
@@ -276,7 +277,7 @@ namespace Main.Pages.SubRecipe
 
             TextBox textBox = sender as TextBox;
             int i = ControlsIDs[recipeWeightInfo.Criteria];
-            int n = Settings.Default.RecipeWeight_NbDecimal;
+            int n = Settings.Default.General_Weight_NbDecimal;
 
             /*
             try

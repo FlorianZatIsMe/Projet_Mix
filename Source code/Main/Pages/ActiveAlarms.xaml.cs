@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Data;
 using Alarm_Management;
 using Database;
-using Main.Properties;
-using System.Data;
 using User_Management;
+using Main.Properties;
 
 namespace Main.Pages
 {

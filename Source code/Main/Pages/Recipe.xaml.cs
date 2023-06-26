@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Database;
-using Main.Properties;
 using System.Collections.Specialized;
 using System.Globalization;
+using System.Configuration;
+using Database;
 using Main.Pages.SubCycle;
 using Message;
-using System.Configuration;
+using Main.Properties;
 
 namespace Main.Pages
 {
@@ -482,7 +482,7 @@ namespace Main.Pages
                 }
                 else
                 {
-                    MyMessageBox.Show(Settings.Default.Recipe_Error_FrameNotSeen);
+                    logger.Error("Je ne vois pas de ContentControl mais plutôt un " + gridMain.Children[gridMain.Children.Count - 1].GetType().ToString());
                 }
             } //while (nextSeqID != null);
 
@@ -898,8 +898,8 @@ namespace Main.Pages
             }
             else
             {
-                logger.Error(Settings.Default.Recipe_DelAct_Error_NoRadiobt);
-                MyMessageBox.Show(Settings.Default.Recipe_DelAct_Error_NoRadiobt);
+                logger.Error("Ce n'est pas possible, je ne te crois pas");
+                MyMessageBox.Show("Ce n'est pas possible, je ne te crois pas");
             }
             button.IsEnabled = true;
         }

@@ -2,8 +2,8 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Message;
 using System.Configuration;
+using Message;
 using Main.Properties;
 
 namespace Main.Pages

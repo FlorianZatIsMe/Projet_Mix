@@ -3,13 +3,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Database;
-using Driver_MODBUS;
 using System.Reflection;
+
 using Alarm_Management;
-using Main.Properties;
-using Message;
+using Database;
 using Driver_RS232_Pump;
+using Driver_MODBUS_SpeedMixer;
+using Message;
+using Main.Properties;
 
 namespace Main.Pages.SubCycle
 {
@@ -140,7 +141,7 @@ namespace Main.Pages.SubCycle
 
             // On affiche sur le panneau d'information que la séquence est en cours
             General.CurrentCycleInfo.UpdateCurrentSpeedMixerInfo(new string[] { Settings.Default.CycleInfo_Mix_StatusOnGoing });
-
+            
             // Penser à changer ça
             // A CORRIGER : IF RESULT IS FALSE
             t = MyDatabase.TaskEnQueue(() => { return MyDatabase.CreateTempTable(); });
@@ -262,13 +263,13 @@ namespace Main.Pages.SubCycle
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
-        ~CycleSpeedMixer()
+/*        ~CycleSpeedMixer()
         {
             logger.Debug("~CycleSpeedMixer");
 
             Dispose(disposing: false);
             //MyMessageBox.Show(MethodBase.GetCurrentMethod().DeclaringType.Name + " - Disconnection done");
-        }
+        }*/
         private async void SequenceController()
         {
             if (subCycle.prevSeqInfo.SeqType != cycleSpeedMixerInfo.SeqType) // Si la prochaine séquence est une séquence speedmixer
@@ -310,12 +311,13 @@ namespace Main.Pages.SubCycle
                         countBeforeStart++;
                     }
                 }
-                // Si on n'a pas encore démarré et que le capot est fermé alors on démarre le cycle
+                // Si on n'a pas encore démarré et que le capot est fermé
                 else if (!hasSequenceStarted && status[SpeedMixerSettings.MixerStatusId_SafetyOK] && !status[SpeedMixerSettings.MixerStatusId_MixerRunning])
                 {
+                    // Si on ne contrôle pas la température du cold trap ou si la température est bonne ET
+                    // Si on ne contrôle pas la pression ou si la pompe est démarrée
                     if ((currentRecipeValues[recipeSpeedMixerInfo.Coldtrap].ToString() == DatabaseSettings.General_FalseValue_Read || isTempOK) &&
-                        (wasPumpActivated || currentRecipeValues[recipeSpeedMixerInfo.Vaccum_control].ToString() == DatabaseSettings.General_FalseValue_Read)) // Si on ne conttrôle pas la température ou qu'elle est bonne et si la pompe a été commandée ou qu'on en a pas besoin, on démarre le cycle
-                    //if ((currentPhaseParameters[11] == "False" || isTempOK) && (wasPumpActivated || currentPhaseParameters[6] == "False")) // Si on ne conttrôle pas la température ou qu'elle est bonne et si la pompe a été commandée ou qu'on en a pas besoin, on démarre le cycle
+                        (currentRecipeValues[recipeSpeedMixerInfo.Vaccum_control].ToString() == DatabaseSettings.General_FalseValue_Read || wasPumpActivated))                    
                     {
                         if (!status[SpeedMixerSettings.MixerStatusId_MixerError])
                         {
@@ -336,8 +338,16 @@ namespace Main.Pages.SubCycle
                         }
                         else
                         {
-                            SpeedMixerModbus.ResetErrorProgram();
-                            logger.Debug("ResetErrorProgram");
+                            if (countBeforeStart > 6 && MyMessageBox.Show("Voulez-vous arrêter le cycle ?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                            {
+                                StopCycle();
+                            }
+                            else
+                            {
+                                SpeedMixerModbus.ResetErrorProgram();
+                                logger.Debug("ResetErrorProgram");
+                                countBeforeStart++;
+                            }
                         }
                     }
                 }
@@ -419,11 +429,17 @@ namespace Main.Pages.SubCycle
                 {
                     if (tempTooHotSince > timeoutTempTooHotBeforeCycle)
                     {
-                        tempControlTimer.Stop();
-
-                        logger.Error(Settings.Default.CycleMix_Error_TempTooHot);
-                        MyMessageBox.Show(Settings.Default.CycleMix_Error_TempTooHot);
-                        StopCycle();
+                        if (MyMessageBox.Show(Settings.Default.CycleMix_Request_WaitingTemp, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                        {
+                            tempTooHotSince = 0;
+                        }
+                        else
+                        {
+                            tempControlTimer.Stop();
+                            logger.Error(Settings.Default.CycleMix_Error_TempTooHot);
+                            MyMessageBox.Show(Settings.Default.CycleMix_Error_TempTooHot);
+                            StopCycle();
+                        }
                     }
                 }
             }

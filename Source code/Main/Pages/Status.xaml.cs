@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Main.Properties;
-using Driver_MODBUS;
+using Driver_MODBUS_SpeedMixer;
 using Driver_RS232_Pump;
 using Driver_Ethernet_Balance;
 

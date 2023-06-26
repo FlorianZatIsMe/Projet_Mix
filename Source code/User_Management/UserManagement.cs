@@ -26,8 +26,6 @@ namespace User_Management
     {
         // Access table variable: contains the values of the applicable line of the database table "access_table"
         private static bool[] CurrentAccessTable;
-        // Contains the information of the database table "access_table"
-        //private static readonly AccessTableInfo accessTableInfo = new AccessTableInfo();
         // Allow the actions logging for debug
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         //private static IniInfo info;
@@ -80,42 +78,43 @@ namespace User_Management
                     MyMessageBox.Show("Faute du programmeur, virez le tout de suite");
                     goto End;
                 }
+
+                UserPrincipal user;
+                if (username == null)
+                {
+                    user = UserPrincipal.FindByIdentity(ctx, UserPrincipal.Current.UserPrincipalName);
+                }
+                else
+                {
+                    user = UserPrincipal.FindByIdentity(ctx, username);
+                }
+
+                // find a user
+
+                if (user != null)
+                {
+                    // For each group in the variable appGroups 
+                    for (int i = 0; i < appGroups.GetLength(0); i++)
+                    {
+                        GroupPrincipal group = GroupPrincipal.FindByIdentity(ctx, appGroups[i, 0]);
+
+                        // check if user is member of that group
+                        if (user.IsMemberOf(group))
+                        {
+                            // If role wasn't updated then role = applicable application group name
+                            if (role == null) { role = appGroups[i, 1]; logger.Debug(appGroups[i, 1]); }
+                            // If role was already updated then role = guest application group name
+                            else { role = AccessTableInfo.NoneRole; logger.Debug(appGroups[i, 1]); }
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
-                MessageBox.Show(ex.Message);
+                if (username == null) MyMessageBox.Show("Vous n'avez pas accès à l'application");
+                MyMessageBox.Show(ex.Message);
                 goto End;
-            }
-
-            UserPrincipal user;
-            if (username == null)
-            {
-                user = UserPrincipal.FindByIdentity(ctx, UserPrincipal.Current.UserPrincipalName);
-            }
-            else
-            {
-                user = UserPrincipal.FindByIdentity(ctx, username);
-            }
-
-            // find a user
-
-            if (user != null)
-            {
-                // For each group in the variable appGroups 
-                for (int i = 0; i < appGroups.GetLength(0); i++)
-                {
-                    GroupPrincipal group = GroupPrincipal.FindByIdentity(ctx, appGroups[i, 0]);
-
-                    // check if user is member of that group
-                    if (user.IsMemberOf(group))
-                    {
-                        // If role wasn't updated then role = applicable application group name
-                        if (role == null) { role = appGroups[i, 1]; logger.Debug(appGroups[i, 1]); }
-                        // If role was already updated then role = guest application group name
-                        else { role = AccessTableInfo.NoneRole; logger.Debug(appGroups[i, 1]); }
-                    }
-                }
             }
 
         End:
@@ -124,58 +123,6 @@ namespace User_Management
             SetAccess(role);
             // Return the application group name
             return role;
-            /*
-
-
-            MessageBox.Show("Madame");
-
-            // Represents the active directory
-            DirectoryEntry localMachine = new DirectoryEntry("WinNT://" + Environment.MachineName + ",Computer");
-            // Temporary group variable
-            DirectoryEntry currentGroup;
-            // Temporary members variable which contains the members of the temporary group
-            object members;
-
-            // For each group in the variable appGroups 
-            for (int i = 0; i < appGroups.GetLength(0); i++)
-            {
-                // Temporary group = information of the current group
-                currentGroup = localMachine.Children.Find(appGroups[i, 0], "group");
-                // Temporary members = members of the current Temporary group
-                members = currentGroup.Invoke("members", null);
-
-                // For each member (groupMember) of the current Temporary group
-                foreach (object groupMember in (IEnumerable)members)
-                {
-                    // member = current member based on groupMember
-                    DirectoryEntry member = new DirectoryEntry(groupMember);
-                    // If the name of the current member = username (parameter of the function) then update role...
-                    if (member.Name.ToLower() == username.ToLower())
-                    {
-                        // If role wasn't updated then role = applicable application group name
-                        if (role == null) { role = appGroups[i, 1]; logger.Debug(appGroups[i, 1]); }
-                        // If role was already updated then role = guest application group name
-                        else {role = AccessTableInfo.NoneRole; logger.Debug(appGroups[i, 1]); }
-                    }
-                }
-            }
-            // If role wasn't updated at the end of the loop, role = guest application group name
-            if (role == null) role = AccessTableInfo.NoneRole;
-
-            SetAccess(role);
-            /*
-            // Update of access table variable...
-            // accessTable contains the information of the database table access_table
-            AccessTableInfo accessTable = new AccessTableInfo();
-            // Set the value of the role column to the value of the variable role previously set
-            accessTable.Columns[accessTable.Role].Value = role;
-            // Start database task: get the row of the database table access_table for the applicable role (returns bool array)
-            Task<object> t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneBoolRow(accessTable); });
-            // Storage of the database result in the variable CurrentAccessTable
-            CurrentAccessTable = (bool[])t.Result;
-            */
-            // Return the application group name
-       /*     return role;*/
         }
 
         /// <summary>

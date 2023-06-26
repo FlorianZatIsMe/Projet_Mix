@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Security.Cryptography;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Windows;
 
 namespace Main
 {
@@ -310,13 +311,31 @@ namespace Main
                 return;
             }
 
+            AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
+            object[] auditTrailValues = new object[auditTrailInfo.Ids.Count()];
+            auditTrailValues[auditTrailInfo.Username] = loggedUsername;
+            auditTrailValues[auditTrailInfo.EventType] = Settings.Default.General_AuditTrailEvent_Event;
+            auditTrailValues[auditTrailInfo.Description] = Settings.Default.Cycle_AuditTrail_StartCycleDesc1 + info.JobNumber + Settings.Default.Cycle_AuditTrail_StartCycleDesc2 + recipe_name + " version " + recipe_version;
+            Task<object> t4 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTrailInfo, auditTrailValues); });
+
+            int firstAlarmId;
+            if (AlarmManagement.ActiveAlarms.Count > 0)
+            {
+                firstAlarmId = AlarmManagement.Alarms[AlarmManagement.ActiveAlarms[0].Item1, AlarmManagement.ActiveAlarms[0].Item2].id;
+            }
+            else
+            {
+                t4.Wait();
+                Task<object> t5 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax_new(auditTrailInfo, auditTrailInfo.Ids[auditTrailInfo.Id]); });
+                firstAlarmId = ((int)t5.Result);
+            }
 
             CycleTableInfo cycleTableInfo = new CycleTableInfo();
             object[] cycleTableValues = new object[cycleTableInfo.Ids.Count()];
             cycleTableValues[cycleTableInfo.JobNumber] = info.JobNumber;
             cycleTableValues[cycleTableInfo.BatchNumber] = info.BatchNumber;
             cycleTableValues[cycleTableInfo.FinalWeight] = info.finalWeight;
-            cycleTableValues[cycleTableInfo.FinalWeightUnit] = Settings.Default.Cycle_FinalWeight_g_Unit;
+            cycleTableValues[cycleTableInfo.FinalWeightUnit] = Settings.Default.General_Weight_Unit;
             cycleTableValues[cycleTableInfo.ItemNumber] = recipe_name;
             cycleTableValues[cycleTableInfo.RecipeName] = recipe_name;
             cycleTableValues[cycleTableInfo.RecipeVersion] = recipe_version;
@@ -324,6 +343,8 @@ namespace Main
             cycleTableValues[cycleTableInfo.Username] = General.loggedUsername;
             cycleTableValues[cycleTableInfo.IsItATest] = info.isTest ? DatabaseSettings.General_TrueValue_Write : DatabaseSettings.General_FalseValue_Write;
             cycleTableValues[cycleTableInfo.bowlWeight] = info.bowlWeight;
+            cycleTableValues[cycleTableInfo.DateTimeStartCycle] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            cycleTableValues[cycleTableInfo.FirstAlarmId] = firstAlarmId;
 
             // A CORRIGER : IF RESULT IS FALSE
             Task<object> t1 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(cycleTableInfo, cycleTableValues); });
@@ -371,6 +392,7 @@ namespace Main
 
             CurrentCycleInfo.InitializeSequenceNumber(); //'2022-09-20 11:52:10
 
+            /*
             AuditTrailInfo auditTrailInfo = new AuditTrailInfo();
             object[] auditTrailValues = new object[auditTrailInfo.Ids.Count()];
             auditTrailValues[auditTrailInfo.Username] = loggedUsername;
@@ -379,7 +401,6 @@ namespace Main
 
             // A CORRIGER : IF RESULT IS FALSE
             Task<object> t4 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(auditTrailInfo, auditTrailValues); });
-
             int firstAlarmId;
             if (AlarmManagement.ActiveAlarms.Count > 0) firstAlarmId = AlarmManagement.Alarms[AlarmManagement.ActiveAlarms[0].Item1, AlarmManagement.ActiveAlarms[0].Item2].id;
             else
@@ -395,7 +416,7 @@ namespace Main
             cycleTableValues[cycleTableInfo.FirstAlarmId] = firstAlarmId;
 
             // A CORRIGER : IF RESULT IS FALSE
-            Task<object> t6 = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row_new(cycleTableInfo, cycleTableValues, idCycle); });
+            Task<object> t6 = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row_new(cycleTableInfo, cycleTableValues, idCycle); });*/
             //MyDatabase.Update_Row(cycleTableInfo, idCycle.ToString());
 
             SubCycleArg subCycleArg = new SubCycleArg(
@@ -527,8 +548,8 @@ namespace Main
             int lastAlarmId = ((int)t6.Result);
             cycleTableValues[cycleTableInfo.DateTimeEndCycle] = DateTime.Now.ToString(Settings.Default.DateTime_Format_Write);
             cycleTableValues[cycleTableInfo.LastAlarmId] = lastAlarmId;
-            cycleTableValues[cycleTableInfo.lastWeightTh] = finalWeight.ToString("N" + Settings.Default.RecipeWeight_NbDecimal.ToString());
-            cycleTableValues[cycleTableInfo.lastWeightEff] = bowlWeight.ToString("N" + Settings.Default.RecipeWeight_NbDecimal.ToString());
+            cycleTableValues[cycleTableInfo.lastWeightTh] = finalWeight.ToString("N" + Settings.Default.General_Weight_NbDecimal.ToString());
+            cycleTableValues[cycleTableInfo.lastWeightEff] = bowlWeight.ToString("N" + Settings.Default.General_Weight_NbDecimal.ToString());
             cycleTableValues[cycleTableInfo.Comment] = nextSeqInfo.comment;
 
             // A CORRIGER : IF RESULT IS FALSE
@@ -572,7 +593,23 @@ namespace Main
 
         public static void ShowKeyBoard()
         {
-            if (keyBoardProcess == null)
+            try
+            {
+                while(keyBoardProcess != null && !keyBoardProcess.HasExited)
+                {
+                    keyBoardProcess.Kill();
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+            }
+
+            if (keyBoardProcess != null)
+            {
+                keyBoardProcess.Start();
+            }
+            else
             {
                 keyBoardProcess = Process.Start("osk.exe");
             }
@@ -585,13 +622,16 @@ namespace Main
                 if (keyBoardProcess != null)
                 {
                     //info.Window.Activate();
+                    
                     keyBoardProcess.Kill();
-                    keyBoardProcess = null;
+                    
+                    //keyBoardProcess.Close();
+                    //keyBoardProcess = null;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                logger.Error(ex.Message);
             }
 
         }

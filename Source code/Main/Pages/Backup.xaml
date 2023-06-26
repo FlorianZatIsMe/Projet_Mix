@@ -35,6 +35,7 @@
                     Click="Restore_Click"/>
             <ListBox Margin="0,10,0,0" x:Name="lbBackups" 
                      HorizontalAlignment="Left" 
+                     FontSize="{DynamicResource FontSize_ListBox1}"
                      Width="Auto" Height="Auto" 
                      MaxHeight="600" 
                      ScrollViewer.VerticalScrollBarVisibility="Auto"/>

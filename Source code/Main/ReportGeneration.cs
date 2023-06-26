@@ -1,6 +1,4 @@
-﻿using Alarm_Management;
-using Database;
-using Main.Properties;
+﻿
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using System;
@@ -10,12 +8,15 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Principal;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Diagnostics;
-using Message;
 using System.Runtime.InteropServices;
+
+using Alarm_Management;
+using Database;
+using Message;
+using Main.Properties;
 
 namespace Main
 {
@@ -38,6 +39,7 @@ namespace Main
         private string dateTimeSampling;
         private string samplingStatus;
         private string[] samplingRefs;
+        private string[] samplingRefIDs;
         private string[] samplingMeas;
 
         string SamplingDateTimeField = "Date et heure du test: ";
@@ -280,7 +282,7 @@ namespace Main
         private readonly string userField = "Utilisateur";
         private readonly string lastDailyTestField = "Date et heure du dernier étalonnage de la balance";
 
-        private readonly int statusId = 3;
+        private readonly int statusId = 4;
 
         private double GenerateGeneralInfo(PdfPage page, double y)
         {
@@ -1255,13 +1257,15 @@ namespace Main
 
             samplingRefs = new string[nSamples];
             samplingMeas = new string[nSamples];
+            samplingRefIDs = new string[nSamples];
 
             for (int i = 0; i < nSamples; i++)
             {
                 try
                 {
-                    samplingRefs[i] = decimal.Parse(dailyTestValues[dailyTestInfo.Setpoint1 + i].ToString()).ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
-                    samplingMeas[i] = decimal.Parse(dailyTestValues[dailyTestInfo.Measure1 + i].ToString()).ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
+                    samplingRefs[i] = decimal.Parse(dailyTestValues[dailyTestInfo.Setpoint1 + i].ToString()).ToString("N" + Settings.Default.General_Weight_NbDecimal);
+                    samplingRefIDs[i] = dailyTestValues[dailyTestInfo.Id1 + i].ToString();    
+                    samplingMeas[i] = decimal.Parse(dailyTestValues[dailyTestInfo.Measure1 + i].ToString()).ToString("N" + Settings.Default.General_Weight_NbDecimal);
                 }
                 catch (Exception ex)
                 {
@@ -1297,19 +1301,21 @@ namespace Main
 
             currentY = DrawStringColumns(page, currentY, values, 2);
 
-            string[,] tableValues = new string[4, samplingRefs.Length + 1];
+            string[,] tableValues = new string[5, samplingRefs.Length + 1];
 
-            tableValues[0, 0] = "Masse étalon (g)";
-            tableValues[1, 0] = "Masse pesée (g)";
-            tableValues[2, 0] = "Ecart (g)";
-            tableValues[3, 0] = "Statut";
+            tableValues[0, 0] = "ID masse étalon";
+            tableValues[1, 0] = "Masse étalon (g)";
+            tableValues[2, 0] = "Masse pesée (g)";
+            tableValues[3, 0] = "Ecart (g)";
+            tableValues[4, 0] = "Statut";
 
             for (int i = 0; i < samplingRefs.Length; i++)
             {
-                tableValues[0, 1 + i] = samplingRefs[i];
-                tableValues[1, 1 + i] = samplingMeas[i];
-                tableValues[2, 1 + i] = (decimal.Parse(samplingRefs[i]) - decimal.Parse(samplingMeas[i])).ToString("N" + Settings.Default.RecipeWeight_NbDecimal);
-                tableValues[3, 1 + i] = Pages.SubCycle.CycleWeight.IsSampWeightCorrect(decimal.Parse(samplingMeas[i]), decimal.Parse(samplingRefs[i])) ? statusPASS : statusFAIL;
+                tableValues[0, 1 + i] = samplingRefIDs[i];
+                tableValues[1, 1 + i] = samplingRefs[i];
+                tableValues[2, 1 + i] = samplingMeas[i];
+                tableValues[3, 1 + i] = (decimal.Parse(samplingRefs[i]) - decimal.Parse(samplingMeas[i])).ToString("N" + Settings.Default.General_Weight_NbDecimal);
+                tableValues[4, 1 + i] = Pages.SubCycle.CycleWeight.IsSampWeightCorrect(decimal.Parse(samplingMeas[i]), decimal.Parse(samplingRefs[i])) ? statusPASS : statusFAIL;
             }
             
             double xShift = (page.Width - 2 * margin) / tableValues.GetLength(0);

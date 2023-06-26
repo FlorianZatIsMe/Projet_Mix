@@ -6,10 +6,11 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Globalization;
-using Database;
-using Main.Properties;
 using System.Windows.Controls.Primitives;
+
+using Database;
 using Message;
+using Main.Properties;
 
 namespace Main.Pages.SubRecipe
 {

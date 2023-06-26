@@ -43,9 +43,6 @@
         <member name="F:Database.IniInfo.RecipeWeight_gG_Unit">
             <value>Unit g/g to put in the weight recipe database table (used by the class CycleWeightInfo)</value>
         </member>
-        <member name="F:Database.IniInfo.RecipeWeight_gG_Conversion">
-            <value>Conversion value of the unit g/g. Used to calculate the conversion ratio in the class CycleWeightInfo</value>
-        </member>
         <member name="F:Database.IniInfo.CycleFinalWeight_g_Unit">
             <value>Unit g to put in the cycle database table (used by the class CycleWeightInfo)</value>
         </member>
@@ -1022,6 +1019,18 @@
         </member>
         <member name="P:Database.DailyTestInfo.Measure4">
             <value>Index of the measure 4 column. This column contains the measure weight of the setpoint 4</value>
+        </member>
+        <member name="P:Database.DailyTestInfo.Id1">
+            <value>Index of the ID of the weight 1 column. This column contains the Id of the weight 1</value>
+        </member>
+        <member name="P:Database.DailyTestInfo.Id2">
+            <value>Index of the ID of the weight 2 column. This column contains the Id of the weight 2</value>
+        </member>
+        <member name="P:Database.DailyTestInfo.Id3">
+            <value>Index of the ID of the weight 3 column. This column contains the Id of the weight 3</value>
+        </member>
+        <member name="P:Database.DailyTestInfo.Id4">
+            <value>Index of the ID of the weight 4 column. This column contains the Id of the weight 4</value>
         </member>
         <member name="P:Database.DailyTestInfo.Status">
             <value>Index of the status column. This column contains the status of the sample</value>

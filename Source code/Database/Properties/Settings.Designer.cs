@@ -12,7 +12,7 @@ namespace Database.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.2.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.6.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -1804,6 +1804,10 @@ namespace Database.Properties {
   <string>measure2</string>
   <string>measure3</string>
   <string>measure4</string>
+  <string>id1</string>
+  <string>id2</string>
+  <string>id3</string>
+  <string>id4</string>
   <string>status</string>
 </ArrayOfString>")]
         public global::System.Collections.Specialized.StringCollection DailyTest_ColIds {
@@ -1828,6 +1832,10 @@ namespace Database.Properties {
   <string>Masse mesurée</string>
   <string>Masse mesurée</string>
   <string>Masse mesurée</string>
+  <string>ID poids étalon</string>
+  <string>ID poids étalon</string>
+  <string>ID poids étalon</string>
+  <string>ID poids étalon</string>
   <string>Statut</string>
 </ArrayOfString>")]
         public global::System.Collections.Specialized.StringCollection DailyTest_ColDesc {
@@ -1937,7 +1945,7 @@ namespace Database.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("12")]
+        [global::System.Configuration.DefaultSettingValueAttribute("16")]
         public int DailyTest_ColN_status {
             get {
                 return ((int)(this["DailyTest_ColN_status"]));
@@ -2004,6 +2012,15 @@ namespace Database.Properties {
         public int AccessTable_ColN_AckAlarm {
             get {
                 return ((int)(this["AccessTable_ColN_AckAlarm"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("12")]
+        public int DailyTest_ColN_id1 {
+            get {
+                return ((int)(this["DailyTest_ColN_id1"]));
             }
         }
         

@@ -65,7 +65,7 @@ namespace Main.Pages
         {
             logger.Debug("UpdateAuditTrail");
 
-            DataTable dt = new DataTable();
+            DataTable dt = new DataTable();            
             DataRow row;
             //string[] columnNames = MySettings["Columns"].Split(',');
             DateTime dtBefore = Convert.ToDateTime(((DateTime)dpDateBefore.SelectedDate).ToString("dd.MM.yyyy") + " " + tbTimeBefore.Text);
@@ -108,6 +108,8 @@ namespace Main.Pages
                 row.ItemArray = tables[i];
                 dt.Rows.Add(row);
             }
+
+            DataTable dt1 = new DataTable();
 
             //Implémentation dans la DataGrid dataGridAuditTrail
             dataGridAuditTrail.ItemsSource = dt.DefaultView;

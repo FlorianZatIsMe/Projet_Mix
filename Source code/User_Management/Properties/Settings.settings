@@ -3,13 +3,13 @@
   <Profiles />
   <Settings>
     <Setting Name="Group_operator" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">INTEGRA\F-CHLOC-PRJ-LTR-RW</Value>
+      <Value Profile="(Default)">INTEGRA\A-CHLOC-ENDEXO_Operator</Value>
     </Setting>
     <Setting Name="Group_supervisor" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">INTEGRA\F-CHLOC-PRJ-LIC-RW</Value>
+      <Value Profile="(Default)">INTEGRA\A-CHLOC-ENDEXO_Supervisor</Value>
     </Setting>
     <Setting Name="Group_administrator" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">INTEGRA\F-CHLOC-PRJ-LIC-WRX</Value>
+      <Value Profile="(Default)">INTEGRA\A-CHLOC-ENDEXO_Administrator</Value>
     </Setting>
   </Settings>
 </SettingsFile>

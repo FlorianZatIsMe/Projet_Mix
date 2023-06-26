@@ -49,7 +49,7 @@ namespace Database
         ///<value>Unit g/g to put in the weight recipe database table (used by the class CycleWeightInfo)</value>
         public string RecipeWeight_gG_Unit;
         ///<value>Conversion value of the unit g/g. Used to calculate the conversion ratio in the class CycleWeightInfo</value>
-        public decimal? RecipeWeight_gG_Conversion;
+        //public decimal? RecipeWeight_gG_Conversion;
         ///<value>Unit g to put in the cycle database table (used by the class CycleWeightInfo)</value>
         public string CycleFinalWeight_g_Unit;
         ///<value>Conversion value of the unit g. Used to calculate the conversion ratio in the class CycleWeightInfo</value>
@@ -269,7 +269,7 @@ namespace Database
             if (info.RecipeWeight_mgG_Unit == null && info_arg.RecipeWeight_mgG_Unit != null) info.RecipeWeight_mgG_Unit = info_arg.RecipeWeight_mgG_Unit;                                  // if unit mg/g from info wasn't already updated and if this value of the parameter isn't empty then we update info
             if (info.RecipeWeight_mgG_Conversion == null && info_arg.RecipeWeight_mgG_Conversion != null) info.RecipeWeight_mgG_Conversion = info_arg.RecipeWeight_mgG_Conversion;          // if conversion of the unit mg/g from info wasn't already updated and if this value of the parameter isn't empty then we update info
             if (info.RecipeWeight_gG_Unit == null && info_arg.RecipeWeight_gG_Unit != null) info.RecipeWeight_gG_Unit = info_arg.RecipeWeight_gG_Unit;                                      // if unit g/g from info wasn't already updated and if this value of the parameter isn't empty then we update info
-            if (info.RecipeWeight_gG_Conversion == null && info_arg.RecipeWeight_gG_Conversion != null) info.RecipeWeight_gG_Conversion = info_arg.RecipeWeight_gG_Conversion;              // if conversion of the unit g/g from info wasn't already updated and if this value of the parameter isn't empty then we update info
+            //if (info.RecipeWeight_gG_Conversion == null && info_arg.RecipeWeight_gG_Conversion != null) info.RecipeWeight_gG_Conversion = info_arg.RecipeWeight_gG_Conversion;              // if conversion of the unit g/g from info wasn't already updated and if this value of the parameter isn't empty then we update info
             if (info.CycleFinalWeight_g_Unit == null && info_arg.CycleFinalWeight_g_Unit != null) info.CycleFinalWeight_g_Unit = info_arg.CycleFinalWeight_g_Unit;                          // if unit g from info wasn't already updated and if this value of the parameter isn't empty then we update info
             //if (info.CycleFinalWeight_g_Conversion == null && info_arg.CycleFinalWeight_g_Conversion != null) info.CycleFinalWeight_g_Conversion = info_arg.CycleFinalWeight_g_Conversion;  // if conversion of the unit g from info wasn't already updated and if this value of the parameter isn't empty then we update info
             if (info.Window == null && info_arg.Window != null) info.Window = info_arg.Window;                                                                                              // if conversion of the unit g from info wasn't already updated and if this value of the parameter isn't empty then we update info

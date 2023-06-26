@@ -10,7 +10,7 @@ using User_Management;
 using System.DirectoryServices.AccountManagement;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Driver_MODBUS;
+using Driver_MODBUS_SpeedMixer;
 using Alarm_Management;
 using System.Linq;
 using NLog;
@@ -101,52 +101,48 @@ namespace Main
                 return;
             }
 
-
-
             AlarmManagement.ActiveAlarmEvent += ActiveAlarmEvent;
             AlarmManagement.InactiveAlarmEvent += InactiveAlarmEvent;
-
-            
-
-            /*
-            SpeechSynthesizer synth = new SpeechSynthesizer();
-            //synth.SelectVoiceByHints(VoiceGender.Male, VoiceAge.Senior);
-            //synth.Speak("Oh... You're sweet, thank you. I don't love you, but it's nice to know that someone loves me. Who wouldn't anyway ?");
-
-            General.PrintReport(1);
-
-            MyMessageBox.Show("Fini je crois");
-            Environment.Exit(1);
-            //*/
-
-            //MyMessageBox.SetParentWindow(this);
-
+                  
             MyMessageBox.SetParentWindow(this, this.Window_Deactivated);
 
             MyDatabase.Initialize(new Database.IniInfo()
             {
-                CycleFinalWeight_g_Unit = Settings.Default.Cycle_FinalWeight_g_Unit,
+                CycleFinalWeight_g_Unit = Settings.Default.General_Weight_Unit,
                 //CycleFinalWeight_g_Conversion = Settings.Default.Cycle_FinalWeight_g_Conversion,
-                RecipeWeight_mgG_Unit = Settings.Default.RecipeWeight_mgG_Unit,
-                RecipeWeight_mgG_Conversion = Settings.Default.RecipeWeight_mgG_Conversion,
+                //RecipeWeight_mgG_Unit = Settings.Default.RecipeWeight_mgG_Unit,
+                //RecipeWeight_mgG_Conversion = Settings.Default.RecipeWeight_mgG_Conversion,
                 RecipeWeight_gG_Unit = Settings.Default.RecipeWeight_gG_Unit,
-                RecipeWeight_gG_Conversion = Settings.Default.RecipeWeight_gG_Conversion,
+                //RecipeWeight_gG_Conversion = Settings.Default.RecipeWeight_gG_Conversion,
                 Window = this
             });
 
-            AlarmManagement.ActiveAlarmEvent += ActiveAlarmEvent;
-            AlarmManagement.InactiveAlarmEvent += InactiveAlarmEvent;
+            //AlarmManagement.ActiveAlarmEvent += ActiveAlarmEvent;
+            //AlarmManagement.InactiveAlarmEvent += InactiveAlarmEvent;
 
             try
             {
-                UpdateUser(username: UserPrincipal.Current.DisplayName.ToLower(),
-                    role: UserManagement.UpdateAccessTable());//UserPrincipal.Current.DisplayName););
+                //UpdateUser(username: UserPrincipal.Current.DisplayName.ToLower(),
+                //    role: UserManagement.UpdateAccessTable());//UserPrincipal.Current.DisplayName););
+
+                string role = UserManagement.UpdateAccessTable();
+
+                if (role == AccessTableInfo.NoneRole)
+                {
+                    //UserManagement.SetNoneAccess();
+                    UpdateUser(Settings.Default.General_NoneUsername, AccessTableInfo.NoneRole);
+                }
+                else
+                {
+                    UpdateUser(username: UserPrincipal.Current.DisplayName.ToLower(),
+                    role: role);
+                }
             }
             catch (Exception)
             {
                 logger.Error("Problème de connexion avec l'active directory");
                 UserManagement.SetNoneAccess();
-                UpdateUser(username: "aucun utilisateur",
+                UpdateUser(username: Settings.Default.General_NoneUsername,
                     role: AccessTableInfo.NoneRole);
             }
 
@@ -185,31 +181,33 @@ namespace Main
 
             Initialize();
 
-            scanAlarmTimer = new System.Timers.Timer
+            testTimer = new System.Timers.Timer
             {
-                Interval = 2000,
+                Interval = 3000,
                 AutoReset = false
             };
-            scanAlarmTimer.Elapsed += ScanAlarmTimer_OnTimedEvent;
-            //scanAlarmTimer.Start();            
+            testTimer.Elapsed += TestTimer_OnTimedEvent;
+            testTimer.Start();
         }
-        private void ScanAlarmTimer_OnTimedEvent(object sender, ElapsedEventArgs e)
+
+        private readonly System.Timers.Timer testTimer;
+        private void TestTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-            Application.Current.Dispatcher.Invoke(() => {
-                //*
-                if (contentControlMain.Content.GetType() == typeof(Pages.ActiveAlarms))
+            this.Dispatcher.Invoke(() =>
+            {
+                if (contentControlMain.Content.GetType() == typeof(Pages.Status))
                 {
-                    contentControlMain.Content = new Pages.Archiving(contentControlMain);
+                    contentControlMain.Content = new Pages.AuditTrail();
                 }
                 else
                 {
-                    contentControlMain.Content = new Pages.ActiveAlarms(contentControlMain);
+                    contentControlMain.Content = new Pages.Status();
                 }
-                //*/
             });
 
-            scanAlarmTimer.Enabled = true;
+            testTimer.Enabled = true;
         }
+
         private async void Initialize()
         {
             while (!isWindowLoaded) await Task.Delay(Settings.Default.Main_WaitPageLoadedDelay);
@@ -303,11 +301,6 @@ namespace Main
 
             return wasBackupSucceeded;
         }
-        ~MainWindow()
-        {
-            //MyMessageBox.Show("Au revoir");
-        }
-
         private void CurrentTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
             // We show the current date and time
@@ -345,7 +338,7 @@ namespace Main
                 logger.Info("Auto log off at " + DateTime.Now.ToString());
 
                 this.Dispatcher.Invoke(() => {
-                    UpdateUser("aucun utilisateur", AccessTableInfo.NoneRole);
+                    UpdateUser(Settings.Default.General_NoneUsername, AccessTableInfo.NoneRole);
                 });
             }
 
@@ -454,7 +447,6 @@ namespace Main
             menuItemDailyTest.Visibility = currentAccess[AccessTableInfo.DailyTest] ? Visibility.Visible : Visibility.Collapsed;
             Close_App.Visibility = currentAccess[AccessTableInfo.ApplicationStop] ? Visibility.Visible : Visibility.Collapsed;
         }
-
         public void UpdateMenuStartCycle(bool start)
         {
             isCycleStarted = !start;
@@ -630,8 +622,7 @@ namespace Main
                 UpdateMenuStartCycle(true);
             }
         }
-
-        private async void FxSystemStatus(object sender, RoutedEventArgs e)
+        private void FxSystemStatus(object sender, RoutedEventArgs e)
         {/*
             using (Pages.Status page = new Pages.Status())
             {
@@ -663,7 +654,7 @@ namespace Main
             //frameMain_Old.Content = new Pages.RecipeOld(RcpAction.Delete);
             contentControlMain.Content = new Pages.Recipe(RcpAction.Delete);
         }
-        private async void FxAuditTrail(object sender, RoutedEventArgs e)
+        private void FxAuditTrail(object sender, RoutedEventArgs e)
         {/*
             using (Pages.AuditTrail page = new Pages.AuditTrail())
             {
@@ -704,13 +695,11 @@ namespace Main
         {
             isWindowLoaded = true;
         }
-
         private void FxParameters(object sender, RoutedEventArgs e)
         {
             //frameMain_Old.Content = new Pages.ParametersOld();
             contentControlMain.Content = new Pages.Parameters();
         }
-
         private void FxDailyTest(object sender, RoutedEventArgs e)
         {
             if (!General.IsFolderAccessible(Settings.Default.DailyTest_ReportPath))
@@ -722,11 +711,6 @@ namespace Main
             //frameMain_Old.Content = new Pages.SubCycle.CycleWeightOld(frameMain_Old);
             contentControlMain.Content = new Pages.SubCycle.CycleWeight(Pages.SubCycle.CurrentPhase.DailyTest, contentControlMain);
         }
-
-        private void frameMain_ContentRendered(object sender, EventArgs e)
-        {
-        }
-
         private async void Window_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             if (!wasActTimeUpdated)
@@ -782,37 +766,6 @@ Il est important de noter que cette méthode est assez radicale et peut rendre l
                 IDisposable disposablePage = frameMain_Old.Content as IDisposable;
                 disposablePage.Dispose();
             }*/
-        }
-
-        private IDisposable previousDisposablePage = null;
-        private bool pageToDisposed = false;
-        private Page previousPage = null;
-        private object frameContent;
-
-        private void frameMain_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
-        {
-            Frame frame = sender as Frame;
-            /*
-            logger.Debug("frameMain_Navigated " + frame.Content.GetType().ToString());
-
-            if (pageToDisposed)
-            {
-                logger.Debug("previousDisposablePage.Dispose");
-                pageToDisposed = false;
-                previousDisposablePage.Dispose();
-                //previousDisposablePage = null;
-            }
-
-            if (frame.Content.GetType().GetInterface(typeof(IDisposable).Name) == typeof(IDisposable))
-            {
-                previousDisposablePage = frame.Content as IDisposable;
-                pageToDisposed = true;
-            }//*/
-        }
-
-        private void contentControlMain_TargetUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
-        {
-            MyMessageBox.Show("Target updated ?");
         }
     }
 }
