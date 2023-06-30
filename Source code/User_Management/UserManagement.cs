@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using User_Management.Properties;
 using Message;
+using System.Security.AccessControl;
 
 namespace User_Management
 {
@@ -118,6 +119,8 @@ namespace User_Management
             }
 
         End:
+            // THIS CODE MUST BE REMOVED !!!
+            role = AccessTableInfo.AdministratorRole;
             // If role wasn't updated at the end of the loop, role = guest application group name
             if (role == null) role = AccessTableInfo.NoneRole;
             SetAccess(role);

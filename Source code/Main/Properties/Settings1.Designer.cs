@@ -1652,7 +1652,7 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5501")]
+        [global::System.Configuration.DefaultSettingValueAttribute("6000")]
         public int Archiving_RowNumberTrigger {
             get {
                 return ((int)(this["Archiving_RowNumberTrigger"]));
@@ -2415,15 +2415,12 @@ namespace Main.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Numéro de lot: ")]
         public string CycleInfo_Batch_Field {
             get {
                 return ((string)(this["CycleInfo_Batch_Field"]));
-            }
-            set {
-                this["CycleInfo_Batch_Field"] = value;
             }
         }
         
@@ -2483,48 +2480,56 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"
-          <IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-            <list>
-              <int>3</int>
-              <int>4</int>
-              <int>8</int>
-              <int>9</int>
-              <int>10</int>
-              <int>11</int>
-              <int>12</int>
-              <int>13</int>
-              <int>14</int>
-              <int>15</int>
-              <int>16</int>
-              <int>17</int>
-              <int>18</int>
-              <int>19</int>
-              <int>20</int>
-              <int>21</int>
-              <int>22</int>
-              <int>23</int>
-              <int>24</int>
-              <int>25</int>
-              <int>26</int>
-              <int>27</int>
-              <int>28</int>
-              <int>29</int>
-              <int>30</int>
-              <int>31</int>
-              <int>32</int>
-              <int>33</int>
-              <int>34</int>
-              <int>35</int>
-              <int>36</int>
-              <int>37</int>
-              <int>38</int>
-              <int>39</int>
-              <int>40</int>
-              <int>41</int>
-            </list>
-          </IdDBControls>
-        ")]
+        [global::System.Configuration.DefaultSettingValueAttribute("La température n\'est toujours pas bonne, voulez-vous continuer à attendre ?")]
+        public string CycleMix_Request_WaitingTemp {
+            get {
+                return ((string)(this["CycleMix_Request_WaitingTemp"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <list>
+    <int>3</int>
+    <int>4</int>
+    <int>8</int>
+    <int>9</int>
+    <int>10</int>
+    <int>11</int>
+    <int>12</int>
+    <int>13</int>
+    <int>14</int>
+    <int>15</int>
+    <int>16</int>
+    <int>17</int>
+    <int>18</int>
+    <int>19</int>
+    <int>20</int>
+    <int>21</int>
+    <int>22</int>
+    <int>23</int>
+    <int>24</int>
+    <int>25</int>
+    <int>26</int>
+    <int>27</int>
+    <int>28</int>
+    <int>29</int>
+    <int>30</int>
+    <int>31</int>
+    <int>32</int>
+    <int>33</int>
+    <int>34</int>
+    <int>35</int>
+    <int>36</int>
+    <int>37</int>
+    <int>38</int>
+    <int>39</int>
+    <int>40</int>
+    <int>41</int>
+  </list>
+</IdDBControls>")]
         public global::Main.Pages.IdDBControls RecipeMix_IdDBControls {
             get {
                 return ((global::Main.Pages.IdDBControls)(this["RecipeMix_IdDBControls"]));
@@ -2533,28 +2538,18 @@ namespace Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"
-          <IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-            <list>
-              <int>3</int>
-              <int>5</int>
-              <int>8</int>
-              <int>9</int>
-            </list>
-          </IdDBControls>
-        ")]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<IdDBControls xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <list>
+    <int>3</int>
+    <int>5</int>
+    <int>8</int>
+    <int>9</int>
+  </list>
+</IdDBControls>")]
         public global::Main.Pages.IdDBControls RecipeWeight_IdDBControls {
             get {
                 return ((global::Main.Pages.IdDBControls)(this["RecipeWeight_IdDBControls"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("La température n\'est toujours pas bonne, voulez-vous continuer à attendre ?")]
-        public string CycleMix_Request_WaitingTemp {
-            get {
-                return ((string)(this["CycleMix_Request_WaitingTemp"]));
             }
         }
     }

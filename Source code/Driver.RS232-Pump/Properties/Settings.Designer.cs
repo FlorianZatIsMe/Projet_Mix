@@ -23,111 +23,84 @@ namespace Driver_RS232_Pump.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("9600")]
         public int BaudRate {
             get {
                 return ((int)(this["BaudRate"]));
             }
-            set {
-                this["BaudRate"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("8")]
         public int DataBits {
             get {
                 return ((int)(this["DataBits"]));
             }
-            set {
-                this["DataBits"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("None")]
         public global::System.IO.Ports.Parity Parity {
             get {
                 return ((global::System.IO.Ports.Parity)(this["Parity"]));
             }
-            set {
-                this["Parity"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("XOnXOff")]
         public global::System.IO.Ports.Handshake Handshake {
             get {
                 return ((global::System.IO.Ports.Handshake)(this["Handshake"]));
             }
-            set {
-                this["Handshake"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("COM2")]
         public string PortName {
             get {
                 return ((string)(this["PortName"]));
             }
-            set {
-                this["PortName"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("2")]
         public int Alarm_Connection_id1 {
             get {
                 return ((int)(this["Alarm_Connection_id1"]));
             }
-            set {
-                this["Alarm_Connection_id1"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int Alarm_Connection_id2 {
             get {
                 return ((int)(this["Alarm_Connection_id2"]));
             }
-            set {
-                this["Alarm_Connection_id2"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("!C802 1")]
         public string StartCommand {
             get {
                 return ((string)(this["StartCommand"]));
             }
-            set {
-                this["StartCommand"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("!C802 0")]
         public string StopCommand {
             get {
                 return ((string)(this["StopCommand"]));
-            }
-            set {
-                this["StopCommand"] = value;
             }
         }
     }

@@ -15,67 +15,169 @@ using Main.Properties;
 
 namespace Main.Pages
 {
+    /// <summary>
+    /// Interface of sequence recipe UserControl (weight or speedmixer sequence)
+    /// </summary>
     public interface ISubRecipe
     {
+        /// <summary>
+        /// Event sent by the UserControl when it is deleted
+        /// </summary>
         event Action<object> SubRecipeDeletedEvent;
+
+        /// <summary>
+        /// Event sent by the UserControl when changing it to another sequence recipe
+        /// </summary>
         event Action<object> NextSubRecipeEvent;
+
+        /// <summary>
+        /// Method used to set the values of the UserControl from the values of a row of the applicable database sub recipe table
+        /// </summary>
+        /// <param name="seqValues">Values to set</param>
         void SetPage(object[] seqValues);
-        ISeqTabInfo GetPage();
-        ISeqTabInfo GetRecipeInfo();
+
+        /// <summary>
+        /// Gets the field values from the UserControl
+        /// </summary>
+        /// <returns>The values of the UserControl as a object array. The order of the array respects the columns of the applicable database sub recipe table</returns>
         object[] GetRecipeValues();
 
+        /// <summary>
+        /// Get the applicable database table class related to the UserControl
+        /// </summary>
+        /// <returns>The applicable database table class related to the UserControl</returns>
+        ISeqTabInfo GetRecipeInfo();
+
+        /// <summary>
+        /// Verifies the format of the UserControl's field
+        /// </summary>
+        /// <returns>
+        /// <para>True: The format is correct</para>
+        /// <para>False: The format is not correct</para>
+        /// </returns>
         bool IsFormatOk();
+
+        /// <summary>
+        /// Set the sequence number of the UserControl
+        /// </summary>
+        /// <param name="n">Sequence number</param>
         void SetSeqNumber(int n);
     }
+
+    /// <summary>
+    /// Interface of sequence cycle UserControl (weight or speedmixer sequence)
+    /// </summary>
     public interface ISubCycle
     {
+        /// <summary>
+        /// Stops the cycle
+        /// </summary>
         void StopCycle();
+
+        /// <summary>
+        /// Enable or disable the UserControl
+        /// </summary>
+        /// <param name="enable">
+        /// <para>True: Enables the UserControl</para>
+        /// <para>False: Disable the UserControl</para>
+        /// </param>
         void EnablePage(bool enable);
+
+        /// <summary>
+        /// Return the test status of the current cycle
+        /// </summary>
+        /// <returns>
+        /// <para>True: The cycle is a test</para>
+        /// <para>False: The cycle is not a test</para>
+        /// </returns>
         bool IsItATest();
     }
+
+    /// <summary>
+    /// Class used to send sub cycle information
+    /// </summary>
     public class SubCycleArg
     {
-        public Frame frameMain { get; }
-        public Frame frameInfoCycle { get; }
-        public ContentControl contentControlMain { get; }
-        public ContentControl contentControlInfoCycle { get; }
-        public int id { get; }
-        public int idCycle { get; }
-        public int idPrevious { get; }
-        public string tablePrevious { get; }
-        public ISeqTabInfo prevSeqInfo { get; }
-        public object[] prevSeqValues { get; }
-        public bool isTest { get; }
+        /// <value>Main ContentControl from the Main window</value>
+        public ContentControl ContentControlMain { get; }
 
-        public SubCycleArg(ContentControl contentControlMain_arg, ContentControl contentControlInfoCycle_arg, int id_arg, int idCycle_arg, int idPrevious_arg, string tablePrevious_arg, ISeqTabInfo prevSeqInfo_arg, bool isTest_arg = true, object[] prevSeqValues_arg = null)
+        /// <value>Second ContentControl from the Main window</value>
+        public ContentControl ContentControlInfoCycle { get; }
+
+        /// <value>Value of the column id from the sequence recipe database table of the current cycle sequence</value>
+        public int Id { get; }
+
+        /// <value>Value of the column id from the cycle database table of the current cycle</value>
+        public int IdCycle { get; }
+
+        /// <value>Value of the column id from the sequence cycle database table of the previous cycle sequence</value>
+        public int IdPrevious { get; }
+
+        /// <value>Database table class object related to the previous cycle sequence</value>
+        public ISeqTabInfo PrevSeqInfo { get; }
+
+        /// <value>
+        /// <para>True: The cycle is a test</para>
+        /// <para>False: The cycle is not a test</para>
+        /// </value>
+        public bool IsTest { get; }
+
+        /// <summary>
+        /// Sets the variables of the class
+        /// </summary>
+        /// <param name="contentControlMain">Value of ContentControlMain</param>
+        /// <param name="contentControlInfoCycle">Value of ContentControlInfoCycle</param>
+        /// <param name="id">Value of Id</param>
+        /// <param name="idCycle">Value of IdCycle</param>
+        /// <param name="idPrevious">Value of IdPrevious</param>
+        /// <param name="prevSeqInfo">Value of PrevSeqInfo</param>
+        /// <param name="isTest">Value of IsTest</param>
+        public SubCycleArg(ContentControl contentControlMain, ContentControl contentControlInfoCycle, int id, int idCycle, int idPrevious, ISeqTabInfo prevSeqInfo, bool isTest = true)
         {
-            contentControlMain = contentControlMain_arg;
-            contentControlInfoCycle = contentControlInfoCycle_arg;
-            id = id_arg;
-            idCycle = idCycle_arg;
-            idPrevious = idPrevious_arg;
-            tablePrevious = tablePrevious_arg;
-            prevSeqInfo = prevSeqInfo_arg;
-            isTest = isTest_arg;
+            this.ContentControlMain = contentControlMain;
+            this.ContentControlInfoCycle = contentControlInfoCycle;
+            this.Id = id;
+            this.IdCycle = idCycle;
+            this.IdPrevious = idPrevious;
+            //TablePrevious = tablePrevious_arg;
+            this.PrevSeqInfo = prevSeqInfo;
+            this.IsTest = isTest;
+            /*
             if (prevSeqValues_arg == null)
             {
-                prevSeqValues = new object[prevSeqInfo.Ids.Count()];
+                PrevSeqValues = new object[PrevSeqInfo.Ids.Count()];
             }
             else
             {
-                prevSeqValues = prevSeqValues_arg;
-            }
+                PrevSeqValues = prevSeqValues_arg;
+            }*/
         }
     }
+
+    /// <summary>
+    /// Class which contains the basic information related to sequence (e.g. weight, speedmixer)
+    /// </summary>
     public class Seq
     {
+        /// <value>Type of the sequence recipe UserControl</value>
         public Type subRcpPgType { get; set; }
+
+        /// <value>Type of the sequence recipe database table class</value>
         public ISeqTabInfo subRecipeInfo { get; set; }
+
+        /// <value>Type of the sequence cycle UserControl</value>
         public Type subCycPgType { get; set; }
+
+        /// <value>Type of the sequence cycle database table class</value>
         public ICycleSeqInfo subCycleInfo { get; set; }
     }
+
+    /// <summary>
+    /// Class which contains the list of sequences (e.g. weight, speedmixer)
+    /// </summary>
     public class Sequence
     {
+        /// <value>List of Seq object which represents all the sequences</value>
         public static readonly List<Seq> list = new List<Seq>()
         {
             new Seq()
@@ -96,9 +198,9 @@ namespace Main.Pages
         };
     }
 
-    //
-    // Classe utilisée pour lister les contrôles des sous-recette (ex: Weight, Speedmixer)
-    //
+    /// <summary>
+    /// Class used to list in the configuration the controls of sequence recipe UserControl (e.g. Weight, Speedmixer)
+    /// </summary>
     [SettingsSerializeAs(SettingsSerializeAs.Xml)]
     public class IdDBControls
     {
@@ -133,14 +235,27 @@ namespace Main.Pages
         private MainWindow mainWindow;
         private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public Recipe(RcpAction action, ContentControl contentControlMain_arg = null, ContentControl contentControlInfoCycle_arg = null, string recipeName = "", MainWindow window = null)
+        /// <summary>
+        /// Initializes the UserControl depending on user's choice (i.e. new recipe, modify recipe, copy recipe and delete/activate recipe)
+        /// </summary>
+        /// <param name="action">
+        /// <para>RcpAction.New: Displays the UserControl to create a new recipe</para>
+        /// <para>RcpAction.Modify: Displays the UserControl to modify a recipe</para>
+        /// <para>RcpAction.Copy: Displays the UserControl to copy a recipe</para>
+        /// <para>RcpAction.Delete: Displays the UserControl to delete/activate a recipe</para>
+        /// </param>
+        /// <param name="contentControlMain"></param>
+        /// <param name="contentControlInfoCycle"></param>
+        /// <param name="recipeName"></param>
+        /// <param name="window"></param>
+        public Recipe(RcpAction action, ContentControl contentControlMain = null, ContentControl contentControlInfoCycle = null, string recipeName = "", MainWindow window = null)
         {
             logger.Debug("Start");
 
             nRow = 1;
-            contentControlMain = contentControlMain_arg;
+            this.contentControlMain = contentControlMain;
             isFrameLoaded = false;
-            mainWindow = window;
+            this.mainWindow = window;
 
             InitializeComponent();
 
@@ -151,8 +266,8 @@ namespace Main.Pages
                     Create_NewSequence(recipeWeightInfo.SeqType);// MySettings["SubRecipeWeight_SeqType"]);
                     break;
                 case RcpAction.Modify: // pour ça je pense qu'une comboBox est suffisant, on puet imaginer une fenêtre intermédiaire avec une liste et une champ pour filtrer mais ça me semble pas applicable à notre besoin
-                    contentControlMain = contentControlMain_arg;
-                    contentControlInfoCycle = contentControlInfoCycle_arg;
+                    this.contentControlMain = contentControlMain;
+                    this.contentControlInfoCycle = contentControlInfoCycle;
                     if (mainWindow == null)
                     {
                         MyMessageBox.Show("La fenêtre principale n'a pas été définie");

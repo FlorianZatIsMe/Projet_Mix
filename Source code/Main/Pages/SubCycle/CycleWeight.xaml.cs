@@ -116,7 +116,7 @@ namespace Main.Pages.SubCycle
             Task<object> t;
 
             subCycle = subCycleArg;
-            contentControlMain = subCycle.contentControlMain;
+            contentControlMain = subCycle.ContentControlMain;
             
             //isSequenceOver = false;
             //isWeightCorrect = false;
@@ -126,7 +126,7 @@ namespace Main.Pages.SubCycle
             //t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow(typeof(RecipeWeightInfo), subCycle.id.ToString()); });
             //recipeWeightInfo = (RecipeWeightInfo)t.Result;
 
-            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow_new(new RecipeWeightInfo(), subCycle.id); });
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow_new(new RecipeWeightInfo(), subCycle.Id); });
             recipeWeightValues = (object[])t.Result;
 
             if (recipeWeightValues == null) // Si la commande a renvoyée une ligne
@@ -136,7 +136,7 @@ namespace Main.Pages.SubCycle
                 return; // ou exit carrément
             }
 
-            cycleWeightValues = cycleWeightInfo.GetRecipeParameters(recipeWeightValues, subCycle.idCycle);
+            cycleWeightValues = cycleWeightInfo.GetRecipeParameters(recipeWeightValues, subCycle.IdCycle);
 
             message1 = message1Cycle1 + recipeWeightValues[recipeWeightInfo.Name].ToString() + message1Cycle2;
             currentSetpoint = decimal.Parse(cycleWeightValues[cycleWeightInfo.Setpoint].ToString());
@@ -152,25 +152,25 @@ namespace Main.Pages.SubCycle
             t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax_new(cycleWeightInfo, cycleWeightInfo.Ids[cycleWeightInfo.Id]); });
             previousSeqId = (int)t.Result;
 
-            object[] prevSeqValues = new object[subCycle.prevSeqInfo.Ids.Count()];
-            prevSeqValues[subCycle.prevSeqInfo.NextSeqType] = cycleWeightInfo.SeqType.ToString();
-            prevSeqValues[subCycle.prevSeqInfo.NextSeqId] = previousSeqId.ToString();
+            object[] prevSeqValues = new object[subCycle.PrevSeqInfo.Ids.Count()];
+            prevSeqValues[subCycle.PrevSeqInfo.NextSeqType] = cycleWeightInfo.SeqType.ToString();
+            prevSeqValues[subCycle.PrevSeqInfo.NextSeqId] = previousSeqId.ToString();
 
             // A CORRIGER : IF RESULT IS FALSE
-            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row_new(subCycle.prevSeqInfo, prevSeqValues, subCycle.idPrevious); });
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row_new(subCycle.PrevSeqInfo, prevSeqValues, subCycle.IdPrevious); });
             //MyDatabase.Update_Row(subCycle.prevSeqInfo, subCycle.idPrevious.ToString());
 
             nextSeqInfo = new NextSeqInfo(
                 recipeInfo_arg: recipeWeightInfo, // done
                 recipeValues_arg: recipeWeightValues,
-                frameMain_arg: null,
-                frameInfoCycle_arg: null,
-                contentControlMain_arg: subCycle.contentControlMain,
-                contentControlInfoCycle_arg: subCycle.contentControlInfoCycle,
-                idCycle_arg: subCycle.idCycle,
+                //frameMain_arg: null,
+                //frameInfoCycle_arg: null,
+                contentControlMain_arg: subCycle.ContentControlMain,
+                contentControlInfoCycle_arg: subCycle.ContentControlInfoCycle,
+                idCycle_arg: subCycle.IdCycle,
                 previousSeqType_arg: recipeWeightInfo.SeqType, // done
                 previousSeqId_arg: previousSeqId,
-                isTest_arg: subCycle.isTest);
+                isTest_arg: subCycle.IsTest);
             Initialize();
         }
 
@@ -741,14 +741,14 @@ namespace Main.Pages.SubCycle
                     NextSeqInfo nextSeqInfo = new NextSeqInfo(
                         recipeInfo_arg: recipeWeightInfo,
                         recipeValues_arg: recipeWeightValues,
-                        frameMain_arg: subCycle.frameMain,
-                        frameInfoCycle_arg: subCycle.frameInfoCycle,
-                        contentControlMain_arg: subCycle.contentControlMain,
-                        contentControlInfoCycle_arg: subCycle.contentControlInfoCycle,
-                        idCycle_arg: subCycle.idCycle,
+                        //frameMain_arg: subCycle.frameMain,
+                        //frameInfoCycle_arg: subCycle.frameInfoCycle,
+                        contentControlMain_arg: subCycle.ContentControlMain,
+                        contentControlInfoCycle_arg: subCycle.ContentControlInfoCycle,
+                        idCycle_arg: subCycle.IdCycle,
                         previousSeqType_arg: 0,
                         previousSeqId_arg: previousSeqId,
-                        isTest_arg: subCycle.isTest);
+                        isTest_arg: subCycle.IsTest);
                     General.NextSequence(nextSeqInfo, new CycleWeightInfo());
                 }
             }
@@ -872,7 +872,7 @@ namespace Main.Pages.SubCycle
 
         public bool IsItATest()
         {
-            return (currentPhase == CurrentPhase.BowlWeight && info.isTest) || (currentPhase == CurrentPhase.Cycle && subCycle.isTest);
+            return (currentPhase == CurrentPhase.BowlWeight && info.isTest) || (currentPhase == CurrentPhase.Cycle && subCycle.IsTest);
         }
 
         public void StopCycle()

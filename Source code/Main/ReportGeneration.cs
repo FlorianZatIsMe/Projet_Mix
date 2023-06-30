@@ -282,7 +282,8 @@ namespace Main
         private readonly string userField = "Utilisateur";
         private readonly string lastDailyTestField = "Date et heure du dernier étalonnage de la balance";
 
-        private readonly int statusId = 4;
+        private readonly int statusId = 3; 
+        private readonly int dailyTestStatusId = 4; 
 
         private double GenerateGeneralInfo(PdfPage page, double y)
         {
@@ -1333,11 +1334,11 @@ namespace Main
                 {
                     rect.Y += smSeq_RowHeight;
                     gfxs[pagesNumber - 1].DrawRectangle(new XPen(XColors.Black, rectTablesSize),
-                        (i == statusId ? (tableValues[i, 1 + j] == statusPASS ? BrushGreen2 : BrushRed2) :
+                        (i == dailyTestStatusId ? (tableValues[i, 1 + j] == statusPASS ? BrushGreen2 : BrushRed2) :
                         XBrushes.White),
                         rect);
                     gfxs[pagesNumber - 1].DrawString(tableValues[i, 1 + j], new XFont(fontDoc, fontBodySize2),
-                        (i == statusId ? (tableValues[i, 1 + j] == statusPASS ? BrushGreen1 : BrushRed1) :
+                        (i == dailyTestStatusId ? (tableValues[i, 1 + j] == statusPASS ? BrushGreen1 : BrushRed1) :
                         XBrushes.Black),
                         rect, PdfSharp.Drawing.XStringFormats.Center);
                 }

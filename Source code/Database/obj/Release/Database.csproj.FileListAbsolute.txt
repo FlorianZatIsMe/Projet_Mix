@@ -86,3 +86,31 @@ C:\Temp\MixingApplication\Database\obj\Release\Database.csproj.CoreCompileInputs
 C:\Temp\MixingApplication\Database\obj\Release\Database.csproj.CopyComplete
 C:\Temp\MixingApplication\Database\obj\Release\Database.dll
 C:\Temp\MixingApplication\Database\obj\Release\Database.pdb
+C:\Temp\MixingApplication\Source code\Database\bin\Release\Database.dll.config
+C:\Temp\MixingApplication\Source code\Database\bin\Release\Database.dll
+C:\Temp\MixingApplication\Source code\Database\bin\Release\Database.pdb
+C:\Temp\MixingApplication\Source code\Database\bin\Release\Message.exe
+C:\Temp\MixingApplication\Source code\Database\bin\Release\MySqlConnector.dll
+C:\Temp\MixingApplication\Source code\Database\bin\Release\NLog.dll
+C:\Temp\MixingApplication\Source code\Database\bin\Release\System.Buffers.dll
+C:\Temp\MixingApplication\Source code\Database\bin\Release\System.Diagnostics.DiagnosticSource.dll
+C:\Temp\MixingApplication\Source code\Database\bin\Release\System.Memory.dll
+C:\Temp\MixingApplication\Source code\Database\bin\Release\System.Numerics.Vectors.dll
+C:\Temp\MixingApplication\Source code\Database\bin\Release\System.Runtime.CompilerServices.Unsafe.dll
+C:\Temp\MixingApplication\Source code\Database\bin\Release\System.Threading.Tasks.Extensions.dll
+C:\Temp\MixingApplication\Source code\Database\bin\Release\Message.pdb
+C:\Temp\MixingApplication\Source code\Database\bin\Release\Message.exe.config
+C:\Temp\MixingApplication\Source code\Database\bin\Release\MySqlConnector.xml
+C:\Temp\MixingApplication\Source code\Database\bin\Release\NLog.xml
+C:\Temp\MixingApplication\Source code\Database\bin\Release\System.Buffers.xml
+C:\Temp\MixingApplication\Source code\Database\bin\Release\System.Diagnostics.DiagnosticSource.xml
+C:\Temp\MixingApplication\Source code\Database\bin\Release\System.Memory.xml
+C:\Temp\MixingApplication\Source code\Database\bin\Release\System.Numerics.Vectors.xml
+C:\Temp\MixingApplication\Source code\Database\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
+C:\Temp\MixingApplication\Source code\Database\bin\Release\System.Threading.Tasks.Extensions.xml
+C:\Temp\MixingApplication\Source code\Database\obj\Release\Database.csproj.AssemblyReference.cache
+C:\Temp\MixingApplication\Source code\Database\obj\Release\Database.csproj.CoreCompileInputs.cache
+C:\Temp\MixingApplication\Source code\Database\obj\Release\Database.csproj.CopyComplete
+C:\Temp\MixingApplication\Source code\Database\obj\Release\Database.dll
+C:\Temp\MixingApplication\Source code\Database\obj\Release\Database.pdb
+C:\Temp\MixingApplication\Source code\Database\bin\Release\Message.xml

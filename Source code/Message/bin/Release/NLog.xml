@@ -14436,6 +14436,12 @@
             </summary>
             <docgen category='Layout Options' order='100' />
         </member>
+        <member name="P:NLog.Layouts.JsonLayout.IndentJson">
+            <summary>
+            Auto indent and create new lines
+            </summary>
+            <docgen category='Layout Options' order='100' />
+        </member>
         <member name="P:NLog.Layouts.JsonLayout.IncludeEventProperties">
             <summary>
             Gets or sets the option to include all properties from the log event (as JSON)

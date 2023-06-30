@@ -95,3 +95,43 @@ C:\Temp\MixingApplication\Driver.RS232-Pump\obj\Release\Driver_RS232_Pump.csproj
 C:\Temp\MixingApplication\Driver.RS232-Pump\obj\Release\Driver_RS232_Pump.csproj.CopyComplete
 C:\Temp\MixingApplication\Driver.RS232-Pump\obj\Release\Driver.RS232-Pump.dll
 C:\Temp\MixingApplication\Driver.RS232-Pump\obj\Release\Driver.RS232-Pump.pdb
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\Driver_RS232_Pump.dll.config
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\Driver_RS232_Pump.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\Driver_RS232_Pump.pdb
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\Alarm_Management.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\Database.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\Driver_RS232.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\Message.exe
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\NLog.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\MySqlConnector.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\System.Threading.Tasks.Extensions.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\System.Memory.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\System.Diagnostics.DiagnosticSource.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\System.Buffers.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\System.Runtime.CompilerServices.Unsafe.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\System.Numerics.Vectors.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\Alarm_Management.pdb
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\Alarm_Management.dll.config
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\Database.pdb
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\Database.dll.config
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\Driver_RS232.pdb
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\Driver_RS232.dll.config
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\Message.pdb
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\Message.exe.config
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\NLog.xml
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\MySqlConnector.xml
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\System.Threading.Tasks.Extensions.xml
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\System.Memory.xml
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\System.Diagnostics.DiagnosticSource.xml
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\System.Buffers.xml
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\System.Numerics.Vectors.xml
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\obj\Release\Driver_RS232_Pump.csproj.AssemblyReference.cache
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\obj\Release\Driver_RS232_Pump.csproj.CoreCompileInputs.cache
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\obj\Release\Driver_RS232_Pump.csproj.CopyComplete
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\obj\Release\Driver_RS232_Pump.dll
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\obj\Release\Driver_RS232_Pump.pdb
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\Driver_RS232_Pump.xml
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\Alarm_Management.xml
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\Driver_RS232.xml
+C:\Temp\MixingApplication\Source code\Driver.RS232-Pump\bin\Release\Message.xml

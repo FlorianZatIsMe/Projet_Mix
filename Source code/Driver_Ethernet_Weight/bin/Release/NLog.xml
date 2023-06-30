@@ -4946,7 +4946,7 @@
         <member name="M:NLog.Config.Factory`2.RegisterDefinition(System.String,System.Type)">
             <inheritdoc/>
         </member>
-        <member name="M:NLog.Config.Factory`2.RegisterDefinition(System.String,System.Type,System.String,System.String)">
+        <member name="M:NLog.Config.Factory`2.RegisterDefinitionNoLock(System.String,System.Type,System.String,System.String)">
             <summary>
             Registers a single type definition.
             </summary>
@@ -12359,12 +12359,12 @@
             Full list of options is available at <a href="https://docs.microsoft.com/en-us/dotnet/api/system.environment.specialfolder">MSDN</a>.
             The most common ones are:
             <ul>
-            <li><b>ApplicationData</b> - roaming application data for current user.</li>
             <li><b>CommonApplicationData</b> - application data for all users.</li>
-            <li><b>MyDocuments</b> - My Documents</li>
-            <li><b>DesktopDirectory</b> - Desktop directory</li>
-            <li><b>LocalApplicationData</b> - non roaming application data</li>
-            <li><b>Personal</b> - user profile directory</li>
+            <li><b>ApplicationData</b> - roaming application data for current user.</li>
+            <li><b>LocalApplicationData</b> - non roaming application data for current user</li>
+            <li><b>UserProfile</b> - Profile folder for current user</li>
+            <li><b>DesktopDirectory</b> - Desktop-directory for current user</li>
+            <li><b>MyDocuments</b> - My Documents-directory for current user</li>
             <li><b>System</b> - System directory</li>
             </ul>
             </remarks>
@@ -14433,6 +14433,12 @@
         <member name="P:NLog.Layouts.JsonLayout.RenderEmptyObject">
             <summary>
             Gets or sets the option to render the empty object value {}
+            </summary>
+            <docgen category='Layout Options' order='100' />
+        </member>
+        <member name="P:NLog.Layouts.JsonLayout.IndentJson">
+            <summary>
+            Auto indent and create new lines
             </summary>
             <docgen category='Layout Options' order='100' />
         </member>
@@ -22024,11 +22030,6 @@
             The row-highlighting condition.
             </summary>
         </member>
-        <member name="M:NLog.Targets.ConsoleRowHighlightingRule.#cctor">
-            <summary>
-            Initializes static members of the ConsoleRowHighlightingRule class.
-            </summary>
-        </member>
         <member name="M:NLog.Targets.ConsoleRowHighlightingRule.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:NLog.Targets.ConsoleRowHighlightingRule" /> class.
@@ -24180,6 +24181,12 @@
             <remarks>Warning: zero is not infinite waiting</remarks>
             <docgen category='SMTP Options' order='100' />
         </member>
+        <member name="P:NLog.Targets.MailTarget.MailHeaders">
+            <summary>
+            Gets the array of email headers that are transmitted with this email message
+            </summary>
+            <docgen category='Message Options' order='100' />
+        </member>
         <member name="M:NLog.Targets.MailTarget.Write(NLog.Common.AsyncLogEventInfo)">
             <inheritdoc/>
         </member>
@@ -24220,19 +24227,11 @@
             <returns></returns>
         </member>
         <member name="M:NLog.Targets.MailTarget.GetSmtpSettingsKey(NLog.LogEventInfo)">
-             <summary>
-             Create key for grouping. Needed for multiple events in one mail message
-             </summary>
-             <param name="logEvent">event for rendering layouts   </param>  
-            <returns>string to group on</returns>
-        </member>
-        <member name="M:NLog.Targets.MailTarget.AppendLayout(System.Text.StringBuilder,NLog.LogEventInfo,NLog.Layouts.Layout)">
             <summary>
-            Append rendered <paramref name="layout"/> to <paramref name="sb"/>
+            Create key for grouping. Needed for multiple events in one mail message
             </summary>
-            <param name="sb">append to this</param>
-            <param name="logEvent">event for rendering <paramref name="layout"/></param>
-            <param name="layout">append if not <c>null</c></param>
+            <param name="logEvent">event for rendering layouts   </param>  
+            <returns>string to group on</returns>
         </member>
         <member name="M:NLog.Targets.MailTarget.CreateMailMessage(NLog.LogEventInfo,System.String)">
             <summary>
@@ -24494,19 +24493,16 @@
             </summary>
         </member>
         <member name="F:NLog.Targets.NetworkLogEventDroppedEventArgs.MaxMessageSizeOverflow">
-            <summary>
-            Provides a value to use with events that do not have event data.
-            </summary>
+            <inheritdoc cref="F:NLog.Targets.NetworkLogEventDroppedReason.MaxMessageSizeOverflow"/>
         </member>
         <member name="F:NLog.Targets.NetworkLogEventDroppedEventArgs.MaxConnectionsOverflow">
-            <summary>
-            Provides a value to use with events that do not have event data.
-            </summary>
+            <inheritdoc cref="F:NLog.Targets.NetworkLogEventDroppedReason.MaxConnectionsOverflow"/>
         </member>
         <member name="F:NLog.Targets.NetworkLogEventDroppedEventArgs.MaxQueueOverflow">
-            <summary>
-            Provides a value to use with events that do not have event data.
-            </summary>
+            <inheritdoc cref="F:NLog.Targets.NetworkLogEventDroppedReason.MaxQueueOverflow"/>
+        </member>
+        <member name="F:NLog.Targets.NetworkLogEventDroppedEventArgs.NetworkErrorDetected">
+            <inheritdoc cref="F:NLog.Targets.NetworkLogEventDroppedReason.NetworkError"/>
         </member>
         <member name="M:NLog.Targets.NetworkLogEventDroppedEventArgs.#ctor(NLog.Targets.NetworkLogEventDroppedReason)">
             <summary>
@@ -24536,6 +24532,11 @@
         <member name="F:NLog.Targets.NetworkLogEventDroppedReason.MaxConnectionsOverflow">
             <summary>
             Discarded LogEvent because attempted to open more than <see cref="P:NLog.Targets.NetworkTarget.MaxConnections"/> connections
+            </summary>
+        </member>
+        <member name="F:NLog.Targets.NetworkLogEventDroppedReason.NetworkError">
+            <summary>
+            Discarded LogEvent because of network communication error
             </summary>
         </member>
         <member name="T:NLog.Targets.NetworkTarget">

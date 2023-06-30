@@ -470,6 +470,12 @@ namespace Main.Pages.SubRecipe
                 {
                     if (j == 0 || (bool)toggleButtons[j].IsChecked)
                     {
+                        if(textBox.Text == "0")
+                        {
+                            FormatControl[i + 3 * j, 0] = true;
+                            return;
+                        }
+
                         if (General.Verify_Format(textBox, isNotNull: true, isNumber: true, parameter: 0,
                             min: Settings.Default.RecipeMix_Speed_Min, max: Settings.Default.RecipeMix_Speed_Max))
                         {

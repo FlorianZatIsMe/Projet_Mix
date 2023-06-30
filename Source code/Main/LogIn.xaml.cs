@@ -24,7 +24,7 @@ namespace Main
 
         public LogIn(MainWindow parent, EventHandler windowDeactivatedEvent_arg)
         {
-            logger.Debug("Start");
+            logger.Debug("Start");/*
             mainWindow = parent;
             windowDeactivatedEvent = windowDeactivatedEvent_arg;
             mainWindow.Deactivated -= windowDeactivatedEvent;
@@ -32,7 +32,16 @@ namespace Main
             InitializeComponent();
             Left = (System.Windows.SystemParameters.WorkArea.Width - Width) / 2;
             Top = 100;
-            username.Focus();
+            username.Focus();*/
+
+
+            mainWindow = parent;
+            windowDeactivatedEvent = windowDeactivatedEvent_arg;
+            mainWindow.Deactivated -= windowDeactivatedEvent;
+            //MyMessageBox.SetParentWindow(this, this.Window_Deactivated);
+            InitializeComponent();
+            Left = (System.Windows.SystemParameters.WorkArea.Width - Width) / 2;
+            Top = 100;
         }
         private void Click(string user = null)
         {
@@ -76,6 +85,7 @@ namespace Main
             }
 
             if (role != AccessTableInfo.NoneRole) this.Close();
+            else MyMessageBox.Show("L'utilisateur n'a pas accès à l'application");
             btConnect.IsEnabled = true;
             //this.PreviewKeyDown += Window_PreviewKeyDown;
         }
@@ -131,6 +141,7 @@ namespace Main
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             MyMessageBox.SetParentWindow(this, this.Window_Deactivated);
+            this.username.Focus();
         }
 
         private void ShowKeyBoard(object sender, RoutedEventArgs e)

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Driver_Ethernet_Weight.Properties {
+namespace Driver_Ethernet_Balance.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

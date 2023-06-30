@@ -87,3 +87,43 @@ C:\Temp\MixingApplication\ColdTrap\obj\Release\Driver_ColdTrap.csproj.CoreCompil
 C:\Temp\MixingApplication\ColdTrap\obj\Release\Driver_ColdTrap.csproj.CopyComplete
 C:\Temp\MixingApplication\ColdTrap\obj\Release\ColdTrap.dll
 C:\Temp\MixingApplication\ColdTrap\obj\Release\ColdTrap.pdb
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\ColdTrap.dll.config
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\ColdTrap.dll
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\ColdTrap.pdb
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\Alarm_Management.dll
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\Message.exe
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\NationalInstruments.Common.dll
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\NationalInstruments.DAQmx.dll
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\NLog.dll
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\Database.dll
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\MySqlConnector.dll
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\System.Threading.Tasks.Extensions.dll
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\System.Memory.dll
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\System.Diagnostics.DiagnosticSource.dll
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\System.Buffers.dll
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\System.Runtime.CompilerServices.Unsafe.dll
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\System.Numerics.Vectors.dll
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\Alarm_Management.pdb
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\Alarm_Management.dll.config
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\Message.pdb
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\Message.exe.config
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\NationalInstruments.Common.xml
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\NationalInstruments.DAQmx.xml
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\NLog.xml
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\Database.pdb
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\Database.dll.config
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\MySqlConnector.xml
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\System.Threading.Tasks.Extensions.xml
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\System.Memory.xml
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\System.Diagnostics.DiagnosticSource.xml
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\System.Buffers.xml
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\System.Numerics.Vectors.xml
+C:\Temp\MixingApplication\Source code\ColdTrap\obj\Release\Driver_ColdTrap.csproj.AssemblyReference.cache
+C:\Temp\MixingApplication\Source code\ColdTrap\obj\Release\Driver_ColdTrap.csproj.CoreCompileInputs.cache
+C:\Temp\MixingApplication\Source code\ColdTrap\obj\Release\Driver_ColdTrap.csproj.CopyComplete
+C:\Temp\MixingApplication\Source code\ColdTrap\obj\Release\ColdTrap.dll
+C:\Temp\MixingApplication\Source code\ColdTrap\obj\Release\ColdTrap.pdb
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\ColdTrap.xml
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\Alarm_Management.xml
+C:\Temp\MixingApplication\Source code\ColdTrap\bin\Release\Message.xml

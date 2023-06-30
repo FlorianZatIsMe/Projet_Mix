@@ -32,7 +32,7 @@ namespace Driver_RS232_Pump
                 Parity = Settings.Default.Parity,
                 //pump.StopBits = StopBits.One;
                 Handshake = Settings.Default.Handshake,
-                NewLine = config.AppSettings.Settings["PumpNewLine"].Value, // \r
+                NewLine = config.AppSettings.Settings["PumpNewLine"].Value, // \r: LF (Line Feed)
                 PortName = Settings.Default.PortName
             };
 

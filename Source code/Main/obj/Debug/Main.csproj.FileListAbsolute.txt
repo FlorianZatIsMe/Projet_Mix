@@ -268,8 +268,6 @@ C:\Temp\MixingApplication\Source code\Main\bin\Debug\Alarm_Management.dll
 C:\Temp\MixingApplication\Source code\Main\bin\Debug\ColdTrap.dll
 C:\Temp\MixingApplication\Source code\Main\bin\Debug\Database.dll
 C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_Ethernet.dll
-C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_Ethernet_Weight.dll
-C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_MODBUS.dll
 C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_RS232.dll
 C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_RS232_Pump.dll
 C:\Temp\MixingApplication\Source code\Main\bin\Debug\Message.exe
@@ -299,10 +297,6 @@ C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_RS232_Pump.pdb
 C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_RS232_Pump.dll.config
 C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_Ethernet.pdb
 C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_Ethernet.dll.config
-C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_Ethernet_Weight.pdb
-C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_Ethernet_Weight.dll.config
-C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_MODBUS.pdb
-C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_MODBUS.dll.config
 C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_RS232.pdb
 C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_RS232.xml
 C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_RS232.dll.config
@@ -378,3 +372,15 @@ C:\Temp\MixingApplication\Source code\Main\bin\Debug\System.Memory.dll
 C:\Temp\MixingApplication\Source code\Main\bin\Debug\System.Numerics.Vectors.dll
 C:\Temp\MixingApplication\Source code\Main\bin\Debug\System.Memory.xml
 C:\Temp\MixingApplication\Source code\Main\bin\Debug\System.Numerics.Vectors.xml
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_Ethernet_Balance.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_MODBUS_SpeedMixer.dll
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_Ethernet_Balance.pdb
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_Ethernet_Balance.dll.config
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_MODBUS_SpeedMixer.pdb
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\Driver_MODBUS_SpeedMixer.dll.config
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\MixingApplication.xml
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\MixingApplication.exe.manifest
+C:\Temp\MixingApplication\Source code\Main\bin\Debug\MixingApplication.application
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\MixingApplication.TrustInfo.xml
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\MixingApplication.exe.manifest
+C:\Temp\MixingApplication\Source code\Main\obj\Debug\MixingApplication.application

@@ -148,7 +148,7 @@ namespace Main.Pages.SubCycle
 
             // currentPhaseParameters =  liste des paramètres pour notre séquence
             // A CORRIGER : IF RESULT IS FALSE
-            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow_new(new RecipeSpeedMixerInfo(), subCycle.id); });
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetOneRow_new(new RecipeSpeedMixerInfo(), subCycle.Id); });
             currentRecipeValues = (object[])t.Result;
 
             viewModel.pressureUnit = currentRecipeValues[recipeSpeedMixerInfo.PressureUnit].ToString();
@@ -164,7 +164,7 @@ namespace Main.Pages.SubCycle
             //recipeSpeedMixerInfo = (RecipeSpeedMixerInfo)t.Result;
 
             CycleSpeedMixerInfo cycleSMInfo = new CycleSpeedMixerInfo();
-            object[] cycleSMwithRecipe = cycleSMInfo.GetRecipeParameters(currentRecipeValues, subCycle.idCycle);
+            object[] cycleSMwithRecipe = cycleSMInfo.GetRecipeParameters(currentRecipeValues, subCycle.IdCycle);
             //cycleSMInfo.SetRecipeParameters(recipeSpeedMixerInfo, subCycle.idCycle);
 
             // A CORRIGER : IF RESULT IS FALSE
@@ -175,14 +175,14 @@ namespace Main.Pages.SubCycle
             t = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax_new(cycleSMInfo, cycleSMInfo.Ids[cycleSMInfo.Id]); });
             previousSeqId = (int)t.Result;
 
-            object[] prevSeqValues = new object[subCycle.prevSeqInfo.Ids.Count()];
-            prevSeqValues[subCycle.prevSeqInfo.NextSeqType] = cycleSMInfo.SeqType.ToString();
-            prevSeqValues[subCycle.prevSeqInfo.NextSeqId] = previousSeqId.ToString();
-            prevSeqValues[subCycle.prevSeqInfo.NextSeqType] = cycleSMInfo.SeqType;
-            prevSeqValues[subCycle.prevSeqInfo.NextSeqId] = previousSeqId;
+            object[] prevSeqValues = new object[subCycle.PrevSeqInfo.Ids.Count()];
+            prevSeqValues[subCycle.PrevSeqInfo.NextSeqType] = cycleSMInfo.SeqType.ToString();
+            prevSeqValues[subCycle.PrevSeqInfo.NextSeqId] = previousSeqId.ToString();
+            prevSeqValues[subCycle.PrevSeqInfo.NextSeqType] = cycleSMInfo.SeqType;
+            prevSeqValues[subCycle.PrevSeqInfo.NextSeqId] = previousSeqId;
 
             // A CORRIGER : IF RESULT IS FALSE
-            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row_new(subCycle.prevSeqInfo, prevSeqValues, subCycle.idPrevious); });
+            t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row_new(subCycle.PrevSeqInfo, prevSeqValues, subCycle.IdPrevious); });
             //t = MyDatabase.TaskEnQueue(() => { return MyDatabase.Update_Row(subCycle.prevSeqInfo, subCycle.idPrevious.ToString()); });
             //MyDatabase.Update_Row(subCycle.prevSeqInfo, subCycle.idPrevious.ToString());
             //MyDatabase.Update_Row(tablePrevious, new string[] { "next_seq_type", "next_seq_id" }, new string[] { "1", idSubCycle.ToString() }, idPrevious.ToString());
@@ -272,7 +272,7 @@ namespace Main.Pages.SubCycle
         }*/
         private async void SequenceController()
         {
-            if (subCycle.prevSeqInfo.SeqType != cycleSpeedMixerInfo.SeqType) // Si la prochaine séquence est une séquence speedmixer
+            if (subCycle.PrevSeqInfo.SeqType != cycleSpeedMixerInfo.SeqType) // Si la prochaine séquence est une séquence speedmixer
             {
                 MyMessageBox.Show(Settings.Default.CycleMix_Request_PutProduct);
             }
@@ -686,14 +686,14 @@ namespace Main.Pages.SubCycle
             NextSeqInfo nextSeqInfo = new NextSeqInfo(
                 recipeInfo_arg: recipeSpeedMixerInfo,
                 recipeValues_arg: currentRecipeValues,
-                frameMain_arg: null,
-                frameInfoCycle_arg: null,
-                contentControlMain_arg: subCycle.contentControlMain,
-                contentControlInfoCycle_arg: subCycle.contentControlInfoCycle,
-                idCycle_arg: subCycle.idCycle,
+                //frameMain_arg: null,
+                //frameInfoCycle_arg: null,
+                contentControlMain_arg: subCycle.ContentControlMain,
+                contentControlInfoCycle_arg: subCycle.ContentControlInfoCycle,
+                idCycle_arg: subCycle.IdCycle,
                 previousSeqType_arg: recipeSpeedMixerInfo.SeqType,
                 previousSeqId_arg: previousSeqId,
-                isTest_arg: subCycle.isTest,
+                isTest_arg: subCycle.IsTest,
                 comment_arg: comment);
 
             if (isCycleStopped)
@@ -746,7 +746,7 @@ namespace Main.Pages.SubCycle
 
         public bool IsItATest()
         {
-            return subCycle.isTest;
+            return subCycle.IsTest;
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)

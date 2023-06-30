@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Les informations générales relatives à un assembly dépendent de
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("Driver_Ethernet_Weight")]
+[assembly: AssemblyTitle("Driver_Ethernet_Balance")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Integra")]
-[assembly: AssemblyProduct("Driver_Ethernet_Weight")]
+[assembly: AssemblyProduct("Driver_Ethernet_Balance")]
 [assembly: AssemblyCopyright("Copyright © Integra 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

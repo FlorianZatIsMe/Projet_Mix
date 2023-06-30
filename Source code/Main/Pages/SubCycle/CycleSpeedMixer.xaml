@@ -61,25 +61,25 @@
 
             <TextBlock Name="tbReadyToRun" Text="#" 
                        FontSize="{DynamicResource FontSize_Label2}"
-                       Style="{DynamicResource Label1}" Visibility="Collapsed"/>
+                       Style="{DynamicResource Label1}" Visibility="Visible"/>
             <TextBlock Name="tbMixerRunning" Text="#" 
                        FontSize="{DynamicResource FontSize_Label2}"
-                       Style="{DynamicResource Label1}" Visibility="Collapsed"/>
+                       Style="{DynamicResource Label1}" Visibility="Visible"/>
             <TextBlock Name="tbMixerError" Text="#" 
                        FontSize="{DynamicResource FontSize_Label2}"
-                       Style="{DynamicResource Label1}" Visibility="Collapsed"/>
+                       Style="{DynamicResource Label1}" Visibility="Visible"/>
             <TextBlock Name="tbLidOpen" Text="#" 
                        FontSize="{DynamicResource FontSize_Label2}"
-                       Style="{DynamicResource Label1}" Visibility="Collapsed"/>
+                       Style="{DynamicResource Label1}" Visibility="Visible"/>
             <TextBlock Name="tbLidClosed" Text="#" 
                        FontSize="{DynamicResource FontSize_Label2}"
-                       Style="{DynamicResource Label1}" Visibility="Collapsed"/>
+                       Style="{DynamicResource Label1}" Visibility="Visible"/>
             <TextBlock Name="tbSafetyOK" Text="#" 
                        FontSize="{DynamicResource FontSize_Label2}"
-                       Style="{DynamicResource Label1}" Visibility="Collapsed"/>
+                       Style="{DynamicResource Label1}" Visibility="Visible"/>
             <TextBlock Name="tbRobotAtHome" Text="#" 
                        FontSize="{DynamicResource FontSize_Label2}"
-                       Style="{DynamicResource Label1}" Visibility="Collapsed"/>
+                       Style="{DynamicResource Label1}" Visibility="Visible"/>
 
         </StackPanel>
         <Button x:Name="btNext" Visibility="Hidden" Content="Suivant" Width="60" Height="30" Margin="20" VerticalAlignment="Top" HorizontalAlignment="Right" Click="Button_Click"/>

@@ -819,6 +819,8 @@ namespace Database
             logger.Debug("Connect");    // Log a debug message
             isConnecting = true;        // Activate the connecting flag to inform that connection is on going
 
+            //MessageBox.Show(Decrypt(Settings.Default.ConnectionInfo.Password, key) + " - " + Settings.Default.ConnectionInfo.Password);
+
             // Creation of the connection builer
             MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder
             {

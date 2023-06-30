@@ -830,14 +830,16 @@
       <Value Profile="(Default)">12</Value>
     </Setting>
     <Setting Name="ConnectionInfo" Type="Database.ConnectionInfo" Scope="Application">
-      <Value Profile="(Default)">
-          &lt;ConnectionInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
-            &lt;Server&gt;localhost&lt;/Server&gt;
-            &lt;UserID&gt;root&lt;/UserID&gt;
-            &lt;Password&gt;fDdViXrfIK0s3nNIFU4UAyKljiDYdMzCkJ2cyXi8kGM=&lt;/Password&gt;
-            &lt;Db&gt;db1&lt;/Db&gt;
-          &lt;/ConnectionInfo&gt;
-        </Value>
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ConnectionInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;Server&gt;localhost&lt;/Server&gt;
+  &lt;UserID&gt;root&lt;/UserID&gt;
+  &lt;Password&gt;fDdViXrfIK0s3nNIFU4UAyKljiDYdMzCkJ2cyXi8kGM=&lt;/Password&gt;
+  &lt;Db&gt;db1&lt;/Db&gt;
+&lt;/ConnectionInfo&gt;</Value>
+    </Setting>
+    <Setting Name="Paramètre" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

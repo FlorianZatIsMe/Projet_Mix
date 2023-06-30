@@ -23,15 +23,12 @@ namespace Driver_RS232.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1000")]
         public int scanAlarmTimer_Interval {
             get {
                 return ((int)(this["scanAlarmTimer_Interval"]));
-            }
-            set {
-                this["scanAlarmTimer_Interval"] = value;
             }
         }
     }

@@ -13,7 +13,10 @@
         ResizeMode="NoResize" 
         WindowStartupLocation="Manual" 
         Background="{DynamicResource Backgroup_Main}"
-        PreviewKeyDown="Window_PreviewKeyDown" Deactivated="Window_Deactivated" Closing="Window_Closing" Loaded="Window_Loaded">
+        PreviewKeyDown="Window_PreviewKeyDown" 
+        Deactivated="Window_Deactivated" 
+        Closing="Window_Closing" 
+        Loaded="Window_Loaded">
     <StackPanel Margin="20">
         <WrapPanel HorizontalAlignment="Center">
             <TextBlock Text="{Binding Source={x:Static p:Settings.Default}, Path=LogIn_UserName, Mode=OneWay}" 

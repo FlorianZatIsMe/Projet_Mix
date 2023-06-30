@@ -20,6 +20,10 @@ using Driver_Ethernet_Balance;
 using System.Windows.Media;
 using Message;
 using System.Timers;
+using NLog.Config;
+using NLog.Targets;
+using NLog.Layouts;
+using System.Runtime.InteropServices;
 
 namespace Main
 {
@@ -28,7 +32,8 @@ namespace Main
         New,
         Modify,
         Copy,
-        Delete
+        Delete,
+        None
     }
 
     public partial class MainWindow : Window
@@ -49,13 +54,21 @@ namespace Main
         public MainWindow()
         {
 #if DEBUG
-            LogManager.Configuration.Variables["myLevel"] = "Trace";
-            LogManager.Configuration.Variables["isDebug"] = "true";
+            // logfile
+            LogManager.Configuration.LoggingRules[0].EnableLoggingForLevels(LogLevel.Trace, LogLevel.Fatal);
+
+            // logconsole
+            LogManager.Configuration.LoggingRules[1].EnableLoggingForLevels(LogLevel.Trace, LogLevel.Fatal);
 #else
-            LogManager.Configuration.Variables["myLevel"] = "Error";
-            LogManager.Configuration.Variables["isDebug"] = "false";
-#endif
+            // logfile
+            LogManager.Configuration.LoggingRules[0].DisableLoggingForLevels(LogLevel.Trace, LogLevel.Fatal);
+            LogManager.Configuration.LoggingRules[0].EnableLoggingForLevels(LogLevel.Error, LogLevel.Fatal);
+
+            // logconsole
+            LogManager.Configuration.LoggingRules[1].DisableLoggingForLevels(LogLevel.Trace, LogLevel.Fatal);
+#endif         
             LogManager.ReconfigExistingLoggers(); // Explicit refresh of Layouts and updates active Logger-objects
+
             General.Initialize(new IniInfo() { Window = this });
 
             if (CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator != ".")
@@ -187,22 +200,75 @@ namespace Main
                 AutoReset = false
             };
             testTimer.Elapsed += TestTimer_OnTimedEvent;
-            testTimer.Start();
+            //testTimer.Start();
+
         }
 
         private readonly System.Timers.Timer testTimer;
+        private RcpAction action;
         private void TestTimer_OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
             this.Dispatcher.Invoke(() =>
             {
                 if (contentControlMain.Content.GetType() == typeof(Pages.Status))
                 {
-                    contentControlMain.Content = new Pages.AuditTrail();
+                    contentControlMain.Content = new Pages.SubCycle.PreCycle(contentControlMain, contentControlInfoCycle, this);
                 }
+                else if (contentControlMain.Content.GetType() == typeof(Pages.SubCycle.PreCycle))
+                {
+                    action = RcpAction.New;
+                    contentControlMain.Content = new Pages.Recipe(action, contentControlMain, contentControlInfoCycle, "", this);
+                }/*
+                else if (contentControlMain.Content.GetType() == typeof(Pages.Recipe))
+                {
+                    if (action == RcpAction.New)
+                    {
+                        action = RcpAction.Modify;
+                    }
+                    else if (action == RcpAction.Modify)
+                    {
+                        action = RcpAction.Copy;
+                    }
+                    else if (action == RcpAction.Copy)
+                    {
+                        action = RcpAction.Delete;
+                    }
+                    else
+                    {
+                        action = RcpAction.None;
+                    }
+
+                    if (action == RcpAction.None)
+                    {
+                        contentControlMain.Content = new Pages.AuditTrail();
+                    }
+                    else
+                    {
+                        contentControlMain.Content = new Pages.Recipe(action, contentControlMain, contentControlInfoCycle, "", this);
+                    }
+                }
+                else if (contentControlMain.Content.GetType() == typeof(Pages.AuditTrail))
+                {
+                    contentControlMain.Content = new Pages.ActiveAlarms(contentControlMain);
+                }
+                else if (contentControlMain.Content.GetType() == typeof(Pages.ActiveAlarms))
+                {
+                    contentControlMain.Content = new Pages.Backup(contentControlMain);
+                }
+                else if (contentControlMain.Content.GetType() == typeof(Pages.Backup))
+                {
+                    contentControlMain.Content = new Pages.Archiving(contentControlMain);
+                }
+                else if (contentControlMain.Content.GetType() == typeof(Pages.Archiving))
+                {
+                    contentControlMain.Content = new Pages.Parameters();
+                }*/
                 else
                 {
                     contentControlMain.Content = new Pages.Status();
+                    //General.PrintReport(833);
                 }
+                //General.PrintReport(833);
             });
 
             testTimer.Enabled = true;
@@ -671,10 +737,10 @@ namespace Main
             //frameMain_Old.Content = new Pages.ActiveAlarmsOld(frameMain_Old);
             contentControlMain.Content = new Pages.ActiveAlarms(contentControlMain);
         }
+
         private void FxUserLogInOut(object sender, RoutedEventArgs e)
         {
-            LogIn w = new LogIn(this, this.Window_Deactivated);
-            w.ShowDialog();
+            System.Diagnostics.Process.Start("shutdown", "/l");
         }
         private void Close_App_Click(object sender, RoutedEventArgs e)
         {
@@ -766,6 +832,21 @@ Il est important de noter que cette méthode est assez radicale et peut rendre l
                 IDisposable disposablePage = frameMain_Old.Content as IDisposable;
                 disposablePage.Dispose();
             }*/
+        }
+
+        private void Window_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Point point = e.GetPosition(this.borderSoftwareName);
+            double xMin = 0;
+            double xMax = labelSoftwareName.ActualWidth;
+            double yMin = 0;
+            double yMax = borderSoftwareName.ActualHeight;
+
+            if (point.X > xMin && point.X < xMax && point.Y > yMin && point.Y < yMax)
+            {
+                LogIn w = new LogIn(this, this.Window_Deactivated);
+                w.ShowDialog();
+            }
         }
     }
 }

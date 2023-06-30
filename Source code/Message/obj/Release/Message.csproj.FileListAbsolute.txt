@@ -18,3 +18,24 @@ C:\Temp\MixingApplication\Message\obj\Release\Message.csproj.CoreCompileInputs.c
 C:\Temp\MixingApplication\Message\obj\Release\Message.csproj.CopyComplete
 C:\Temp\MixingApplication\Message\obj\Release\Message.exe
 C:\Temp\MixingApplication\Message\obj\Release\Message.pdb
+C:\Temp\MixingApplication\Source code\Message\bin\Release\Message.exe.config
+C:\Temp\MixingApplication\Source code\Message\bin\Release\Message.exe
+C:\Temp\MixingApplication\Source code\Message\bin\Release\Message.pdb
+C:\Temp\MixingApplication\Source code\Message\bin\Release\NLog.dll
+C:\Temp\MixingApplication\Source code\Message\bin\Release\NLog.xml
+C:\Temp\MixingApplication\Source code\Message\obj\Release\Message.csproj.AssemblyReference.cache
+C:\Temp\MixingApplication\Source code\Message\obj\Release\Message.csproj.SuggestedBindingRedirects.cache
+C:\Temp\MixingApplication\Source code\Message\obj\Release\MyMessageBox.g.cs
+C:\Temp\MixingApplication\Source code\Message\obj\Release\App.g.cs
+C:\Temp\MixingApplication\Source code\Message\obj\Release\Message_MarkupCompile.cache
+C:\Temp\MixingApplication\Source code\Message\obj\Release\Message_MarkupCompile.lref
+C:\Temp\MixingApplication\Source code\Message\obj\Release\App.baml
+C:\Temp\MixingApplication\Source code\Message\obj\Release\MyMessageBox.baml
+C:\Temp\MixingApplication\Source code\Message\obj\Release\Message.g.resources
+C:\Temp\MixingApplication\Source code\Message\obj\Release\Message.Properties.Resources.resources
+C:\Temp\MixingApplication\Source code\Message\obj\Release\Message.csproj.GenerateResource.cache
+C:\Temp\MixingApplication\Source code\Message\obj\Release\Message.csproj.CoreCompileInputs.cache
+C:\Temp\MixingApplication\Source code\Message\obj\Release\Message.csproj.CopyComplete
+C:\Temp\MixingApplication\Source code\Message\obj\Release\Message.exe
+C:\Temp\MixingApplication\Source code\Message\obj\Release\Message.pdb
+C:\Temp\MixingApplication\Source code\Message\bin\Release\Message.xml

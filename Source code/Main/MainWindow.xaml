@@ -17,7 +17,7 @@
         Loaded="Window_Loaded" 
         MouseMove="Window_MouseMove" 
         Deactivated="Window_Deactivated"      
-        Closing="Window_Closing">
+        Closing="Window_Closing" PreviewMouseLeftButtonDown="Window_PreviewMouseLeftButtonDown">
 
 
     <Window.Resources>
@@ -469,13 +469,14 @@
         </Grid>
 
         <Grid Grid.Row="2">
-            <Border Background="{DynamicResource Backgroup_SubMain1}" />
-            <TextBlock x:Name="labelSoftwareName"
+            <Border Background="{DynamicResource Backgroup_SubMain1}"/>
+            <Border x:Name="borderSoftwareName" Height="30" Margin="20,0,0,5" HorizontalAlignment="Left" VerticalAlignment="Center" Width="{Binding Path=ActualWidth, ElementName=labelSoftwareName}">
+                <TextBlock x:Name="labelSoftwareName"
                        Text="Software name and version"
                        Style="{DynamicResource Label1}"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Left"
-                       Margin="20,0,0,5" />
+                       HorizontalAlignment="Left"                       
+                       VerticalAlignment="Center"/>
+            </Border>
             <TextBlock x:Name="labelCalibration"
                        Text=""
                        Style="{DynamicResource Label1}"

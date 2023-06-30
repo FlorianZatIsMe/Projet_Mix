@@ -44,8 +44,8 @@ namespace Main
     {
         public ISeqTabInfo recipeInfo { get; }
         public object[] recipeValues { get; }
-        public Frame frameMain { get; }
-        public Frame frameInfoCycle { get; }
+        //public Frame frameMain { get; }
+        //public Frame frameInfoCycle { get; }
         public ContentControl contentControlMain { get; }
         public ContentControl contentControlInfoCycle { get; }        
         public int idCycle { get; }
@@ -54,12 +54,12 @@ namespace Main
         public bool isTest { get; }
         public string comment { get; }
 
-        public NextSeqInfo(ISeqTabInfo recipeInfo_arg, object[] recipeValues_arg, Frame frameMain_arg, Frame frameInfoCycle_arg, ContentControl contentControlMain_arg, ContentControl contentControlInfoCycle_arg, int idCycle_arg, int previousSeqType_arg, int previousSeqId_arg, bool isTest_arg, string comment_arg = "")
+        public NextSeqInfo(ISeqTabInfo recipeInfo_arg, object[] recipeValues_arg, ContentControl contentControlMain_arg, ContentControl contentControlInfoCycle_arg, int idCycle_arg, int previousSeqType_arg, int previousSeqId_arg, bool isTest_arg, string comment_arg = "")
         {
             recipeInfo = recipeInfo_arg;
             recipeValues = recipeValues_arg;
-            frameMain = frameMain_arg;
-            frameInfoCycle = frameInfoCycle_arg;
+            //frameMain = frameMain_arg;
+            //frameInfoCycle = frameInfoCycle_arg;
             contentControlMain = contentControlMain_arg;
             contentControlInfoCycle = contentControlInfoCycle_arg;
             idCycle = idCycle_arg;
@@ -350,7 +350,7 @@ namespace Main
             Task<object> t1 = MyDatabase.TaskEnQueue(() => { return MyDatabase.InsertRow_new(cycleTableInfo, cycleTableValues); });
             //MyDatabase.InsertRow(cycleTableInfo);
 
-            CurrentCycleInfo = new CycleInfo(cycleTableInfo, cycleTableValues, info.contentControlInfoCycle);
+            CurrentCycleInfo = new CycleInfo(cycleTableValues, info.contentControlInfoCycle);
             // A CORRIGER : IF RESULT IS FALSE
             Task<object> t2 = MyDatabase.TaskEnQueue(() => { return MyDatabase.GetMax_new(cycleTableInfo, cycleTableInfo.Ids[cycleTableInfo.Id]); });
             int idCycle = (int)t2.Result;
@@ -420,14 +420,14 @@ namespace Main
             //MyDatabase.Update_Row(cycleTableInfo, idCycle.ToString());
 
             SubCycleArg subCycleArg = new SubCycleArg(
-                contentControlMain_arg: info.contentControlMain, 
-                contentControlInfoCycle_arg: info.contentControlInfoCycle, 
-                id_arg: (int)firstSeqID, 
-                idCycle_arg: idCycle, 
-                idPrevious_arg: idCycle, 
-                tablePrevious_arg: cycleTableInfo.TabName, 
-                prevSeqInfo_arg: new CycleTableInfo(), 
-                isTest_arg: info.isTest);
+                contentControlMain: info.contentControlMain, 
+                contentControlInfoCycle: info.contentControlInfoCycle, 
+                id: (int)firstSeqID, 
+                idCycle: idCycle, 
+                idPrevious: idCycle, 
+                //tablePrevious_arg: cycleTableInfo.TabName, 
+                prevSeqInfo: new CycleTableInfo(), 
+                isTest: info.isTest);
             info.contentControlMain.Content = Activator.CreateInstance(Pages.Sequence.list[(int)(firstSeqType)].subCycPgType, new object[] { subCycleArg });
 
             //MyDatabase.Close_reader(); // On ferme le reader de la db pour pouvoir lancer une autre requête
@@ -445,15 +445,15 @@ namespace Main
             else
             {
                 SubCycleArg subCycleArg = new SubCycleArg(
-                    contentControlMain_arg: nextSeqInfo.contentControlMain, 
-                    contentControlInfoCycle_arg: nextSeqInfo.contentControlInfoCycle, 
-                    id_arg: int.Parse(nextSeqInfo.recipeValues[nextSeqInfo.recipeInfo.NextSeqId].ToString()),
-                    idCycle_arg: nextSeqInfo.idCycle,
-                    idPrevious_arg: nextSeqInfo.previousSeqId,
-                    tablePrevious_arg: Sequence.list[nextSeqInfo.previousSeqType].subCycleInfo.TabName /*tableNameSubCycles[previousSeqType]*/, 
-                    prevSeqInfo_arg: prevSeqInfo_arg,
-                    isTest_arg: nextSeqInfo.isTest,
-                    prevSeqValues_arg: new object[0]);
+                    contentControlMain: nextSeqInfo.contentControlMain,
+                    contentControlInfoCycle: nextSeqInfo.contentControlInfoCycle,
+                    id: int.Parse(nextSeqInfo.recipeValues[nextSeqInfo.recipeInfo.NextSeqId].ToString()),
+                    idCycle: nextSeqInfo.idCycle,
+                    idPrevious: nextSeqInfo.previousSeqId,
+                    //tablePrevious_arg: Sequence.list[nextSeqInfo.previousSeqType].subCycleInfo.TabName /*tableNameSubCycles[previousSeqType]*/, 
+                    prevSeqInfo: prevSeqInfo_arg,
+                    isTest: nextSeqInfo.isTest);
+                    //prevSeqValues_arg: new object[0]);
                 nextSeqInfo.contentControlMain.Content = Activator.CreateInstance(Pages.Sequence.list[int.Parse(nextSeqInfo.recipeValues[nextSeqInfo.recipeInfo.NextSeqType].ToString())].subCycPgType, new object[] { subCycleArg });
             }
         }
@@ -591,6 +591,13 @@ namespace Main
             report.GenerateCycleReport(id);
         }
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern int Wow64DisableWow64FsRedirection(ref IntPtr ptr);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern int Wow64EnableWow64FsRedirection(ref IntPtr ptr);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern int Wow64RevertWow64FsRedirection(ref IntPtr ptr);
+
         public static void ShowKeyBoard()
         {
             try
@@ -605,14 +612,25 @@ namespace Main
                 logger.Error(ex.Message);
             }
 
-            if (keyBoardProcess != null)
+            try
             {
-                keyBoardProcess.Start();
+                if (keyBoardProcess != null)
+                {
+                    keyBoardProcess.Start();
+                }
+                else
+                {
+                    IntPtr val = IntPtr.Zero;
+                    Wow64DisableWow64FsRedirection(ref val);
+                    keyBoardProcess = Process.Start("osk.exe");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                keyBoardProcess = Process.Start("osk.exe");
+                logger.Error(ex.Message);
+                MyMessageBox.Show(ex.Message);
             }
+
         }
 
         public static void HideKeyBoard()
@@ -623,10 +641,7 @@ namespace Main
                 {
                     //info.Window.Activate();
                     
-                    keyBoardProcess.Kill();
-                    
-                    //keyBoardProcess.Close();
-                    //keyBoardProcess = null;
+                    //keyBoardProcess.Kill();
                 }
             }
             catch (Exception ex)

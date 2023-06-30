@@ -35,9 +35,6 @@ C:\Temp\MixingApplication\Driver_Ethernet_Weight\bin\Debug\Driver_Ethernet.dll.c
 C:\Temp\MixingApplication\Driver_Ethernet_Weight\bin\Debug\System.Threading.Tasks.Extensions.xml
 C:\Temp\MixingApplication\Driver_Ethernet_Weight\bin\Debug\System.Diagnostics.DiagnosticSource.xml
 C:\Temp\MixingApplication\Driver_Ethernet_Weight\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
-C:\Temp\MixingApplication\Source code\Driver_Ethernet_Weight\bin\Debug\Driver_Ethernet_Weight.dll.config
-C:\Temp\MixingApplication\Source code\Driver_Ethernet_Weight\bin\Debug\Driver_Ethernet_Weight.dll
-C:\Temp\MixingApplication\Source code\Driver_Ethernet_Weight\bin\Debug\Driver_Ethernet_Weight.pdb
 C:\Temp\MixingApplication\Source code\Driver_Ethernet_Weight\bin\Debug\Driver_Ethernet.dll
 C:\Temp\MixingApplication\Source code\Driver_Ethernet_Weight\bin\Debug\Message.exe
 C:\Temp\MixingApplication\Source code\Driver_Ethernet_Weight\bin\Debug\NLog.dll
@@ -70,5 +67,8 @@ C:\Temp\MixingApplication\Source code\Driver_Ethernet_Weight\bin\Debug\System.Nu
 C:\Temp\MixingApplication\Source code\Driver_Ethernet_Weight\obj\Debug\Driver_Ethernet_Balance.csproj.AssemblyReference.cache
 C:\Temp\MixingApplication\Source code\Driver_Ethernet_Weight\obj\Debug\Driver_Ethernet_Balance.csproj.CoreCompileInputs.cache
 C:\Temp\MixingApplication\Source code\Driver_Ethernet_Weight\obj\Debug\Driver_Ethernet_Balance.csproj.CopyComplete
-C:\Temp\MixingApplication\Source code\Driver_Ethernet_Weight\obj\Debug\Driver_Ethernet_Weight.dll
-C:\Temp\MixingApplication\Source code\Driver_Ethernet_Weight\obj\Debug\Driver_Ethernet_Weight.pdb
+C:\Temp\MixingApplication\Source code\Driver_Ethernet_Weight\bin\Debug\Driver_Ethernet_Balance.dll.config
+C:\Temp\MixingApplication\Source code\Driver_Ethernet_Weight\bin\Debug\Driver_Ethernet_Balance.dll
+C:\Temp\MixingApplication\Source code\Driver_Ethernet_Weight\bin\Debug\Driver_Ethernet_Balance.pdb
+C:\Temp\MixingApplication\Source code\Driver_Ethernet_Weight\obj\Debug\Driver_Ethernet_Balance.dll
+C:\Temp\MixingApplication\Source code\Driver_Ethernet_Weight\obj\Debug\Driver_Ethernet_Balance.pdb

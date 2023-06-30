@@ -14436,6 +14436,12 @@
             </summary>
             <docgen category='Layout Options' order='100' />
         </member>
+        <member name="P:NLog.Layouts.JsonLayout.IndentJson">
+            <summary>
+            Auto indent and create new lines
+            </summary>
+            <docgen category='Layout Options' order='100' />
+        </member>
         <member name="P:NLog.Layouts.JsonLayout.IncludeEventProperties">
             <summary>
             Gets or sets the option to include all properties from the log event (as JSON)
@@ -24175,6 +24181,12 @@
             <remarks>Warning: zero is not infinite waiting</remarks>
             <docgen category='SMTP Options' order='100' />
         </member>
+        <member name="P:NLog.Targets.MailTarget.MailHeaders">
+            <summary>
+            Gets the array of email headers that are transmitted with this email message
+            </summary>
+            <docgen category='Message Options' order='100' />
+        </member>
         <member name="M:NLog.Targets.MailTarget.Write(NLog.Common.AsyncLogEventInfo)">
             <inheritdoc/>
         </member>
@@ -24215,19 +24227,11 @@
             <returns></returns>
         </member>
         <member name="M:NLog.Targets.MailTarget.GetSmtpSettingsKey(NLog.LogEventInfo)">
-             <summary>
-             Create key for grouping. Needed for multiple events in one mail message
-             </summary>
-             <param name="logEvent">event for rendering layouts   </param>  
-            <returns>string to group on</returns>
-        </member>
-        <member name="M:NLog.Targets.MailTarget.AppendLayout(System.Text.StringBuilder,NLog.LogEventInfo,NLog.Layouts.Layout)">
             <summary>
-            Append rendered <paramref name="layout"/> to <paramref name="sb"/>
+            Create key for grouping. Needed for multiple events in one mail message
             </summary>
-            <param name="sb">append to this</param>
-            <param name="logEvent">event for rendering <paramref name="layout"/></param>
-            <param name="layout">append if not <c>null</c></param>
+            <param name="logEvent">event for rendering layouts   </param>  
+            <returns>string to group on</returns>
         </member>
         <member name="M:NLog.Targets.MailTarget.CreateMailMessage(NLog.LogEventInfo,System.String)">
             <summary>

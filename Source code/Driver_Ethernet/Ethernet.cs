@@ -6,6 +6,7 @@ using System.Timers;
 using Alarm_Management;
 using Driver_Ethernet.Properties;
 using System.Windows;
+using Message;
 
 namespace Driver_Ethernet
 {
@@ -91,6 +92,7 @@ namespace Driver_Ethernet
         public bool WriteData(string dataToSend)
         {
             //logger.Debug("WriteData");
+            // IsConnected() doesn't work
             if (!IsConnected()) Connect();
             if (!IsConnected()) return false;
 

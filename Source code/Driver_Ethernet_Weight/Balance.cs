@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Globalization;
 using System.Windows;
-using Driver_Ethernet_Weight.Properties;
+using Driver_Ethernet_Balance.Properties;
 using System.Configuration;
 
 namespace Driver_Ethernet_Balance
@@ -41,7 +41,7 @@ namespace Driver_Ethernet_Balance
         {
             eth = new Ethernet(Settings.Default.IpAddress, 
                 Settings.Default.Port,
-                config.AppSettings.Settings["BalanceEndLine"].Value, 
+                config.AppSettings.Settings["BalanceEndLine"].Value,  // \r\n : LF + CR (Line Feed + Carriage Return)
                 Settings.Default.Alarm_Connection_id1, 
                 Settings.Default.Alarm_Connection_id2);
             standbyMessage = Settings.Default.StandByChar + eth.endLine;
